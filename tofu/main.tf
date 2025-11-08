@@ -10,6 +10,7 @@ terraform {
 
 provider "azurerm" {
   features {}
+  subscription_id = var.azure_subscription_id
 }
 
 resource "azurerm_resource_group" "main" {

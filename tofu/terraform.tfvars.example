@@ -1,14 +1,16 @@
 # Example configuration file for OpenTofu variables
 # Copy this file to terraform.tfvars and fill in your actual values
 
-resource_group_name            = "rg-mindbody-notifications"
-location                       = "eastus"
+# Azure Configuration
+azure_subscription_id           = "49fbd6b5-f722-420c-a6b1-961f1b03813c"
+resource_group_name             = "rg-mindbody-notifications"
+location                        = "eastus"
 notification_hub_namespace_name = "nhn-mindbody"
-notification_hub_name          = "nh-mindbody"
-notification_hub_sku           = "Free"
-app_service_plan_name          = "asp-mindbody-notifications"
-app_service_plan_sku           = "B1"
-api_app_name                   = "api-mindbody-notifications"
+notification_hub_name           = "nh-mindbody"
+notification_hub_sku            = "Free"
+app_service_plan_name           = "asp-mindbody-notifications"
+app_service_plan_sku            = "B1"
+api_app_name                    = "api-mindbody-notifications"
 
 # Sensitive values - replace with actual values
 api_key            = "your-api-key-here"

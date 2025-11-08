@@ -4,6 +4,12 @@ variable "resource_group_name" {
   default     = "rg-mindbody-notifications"
 }
 
+variable "azure_subscription_id" {
+  description = "Azure subscription ID"
+  type        = string
+  default     = "49fbd6b5-f722-420c-a6b1-961f1b03813c"
+}
+
 variable "location" {
   description = "Azure region for resources"
   type        = string
