@@ -36,6 +36,23 @@ public static class MauiProgram
 		builder.Services.AddSingleton<ProjectListPageModel>();
 		builder.Services.AddSingleton<ManageMetaPageModel>();
 
+#if ANDROID
+		builder.Services.AddSingleton<IDeviceInstallationService, Platforms.Android.DeviceInstallationService>();
+#elif IOS
+		builder.Services.AddSingleton<IDeviceInstallationService, Platforms.iOS.DeviceInstallationService>();
+#endif
+
+		builder.Services.AddSingleton<INotificationActionServiceExtended, NotificationActionService>();
+		builder.Services.AddSingleton<INotificationRegistrationService>(serviceProvider =>
+		{
+			return new NotificationRegistrationService(
+				NotificationConfig.BackendServiceEndpoint,
+				NotificationConfig.ApiKey);
+		});
+
+		builder.Services.AddTransient<NotificationSettingsPageModel>();
+		builder.Services.AddTransient<NotificationSettingsPage>();
+
 		builder.Services.AddTransientWithShellRoute<ProjectDetailPage, ProjectDetailPageModel>("project");
 		builder.Services.AddTransientWithShellRoute<TaskDetailPage, TaskDetailPageModel>("task");
 		
