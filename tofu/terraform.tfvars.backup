@@ -1,0 +1,20 @@
+# Example configuration file for OpenTofu variables
+# Copy this file to terraform.tfvars and fill in your actual values
+
+resource_group_name            = "rg-mindbody-notifications"
+location                       = "eastus"
+notification_hub_namespace_name = "nhn-mindbody"
+notification_hub_name          = "nh-mindbody"
+notification_hub_sku           = "Free"
+app_service_plan_name          = "asp-mindbody-notifications"
+app_service_plan_sku           = "B1"
+api_app_name                   = "api-mindbody-notifications"
+
+# Sensitive values - replace with actual values
+api_key            = "your-api-key-here"
+apns_application_mode = "Sandbox"
+apns_bundle_id     = "com.yourcompany.mindbodydictionary"
+apns_key_id        = "your-apns-key-id"
+apns_team_id       = "your-apple-team-id"
+apns_token         = "your-apns-p8-token-content"
+fcm_server_key     = "your-firebase-server-key"

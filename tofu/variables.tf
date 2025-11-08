@@ -1,0 +1,90 @@
+variable "resource_group_name" {
+  description = "Name of the resource group"
+  type        = string
+  default     = "rg-mindbody-notifications"
+}
+
+variable "azure_subscription_id" {
+  description = "Azure subscription ID"
+  type        = string
+  default     = "49fbd6b5-f722-420c-a6b1-961f1b03813c"
+}
+
+variable "location" {
+  description = "Azure region for resources"
+  type        = string
+  default     = "eastus"
+}
+
+variable "notification_hub_namespace_name" {
+  description = "Name of the notification hub namespace"
+  type        = string
+  default     = "nhn-mindbody"
+}
+
+variable "notification_hub_name" {
+  description = "Name of the notification hub"
+  type        = string
+  default     = "nh-mindbody"
+}
+
+variable "notification_hub_sku" {
+  description = "SKU for the notification hub namespace"
+  type        = string
+  default     = "Free"
+  validation {
+    condition     = contains(["Free", "Basic", "Standard"], var.notification_hub_sku)
+    error_message = "SKU must be Free, Basic, or Standard"
+  }
+}
+
+# Backend API variables removed - using direct client-to-hub communication
+# See: https://github.com/dotnet/maui-samples/tree/main/10.0/WebServices/PushNotificationsDemo
+
+variable "apns_application_mode" {
+  description = "APNS application mode (Production or Sandbox)"
+  type        = string
+  default     = "Sandbox"
+  validation {
+    condition     = contains(["Production", "Sandbox"], var.apns_application_mode)
+    error_message = "Application mode must be Production or Sandbox"
+  }
+}
+
+variable "apns_bundle_id" {
+  description = "iOS app bundle ID"
+  type        = string
+}
+
+variable "apns_key_id" {
+  description = "APNS key ID"
+  type        = string
+}
+
+variable "apns_team_id" {
+  description = "Apple team ID"
+  type        = string
+}
+
+variable "apns_token" {
+  description = "APNS authentication token (.p8 key content)"
+  type        = string
+  sensitive   = true
+}
+
+variable "fcm_private_key" {
+  description = "Firebase Cloud Messaging v1 private key (from service account JSON)"
+  type        = string
+  sensitive   = true
+}
+
+variable "fcm_client_email" {
+  description = "Firebase Cloud Messaging v1 client email (from service account JSON)"
+  type        = string
+  sensitive   = true
+}
+
+variable "fcm_project_id" {
+  description = "Firebase Cloud Messaging v1 project ID"
+  type        = string
+}

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "533561443811",
+    "project_id": "mindbody-dictionary",
+    "storage_bucket": "mindbody-dictionary.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:533561443811:android:b7ba0d1964d9e3720b8cd6",
+        "android_client_info": {
+          "package_name": "com.mindbodydictionary.mindbodydictionarymobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBMMY3RlAb51yD3-N6jnRSOH1YANkwV6jk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
