@@ -9,7 +9,7 @@ notification_hub_namespace_name = "nhn-mindbody"
 notification_hub_name           = "nh-mindbody"
 notification_hub_sku            = "Free"
 app_service_plan_name           = "asp-mindbody-notifications"
-app_service_plan_sku            = "B1"
+app_service_plan_sku            = "F1"
 api_app_name                    = "api-mindbody-notifications"
 
 # Sensitive values - replace with actual values

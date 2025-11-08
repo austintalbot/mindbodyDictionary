@@ -47,7 +47,7 @@ variable "app_service_plan_name" {
 variable "app_service_plan_sku" {
   description = "SKU for the app service plan"
   type        = string
-  default     = "B1"
+  default     = "F1"
 }
 
 variable "api_app_name" {

@@ -39,14 +39,14 @@ resource "azapi_resource" "notification_hub" {
   parent_id = azurerm_notification_hub_namespace.main.id
   location  = azurerm_resource_group.main.location
 
-  body = jsonencode({
+  body = {
     properties = {
       apnsCredential = {
         properties = {
-          appName = var.apns_bundle_id
-          appId   = var.apns_bundle_id
-          keyId   = var.apns_key_id
-          token   = var.apns_token
+          appName  = var.apns_bundle_id
+          appId    = var.apns_bundle_id
+          keyId    = var.apns_key_id
+          token    = var.apns_token
           endpoint = var.apns_application_mode == "Production" ? "https://api.push.apple.com:443/3/device" : "https://api.development.push.apple.com:443/3/device"
         }
       }
@@ -58,7 +58,7 @@ resource "azapi_resource" "notification_hub" {
         }
       }
     }
-  })
+  }
 }
 
 resource "azurerm_notification_hub_authorization_rule" "api_access" {
