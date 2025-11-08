@@ -1,6 +1,7 @@
 using System.Text.Json;
 using MindBodyDictionaryMobile.Models;
 using Microsoft.Azure.NotificationHubs;
+using Microsoft.Extensions.Logging;
 
 namespace MindBodyDictionaryMobile.Services;
 
@@ -10,55 +11,99 @@ public class NotificationRegistrationService : INotificationRegistrationService
     const string CachedTagsKey = "cached_tags";
 
     readonly NotificationHubClient _hubClient;
+    readonly ILogger<NotificationRegistrationService> _logger;
     IDeviceInstallationService _deviceInstallationService;
 
     IDeviceInstallationService DeviceInstallationService =>
         _deviceInstallationService ?? (_deviceInstallationService = Application.Current.Windows[0].Page.Handler.MauiContext.Services.GetService<IDeviceInstallationService>());
 
-    public NotificationRegistrationService()
+    public NotificationRegistrationService(ILogger<NotificationRegistrationService> logger)
     {
-        // Create NotificationHubClient for direct registration
-        _hubClient = NotificationHubClient.CreateClientFromConnectionString(
-            NotificationConfig.ListenConnectionString,
-            NotificationConfig.NotificationHubName);
+        _logger = logger;
+        
+        try
+        {
+            _logger.LogInformation("Initializing NotificationRegistrationService");
+            _logger.LogInformation("Hub Name: {HubName}", NotificationConfig.NotificationHubName);
+            _logger.LogInformation("Namespace: {Namespace}", NotificationConfig.NotificationHubNamespace);
+            
+            // Create NotificationHubClient for direct registration
+            _hubClient = NotificationHubClient.CreateClientFromConnectionString(
+                NotificationConfig.ListenConnectionString,
+                NotificationConfig.NotificationHubName);
+                
+            _logger.LogInformation("NotificationHubClient created successfully");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to initialize NotificationHubClient");
+            throw;
+        }
     }
 
     public async Task DeregisterDeviceAsync()
     {
+        _logger.LogInformation("DeregisterDeviceAsync called");
+        
         var cachedToken = await SecureStorage.GetAsync(CachedDeviceTokenKey)
             .ConfigureAwait(false);
 
         if (cachedToken == null)
+        {
+            _logger.LogWarning("No cached device token found, nothing to deregister");
             return;
+        }
 
         var deviceId = DeviceInstallationService?.GetDeviceId();
+        _logger.LogInformation("Device ID: {DeviceId}", deviceId);
 
         if (string.IsNullOrWhiteSpace(deviceId))
+        {
+            _logger.LogError("Unable to resolve device ID");
             throw new Exception("Unable to resolve an ID for the device.");
+        }
 
         try
         {
+            _logger.LogInformation("Deleting installation from Azure Notification Hub...");
             // Delete registration from Azure Notification Hub
             await _hubClient.DeleteInstallationAsync(deviceId);
             
+            _logger.LogInformation("Successfully deleted installation");
+            
             SecureStorage.Remove(CachedDeviceTokenKey);
             SecureStorage.Remove(CachedTagsKey);
+            
+            _logger.LogInformation("Cleared cached tokens");
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "Failed to deregister device");
             throw new Exception($"Failed to deregister device: {ex.Message}", ex);
         }
     }
 
     public async Task RegisterDeviceAsync(params string[] tags)
     {
-        var deviceInstallation = DeviceInstallationService?.GetDeviceInstallation(tags);
-
-        if (deviceInstallation == null)
-            throw new Exception("Unable to get device installation.");
-
+        _logger.LogInformation("RegisterDeviceAsync called with tags: {Tags}", string.Join(", ", tags ?? Array.Empty<string>()));
+        
         try
         {
+            var deviceInstallation = DeviceInstallationService?.GetDeviceInstallation(tags);
+
+            if (deviceInstallation == null)
+            {
+                _logger.LogError("DeviceInstallationService.GetDeviceInstallation returned null");
+                throw new Exception("Unable to get device installation.");
+            }
+
+            _logger.LogInformation("Device Installation Details:");
+            _logger.LogInformation("  InstallationId: {InstallationId}", deviceInstallation.InstallationId);
+            _logger.LogInformation("  Platform: {Platform}", deviceInstallation.Platform);
+            _logger.LogInformation("  PushChannel: {PushChannel}", 
+                string.IsNullOrEmpty(deviceInstallation.PushChannel) ? "EMPTY/NULL" : $"{deviceInstallation.PushChannel.Substring(0, Math.Min(20, deviceInstallation.PushChannel.Length))}...");
+            _logger.LogInformation("  Tags: {Tags}", string.Join(", ", deviceInstallation.Tags ?? new List<string>()));
+
             // Create Installation object for Azure Notification Hub
             var installation = new Installation
             {
@@ -70,39 +115,62 @@ public class NotificationRegistrationService : INotificationRegistrationService
             // Set platform-specific details
 #if ANDROID
             installation.Platform = NotificationPlatform.Fcm;
+            _logger.LogInformation("Platform set to: FCM (Android)");
 #elif IOS
             installation.Platform = NotificationPlatform.Apns;
+            _logger.LogInformation("Platform set to: APNS (iOS)");
 #endif
 
+            _logger.LogInformation("Sending installation to Azure Notification Hub...");
+            
             // Register with Azure Notification Hub
             await _hubClient.CreateOrUpdateInstallationAsync(installation);
+
+            _logger.LogInformation("Successfully registered with Azure Notification Hub");
 
             await SecureStorage.SetAsync(CachedDeviceTokenKey, deviceInstallation.PushChannel)
                 .ConfigureAwait(false);
 
             await SecureStorage.SetAsync(CachedTagsKey, JsonSerializer.Serialize(tags));
+            
+            _logger.LogInformation("Cached device token and tags");
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "Failed to register device. Error: {ErrorMessage}", ex.Message);
+            if (ex.InnerException != null)
+            {
+                _logger.LogError(ex.InnerException, "Inner exception: {InnerMessage}", ex.InnerException.Message);
+            }
             throw new Exception($"Failed to register device: {ex.Message}", ex);
         }
     }
 
     public async Task RefreshRegistrationAsync()
     {
+        _logger.LogInformation("RefreshRegistrationAsync called");
+        
         var cachedToken = await SecureStorage.GetAsync(CachedDeviceTokenKey)
             .ConfigureAwait(false);
 
         var serializedTags = await SecureStorage.GetAsync(CachedTagsKey)
             .ConfigureAwait(false);
 
+        _logger.LogInformation("Cached token exists: {HasToken}", !string.IsNullOrWhiteSpace(cachedToken));
+        _logger.LogInformation("Cached tags exist: {HasTags}", !string.IsNullOrWhiteSpace(serializedTags));
+        _logger.LogInformation("Current device token exists: {HasCurrentToken}", !string.IsNullOrWhiteSpace(DeviceInstallationService?.Token));
+
         if (string.IsNullOrWhiteSpace(cachedToken) ||
             string.IsNullOrWhiteSpace(serializedTags) ||
             string.IsNullOrWhiteSpace(DeviceInstallationService?.Token) ||
             cachedToken == DeviceInstallationService.Token)
+        {
+            _logger.LogInformation("No refresh needed - tokens match or missing required data");
             return;
+        }
 
         var tags = JsonSerializer.Deserialize<string[]>(serializedTags);
+        _logger.LogInformation("Refreshing registration with tags: {Tags}", string.Join(", ", tags ?? Array.Empty<string>()));
 
         await RegisterDeviceAsync(tags);
     }
