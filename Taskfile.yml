@@ -1,0 +1,317 @@
+version: '3'
+
+vars:
+  PROJECT_NAME: mindbody-dictionary
+  ANDROID_PACKAGE: com.companyname.mindbodydictionarymobile
+  IOS_BUNDLE_ID: com.companyname.mindbodydictionarymobile
+  FIREBASE_PROJECT_ID: '{{.FIREBASE_PROJECT_ID | default "mindbody-dictionary"}}'
+  APPLE_TEAM_ID: '{{.APPLE_TEAM_ID}}'
+  APNS_KEY_NAME: MindBodyDictionaryAPNsKey
+
+dotenv: ['.env']
+
+tasks:
+  default:
+    desc: Show available tasks
+    cmds:
+      - task --list
+
+  check-prereqs:
+    desc: Check if required CLIs are installed
+    cmds:
+      - |
+        echo "Checking prerequisites..."
+        command -v firebase >/dev/null 2>&1 || { echo "❌ Firebase CLI not installed. Run: npm install -g firebase-tools"; exit 1; }
+        echo "✅ Firebase CLI found"
+        command -v gcloud >/dev/null 2>&1 || { echo "⚠️  Google Cloud CLI not found (optional but recommended)"; }
+        echo "Note: Apple Developer tasks require manual portal access (no official CLI)"
+        echo "✅ Prerequisites check complete"
+
+  firebase-login:
+    desc: Login to Firebase
+    cmds:
+      - firebase login
+    status:
+      - firebase projects:list >/dev/null 2>&1
+
+  firebase-create-project:
+    desc: Create Firebase project
+    deps: [firebase-login]
+    cmds:
+      - |
+        echo "Creating Firebase project: {{.FIREBASE_PROJECT_ID}}"
+        firebase projects:create {{.FIREBASE_PROJECT_ID}} --display-name "{{.PROJECT_NAME}}"
+    status:
+      - firebase projects:list | grep -q {{.FIREBASE_PROJECT_ID}}
+
+  firebase-add-android:
+    desc: Add Android app to Firebase project
+    deps: [firebase-create-project]
+    cmds:
+      - |
+        echo "Adding Android app to Firebase project..."
+        firebase apps:create ANDROID \
+          --project={{.FIREBASE_PROJECT_ID}} \
+          --package-name={{.ANDROID_PACKAGE}} \
+          --display-name="MindBody Dictionary Mobile"
+    preconditions:
+      - sh: firebase projects:list | grep -q {{.FIREBASE_PROJECT_ID}}
+        msg: "Firebase project {{.FIREBASE_PROJECT_ID}} does not exist. Run 'task firebase-create-project' first."
+
+  firebase-download-config:
+    desc: Download google-services.json
+    deps: [firebase-add-android]
+    cmds:
+      - |
+        echo "Downloading google-services.json..."
+        firebase apps:sdkconfig ANDROID \
+          --project={{.FIREBASE_PROJECT_ID}} \
+          --out=../MindBodyDictionaryMobile/Platforms/Android/google-services.json
+        echo "✅ google-services.json downloaded to MindBodyDictionaryMobile/Platforms/Android/"
+
+  firebase-enable-fcm:
+    desc: Enable Firebase Cloud Messaging (requires gcloud)
+    deps: [firebase-create-project]
+    cmds:
+      - |
+        echo "Enabling Firebase Cloud Messaging API..."
+        gcloud services enable fcm.googleapis.com --project={{.FIREBASE_PROJECT_ID}}
+        echo "✅ FCM enabled"
+    preconditions:
+      - sh: command -v gcloud >/dev/null 2>&1
+        msg: "Google Cloud CLI not found. Install from: https://cloud.google.com/sdk/docs/install"
+
+  firebase-get-server-key:
+    desc: Get FCM server key (requires manual steps)
+    cmds:
+      - |
+        echo "📋 To get your FCM Server Key:"
+        echo "1. Go to: https://console.firebase.google.com/project/{{.FIREBASE_PROJECT_ID}}/settings/cloudmessaging"
+        echo "2. Navigate to 'Cloud Messaging' tab"
+        echo "3. Under 'Cloud Messaging API (Legacy)', click the 3-dot menu"
+        echo "4. If disabled, click 'Manage API in Google Cloud Console' and enable it"
+        echo "5. Copy the 'Server key'"
+        echo "6. Add to tofu/terraform.tfvars: fcm_server_key = \"YOUR_KEY_HERE\""
+        echo ""
+        echo "Opening Firebase Console..."
+        open "https://console.firebase.google.com/project/{{.FIREBASE_PROJECT_ID}}/settings/cloudmessaging" || true
+
+  firebase-setup:
+    desc: Complete Firebase setup (create project, add Android app, download config)
+    cmds:
+      - task: check-prereqs
+      - task: firebase-create-project
+      - task: firebase-add-android
+      - task: firebase-download-config
+      - task: firebase-enable-fcm
+      - task: firebase-get-server-key
+
+  apple-info:
+    desc: Display Apple Developer setup instructions
+    cmds:
+      - |
+        echo "🍎 Apple Push Notification Setup"
+        echo "=================================="
+        echo ""
+        echo "Apple does not provide a CLI for Developer Portal management."
+        echo "You must complete these steps manually:"
+        echo ""
+        echo "1. CREATE APP IDENTIFIER"
+        echo "   • Go to: https://developer.apple.com/account/resources/identifiers/list"
+        echo "   • Click '+' to create new identifier"
+        echo "   • Select 'App IDs' → Continue"
+        echo "   • Select 'App' → Continue"
+        echo "   • Description: MindBody Dictionary Mobile"
+        echo "   • Bundle ID: {{.IOS_BUNDLE_ID}}"
+        echo "   • Enable 'Push Notifications' capability"
+        echo "   • Click Continue → Register"
+        echo ""
+        echo "2. CREATE APNs AUTHENTICATION KEY"
+        echo "   • Go to: https://developer.apple.com/account/resources/authkeys/list"
+        echo "   • Click '+' to create new key"
+        echo "   • Key Name: {{.APNS_KEY_NAME}}"
+        echo "   • Enable 'Apple Push Notifications service (APNs)'"
+        echo "   • Click Continue → Register"
+        echo "   • Download the .p8 file (you can only download once!)"
+        echo "   • Note the Key ID (10 characters)"
+        echo "   • Note your Team ID (top-right corner of portal)"
+        echo ""
+        echo "3. SAVE CREDENTIALS"
+        echo "   • Move .p8 file to a secure location"
+        echo "   • Update tofu/terraform.tfvars:"
+        echo "     - apns_bundle_id = \"{{.IOS_BUNDLE_ID}}\""
+        echo "     - apns_key_id = \"YOUR_KEY_ID\""
+        echo "     - apns_team_id = \"YOUR_TEAM_ID\""
+        echo "     - apns_token = content of .p8 file (including BEGIN/END lines)"
+        echo ""
+        echo "Opening Apple Developer Portal..."
+        open "https://developer.apple.com/account/resources/identifiers/list" || true
+
+  generate-api-key:
+    desc: Generate secure API key for terraform.tfvars
+    cmds:
+      - |
+        echo "Generating secure API key..."
+        API_KEY=$(openssl rand -base64 32)
+        echo ""
+        echo "✅ Generated API Key:"
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        echo "$API_KEY"
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        echo ""
+        echo "Add this to tofu/terraform.tfvars:"
+        echo "api_key = \"$API_KEY\""
+        echo ""
+        echo "And to MindBodyDictionaryMobile/NotificationConfig.cs:"
+        echo "public const string ApiKey = \"$API_KEY\";"
+
+  create-tfvars:
+    desc: Create terraform.tfvars from example
+    dir: tofu
+    cmds:
+      - |
+        if [ -f terraform.tfvars ]; then
+          echo "⚠️  terraform.tfvars already exists"
+          read -p "Overwrite? (y/N): " confirm
+          if [ "$confirm" != "y" ] && [ "$confirm" != "Y" ]; then
+            echo "Cancelled"
+            exit 0
+          fi
+        fi
+        cp terraform.tfvars.example terraform.tfvars
+        echo "✅ Created tofu/terraform.tfvars from example"
+        echo "⚠️  Please edit this file and fill in all values"
+        echo ""
+        echo "Run these tasks to help:"
+        echo "  task generate-api-key    # Generate API key"
+        echo "  task firebase-setup      # Setup Firebase"
+        echo "  task apple-info          # Apple setup instructions"
+
+  tofu-init:
+    desc: Initialize OpenTofu
+    dir: tofu
+    cmds:
+      - tofu init
+    sources:
+      - "*.tf"
+    status:
+      - test -d .terraform
+
+  tofu-plan:
+    desc: Plan OpenTofu deployment
+    dir: tofu
+    deps: [tofu-init]
+    cmds:
+      - tofu plan
+    preconditions:
+      - sh: test -f terraform.tfvars
+        msg: "terraform.tfvars not found. Run 'task create-tfvars' first."
+
+  tofu-apply:
+    desc: Apply OpenTofu deployment
+    dir: tofu
+    deps: [tofu-init]
+    cmds:
+      - tofu apply
+    preconditions:
+      - sh: test -f terraform.tfvars
+        msg: "terraform.tfvars not found. Run 'task create-tfvars' first."
+
+  tofu-destroy:
+    desc: Destroy OpenTofu infrastructure
+    dir: tofu
+    cmds:
+      - tofu destroy
+    preconditions:
+      - sh: test -f terraform.tfvars
+        msg: "terraform.tfvars not found."
+
+  tofu-output:
+    desc: Show OpenTofu outputs
+    dir: tofu
+    cmds:
+      - tofu output
+
+  update-notification-config:
+    desc: Update NotificationConfig.cs with Tofu outputs
+    dir: tofu
+    cmds:
+      - |
+        echo "Extracting Tofu outputs..."
+        API_ENDPOINT=$(tofu output -raw api_endpoint 2>/dev/null || echo "")
+        
+        if [ -z "$API_ENDPOINT" ]; then
+          echo "❌ Could not get API endpoint. Run 'task tofu-apply' first."
+          exit 1
+        fi
+        
+        echo "✅ API Endpoint: $API_ENDPOINT"
+        echo ""
+        echo "Update MindBodyDictionaryMobile/NotificationConfig.cs:"
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        echo "public const string BackendServiceEndpoint = \"$API_ENDPOINT\";"
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+  build-android:
+    desc: Build Android app
+    dir: MindBodyDictionaryMobile
+    cmds:
+      - dotnet build -f net10.0-android
+
+  build-ios:
+    desc: Build iOS app
+    dir: MindBodyDictionaryMobile
+    cmds:
+      - dotnet build -f net10.0-ios
+
+  build:
+    desc: Build all platforms
+    cmds:
+      - task: build-android
+
+  setup-complete:
+    desc: Complete end-to-end setup
+    cmds:
+      - echo "🚀 Starting complete push notifications setup..."
+      - echo ""
+      - task: check-prereqs
+      - task: firebase-setup
+      - task: apple-info
+      - task: generate-api-key
+      - task: create-tfvars
+      - echo ""
+      - echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+      - echo "✅ Automated setup complete!"
+      - echo ""
+      - echo "Next manual steps{{":"}}
+      - echo "1. Complete Apple Developer Portal setup (see output above)"
+      - echo "2. Edit tofu/terraform.tfvars with all credentials"
+      - echo "3. Run{{":"}} task tofu-apply"
+      - echo "4. Run{{":"}} task update-notification-config"
+      - echo "5. Deploy backend API to Azure App Service"
+      - echo "6. Run{{":"}} task build"
+      - echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+  clean:
+    desc: Clean build artifacts
+    cmds:
+      - rm -rf MindBodyDictionaryMobile/bin MindBodyDictionaryMobile/obj
+      - rm -rf tofu/.terraform tofu/.terraform.lock.hcl
+      - echo "✅ Cleaned build artifacts"
+
+  test-notification:
+    desc: Open Azure Portal to test notifications
+    dir: tofu
+    cmds:
+      - |
+        RG_NAME=$(tofu output -raw resource_group_name 2>/dev/null || echo "")
+        NH_NAME=$(tofu output -raw notification_hub_name 2>/dev/null || echo "")
+        
+        if [ -z "$RG_NAME" ] || [ -z "$NH_NAME" ]; then
+          echo "❌ Could not get resource details. Run 'task tofu-apply' first."
+          exit 1
+        fi
+        
+        echo "Opening Azure Portal to test notifications..."
+        echo "Navigate to: Notification Hub → Test Send"
+        open "https://portal.azure.com/#@/resource/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/$RG_NAME/providers/Microsoft.NotificationHubs/namespaces/nhn-mindbody/notificationHubs/$NH_NAME/testSend" || true
