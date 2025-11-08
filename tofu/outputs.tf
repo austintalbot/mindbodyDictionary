@@ -19,12 +19,13 @@ output "notification_hub_connection_string" {
   sensitive   = true
 }
 
-output "api_endpoint" {
-  description = "API endpoint URL"
-  value       = "https://${azurerm_linux_web_app.api.default_hostname}"
-}
-
-output "api_app_name" {
-  description = "Name of the API app service"
-  value       = azurerm_linux_web_app.api.name
-}
+# Commented out - App Service not deployed due to quota
+# output "api_endpoint" {
+#   description = "API endpoint URL"
+#   value       = "https://${azurerm_linux_web_app.api.default_hostname}"
+# }
+# 
+# output "api_app_name" {
+#   description = "Name of the API app service"
+#   value       = azurerm_linux_web_app.api.name
+# }

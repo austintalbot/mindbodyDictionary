@@ -38,29 +38,8 @@ variable "notification_hub_sku" {
   }
 }
 
-variable "app_service_plan_name" {
-  description = "Name of the app service plan"
-  type        = string
-  default     = "asp-mindbody-notifications"
-}
-
-variable "app_service_plan_sku" {
-  description = "SKU for the app service plan"
-  type        = string
-  default     = "F1"
-}
-
-variable "api_app_name" {
-  description = "Name of the API app service"
-  type        = string
-  default     = "api-mindbody-notifications"
-}
-
-variable "api_key" {
-  description = "API key for authentication"
-  type        = string
-  sensitive   = true
-}
+# Backend API variables removed - using direct client-to-hub communication
+# See: https://github.com/dotnet/maui-samples/tree/main/10.0/WebServices/PushNotificationsDemo
 
 variable "apns_application_mode" {
   description = "APNS application mode (Production or Sandbox)"
