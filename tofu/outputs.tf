@@ -15,12 +15,12 @@ output "notification_hub_namespace" {
 
 output "notification_hub_connection_string" {
   description = "Connection string for the notification hub"
-  value       = azurerm_notification_hub.main.default_access_policy[0].primary_connection_string
+  value       = azurerm_notification_hub_authorization_rule.api_access.primary_connection_string
   sensitive   = true
 }
 
-output "api_app_url" {
-  description = "URL of the API app service"
+output "api_endpoint" {
+  description = "API endpoint URL"
   value       = "https://${azurerm_linux_web_app.api.default_hostname}"
 }
 

@@ -44,6 +44,16 @@ resource "azurerm_notification_hub" "main" {
   }
 }
 
+resource "azurerm_notification_hub_authorization_rule" "api_access" {
+  name                  = "ApiAccess"
+  notification_hub_name = azurerm_notification_hub.main.name
+  namespace_name        = azurerm_notification_hub_namespace.main.name
+  resource_group_name   = azurerm_resource_group.main.name
+  manage                = true
+  send                  = true
+  listen                = true
+}
+
 resource "azurerm_service_plan" "main" {
   name                = var.app_service_plan_name
   resource_group_name = azurerm_resource_group.main.name
@@ -67,7 +77,7 @@ resource "azurerm_linux_web_app" "api" {
 
   app_settings = {
     "NotificationHub__Name"             = azurerm_notification_hub.main.name
-    "NotificationHub__ConnectionString" = azurerm_notification_hub.main.default_access_policy[0].primary_connection_string
+    "NotificationHub__ConnectionString" = azurerm_notification_hub_authorization_rule.api_access.primary_connection_string
     "Authentication__ApiKey"            = var.api_key
   }
 
