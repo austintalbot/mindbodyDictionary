@@ -114,8 +114,8 @@ public class NotificationRegistrationService : INotificationRegistrationService
 
             // Set platform-specific details
 #if ANDROID
-            installation.Platform = NotificationPlatform.Fcm;
-            _logger.LogInformation("Platform set to: FCM (Android)");
+            installation.Platform = NotificationPlatform.FcmV1;
+            _logger.LogInformation("Platform set to: FcmV1 (Android)");
 #elif IOS
             installation.Platform = NotificationPlatform.Apns;
             _logger.LogInformation("Platform set to: APNS (iOS)");
