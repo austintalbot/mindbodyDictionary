@@ -174,4 +174,46 @@ public class NotificationRegistrationService : INotificationRegistrationService
 
         await RegisterDeviceAsync(tags);
     }
+    
+    public async Task<bool> CheckRegistrationAsync(string installationId)
+    {
+        try
+        {
+            _logger.LogInformation("Checking registration status for installation: {InstallationId}", installationId);
+            
+            if (_hubClient == null)
+            {
+                _logger.LogError("NotificationHubClient is null, cannot check registration");
+                return false;
+            }
+            
+            // Try to get the installation from Azure
+            var installation = await _hubClient.GetInstallationAsync(installationId);
+            
+            if (installation != null)
+            {
+                _logger.LogInformation("✅ Installation found in Azure - Platform: {Platform}, PushChannel exists: {HasChannel}", 
+                    installation.Platform, 
+                    !string.IsNullOrEmpty(installation.PushChannel));
+                return true;
+            }
+            else
+            {
+                _logger.LogInformation("Installation not found in Azure");
+                return false;
+            }
+        }
+        catch (Exception ex)
+        {
+            // 404 Not Found is expected if not registered
+            if (ex.Message.Contains("404") || ex.Message.Contains("NotFound"))
+            {
+                _logger.LogInformation("Installation not found in Azure (404)");
+                return false;
+            }
+            
+            _logger.LogError(ex, "Error checking registration status");
+            throw;
+        }
+    }
 }
