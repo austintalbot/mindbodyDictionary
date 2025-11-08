@@ -36,12 +36,21 @@ az account set --subscription "your-subscription-id"
    - Download the .p8 file
 3. Note your Key ID, Team ID, and Bundle ID
 
-### 3. Firebase Cloud Messaging (FCM) Setup
+### 3. Firebase Cloud Messaging (FCM) v1 Setup
+
+**Important**: Google deprecated the legacy FCM API. You must use FCM v1 credentials.
 
 1. Create a Firebase project at [Firebase Console](https://console.firebase.google.com/)
 2. Add an Android app to your project
-3. Download google-services.json
-4. Get the Server Key from Project Settings > Cloud Messaging
+3. Download `google-services.json`
+4. Create a service account for FCM v1:
+   - Go to Project Settings > Service Accounts
+   - Click "Generate new private key"
+   - Download the JSON file (contains `private_key`, `client_email`, `project_id`)
+5. Extract the following from the service account JSON:
+   - `private_key`: The full private key including BEGIN/END markers
+   - `client_email`: The service account email
+   - `project_id`: Your Firebase project ID
 
 ### 4. Configure Variables
 
@@ -117,6 +126,17 @@ tofu apply
 tofu destroy
 ```
 
+## Important Notes
+
+### FCM v1 Migration
+
+This configuration uses **Firebase Cloud Messaging (FCM) v1 API** via the AzAPI provider because:
+- Google deprecated the legacy FCM API in June 2024
+- The standard `azurerm` provider doesn't yet support FCM v1 credentials natively
+- See: https://github.com/hashicorp/terraform-provider-azurerm/issues/25215
+
+The AzAPI provider allows us to use the latest Azure Notification Hub API that supports FCM v1.
+
 ## Cost Considerations
 
 - **Free Tier**: Notification Hub Free SKU supports up to 1M pushes/month
@@ -143,5 +163,6 @@ tofu destroy
 
 ### Push Notification Issues
 - Verify APNS credentials and bundle ID match
-- Check FCM server key is valid
+- Verify FCM v1 service account credentials are correct
+- Ensure Firebase Cloud Messaging API is enabled in Google Cloud Console
 - Test notification hub connection string

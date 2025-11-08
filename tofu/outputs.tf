@@ -5,7 +5,7 @@ output "resource_group_name" {
 
 output "notification_hub_name" {
   description = "Name of the notification hub"
-  value       = azurerm_notification_hub.main.name
+  value       = var.notification_hub_name
 }
 
 output "notification_hub_namespace" {

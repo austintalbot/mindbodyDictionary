@@ -67,8 +67,7 @@ tasks:
       echo "Downloading google-services.json..."
       firebase apps:sdkconfig ANDROID \
         --project={{.FIREBASE_PROJECT_ID}} \
-        --out=MindBodyDictionaryMobile/Platforms/Android/google-services.json \
-        --force
+        --out=MindBodyDictionaryMobile/Platforms/Android/google-services.json 
       echo "✅ google-services.json downloaded to MindBodyDictionaryMobile/Platforms/Android/"
 
   firebase-enable-fcm:
@@ -84,19 +83,21 @@ tasks:
       msg: "Google Cloud CLI not found. Install from: https://cloud.google.com/sdk/docs/install"
 
   firebase-get-server-key:
-    desc: Get FCM server key (requires manual steps)
+    desc: Get FCM credentials (requires manual steps)
     cmds:
     - |
-      echo "📋 To get your FCM Server Key:"
+      echo "📋 To get your FCM credentials:"
       echo "1. Go to: https://console.firebase.google.com/project/{{.FIREBASE_PROJECT_ID}}/settings/cloudmessaging"
-      echo "2. Navigate to 'Cloud Messaging' tab"
-      echo "3. If 'Cloud Messaging API (Legacy)' is disabled:"
-      echo "   - Click 'Manage API in Google Cloud Console'"
-      echo "   - Enable the Firebase Cloud Messaging API"
-      echo "   - Return to Firebase Console Cloud Messaging settings"
-      echo "4. Under 'Cloud Messaging API (Legacy)', find the 'Server key'"
-      echo "5. Copy the 'Server key'"
-      echo "6. Add to tofu/terraform.tfvars: fcm_server_key = \"YOUR_KEY_HERE\""
+      echo "2. Under 'Firebase Cloud Messaging API (V1)' - verify it shows 'Enabled'"
+      echo "3. Note your Sender ID (e.g., 533561443811)"
+      echo "4. Click 'Manage Service Accounts' to open Google Cloud Console"
+      echo "5. Create/download a service account key (JSON format)"
+      echo "6. Add to tofu/terraform.tfvars:"
+      echo "   - fcm_sender_id = \"YOUR_SENDER_ID\""
+      echo "   - fcm_service_account_key = content of service account JSON file"
+      echo ""
+      echo "Note: The legacy Server Key API was deprecated 6/20/2023 and removed 6/20/2024."
+      echo "Firebase now uses the V1 API with service account authentication."
       echo ""
       echo "Opening Firebase Console..."
       open "https://console.firebase.google.com/project/{{.FIREBASE_PROJECT_ID}}/settings/cloudmessaging" || true

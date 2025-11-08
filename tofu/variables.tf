@@ -93,8 +93,19 @@ variable "apns_token" {
   sensitive   = true
 }
 
-variable "fcm_server_key" {
-  description = "Firebase Cloud Messaging server key"
+variable "fcm_private_key" {
+  description = "Firebase Cloud Messaging v1 private key (from service account JSON)"
   type        = string
   sensitive   = true
+}
+
+variable "fcm_client_email" {
+  description = "Firebase Cloud Messaging v1 client email (from service account JSON)"
+  type        = string
+  sensitive   = true
+}
+
+variable "fcm_project_id" {
+  description = "Firebase Cloud Messaging v1 project ID"
+  type        = string
 }

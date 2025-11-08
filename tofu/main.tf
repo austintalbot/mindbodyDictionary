@@ -5,6 +5,10 @@ terraform {
       source  = "hashicorp/azurerm"
       version = ">= 4.51.0"
     }
+    azapi = {
+      source  = "Azure/azapi"
+      version = "~> 2.7"
+    }
   }
 }
 
@@ -26,33 +30,47 @@ resource "azurerm_notification_hub_namespace" "main" {
   sku_name            = var.notification_hub_sku
 }
 
-resource "azurerm_notification_hub" "main" {
-  name                = var.notification_hub_name
-  namespace_name      = azurerm_notification_hub_namespace.main.name
-  resource_group_name = azurerm_resource_group.main.name
-  location            = azurerm_resource_group.main.location
+# Using AzAPI provider to configure FCM v1 credentials
+# The standard azurerm provider doesn't yet support FCM v1 (only legacy GCM)
+# See: https://github.com/hashicorp/terraform-provider-azurerm/issues/25215
+resource "azapi_resource" "notification_hub" {
+  type      = "Microsoft.NotificationHubs/namespaces/notificationHubs@2023-10-01-preview"
+  name      = var.notification_hub_name
+  parent_id = azurerm_notification_hub_namespace.main.id
+  location  = azurerm_resource_group.main.location
 
-  apns_credential {
-    application_mode = var.apns_application_mode
-    bundle_id        = var.apns_bundle_id
-    key_id           = var.apns_key_id
-    team_id          = var.apns_team_id
-    token            = var.apns_token
-  }
-
-  gcm_credential {
-    api_key = var.fcm_server_key
-  }
+  body = jsonencode({
+    properties = {
+      apnsCredential = {
+        properties = {
+          appName = var.apns_bundle_id
+          appId   = var.apns_bundle_id
+          keyId   = var.apns_key_id
+          token   = var.apns_token
+          endpoint = var.apns_application_mode == "Production" ? "https://api.push.apple.com:443/3/device" : "https://api.development.push.apple.com:443/3/device"
+        }
+      }
+      fcmV1Credential = {
+        properties = {
+          privateKey  = var.fcm_private_key
+          clientEmail = var.fcm_client_email
+          projectId   = var.fcm_project_id
+        }
+      }
+    }
+  })
 }
 
 resource "azurerm_notification_hub_authorization_rule" "api_access" {
   name                  = "ApiAccess"
-  notification_hub_name = azurerm_notification_hub.main.name
+  notification_hub_name = var.notification_hub_name
   namespace_name        = azurerm_notification_hub_namespace.main.name
   resource_group_name   = azurerm_resource_group.main.name
   manage                = true
   send                  = true
   listen                = true
+
+  depends_on = [azapi_resource.notification_hub]
 }
 
 resource "azurerm_service_plan" "main" {
@@ -77,7 +95,7 @@ resource "azurerm_linux_web_app" "api" {
   }
 
   app_settings = {
-    "NotificationHub__Name"             = azurerm_notification_hub.main.name
+    "NotificationHub__Name"             = var.notification_hub_name
     "NotificationHub__ConnectionString" = azurerm_notification_hub_authorization_rule.api_access.primary_connection_string
     "Authentication__ApiKey"            = var.api_key
   }

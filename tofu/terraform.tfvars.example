@@ -19,4 +19,10 @@ apns_bundle_id     = "com.yourcompany.mindbodydictionary"
 apns_key_id        = "your-apns-key-id"
 apns_team_id       = "your-apple-team-id"
 apns_token         = "your-apns-p8-token-content"
-fcm_server_key     = "your-firebase-server-key"
+
+# Firebase Cloud Messaging v1 credentials
+# Get these from your Firebase project's service account JSON file
+# See: https://firebase.google.com/docs/cloud-messaging/migrate-v1
+fcm_private_key    = "-----BEGIN PRIVATE KEY-----\nYour private key here\n-----END PRIVATE KEY-----"
+fcm_client_email   = "firebase-adminsdk-xxxxx@your-project-id.iam.gserviceaccount.com"
+fcm_project_id     = "your-firebase-project-id"

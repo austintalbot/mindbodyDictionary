@@ -25,7 +25,7 @@ This document outlines the manual setup steps required before deploying the Azur
 ### 1.2 Add Android App to Firebase
 
 - [ ] In Firebase Console, click "Add app" → Select Android (robot icon)
-- [ ] Enter Android package name: `com.companyname.mindbodydictionarymobile`
+- [ ] Enter Android package name: `com.mindbodydictionary.mindbodydictionarymobile`
   - **Note:** This must match the package name in `AndroidManifest.xml`
 - [ ] Enter app nickname (optional): `MindBody Dictionary Mobile`
 - [ ] Enter debug signing certificate SHA-1 (optional for FCM)
@@ -66,7 +66,7 @@ This document outlines the manual setup steps required before deploying the Azur
 - [ ] Fill in details:
   - [ ] Description: `MindBody Dictionary Mobile`
   - [ ] Bundle ID: Select "Explicit"
-  - [ ] Bundle ID: `com.companyname.mindbodydictionarymobile`
+  - [ ] Bundle ID: `com.mindbodydictionary.mindbodydictionarymobile`
     - **Note:** Must match the bundle ID in `Info.plist`
 - [ ] Scroll to "Capabilities"
   - [ ] Check "Push Notifications"
@@ -113,7 +113,7 @@ MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQg...
 ### 3.1 Update Bundle Identifier
 
 - [ ] Open `MindBodyDictionaryMobile/Platforms/iOS/Info.plist`
-- [ ] Verify `CFBundleIdentifier` matches: `com.companyname.mindbodydictionarymobile`
+- [ ] Verify `CFBundleIdentifier` matches: `com.mindbodydictionary.mindbodydictionarymobile`
 - [ ] If different, update to match the App ID created in Task 2.1
 
 ### 3.2 Enable Push Notifications Capability
@@ -163,7 +163,7 @@ api_key = "GENERATE-SECURE-KEY-HERE"  # Generate with: openssl rand -base64 32
 
 # Apple Push Notification Service
 apns_application_mode = "Sandbox"  # Use "Production" for release builds
-apns_bundle_id        = "com.companyname.mindbodydictionarymobile"
+apns_bundle_id        = "com.mindbodydictionary.mindbodydictionarymobile"
 apns_key_id           = "ABC123XYZ"  # From Task 2.3
 apns_team_id          = "TEAM123456"  # From Task 2.3
 apns_token            = <<-EOT
