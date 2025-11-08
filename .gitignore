@@ -368,3 +368,5 @@ FodyWeavers.xsd
 .shadowgit.git
 .shadowgit.git
 
+mindbodyDictionary/google-cloud-sdk/
+google-cloud-sdk/
