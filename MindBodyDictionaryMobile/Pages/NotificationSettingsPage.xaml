@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:MindBodyDictionaryMobile.PageModels"
+             x:Class="MindBodyDictionaryMobile.Pages.NotificationSettingsPage"
+             x:DataType="vm:NotificationSettingsPageModel"
+             Title="Notification Settings">
+    
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+            
+            <!-- Header -->
+            <Label Text="Push Notifications"
+                   FontSize="24"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center" />
+
+            <!-- Support Status -->
+            <Border StrokeThickness="1"
+                    Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}"
+                    Padding="15"
+                    StrokeShape="RoundRectangle 10">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Device Status"
+                           FontSize="16"
+                           FontAttributes="Bold" />
+                    <Label Text="{Binding StatusMessage}"
+                           FontSize="14" />
+                    <Label Text="{Binding LastActionReceived, StringFormat='Last Action: {0}'}"
+                           FontSize="12"
+                           IsVisible="{Binding LastActionReceived, Converter={StaticResource IsNotNullOrEmptyConverter}}"
+                           TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Registration Status -->
+            <Border StrokeThickness="1"
+                    Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}"
+                    Padding="15"
+                    StrokeShape="RoundRectangle 10">
+                <HorizontalStackLayout Spacing="10">
+                    <Label Text="Registration Status:"
+                           FontSize="14"
+                           VerticalOptions="Center" />
+                    <Label Text="{Binding IsRegistered, Converter={StaticResource BoolToRegisteredTextConverter}}"
+                           FontSize="14"
+                           FontAttributes="Bold"
+                           TextColor="{Binding IsRegistered, Converter={StaticResource BoolToColorConverter}}"
+                           VerticalOptions="Center" />
+                </HorizontalStackLayout>
+            </Border>
+
+            <!-- Action Buttons -->
+            <VerticalStackLayout Spacing="15">
+                <Button Text="Register for Notifications"
+                        Command="{Binding RegisterDeviceCommand}"
+                        IsEnabled="{Binding NotificationsSupported}"
+                        BackgroundColor="{StaticResource Primary}"
+                        TextColor="White"
+                        HeightRequest="50"
+                        CornerRadius="10" />
+
+                <Button Text="Deregister from Notifications"
+                        Command="{Binding DeregisterDeviceCommand}"
+                        IsEnabled="{Binding IsRegistered}"
+                        BackgroundColor="{StaticResource Secondary}"
+                        TextColor="White"
+                        HeightRequest="50"
+                        CornerRadius="10" />
+            </VerticalStackLayout>
+
+            <!-- Information -->
+            <Border StrokeThickness="1"
+                    Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}"
+                    Padding="15"
+                    StrokeShape="RoundRectangle 10">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="About Push Notifications"
+                           FontSize="16"
+                           FontAttributes="Bold" />
+                    <Label FontSize="12"
+                           LineBreakMode="WordWrap">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="• Receive updates about your projects and tasks" />
+                                <Span Text="&#x0a;• Get reminders for important deadlines" />
+                                <Span Text="&#x0a;• Stay informed even when the app is closed" />
+                                <Span Text="&#x0a;&#x0a;" />
+                                <Span Text="Note: " FontAttributes="Bold" />
+                                <Span Text="You can manage notification permissions in your device settings." />
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Loading Indicator -->
+            <ActivityIndicator IsRunning="{Binding IsRegistering}"
+                              IsVisible="{Binding IsRegistering}"
+                              Color="{StaticResource Primary}"
+                              HeightRequest="40" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+    
+</ContentPage>

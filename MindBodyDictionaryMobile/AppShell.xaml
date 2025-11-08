@@ -26,6 +26,11 @@
         ContentTemplate="{DataTemplate pages:ManageMetaPage}"
         Route="manage" />
 
+    <ShellContent
+        Title="Notifications"
+        ContentTemplate="{DataTemplate pages:NotificationSettingsPage}"
+        Route="notifications" />
+
     <Shell.FlyoutFooter>
         <Grid Padding="15">
             <sf:SfSegmentedControl x:Name="ThemeSegmentedControl" 
