@@ -13,9 +13,12 @@ This directory contains OpenTofu configuration for deploying the Azure infrastru
 ## Infrastructure Components
 
 - **Azure Notification Hub Namespace**: Container for notification hubs
-- **Azure Notification Hub**: Manages push notification distribution
-- **Azure App Service Plan**: Hosts the backend API
-- **Azure Linux Web App**: Backend API service for push notifications
+- **Azure Notification Hub**: Manages push notification distribution to iOS and Android devices
+
+This configuration uses **direct client-to-hub communication** following the MAUI sample pattern:
+https://github.com/dotnet/maui-samples/tree/main/10.0/WebServices/PushNotificationsDemo
+
+No backend API is required - the mobile app communicates directly with Azure Notification Hubs.
 
 ## Setup Instructions
 
@@ -81,24 +84,24 @@ tofu apply
 After deployment, get the connection details:
 
 ```bash
-# Get the API URL
-tofu output api_app_url
-
-# Get the notification hub connection string (sensitive)
+# Get the notification hub connection string
 tofu output -raw notification_hub_connection_string
+
+# Get resource names
+tofu output notification_hub_name
+tofu output notification_hub_namespace
 ```
 
 ## Post-Deployment Configuration
 
 ### Update Mobile App Configuration
 
-1. Copy the API URL from outputs
-2. Update `MindBodyDictionaryMobile/Config.cs`:
-   ```csharp
-   public static string BackendServiceEndpoint = "https://your-api-url";
-   public static string ApiKey = "your-api-key";
-   ```
-
+1. Copy the Notification Hub connection string from outputs
+2. Configure your .NET MAUI app with:
+   - Hub Name: `nh-mindbody`
+   - Namespace: `nhn-mindbody`
+   - Connection String: (from output above)
+   
 3. Add `google-services.json` to `Platforms/Android/` folder
 4. Update `ApplicationId` in the .csproj file to match your bundle ID
 
@@ -139,9 +142,8 @@ The AzAPI provider allows us to use the latest Azure Notification Hub API that s
 
 ## Cost Considerations
 
-- **Free Tier**: Notification Hub Free SKU supports up to 1M pushes/month
-- **App Service**: B1 tier costs ~$13/month
-- Consider upgrading SKUs for production workloads
+- **Free Tier**: Notification Hub Free SKU supports up to 1M pushes/month and 500 active devices
+- No additional costs for this configuration (no App Service)
 
 ## Security Notes
 

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Push Notifications Entitlement -->
+	<key>aps-environment</key>
+	<string>development</string>
+	
+	<!-- NOTE: This file is named Entitlements.plist.txt to allow the project to build 
+	     without requiring a valid provisioning profile during development.
+	     
+	     To enable iOS push notifications for deployment:
+	     1. Rename this file to Entitlements.plist
+	     2. Configure proper iOS code signing in the project properties
+	     3. Ensure you have a valid provisioning profile with push notification capability
+	     4. For production, change aps-environment to "production"
+	-->
+</dict>
+</plist>
