@@ -7,6 +7,8 @@ vars:
   FIREBASE_PROJECT_ID: '{{.FIREBASE_PROJECT_ID | default "mindbody-dictionary"}}'
   APPLE_TEAM_ID: '{{.APPLE_TEAM_ID}}'
   APNS_KEY_NAME: MindBodyDictionaryAPNsKey
+  XCODE_XIP_URL: 'REPLACE_WITH_ACTUAL_URL_FROM_DEVELOPER_APPLE_COM'
+  XCODE_XIP_FILENAME: 'Xcode_26.0.1_Apple_silicon.xip'
 
 dotenv: [ '.env' ]
 
@@ -304,19 +306,49 @@ tasks:
     - rm -rf tofu/.terraform tofu/.terraform.lock.hcl
     - echo "✅ Cleaned build artifacts"
 
-  test-notification:
-    desc: Open Azure Portal to test notifications
-    dir: tofu
+  install-xcode:
+    desc: Install Xcode 26.0 using .xip download
     cmds:
     - |
-      RG_NAME=$(tofu output -raw resource_group_name 2>/dev/null || echo "")
-      NH_NAME=$(tofu output -raw notification_hub_name 2>/dev/null || echo "")
-
-      if [ -z "$RG_NAME" ] || [ -z "$NH_NAME" ]; then
-        echo "❌ Could not get resource details. Run 'task tofu-apply' first."
+      echo "Checking for Xcode .xip file..."
+      if [ -f {{.XCODE_XIP_FILENAME}} ]; then
+        echo "Existing .xip file found, skipping download."
+      fi
+      if [ ! -f {{.XCODE_XIP_FILENAME}} ]; then
+        if [ "{{.XCODE_XIP_URL}}" = "REPLACE_WITH_ACTUAL_URL_FROM_DEVELOPER_APPLE_COM" ]; then
+          echo "Error: XCODE_XIP_URL is not set to a valid URL. Please update it in Taskfile.yml with the download URL from https://developer.apple.com/download/all/?q=Xcode"
+          echo "Alternatively, download {{.XCODE_XIP_FILENAME}} manually and place it in the current directory, then run this task again."
+          exit 1
+        fi
+        echo "Downloading Xcode 26.0 .xip..."
+        curl -f -O {{.XCODE_XIP_URL}}
+        if [ ! -f {{.XCODE_XIP_FILENAME}} ] || [ ! -s {{.XCODE_XIP_FILENAME}} ]; then
+          echo "Download failed or file is empty."
+          exit 1
+        fi
+        echo "Download complete. File size: $(ls -lh {{.XCODE_XIP_FILENAME}} | awk '{print $5}')"
+      fi
+      if [ -f {{.XCODE_XIP_FILENAME}} ]; then
+        if [ -d Xcode.app ]; then
+          echo "Xcode.app already extracted, skipping extraction."
+        else
+          echo "Extracting Xcode..."
+          xip -x {{.XCODE_XIP_FILENAME}}
+        fi
+        echo "Moving Xcode to Applications..."
+        sudo mv Xcode.app /Applications/Xcode_26.0.1.app
+        echo "Setting Xcode 26.0.1 as the active developer directory..."
+        sudo xcode-select -s /Applications/Xcode_26.0.1.app/Contents/Developer
+        echo "Installing command line tools..."
+        xcode-select --install
+        echo "Verifying installation..."
+        xcodebuild -version
+      else
+        echo "No Xcode .xip file available. Installation aborted."
         exit 1
       fi
 
-      echo "Opening Azure Portal to test notifications..."
-      echo "Navigate to: Notification Hub → Test Send"
-      open "https://portal.azure.com/#@/resource/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/$RG_NAME/providers/Microsoft.NotificationHubs/namespaces/nhn-mindbody/notificationHubs/$NH_NAME/testSend" || true
+  run-ios:
+    desc: Run the iOS app on iPhone 17 Pro simulator
+    cmds:
+    - dotnet build -f net10.0-ios -c debug -t:run -p:_DeviceName=:v2:udid=A4A1F78D-4814-4500-A2F3-928F35CF37BC
