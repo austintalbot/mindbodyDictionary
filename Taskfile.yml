@@ -271,7 +271,7 @@ tasks:
     desc: Clean and build iOS and Android (Debug)
     cmds:
     - task: clean
-    - dotnet build -c debug
+    - dotnet build -c Debug
 
   setup-complete:
     desc: Complete end-to-end setup
