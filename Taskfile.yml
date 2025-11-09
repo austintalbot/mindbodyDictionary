@@ -322,7 +322,6 @@ tasks:
           exit 1
         fi
         curl -fS -O {{.XCODE_XIP_URL}}
-        curl -f -O {{.XCODE_XIP_URL}}
         if [ ! -f {{.XCODE_XIP_FILENAME}} ] || [ ! -s {{.XCODE_XIP_FILENAME}} ]; then
           echo "Download failed or file is empty."
           exit 1
@@ -334,15 +333,20 @@ tasks:
           echo "Xcode.app already extracted, skipping extraction."
         else
           echo "Extracting Xcode..."
+          echo "This may take 30+ minutes for large Xcode archives. Please wait..."
           xip -x {{.XCODE_XIP_FILENAME}}
         fi
         echo "Moving Xcode to Applications..."
+        echo "Moving Xcode to Applications..."
+        if [ -d /Applications/Xcode_{{.XCODE_VERSION}}.app ]; then
+          echo "Removing existing /Applications/Xcode_{{.XCODE_VERSION}}.app..."
+          sudo rm -rf /Applications/Xcode_{{.XCODE_VERSION}}.app
+        fi
         sudo mv Xcode.app /Applications/Xcode_{{.XCODE_VERSION}}.app
         echo "Setting Xcode {{.XCODE_VERSION}} as the active developer directory..."
         sudo xcode-select -s /Applications/Xcode_{{.XCODE_VERSION}}.app/Contents/Developer
         echo "Verifying installation..."
         xcodebuild -version
-      else
         echo "No Xcode .xip file available. Installation aborted."
         exit 1
       fi
