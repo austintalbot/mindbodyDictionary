@@ -13,20 +13,23 @@
             <Label Text="Push Notifications"
                    FontSize="24"
                    FontAttributes="Bold"
-                   HorizontalOptions="Center" />
+                   HorizontalOptions="Center"
+                   TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}" />
 
             <!-- Support Status -->
             <Border StrokeThickness="1"
                     Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}"
-                    BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource LightSecondaryBackground}, Dark={StaticResource DarkSecondaryBackground}}"
                     Padding="15"
                     StrokeShape="RoundRectangle 10">
                 <VerticalStackLayout Spacing="10">
                     <Label Text="Device Status"
                            FontSize="16"
-                           FontAttributes="Bold" />
+                           FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}" />
                     <Label Text="{Binding StatusMessage}"
-                           FontSize="14" />
+                           FontSize="14"
+                           TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}" />
                     <Label Text="{Binding LastActionReceived, StringFormat='Last Action: {0}'}"
                            FontSize="12"
                            IsVisible="{Binding LastActionReceived, Converter={StaticResource IsNotNullOrEmptyConverter}}"
@@ -37,12 +40,13 @@
             <!-- Registration Status -->
             <Border StrokeThickness="1"
                     Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}"
-                    BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource LightSecondaryBackground}, Dark={StaticResource DarkSecondaryBackground}}"
                     Padding="15"
                     StrokeShape="RoundRectangle 10">
                 <HorizontalStackLayout Spacing="10">
                     <Label Text="Registration Status:"
                            FontSize="14"
+                           TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"
                            VerticalOptions="Center" />
                     <Label Text="{Binding IsRegistered, Converter={StaticResource BoolToRegisteredTextConverter}}"
                            FontSize="14"
@@ -57,16 +61,16 @@
                 <Button Text="Register for Notifications"
                         Command="{Binding RegisterDeviceCommand}"
                         IsEnabled="{Binding NotificationsSupported}"
-                        BackgroundColor="{StaticResource Primary}"
-                        TextColor="White"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
+                        TextColor="{AppThemeBinding Light=White, Dark={StaticResource PrimaryDarkText}}"
                         HeightRequest="50"
                         CornerRadius="10" />
 
                 <Button Text="Deregister from Notifications"
                         Command="{Binding DeregisterDeviceCommand}"
                         IsEnabled="{Binding IsRegistered}"
-                        BackgroundColor="{StaticResource Secondary}"
-                        TextColor="White"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource Secondary}, Dark={StaticResource Tertiary}}"
+                        TextColor="{AppThemeBinding Light={StaticResource SecondaryDarkText}, Dark=White}"
                         HeightRequest="50"
                         CornerRadius="10" />
             </VerticalStackLayout>
@@ -74,15 +78,17 @@
             <!-- Information -->
             <Border StrokeThickness="1"
                     Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}"
-                    BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource LightSecondaryBackground}, Dark={StaticResource DarkSecondaryBackground}}"
                     Padding="15"
                     StrokeShape="RoundRectangle 10">
                 <VerticalStackLayout Spacing="10">
                     <Label Text="About Push Notifications"
                            FontSize="16"
-                           FontAttributes="Bold" />
+                           FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}" />
                     <Label FontSize="12"
-                           LineBreakMode="WordWrap">
+                           LineBreakMode="WordWrap"
+                           TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}">
                         <Label.FormattedText>
                             <FormattedString>
                                 <Span Text="• Receive updates about your projects and tasks" />
@@ -100,7 +106,7 @@
             <!-- Loading Indicator -->
             <ActivityIndicator IsRunning="{Binding IsRegistering}"
                               IsVisible="{Binding IsRegistering}"
-                              Color="{StaticResource Primary}"
+                              Color="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
                               HeightRequest="40" />
 
         </VerticalStackLayout>
