@@ -95,25 +95,39 @@ public class PushNotificationFirebaseMessagingService : FirebaseMessagingService
             intent.PutExtra("notification_title", title);
             intent.PutExtra("notification_body", body);
             
-            var pendingIntent = global::Android.App.PendingIntent.GetActivity(
-                this, 
-                new Random().Next(), // Use random ID for multiple notifications
-                intent, 
-                global::Android.App.PendingIntentFlags.UpdateCurrent | global::Android.App.PendingIntentFlags.Immutable);
+            var pendingFlags = global::Android.App.PendingIntentFlags.UpdateCurrent;
+            if (global::Android.OS.Build.VERSION.SdkInt >= global::Android.OS.BuildVersionCodes.M)
+                pendingFlags |= global::Android.App.PendingIntentFlags.Immutable;
 
-            var notificationBuilder = new Notification.Builder(this, MainActivity.CHANNEL_ID)
-                .SetSmallIcon(Resource.Mipmap.appicon)
+            var pendingIntent = global::Android.App.PendingIntent.GetActivity(
+                this,
+                new Random().Next(),
+                intent,
+                pendingFlags);
+
+            Notification.Builder notificationBuilder;
+            if (global::Android.OS.Build.VERSION.SdkInt >= global::Android.OS.BuildVersionCodes.O)
+            {
+                notificationBuilder = new Notification.Builder(this, MainActivity.CHANNEL_ID);
+            }
+            else
+            {
+                notificationBuilder = new Notification.Builder(this);
+            }
+
+            notificationBuilder
+                .SetSmallIcon(ApplicationInfo.Icon)
                 .SetContentTitle(title)
                 .SetContentText(body)
                 .SetAutoCancel(true)
-                .SetPriority((int)NotificationPriority.High)
-                .SetDefaults(NotificationDefaults.All)
                 .SetContentIntent(pendingIntent);
 
-            // For Android 8.0+, ensure we're using the channel
-            if (global::Android.OS.Build.VERSION.SdkInt >= global::Android.OS.BuildVersionCodes.O)
+            // Only set priority/defaults on pre-O devices (methods obsolete / ignored on O+)
+            if (global::Android.OS.Build.VERSION.SdkInt < global::Android.OS.BuildVersionCodes.O)
             {
-                notificationBuilder.SetChannelId(MainActivity.CHANNEL_ID);
+                notificationBuilder
+                    .SetPriority((int)NotificationPriority.High)
+                    .SetDefaults(NotificationDefaults.All);
             }
 
             var notification = notificationBuilder.Build();

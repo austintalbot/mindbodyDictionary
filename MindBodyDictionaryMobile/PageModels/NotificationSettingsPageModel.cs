@@ -10,7 +10,7 @@ public partial class NotificationSettingsPageModel : ObservableObject
 {
     readonly INotificationRegistrationService _notificationRegistrationService;
     readonly INotificationActionServiceExtended _notificationActionService;
-    readonly IDeviceInstallationService _deviceInstallationService;
+    readonly IDeviceInstallationService _deviceInstallationService = null!; // assigned via constructor
     readonly ILogger<NotificationSettingsPageModel> _logger;
 
     [ObservableProperty]
@@ -23,13 +23,13 @@ public partial class NotificationSettingsPageModel : ObservableObject
     bool notificationsSupported;
 
     [ObservableProperty]
-    string statusMessage;
+    string statusMessage = string.Empty;
 
     [ObservableProperty]
-    string lastActionReceived;
+    string lastActionReceived = string.Empty;
     
     [ObservableProperty]
-    string debugInfo;
+    string debugInfo = string.Empty;
 
     public NotificationSettingsPageModel(
         INotificationRegistrationService notificationRegistrationService,
@@ -278,7 +278,7 @@ public partial class NotificationSettingsPageModel : ObservableObject
         }
     }
 
-    void OnNotificationActionTriggered(object sender, NotificationAction action)
+    void OnNotificationActionTriggered(object? sender, NotificationAction action)
     {
         LastActionReceived = $"{action} - {DateTime.Now:HH:mm:ss}";
         StatusMessage = $"Notification received: {action}";

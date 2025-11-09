@@ -31,10 +31,10 @@ public partial class NotificationSettingsPage : ContentPage
         var debugBorder = new Border
         {
             StrokeThickness = 1,
-            Stroke = Application.Current.RequestedTheme == AppTheme.Dark 
+            Stroke = (Application.Current?.RequestedTheme == AppTheme.Dark) 
                 ? Color.FromArgb("#4A4A4A") 
                 : Color.FromArgb("#E0E0E0"),
-            BackgroundColor = Application.Current.RequestedTheme == AppTheme.Dark 
+            BackgroundColor = (Application.Current?.RequestedTheme == AppTheme.Dark) 
                 ? Color.FromArgb("#1A1A1A") 
                 : Color.FromArgb("#F5F5F5"),
             Padding = 15,

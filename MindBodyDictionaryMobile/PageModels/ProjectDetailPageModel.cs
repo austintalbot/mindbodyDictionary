@@ -137,7 +137,7 @@ public partial class ProjectDetailPageModel : ObservableObject, IQueryAttributab
 			Description = _project.Description;
 			Tasks = _project.Tasks;
 
-			Icon.Icon = _project.Icon;
+			Icon = Icons.FirstOrDefault(i => i.Icon == _project.Icon) ?? Icons.First();
 
 			Categories = await _categoryRepository.ListAsync();
 			Category = Categories?.FirstOrDefault(c => c.ID == _project.CategoryID);
@@ -277,6 +277,7 @@ public partial class ProjectDetailPageModel : ObservableObject, IQueryAttributab
 	[RelayCommand]
 	private void IconSelected(IconData icon)
 	{
+		Icon = icon;
 		SemanticScreenReader.Announce($"{icon.Description} selected");
 	}
 
