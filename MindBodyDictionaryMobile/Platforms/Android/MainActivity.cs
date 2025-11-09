@@ -26,7 +26,7 @@ public class MainActivity : MauiAppCompatActivity
         
         if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
         {
-            var importance = Build.VERSION.SdkInt >= BuildVersionCodes.N ? NotificationImportance.High : NotificationImportance.Default;
+            var importance = NotificationImportance.High;
             var channel = new NotificationChannel(
                 CHANNEL_ID,
                 "MindBody Notifications",

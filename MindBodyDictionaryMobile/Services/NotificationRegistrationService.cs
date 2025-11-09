@@ -1,6 +1,5 @@
 using System.Text.Json;
 using MindBodyDictionaryMobile.Models;
-using System.Linq;
 using Microsoft.Azure.NotificationHubs;
 using Microsoft.Extensions.Logging;
 

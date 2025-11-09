@@ -10,7 +10,7 @@ public partial class NotificationSettingsPageModel : ObservableObject
 {
     readonly INotificationRegistrationService _notificationRegistrationService;
     readonly INotificationActionServiceExtended _notificationActionService;
-    readonly IDeviceInstallationService _deviceInstallationService = null!; // injected via DI
+    readonly IDeviceInstallationService _deviceInstallationService = null!; // assigned via constructor
     readonly ILogger<NotificationSettingsPageModel> _logger;
 
     [ObservableProperty]
