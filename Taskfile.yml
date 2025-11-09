@@ -260,22 +260,18 @@ tasks:
       echo "public const string BackendServiceEndpoint = \"$API_ENDPOINT\";"
       echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
-  build-android:
-    desc: Build Android app
+  run-android:
+    desc: Clean and run Android app (Debug)
     dir: MindBodyDictionaryMobile
     cmds:
-    - dotnet build -f net10.0-android
+    - task: build-debug
+    - dotnet build -f net10.0-android -c Debug -t:run
 
-  build-ios:
-    desc: Build iOS app
-    dir: MindBodyDictionaryMobile
+  build-debug:
+    desc: Clean and build iOS and Android (Debug)
     cmds:
-    - dotnet build -f net10.0-ios
-
-  build:
-    desc: Build all platforms
-    cmds:
-    - task: build-android
+    - task: clean
+    - dotnet build -c debug
 
   setup-complete:
     desc: Complete end-to-end setup
@@ -301,8 +297,10 @@ tasks:
     - echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
   clean:
-    desc: Clean build artifacts
+    desc: Clean build artifacts (dotnet clean + rm)
+    silent: true
     cmds:
+    - dotnet clean MindBodyDictionaryMobile/MindBodyDictionaryMobile.csproj || true
     - rm -rf MindBodyDictionaryMobile/bin MindBodyDictionaryMobile/obj
     - rm -rf tofu/.terraform tofu/.terraform.lock.hcl
     - echo "✅ Cleaned build artifacts"
