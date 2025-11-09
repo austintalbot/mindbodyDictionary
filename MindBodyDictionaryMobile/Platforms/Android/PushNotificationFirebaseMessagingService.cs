@@ -101,7 +101,7 @@ public class PushNotificationFirebaseMessagingService : FirebaseMessagingService
 
             var pendingIntent = global::Android.App.PendingIntent.GetActivity(
                 this,
-                new Random().Next(), // Use random ID for multiple notifications
+                new Random().Next(),
                 intent,
                 pendingFlags);
 
@@ -116,7 +116,7 @@ public class PushNotificationFirebaseMessagingService : FirebaseMessagingService
             }
 
             notificationBuilder
-                .SetSmallIcon(Resource.Mipmap.appicon)
+                .SetSmallIcon(ApplicationInfo.Icon)
                 .SetContentTitle(title)
                 .SetContentText(body)
                 .SetAutoCancel(true)

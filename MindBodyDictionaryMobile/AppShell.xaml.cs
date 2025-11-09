@@ -32,14 +32,19 @@ public partial class AppShell : Shell
 
 	public static async Task DisplayToastAsync(string message)
 	{
-		// Toast is currently not working in MCT on Windows
-		if (OperatingSystem.IsWindows())
-			return;
+		// On Android, use Snackbar to display with visibility
+		// Toast doesn't support icons on Android
+		var snackbarOptions = new SnackbarOptions
+		{
+			BackgroundColor = Color.FromArgb("#4CAF50"),
+			TextColor = Colors.White,
+			CornerRadius = new CornerRadius(8),
+			Font = Font.SystemFontOfSize(16)
+		};
 
-		var toast = Toast.Make(message, textSize: 18);
-
-		var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
-		await toast.Show(cts.Token);
+		var snackbar = Snackbar.Make(message, visualOptions: snackbarOptions);
+		var cts = new CancellationTokenSource(TimeSpan.FromSeconds(3));
+		await snackbar.Show(cts.Token);
 	}
 
 	private void SfSegmentedControl_SelectionChanged(object sender, Syncfusion.Maui.Toolkit.SegmentedControl.SelectionChangedEventArgs e)
