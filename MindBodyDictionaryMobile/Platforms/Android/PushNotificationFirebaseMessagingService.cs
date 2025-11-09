@@ -102,7 +102,7 @@ public class PushNotificationFirebaseMessagingService : FirebaseMessagingService
                 global::Android.App.PendingIntentFlags.UpdateCurrent | global::Android.App.PendingIntentFlags.Immutable);
 
             var notificationBuilder = new Notification.Builder(this, MainActivity.CHANNEL_ID)
-                .SetSmallIcon(Resource.Mipmap.appicon)
+                .SetSmallIcon(ApplicationInfo.Icon)
                 .SetContentTitle(title)
                 .SetContentText(body)
                 .SetAutoCancel(true)
