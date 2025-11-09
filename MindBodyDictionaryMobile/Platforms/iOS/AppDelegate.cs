@@ -34,9 +34,13 @@ public class AppDelegate : MauiUIApplicationDelegate
 		var token = BitConverter.ToString(deviceToken.ToArray()).Replace("-", "").ToLower();
 		// Set the token in the service
 		var service = IPlatformApplication.Current.Services.GetService<Platforms.iOS.DeviceInstallationService>();
-		if (service != null)
+		if (service is not null)
 		{
 			service.Token = token;
+		}
+		else
+		{
+			System.Diagnostics.Debug.WriteLine("Warning: DeviceInstallationService not found. Device token will not be registered, and push notifications may not work.");
 		}
 	}
 

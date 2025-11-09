@@ -7,8 +7,9 @@ vars:
   FIREBASE_PROJECT_ID: '{{.FIREBASE_PROJECT_ID | default "mindbody-dictionary"}}'
   APPLE_TEAM_ID: '{{.APPLE_TEAM_ID}}'
   APNS_KEY_NAME: MindBodyDictionaryAPNsKey
+  XCODE_VERSION: '26.0.1'
   XCODE_XIP_URL: 'REPLACE_WITH_ACTUAL_URL_FROM_DEVELOPER_APPLE_COM'
-  XCODE_XIP_FILENAME: 'Xcode_26.0.1_Apple_silicon.xip'
+  XCODE_XIP_FILENAME: 'Xcode_{{.XCODE_VERSION}}_Apple_silicon.xip'
 
 dotenv: [ '.env' ]
 
@@ -316,11 +317,11 @@ tasks:
       fi
       if [ ! -f {{.XCODE_XIP_FILENAME}} ]; then
         if [ "{{.XCODE_XIP_URL}}" = "REPLACE_WITH_ACTUAL_URL_FROM_DEVELOPER_APPLE_COM" ]; then
-          echo "Error: XCODE_XIP_URL is not set to a valid URL. Please update it in Taskfile.yml with the download URL from https://developer.apple.com/download/all/?q=Xcode"
-          echo "Alternatively, download {{.XCODE_XIP_FILENAME}} manually and place it in the current directory, then run this task again."
+          echo "Error: XCODE_XIP_URL must be set before first use. This is a one-time setup for Xcode 26.0.1. Please update Taskfile.yml with the download URL from https://developer.apple.com/download/all/?q=Xcode"
+          echo "Alternatively, download {{.XCODE_XIP_FILENAME}} (Xcode 26.0.1) manually and place it in the current directory, then run this task again."
           exit 1
         fi
-        echo "Downloading Xcode 26.0 .xip..."
+        curl -fS -O {{.XCODE_XIP_URL}}
         curl -f -O {{.XCODE_XIP_URL}}
         if [ ! -f {{.XCODE_XIP_FILENAME}} ] || [ ! -s {{.XCODE_XIP_FILENAME}} ]; then
           echo "Download failed or file is empty."
@@ -336,11 +337,9 @@ tasks:
           xip -x {{.XCODE_XIP_FILENAME}}
         fi
         echo "Moving Xcode to Applications..."
-        sudo mv Xcode.app /Applications/Xcode_26.0.1.app
-        echo "Setting Xcode 26.0.1 as the active developer directory..."
-        sudo xcode-select -s /Applications/Xcode_26.0.1.app/Contents/Developer
-        echo "Installing command line tools..."
-        xcode-select --install
+        sudo mv Xcode.app /Applications/Xcode_{{.XCODE_VERSION}}.app
+        echo "Setting Xcode {{.XCODE_VERSION}} as the active developer directory..."
+        sudo xcode-select -s /Applications/Xcode_{{.XCODE_VERSION}}.app/Contents/Developer
         echo "Verifying installation..."
         xcodebuild -version
       else

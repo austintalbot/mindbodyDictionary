@@ -3,7 +3,7 @@ using CommunityToolkit.Maui.Core;
 using Font = Microsoft.Maui.Font;
 namespace MindBodyDictionaryMobile;
 
-public partial class AppShell
+public partial class AppShell : Shell
 {
 	public AppShell()
 	{

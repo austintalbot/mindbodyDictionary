@@ -53,4 +53,4 @@ pnpm-lock.yaml
 .shadowgit-ignore
 
 google-cloud-sdk/
-Xcode.App
+Xcode.app
