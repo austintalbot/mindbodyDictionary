@@ -11,7 +11,7 @@ public class NotificationActionService : INotificationActionServiceExtended
         { "custom", NotificationAction.Custom }
     };
 
-    public event EventHandler<NotificationAction> ActionTriggered = delegate { };
+    public event EventHandler<NotificationAction>? ActionTriggered;
 
     public void TriggerAction(string action)
     {
@@ -20,7 +20,8 @@ public class NotificationActionService : INotificationActionServiceExtended
 
         List<Exception> exceptions = new List<Exception>();
 
-        foreach (var handler in ActionTriggered?.GetInvocationList())
+        var handlers = ActionTriggered?.GetInvocationList() ?? Array.Empty<Delegate>();
+        foreach (var handler in handlers)
         {
             try
             {

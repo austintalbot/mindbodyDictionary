@@ -4,7 +4,7 @@ namespace MindBodyDictionaryMobile.Services;
 
 public static class NotificationDebugHelper
 {
-    public static string GetDebugInfo(IDeviceInstallationService deviceService = null)
+    public static string GetDebugInfo(IDeviceInstallationService? deviceService = null)
     {
         var sb = new StringBuilder();
         sb.AppendLine("=== NOTIFICATION HUB CONFIGURATION ===");

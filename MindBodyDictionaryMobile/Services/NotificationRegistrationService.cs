@@ -1,5 +1,6 @@
 using System.Text.Json;
 using MindBodyDictionaryMobile.Models;
+using System.Linq;
 using Microsoft.Azure.NotificationHubs;
 using Microsoft.Extensions.Logging;
 
@@ -12,10 +13,11 @@ public class NotificationRegistrationService : INotificationRegistrationService
 
     readonly NotificationHubClient _hubClient;
     readonly ILogger<NotificationRegistrationService> _logger;
-    IDeviceInstallationService _deviceInstallationService;
+    IDeviceInstallationService? _deviceInstallationService;
 
     IDeviceInstallationService DeviceInstallationService =>
-        _deviceInstallationService ?? (_deviceInstallationService = Application.Current.Windows[0].Page.Handler.MauiContext.Services.GetService<IDeviceInstallationService>());
+        _deviceInstallationService ??= (Application.Current?.Windows?.FirstOrDefault()?.Page?.Handler?.MauiContext?.Services?.GetService<IDeviceInstallationService>()
+            ?? throw new InvalidOperationException("DeviceInstallationService not available"));
 
     public NotificationRegistrationService(ILogger<NotificationRegistrationService> logger)
     {
@@ -54,7 +56,7 @@ public class NotificationRegistrationService : INotificationRegistrationService
             return;
         }
 
-        var deviceId = DeviceInstallationService?.GetDeviceId();
+        var deviceId = DeviceInstallationService.GetDeviceId();
         _logger.LogInformation("Device ID: {DeviceId}", deviceId);
 
         if (string.IsNullOrWhiteSpace(deviceId))
@@ -89,7 +91,7 @@ public class NotificationRegistrationService : INotificationRegistrationService
         
         try
         {
-            var deviceInstallation = DeviceInstallationService?.GetDeviceInstallation(tags);
+            var deviceInstallation = DeviceInstallationService.GetDeviceInstallation(tags ?? Array.Empty<string>());
 
             if (deviceInstallation == null)
             {
@@ -172,7 +174,7 @@ public class NotificationRegistrationService : INotificationRegistrationService
         var tags = JsonSerializer.Deserialize<string[]>(serializedTags);
         _logger.LogInformation("Refreshing registration with tags: {Tags}", string.Join(", ", tags ?? Array.Empty<string>()));
 
-        await RegisterDeviceAsync(tags);
+        await RegisterDeviceAsync(tags ?? Array.Empty<string>());
     }
     
     public async Task<bool> CheckRegistrationAsync(string installationId)

@@ -6,12 +6,12 @@ namespace MindBodyDictionaryMobile.Platforms.iOS;
 
 public class DeviceInstallationService : IDeviceInstallationService
 {
-    public string Token { get; set; }
+    public string Token { get; set; } = string.Empty;
     public bool NotificationsSupported => true;
 
     public string GetDeviceId()
     {
-        return UIDevice.CurrentDevice.IdentifierForVendor.AsString();
+        return UIDevice.CurrentDevice.IdentifierForVendor?.AsString() ?? Guid.NewGuid().ToString();
     }
 
     public DeviceInstallation GetDeviceInstallation(params string[] tags)
@@ -29,7 +29,7 @@ public class DeviceInstallationService : IDeviceInstallationService
             PushChannel = Token
         };
 
-        installation.Tags.AddRange(tags);
+        installation.Tags.AddRange(tags ?? Array.Empty<string>());
 
         return installation;
     }
