@@ -30,7 +30,7 @@ tasks:
     desc: Build .NET solution
     dir: backend
     cmds:
-    - dotnet build src/MindBodyDictionary.Backend.sln -c {{.BUILD_CONFIG}}
+    - dotnet build MindBodyDictionary.Backend.slnx -c {{.BUILD_CONFIG}}
     sources:
     - src/**/*.cs
     - src/**/*.csproj
@@ -41,8 +41,8 @@ tasks:
     desc: Clean and rebuild .NET solution
     dir: backend
     cmds:
-    - dotnet clean src/MindBodyDictionary.Backend.sln
-    - dotnet build src/MindBodyDictionary.Backend.sln -c {{.BUILD_CONFIG}}
+    - dotnet clean MindBodyDictionary.Backend.slnx
+    - dotnet build MindBodyDictionary.Backend.slnx -c {{.BUILD_CONFIG}}
 
   publish:
     desc: Publish Azure Functions
@@ -58,13 +58,13 @@ tasks:
     desc: Run tests
     dir: backend
     cmds:
-    - dotnet test src/MindBodyDictionary.Backend.sln -c {{.BUILD_CONFIG}}
+    - dotnet test MindBodyDictionary.Backend.slnx -c {{.BUILD_CONFIG}}
 
   lint:
     desc: Run code analysis
     dir: backend
     cmds:
-    - dotnet format src/MindBodyDictionary.Backend.sln --verify-no-changes --verbosity diagnostic || true
+    - dotnet format MindBodyDictionary.Backend.slnx --verify-no-changes --verbosity diagnostic || true
 
   tf:init:
     desc: Initialize Tofu (OpenTofu)
@@ -148,7 +148,7 @@ tasks:
     desc: Clean build artifacts
     dir: backend
     cmds:
-    - dotnet clean src/MindBodyDictionary.Backend.sln
+    - dotnet clean MindBodyDictionary.Backend.slnx
     - rm -rf bin obj publish
 
   info:
@@ -160,7 +160,7 @@ tasks:
       echo "Build Config: {{.BUILD_CONFIG}}"
       echo "Terraform Vars: {{.TERRAFORM_VARS}}"
       echo ""
-      echo "Solution: backend/src/MindBodyDictionary.Backend.sln"
+      echo "Solution: backend/MindBodyDictionary.Backend.slnx"
       echo "Admin API: backend/src/MindBodyDictionary.AdminApi"
 
   vscode:deploy:
