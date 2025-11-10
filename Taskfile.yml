@@ -1,5 +1,8 @@
 version: '3'
 
+includes:
+  backend: ./backend/Taskfile.yml
+
 vars:
   PROJECT_NAME: mindbody-dictionary
   ANDROID_PACKAGE: com.mindbodydictionary.mindbodydictionarymobile
