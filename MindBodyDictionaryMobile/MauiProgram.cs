@@ -39,7 +39,9 @@ public static class MauiProgram
 #if ANDROID
 		builder.Services.AddSingleton<IDeviceInstallationService, Platforms.Android.DeviceInstallationService>();
 #elif IOS
-		builder.Services.AddSingleton<IDeviceInstallationService, Platforms.iOS.DeviceInstallationService>();
+		var iosDeviceService = new Platforms.iOS.DeviceInstallationService();
+		builder.Services.AddSingleton<IDeviceInstallationService>(iosDeviceService);
+		builder.Services.AddSingleton(iosDeviceService);
 #endif
 
 		builder.Services.AddSingleton<INotificationActionServiceExtended, NotificationActionService>();

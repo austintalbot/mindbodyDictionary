@@ -32,18 +32,36 @@ public class AppDelegate : MauiUIApplicationDelegate
 	{
 		// Convert token to string
 		var token = BitConverter.ToString(deviceToken.ToArray()).Replace("-", "").ToLower();
+		
+		System.Diagnostics.Debug.WriteLine($"APNS Token Received: {token}");
+		
 		// Set the token in the service
 		var currentApp = IPlatformApplication.Current;
 		if (currentApp != null)
 		{
-			var service = currentApp.Services.GetService<Platforms.iOS.DeviceInstallationService>();
-			if (service is not null)
+			try
 			{
-				service.Token = token;
+				var service = currentApp.Services.GetService<IDeviceInstallationService>();
+				if (service is not null)
+				{
+					if (service is Platforms.iOS.DeviceInstallationService iosService)
+					{
+						iosService.Token = token;
+						System.Diagnostics.Debug.WriteLine("APNS Token successfully set in DeviceInstallationService");
+					}
+					else
+					{
+						System.Diagnostics.Debug.WriteLine($"Warning: Service is not iOS DeviceInstallationService, it's {service.GetType().Name}");
+					}
+				}
+				else
+				{
+					System.Diagnostics.Debug.WriteLine("Warning: DeviceInstallationService not found. Device token will not be registered, and push notifications may not work.");
+				}
 			}
-			else
+			catch (Exception ex)
 			{
-				System.Diagnostics.Debug.WriteLine("Warning: DeviceInstallationService not found. Device token will not be registered, and push notifications may not work.");
+				System.Diagnostics.Debug.WriteLine($"Error setting APNS token: {ex.Message}");
 			}
 		}
 		else

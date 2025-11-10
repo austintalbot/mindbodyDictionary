@@ -88,3 +88,10 @@ variable "fcm_project_id" {
   description = "Firebase Cloud Messaging v1 project ID"
   type        = string
 }
+
+variable "enable_apns" {
+  description = "Enable APNS configuration (set to false if credentials don't validate with Apple)"
+  type        = bool
+  default     = true
+}
+

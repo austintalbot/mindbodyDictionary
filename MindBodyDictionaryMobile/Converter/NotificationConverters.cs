@@ -32,16 +32,17 @@ public class BoolToColorConverter : IValueConverter
 {
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (value is bool isRegistered && isRegistered)
-        {
-            return Application.Current?.RequestedTheme == AppTheme.Dark
-                ? Color.FromArgb("#90EE90")
-                : Color.FromArgb("#228B22");
-        }
+        var primaryColor = Color.FromArgb("#512BD4");
+        var tertiaryColor = Color.FromArgb("#DFD8F7");
         
-        return Application.Current?.RequestedTheme == AppTheme.Dark
-            ? Color.FromArgb("#FF6B6B")
-            : Color.FromArgb("#DC143C");
+        // Get app theme colors if available
+        if (Application.Current?.Resources.TryGetValue("Primary", out var primaryResource) == true && primaryResource is Color primary)
+            primaryColor = primary;
+        if (Application.Current?.Resources.TryGetValue("Tertiary", out var tertiaryResource) == true && tertiaryResource is Color tertiary)
+            tertiaryColor = tertiary;
+        
+        bool isRegistered = value is bool boolValue && boolValue;
+        return isRegistered ? primaryColor : tertiaryColor;
     }
 
     public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)

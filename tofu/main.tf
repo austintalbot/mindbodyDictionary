@@ -9,12 +9,23 @@ terraform {
       source  = "Azure/azapi"
       version = "~> 2.7"
     }
+    local = {
+      source  = "hashicorp/local"
+      version = "~> 2.4"
+    }
   }
 }
 
 provider "azurerm" {
   features {}
   subscription_id = var.azure_subscription_id
+}
+
+# Read APNS key from file if it exists, extracting just the token content
+locals {
+  apns_key_file = "${path.module}/../AuthKey_${var.apns_key_id}_${var.apns_application_mode == "Production" ? "prod" : "dev"}.p8"
+  # Extract token content between headers if file exists, otherwise use provided token
+  apns_token_content = fileexists(local.apns_key_file) ? trimspace(replace(replace(file(local.apns_key_file), "-----BEGIN PRIVATE KEY-----", ""), "-----END PRIVATE KEY-----", "")) : var.apns_token
 }
 
 resource "azurerm_resource_group" "main" {
@@ -30,9 +41,12 @@ resource "azurerm_notification_hub_namespace" "main" {
   sku_name            = var.notification_hub_sku
 }
 
-# Using AzAPI provider to configure FCM v1 credentials
+# Using AzAPI provider to configure FCM v1 and optionally APNS credentials
 # The standard azurerm provider doesn't yet support FCM v1 (only legacy GCM)
 # See: https://github.com/hashicorp/terraform-provider-azurerm/issues/25215
+# 
+# Note: APNS validation happens at Azure level with Apple servers.
+# If disabled, configure APNS manually in Azure Portal.
 resource "azapi_resource" "notification_hub" {
   type      = "Microsoft.NotificationHubs/namespaces/notificationHubs@2023-10-01-preview"
   name      = var.notification_hub_name
@@ -40,16 +54,32 @@ resource "azapi_resource" "notification_hub" {
   location  = azurerm_resource_group.main.location
 
   body = {
-    properties = {
-      fcmV1Credential = {
-        properties = {
-          privateKey  = var.fcm_private_key
-          clientEmail = var.fcm_client_email
-          projectId   = var.fcm_project_id
+    properties = merge(
+      {
+        fcmV1Credential = {
+          properties = {
+            privateKey  = var.fcm_private_key
+            clientEmail = var.fcm_client_email
+            projectId   = var.fcm_project_id
+          }
         }
-      }
-    }
+      },
+      var.enable_apns ? {
+        apnsCredential = {
+          properties = {
+            keyId    = var.apns_key_id
+            token    = local.apns_token_content
+            appId    = var.apns_bundle_id
+            appName  = var.apns_bundle_id
+
+            endpoint = var.apns_application_mode == "Production" ? "https://api.push.apple.com:443/3/device" : "https://api.sandbox.push.apple.com:443/3/device"
+          }
+        }
+      } : {}
+    )
   }
+
+  depends_on = [azurerm_notification_hub_namespace.main]
 }
 
 resource "azurerm_notification_hub_authorization_rule" "api_access" {

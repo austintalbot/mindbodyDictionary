@@ -237,11 +237,46 @@ tasks:
     - sh: test -f terraform.tfvars
       msg: "terraform.tfvars not found."
 
+  tofu-apply:
+    desc: Apply OpenTofu deployment
+    dir: tofu
+    cmds:
+    - tofu apply -auto-approve
+
+  tofu-destroy:
+    desc: Destroy OpenTofu infrastructure
+    dir: tofu
+    cmds:
+    - tofu destroy -auto-approve
+
   tofu-output:
     desc: Show OpenTofu outputs
     dir: tofu
     cmds:
     - tofu output
+
+  apns-configure:
+    desc: Configure APNS for iOS notifications (Sandbox or Production)
+    dir: tofu
+    cmds:
+    - ./configure-apns.sh {{ .APNS_MODE | default "Sandbox" }}
+    preconditions:
+    - sh: test -f configure-apns.sh
+      msg: "configure-apns.sh not found"
+    - sh: test -f ../AuthKey_5R75Q6ALPT_dev.p8
+      msg: "APNS dev key file not found"
+
+  notifications-setup:
+    desc: Complete notifications setup (Terraform + APNS)
+    cmds:
+    - echo "📱 Setting up Azure Notification Hub..."
+    - task: tofu-init
+    - task: tofu-apply
+    - echo ""
+    - echo "🍎 Configuring APNS for iOS..."
+    - task: apns-configure
+    - echo ""
+    - echo "✅ Notifications setup complete!"
 
   update-notification-config:
     desc: Update NotificationConfig.cs with Tofu outputs
@@ -258,6 +293,21 @@ tasks:
 
       echo "✅ API Endpoint: $API_ENDPOINT"
       echo ""
+
+  send-notification:
+    desc: Send test push notification to iOS and Android
+    cmds:
+    - ./send-notification.sh
+
+  send-notification-ios:
+    desc: Send test notification to iOS only
+    cmds:
+    - ./send-notification.sh "Hello iOS" "Test for iOS"
+
+  send-notification-android:
+    desc: Send test notification to Android only
+    cmds:
+    - ./send-notification.sh "Hello Android" "Test for Android"
       echo "Update MindBodyDictionaryMobile/NotificationConfig.cs:"
       echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
       echo "public const string BackendServiceEndpoint = \"$API_ENDPOINT\";"
@@ -356,3 +406,13 @@ tasks:
     desc: Run the iOS app on iPhone 17 Pro simulator
     cmds:
     - dotnet build -f net10.0-ios -c debug -t:run -p:_DeviceName=:v2:udid=A4A1F78D-4814-4500-A2F3-928F35CF37BC
+
+  test:notifications:
+    desc: Test push notifications on Android and iOS
+    cmds:
+      - echo "Testing Android notification..."
+      - ./send-test-notification.sh
+      - echo ""
+      - echo "iOS notifications require physical device and valid APNS setup"
+      - echo "Check Azure Portal for notification delivery status"
+
