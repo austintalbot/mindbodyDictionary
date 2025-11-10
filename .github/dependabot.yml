@@ -1,0 +1,29 @@
+# Configuration file for Dependabot updates
+version: 2
+updates:
+  # Enable automated updates for NuGet dependencies (C#)
+  - package-ecosystem: "nuget"
+    directory: "/"            # Location of manifest files (e.g., .csproj, packages.config)
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "08:00"
+      timezone: "UTC"
+    open-pull-requests-limit: 5
+
+  # (Optional) Enable automated updates for GitHub Actions workflows
+  - package-ecosystem: "github-actions"
+    directory: "/"            # Location of workflow files
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "08:00"
+      timezone: "UTC"
+    open-pull-requests-limit: 5
+
+  # (Optional) Enable automated updates for Docker (if you use Dockerfiles)
+  # - package-ecosystem: "docker"
+  #   directory: "/"          # Location of Dockerfiles
+  #   schedule:
+  #     interval: "weekly"
+  #   open-pull-requests-limit: 2
