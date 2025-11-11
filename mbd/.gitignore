@@ -379,3 +379,7 @@ MindBodyDictionary.AdminApi/__azurite_db_queue_extent__.json
 MindBodyDictionary.AdminApi/__azurite_db_queue__.json
 MindBodyDictionary.AdminApi/__azurite_db_table__.json
 MindBodyDictionary.AdminApi/__blobstorage__
+
+
+local.settings.json
+AdminPortal.html

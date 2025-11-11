@@ -377,4 +377,5 @@ Xcode.app
 **/.terraform/
 AuthKey_5R75Q6ALPT_dev.p8
 AuthKey_YRBWR72DCA_prod.p8
-backend/src/MindBodyDictionary.AdminApi/local.settings.json
+
+local.settings.json
