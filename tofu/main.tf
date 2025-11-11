@@ -69,10 +69,9 @@ resource "azapi_resource" "notification_hub" {
           properties = {
             keyId    = var.apns_key_id
             token    = local.apns_token_content
-            appId    = var.apns_bundle_id
+            appId    = var.apns_team_id
             appName  = var.apns_bundle_id
-
-            endpoint = var.apns_application_mode == "Production" ? "https://api.push.apple.com:443/3/device" : "https://api.sandbox.push.apple.com:443/3/device"
+            endpoint = var.apns_application_mode == "Production" ? "https://api.push.apple.com:443/3/device" : "https://api.development.push.apple.com:443/3/device"
           }
         }
       } : {}

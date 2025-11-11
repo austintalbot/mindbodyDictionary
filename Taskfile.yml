@@ -237,18 +237,6 @@ tasks:
     - sh: test -f terraform.tfvars
       msg: "terraform.tfvars not found."
 
-  tofu-apply:
-    desc: Apply OpenTofu deployment
-    dir: tofu
-    cmds:
-    - tofu apply -auto-approve
-
-  tofu-destroy:
-    desc: Destroy OpenTofu infrastructure
-    dir: tofu
-    cmds:
-    - tofu destroy -auto-approve
-
   tofu-output:
     desc: Show OpenTofu outputs
     dir: tofu
@@ -307,11 +295,7 @@ tasks:
   send-notification-android:
     desc: Send test notification to Android only
     cmds:
-    - ./send-notification.sh "Hello Android" "Test for Android"
-      echo "Update MindBodyDictionaryMobile/NotificationConfig.cs:"
-      echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-      echo "public const string BackendServiceEndpoint = \"$API_ENDPOINT\";"
-      echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    - ./send-notification.sh "Hello Android" "Test for Android" echo "Update MindBodyDictionaryMobile/NotificationConfig.cs:" echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" echo "public const string BackendServiceEndpoint = \"$API_ENDPOINT\";" echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
   run-android:
     desc: Clean and run Android app (Debug)
@@ -410,9 +394,8 @@ tasks:
   test:notifications:
     desc: Test push notifications on Android and iOS
     cmds:
-      - echo "Testing Android notification..."
-      - ./send-test-notification.sh
-      - echo ""
-      - echo "iOS notifications require physical device and valid APNS setup"
-      - echo "Check Azure Portal for notification delivery status"
-
+    - echo "Testing Android notification..."
+    - ./send-test-notification.sh
+    - echo ""
+    - echo "iOS notifications require physical device and valid APNS setup"
+    - echo "Check Azure Portal for notification delivery status"
