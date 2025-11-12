@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
-
+﻿
 namespace MindBodyDictionary.AdminApi
 {
     internal static class Extensions
