@@ -21,6 +21,9 @@ provider "azurerm" {
   subscription_id = var.azure_subscription_id
 }
 
+# Data source to retrieve current subscription context
+data "azurerm_client_config" "current" {}
+
 # Read APNS key from file if it exists, extracting just the token content
 locals {
   apns_key_file = "${path.module}/../AuthKey_${var.apns_key_id}_${var.apns_application_mode == "Production" ? "prod" : "dev"}.p8"
@@ -95,36 +98,6 @@ resource "azurerm_notification_hub_authorization_rule" "api_access" {
 
 # App Service resources commented out due to subscription quota limitations
 # Uncomment when you have App Service quota or use an alternative deployment method
-
-# resource "azurerm_service_plan" "main" {
-#   name                = var.app_service_plan_name
-#   resource_group_name = azurerm_resource_group.main.name
-#   location            = azurerm_resource_group.main.location
-#   os_type             = "Linux"
-#   sku_name            = var.app_service_plan_sku
-# }
-# 
-# resource "azurerm_linux_web_app" "api" {
-#   name                = var.api_app_name
-#   resource_group_name = azurerm_resource_group.main.name
-#   location            = azurerm_resource_group.main.location
-#   service_plan_id     = azurerm_service_plan.main.id
-# 
-#   site_config {
-#     always_on = true
-#     application_stack {
-#       dotnet_version = "8.0"
-#     }
-#   }
-# 
-#   app_settings = {
-#     "NotificationHub__Name"             = var.notification_hub_name
-#     "NotificationHub__ConnectionString" = azurerm_notification_hub_authorization_rule.api_access.primary_connection_string
-#     "Authentication__ApiKey"            = var.api_key
-#   }
-# 
-#   https_only = true
-# }
 
 # Data source for existing function app
 data "azurerm_linux_function_app" "admin_api" {
