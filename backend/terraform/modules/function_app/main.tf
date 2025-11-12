@@ -17,13 +17,8 @@ resource "azurerm_service_plan" "main" {
   tags = var.tags
 }
 
-# Data source for the function app to configure with AzAPI
-data "azurerm_linux_function_app" "main" {
-  name                = "${var.project_name}-admin-api"
-  resource_group_name = var.resource_group_name
-  
-  depends_on = [azurerm_service_plan.main]
-}
+# Data source to retrieve current subscription context
+data "azurerm_client_config" "current" {}
 
 # Function app configuration using AzAPI for .NET 10 support
 # Standard azurerm provider doesn't yet support .NET 10, only up to 8.0
@@ -38,10 +33,9 @@ resource "azapi_resource" "function_app" {
       serverFarmId = azurerm_service_plan.main.id
       httpsOnly    = true
       siteConfig = {
-        linuxFxVersion              = "DOTNET-ISOLATED|10"
-        alwaysOn                    = false
-        numberOfWorkers             = 1
-        functionsExtensionVersion   = "~4"
+        linuxFxVersion  = "DOTNET-ISOLATED|10"
+        alwaysOn        = false
+        numberOfWorkers = 1
         appSettings = [
           { name = "FUNCTIONS_WORKER_RUNTIME", value = "dotnet-isolated" },
           { name = "WEBSITE_RUN_FROM_PACKAGE", value = "1" },
@@ -59,6 +53,3 @@ resource "azapi_resource" "function_app" {
 
   depends_on = [azurerm_service_plan.main]
 }
-
-# Data source to retrieve current subscription context
-data "azurerm_client_config" "current" {}
