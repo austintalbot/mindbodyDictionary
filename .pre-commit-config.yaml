@@ -1,0 +1,34 @@
+# Pre-commit hooks for OpenTofu
+# Install: pip install pre-commit
+# Setup: pre-commit install
+# Run manually: pre-commit run --all-files
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+        exclude: ^tofu/\.terraform/
+      - id: end-of-file-fixer
+        exclude: ^tofu/\.terraform/
+      - id: check-yaml
+        args: ['--unsafe']
+      - id: check-added-large-files
+        args: ['--maxkb=1000']
+      - id: check-merge-conflict
+
+  - repo: local
+    hooks:
+      - id: tofu-fmt
+        name: OpenTofu Format
+        entry: bash -c 'cd tofu && tofu fmt -recursive'
+        language: system
+        files: \.tf$
+        pass_filenames: false
+        
+      - id: tofu-validate
+        name: OpenTofu Validate
+        entry: bash -c 'cd tofu && tofu init -backend=false && tofu validate'
+        language: system
+        files: \.tf$
+        pass_filenames: false

@@ -1,0 +1,100 @@
+name: Tofu Plan
+
+on:
+  pull_request:
+    paths:
+      - 'tofu/**'
+      - '.github/workflows/tofu-plan.yml'
+
+permissions:
+  contents: read
+  id-token: write
+  pull-requests: write
+
+env:
+  ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+  ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+  ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+  ARM_USE_OIDC: true
+
+jobs:
+  plan-dev:
+    name: Plan Dev Environment
+    runs-on: ubuntu-latest
+    environment: dev
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Setup OpenTofu
+        uses: opentofu/setup-opentofu@v1
+        with:
+          tofu_version: 1.6.0
+
+      - name: Tofu Init
+        run: |
+          cd tofu
+          tofu init \
+            -backend-config="resource_group_name=rg-tofu-state-dev" \
+            -backend-config="storage_account_name=tfstatedev" \
+            -backend-config="container_name=tfstate" \
+            -backend-config="key=dev.tfstate"
+
+      - name: Tofu Plan
+        id: plan
+        run: |
+          cd tofu
+          tofu plan \
+            -var-file=environments/dev.tfvars \
+            -var="fcm_project_id=${{ secrets.FCM_PROJECT_ID }}" \
+            -var="fcm_client_email=${{ secrets.FCM_CLIENT_EMAIL }}" \
+            -var="fcm_private_key=${{ secrets.FCM_PRIVATE_KEY }}" \
+            -var="apns_key_id=${{ secrets.APNS_KEY_ID }}" \
+            -var="apns_team_id=${{ secrets.APNS_TEAM_ID }}" \
+            -var="apns_bundle_id=${{ secrets.APNS_BUNDLE_ID }}" \
+            -var="apns_token=${{ secrets.APNS_TOKEN_DEV }}" \
+            -out=tfplan \
+            -no-color
+        continue-on-error: true
+
+      - name: Upload Plan
+        uses: actions/upload-artifact@v4
+        with:
+          name: tfplan-dev
+          path: tofu/tfplan
+          retention-days: 5
+
+      - name: Comment PR with Plan
+        uses: actions/github-script@v7
+        if: github.event_name == 'pull_request'
+        with:
+          script: |
+            const fs = require('fs');
+            const planOutput = `${{ steps.plan.outputs.stdout }}`;
+            
+            const output = `#### Tofu Plan (Dev Environment) 📖
+            
+            <details><summary>Show Plan</summary>
+            
+            \`\`\`terraform
+            ${planOutput}
+            \`\`\`
+            
+            </details>
+            
+            *Pushed by: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: output
+            })

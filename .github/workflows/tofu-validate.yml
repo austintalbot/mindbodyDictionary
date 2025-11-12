@@ -1,0 +1,62 @@
+name: Tofu Validate
+
+on:
+  pull_request:
+    paths:
+      - 'tofu/**'
+      - '.github/workflows/tofu-validate.yml'
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  validate:
+    name: Validate Tofu Configuration
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup OpenTofu
+        uses: opentofu/setup-opentofu@v1
+        with:
+          tofu_version: 1.6.0
+
+      - name: Tofu Format Check
+        id: fmt
+        run: |
+          cd tofu
+          tofu fmt -check -recursive
+        continue-on-error: true
+
+      - name: Tofu Init
+        id: init
+        run: |
+          cd tofu
+          tofu init -backend=false
+
+      - name: Tofu Validate
+        id: validate
+        run: |
+          cd tofu
+          tofu validate
+
+      - name: Comment PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const output = `#### Tofu Format and Style 🖌 \`${{ steps.fmt.outcome }}\`
+            #### Tofu Initialization ⚙️ \`${{ steps.init.outcome }}\`
+            #### Tofu Validation 🤖 \`${{ steps.validate.outcome }}\`
+
+            *Pushed by: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: output
+            })

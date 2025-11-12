@@ -1,145 +1,122 @@
-terraform {
-  required_version = ">= 1.0"
-  required_providers {
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = ">= 4.51.0"
-    }
-    azapi = {
-      source  = "Azure/azapi"
-      version = "~> 2.7"
-    }
-    local = {
-      source  = "hashicorp/local"
-      version = "~> 2.4"
-    }
-  }
-}
+# Root module - orchestrates all infrastructure components
 
-provider "azurerm" {
-  features {}
-  subscription_id = var.azure_subscription_id
-}
-
-# Data source to retrieve current subscription context
-data "azurerm_client_config" "current" {}
-
-# Read APNS key from file if it exists, extracting just the token content
 locals {
-  apns_key_file = "${path.module}/../AuthKey_${var.apns_key_id}_${var.apns_application_mode == "Production" ? "prod" : "dev"}.p8"
-  # Extract token content between headers if file exists, otherwise use provided token
-  apns_token_content = fileexists(local.apns_key_file) ? trimspace(replace(replace(file(local.apns_key_file), "-----BEGIN PRIVATE KEY-----", ""), "-----END PRIVATE KEY-----", "")) : var.apns_token
+  common_tags = merge(
+    var.tags,
+    {
+      Project     = var.project_name
+      Environment = var.environment
+      ManagedBy   = "OpenTofu"
+    }
+  )
 }
 
-resource "azurerm_resource_group" "main" {
-  name     = var.resource_group_name
-  location = var.location
+# Resource Group
+module "resource_group" {
+  source = "./modules/resource_group"
+
+  project_name = var.project_name
+  environment  = var.environment
+  location     = var.location
+  tags         = local.common_tags
 }
 
-resource "azurerm_notification_hub_namespace" "main" {
-  name                = var.notification_hub_namespace_name
-  resource_group_name = azurerm_resource_group.main.name
-  location            = azurerm_resource_group.main.location
-  namespace_type      = "NotificationHub"
+# Monitoring (Application Insights + Log Analytics)
+module "monitoring" {
+  source = "./modules/monitoring"
+
+  project_name        = var.project_name
+  environment         = var.environment
+  resource_group_name = module.resource_group.name
+  location            = module.resource_group.location
+  log_retention_days  = var.log_retention_days
+  tags                = local.common_tags
+
+  depends_on = [module.resource_group]
+}
+
+# Storage Account
+module "storage" {
+  source = "./modules/storage"
+
+  project_name        = var.project_name
+  environment         = var.environment
+  resource_group_name = module.resource_group.name
+  location            = module.resource_group.location
+  account_tier        = var.storage_account_tier
+  replication_type    = var.storage_replication_type
+  containers          = var.storage_containers
+  queues              = var.storage_queues
+  tables              = var.storage_tables
+  tags                = local.common_tags
+
+  depends_on = [module.resource_group]
+}
+
+# CosmosDB
+module "cosmosdb" {
+  source = "./modules/cosmosdb"
+
+  project_name         = var.project_name
+  environment          = var.environment
+  resource_group_name  = module.resource_group.name
+  location             = module.resource_group.location
+  kind                 = var.cosmosdb_kind
+  database_name        = var.cosmosdb_database_name
+  consistency_level    = var.cosmosdb_consistency_level
+  database_throughput  = var.cosmosdb_throughput
+  sql_containers       = var.cosmosdb_sql_containers
+  mongo_collections    = var.cosmosdb_mongo_collections
+  tags                 = local.common_tags
+
+  depends_on = [module.resource_group]
+}
+
+# Function App
+module "function_app" {
+  source = "./modules/function_app"
+
+  project_name                    = var.project_name
+  environment                     = var.environment
+  resource_group_name             = module.resource_group.name
+  location                        = module.resource_group.location
+  sku_name                        = var.function_app_sku
+  storage_account_name            = module.storage.account_name
+  storage_account_key             = module.storage.primary_access_key
+  app_insights_connection_string  = module.monitoring.application_insights_connection_string
+  enable_staging_slot             = var.enable_function_staging_slot
+  additional_app_settings         = var.function_app_settings
+  tags                            = local.common_tags
+
+  depends_on = [module.storage, module.monitoring]
+}
+
+# Notification Hub (optional, only if FCM credentials are provided)
+module "notification_hub" {
+  count  = var.enable_notification_hub ? 1 : 0
+  source = "./modules/notification_hub"
+
+  project_name        = var.project_name
+  environment         = var.environment
+  resource_group_name = module.resource_group.name
+  location            = module.resource_group.location
+  hub_name            = var.notification_hub_name
   sku_name            = var.notification_hub_sku
-}
+  
+  # FCM Configuration
+  fcm_project_id   = var.fcm_project_id
+  fcm_client_email = var.fcm_client_email
+  fcm_private_key  = var.fcm_private_key
+  
+  # APNS Configuration
+  enable_apns       = var.enable_apns
+  apns_key_id       = var.apns_key_id
+  apns_team_id      = var.apns_team_id
+  apns_bundle_id    = var.apns_bundle_id
+  apns_token        = var.apns_token
+  apns_environment  = var.apns_environment
+  
+  tags = local.common_tags
 
-# Using AzAPI provider to configure FCM v1 and optionally APNS credentials
-# The standard azurerm provider doesn't yet support FCM v1 (only legacy GCM)
-# See: https://github.com/hashicorp/terraform-provider-azurerm/issues/25215
-# 
-# Note: APNS validation happens at Azure level with Apple servers.
-# If disabled, configure APNS manually in Azure Portal.
-resource "azapi_resource" "notification_hub" {
-  type      = "Microsoft.NotificationHubs/namespaces/notificationHubs@2023-10-01-preview"
-  name      = var.notification_hub_name
-  parent_id = azurerm_notification_hub_namespace.main.id
-  location  = azurerm_resource_group.main.location
-
-  body = {
-    properties = merge(
-      {
-        fcmV1Credential = {
-          properties = {
-            privateKey  = var.fcm_private_key
-            clientEmail = var.fcm_client_email
-            projectId   = var.fcm_project_id
-          }
-        }
-      },
-      var.enable_apns ? {
-        apnsCredential = {
-          properties = {
-            keyId    = var.apns_key_id
-            token    = local.apns_token_content
-            appId    = var.apns_team_id
-            appName  = var.apns_bundle_id
-            endpoint = var.apns_application_mode == "Production" ? "https://api.push.apple.com:443/3/device" : "https://api.development.push.apple.com:443/3/device"
-          }
-        }
-      } : {}
-    )
-  }
-
-  depends_on = [azurerm_notification_hub_namespace.main]
-}
-
-resource "azurerm_notification_hub_authorization_rule" "api_access" {
-  name                  = "ApiAccess"
-  notification_hub_name = var.notification_hub_name
-  namespace_name        = azurerm_notification_hub_namespace.main.name
-  resource_group_name   = azurerm_resource_group.main.name
-  manage                = true
-  send                  = true
-  listen                = true
-
-  depends_on = [azapi_resource.notification_hub]
-}
-
-# App Service resources commented out due to subscription quota limitations
-# Uncomment when you have App Service quota or use an alternative deployment method
-
-# Data source for existing function app
-data "azurerm_linux_function_app" "admin_api" {
-  name                = var.function_app_name
-  resource_group_name = var.existing_function_rg_name
-}
-
-# Data source for existing storage account
-data "azurerm_storage_account" "functions" {
-  count               = var.storage_account_name != "" ? 1 : 0
-  name                = var.storage_account_name
-  resource_group_name = var.existing_function_rg_name
-}
-
-# Staging deployment slot using AzAPI for .NET 10 support
-resource "azapi_resource" "staging_slot" {
-  type      = "Microsoft.Web/sites/slots@2023-12-01"
-  name      = var.staging_slot_name
-  parent_id = data.azurerm_linux_function_app.admin_api.id
-
-  body = {
-    properties = {
-      serverFarmId = data.azurerm_linux_function_app.admin_api.service_plan_id
-      siteConfig = {
-        linuxFxVersion = "DOTNET-ISOLATED|10"
-        alwaysOn       = false
-        numberOfWorkers = 1
-        appSettings = [
-          { name = "ENVIRONMENT", value = "Staging" },
-          { name = "FUNCTIONS_WORKER_RUNTIME", value = "dotnet-isolated" },
-          { name = "WEBSITE_RUN_FROM_PACKAGE", value = "1" },
-          { name = "WEBSITE_DYNAMIC_CACHE", value = "0" },
-          { name = "WEBSITE_LOCAL_CACHE_OPTION", value = "Never" },
-          { name = "SCM_DO_BUILD_DURING_DEPLOYMENT", value = "0" }
-        ]
-      }
-    }
-    tags = {
-      Environment = "Staging"
-      Component   = "AdminAPI"
-    }
-  }
-
-  depends_on = [data.azurerm_linux_function_app.admin_api]
+  depends_on = [module.resource_group]
 }
