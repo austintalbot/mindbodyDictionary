@@ -1,5 +1,8 @@
 version: '3'
 
+includes:
+  backend: ./backend/Taskfile.yml
+
 vars:
   PROJECT_NAME: mindbody-dictionary
   ANDROID_PACKAGE: com.mindbodydictionary.mindbodydictionarymobile
@@ -240,6 +243,29 @@ tasks:
     cmds:
     - tofu output
 
+  apns-configure:
+    desc: Configure APNS for iOS notifications (Sandbox or Production)
+    dir: tofu
+    cmds:
+    - ./configure-apns.sh {{ .APNS_MODE | default "Sandbox" }}
+    preconditions:
+    - sh: test -f configure-apns.sh
+      msg: "configure-apns.sh not found"
+    - sh: test -f ../AuthKey_5R75Q6ALPT_dev.p8
+      msg: "APNS dev key file not found"
+
+  notifications-setup:
+    desc: Complete notifications setup (Terraform + APNS)
+    cmds:
+    - echo "📱 Setting up Azure Notification Hub..."
+    - task: tofu-init
+    - task: tofu-apply
+    - echo ""
+    - echo "🍎 Configuring APNS for iOS..."
+    - task: apns-configure
+    - echo ""
+    - echo "✅ Notifications setup complete!"
+
   update-notification-config:
     desc: Update NotificationConfig.cs with Tofu outputs
     dir: tofu
@@ -255,10 +281,21 @@ tasks:
 
       echo "✅ API Endpoint: $API_ENDPOINT"
       echo ""
-      echo "Update MindBodyDictionaryMobile/NotificationConfig.cs:"
-      echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-      echo "public const string BackendServiceEndpoint = \"$API_ENDPOINT\";"
-      echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+  send-notification:
+    desc: Send test push notification to iOS and Android
+    cmds:
+    - ./send-notification.sh
+
+  send-notification-ios:
+    desc: Send test notification to iOS only
+    cmds:
+    - ./send-notification.sh "Hello iOS" "Test for iOS"
+
+  send-notification-android:
+    desc: Send test notification to Android only
+    cmds:
+    - ./send-notification.sh "Hello Android" "Test for Android" echo "Update MindBodyDictionaryMobile/NotificationConfig.cs:" echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" echo "public const string BackendServiceEndpoint = \"$API_ENDPOINT\";" echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
   run-android:
     desc: Clean and run Android app (Debug)
@@ -353,3 +390,370 @@ tasks:
     desc: Run the iOS app on iPhone 17 Pro simulator
     cmds:
     - dotnet build -f net10.0-ios -c debug -t:run -p:_DeviceName=:v2:udid=A4A1F78D-4814-4500-A2F3-928F35CF37BC
+
+  test:notifications:
+    desc: Test push notifications on Android and iOS
+    cmds:
+    - echo "Testing Android notification..."
+    - ./send-test-notification.sh
+    - echo ""
+    - echo "iOS notifications require physical device and valid APNS setup"
+    - echo "Check Azure Portal for notification delivery status"
+
+  functions:check:
+    desc: Verify Azure Functions prerequisites
+    cmds:
+    - |
+      echo "Checking Azure Functions prerequisites..."
+      command -v az >/dev/null 2>&1 || { echo "❌ Azure CLI not installed. Run: https://learn.microsoft.com/en-us/cli/azure/install-azure-cli"; exit 1; }
+      echo "✅ Azure CLI found"
+      command -v tofu >/dev/null 2>&1 || { echo "❌ OpenTofu not installed. Run: https://opentofu.org/docs/intro/install/"; exit 1; }
+      echo "✅ OpenTofu found"
+      command -v dotnet >/dev/null 2>&1 || { echo "❌ .NET SDK not installed"; exit 1; }
+      echo "✅ .NET SDK found"
+      echo "✅ Prerequisites check complete"
+
+  functions:validate:
+    desc: Validate Azure Functions configuration
+    dir: tofu
+    cmds:
+    - |
+      if [ ! -f terraform.tfvars.staging ]; then
+        echo "❌ terraform.tfvars.staging not found"
+        exit 1
+      fi
+      echo "✅ Configuration file found"
+    - tofu validate -var-file=terraform.tfvars.staging
+    - echo "✅ Configuration is valid"
+
+  functions:init:
+    desc: Initialize OpenTofu for Azure Functions
+    dir: tofu
+    deps: [ functions:check ]
+    cmds:
+    - tofu init -var-file=terraform.tfvars.staging
+    status:
+    - test -d .terraform
+
+  functions:plan:
+    desc: Plan Azure Functions infrastructure deployment
+    dir: tofu
+    deps: [ functions:init ]
+    cmds:
+    - tofu plan -var-file=terraform.tfvars.staging -out=tfplan
+    preconditions:
+    - sh: test -f terraform.tfvars.staging
+      msg: "terraform.tfvars.staging not found"
+
+  functions:apply:
+    desc: Apply Azure Functions infrastructure deployment
+    dir: tofu
+    deps: [ functions:init ]
+    cmds:
+    - |
+      if [ -f tfplan ]; then
+        tofu apply tfplan
+        rm -f tfplan
+      else
+        tofu apply -var-file=terraform.tfvars.staging
+      fi
+    - echo "✅ Infrastructure deployed"
+    - tofu output -json > outputs.json
+    - echo "📋 Outputs saved to tofu/outputs.json"
+    preconditions:
+    - sh: test -f terraform.tfvars.staging
+      msg: "terraform.tfvars.staging not found"
+
+  functions:deploy-infra:
+    desc: Plan and deploy Azure Functions infrastructure (staging slot)
+    cmds:
+    - task: functions:check
+    - task: functions:init
+    - task: functions:validate
+    - task: functions:plan
+    - |
+      echo ""
+      echo "📋 Infrastructure plan ready for staging slot deployment"
+      read -p "Continue? (y/n) " -r
+      if [[ $REPLY =~ ^[Yy]$ ]]; then
+        task functions:apply
+      else
+        echo "Deployment cancelled"
+      fi
+
+  functions:build:
+    desc: Build .NET 10 Azure Functions project
+    dir: backend/src/MindBodyDictionary.AdminApi
+    cmds:
+    - dotnet clean
+    - dotnet build -c Release
+    - echo "✅ Build complete"
+
+  functions:publish:
+    desc: Publish Azure Functions to Azure
+    cmds:
+    - |
+      echo "📦 Publishing Azure Functions..."
+      cd backend/src/MindBodyDictionary.AdminApi
+      rm -rf publish
+      dotnet publish -c Release -o publish
+      echo "✅ Published to ./publish"
+
+      echo ""
+      echo "🚀 Deploying to Azure..."
+      APP_NAME=$(cd ../../../tofu && tofu output -raw function_app_name 2>/dev/null)
+
+      if [ -z "$APP_NAME" ]; then
+        echo "❌ Function app not deployed. Run 'task functions:deploy-infra' first"
+        exit 1
+      fi
+
+      if command -v func >/dev/null 2>&1; then
+        func azure functionapp publish "$APP_NAME" --build remote
+      else
+        echo "⚠️  Using Azure CLI (Azure Functions Core Tools not found)"
+        cd publish
+        zip -r ../MindBodyDictionary.AdminApi.zip . > /dev/null 2>&1
+        cd ..
+        az functionapp deployment source config-zip \
+          --resource-group mbd-backend-rg \
+          --name "$APP_NAME" \
+          --src-path MindBodyDictionary.AdminApi.zip
+        rm -f MindBodyDictionary.AdminApi.zip
+      fi
+
+      echo "✅ Functions deployed successfully to $APP_NAME"
+
+  functions:info:
+    desc: Display deployed staging slot information
+    dir: tofu
+    cmds:
+    - |
+      echo "📊 Staging Slot Deployment Information"
+      echo "========================================"
+      echo ""
+      
+      SLOT_HOSTNAME=$(tofu output -raw staging_slot_hostname 2>/dev/null || echo "")
+      if [ -z "$SLOT_HOSTNAME" ]; then
+        echo "❌ Staging slot not deployed"
+        exit 1
+      fi
+      
+      echo "✅ Function App: mbd-mobile-api"
+      echo "   Staging Slot: staging"
+      echo "   URL: https://$SLOT_HOSTNAME"
+      echo "   Storage: mbdstoragesa"
+      echo ""
+      echo "📍 Portal: https://portal.azure.com/#resource/subscriptions/49fbd6b5-f722-420c-a6b1-961f1b03813c/resourceGroups/mbd-backend-rg/providers/Microsoft.Web/sites/mbd-admin-api/slots/staging"
+      echo ""
+      echo "💡 Deployment commands:"
+      echo "   Swap to production: az functionapp deployment slot swap --name mbd-admin-api --resource-group mbd-backend-rg --slot staging"
+
+  functions:list:
+    desc: List deployed Azure Functions
+    dir: tofu
+    cmds:
+    - |
+      APP_NAME=$(tofu output -raw function_app_name 2>/dev/null || echo "")
+      if [ -z "$APP_NAME" ]; then
+        echo "❌ Function app not deployed"
+        exit 1
+      fi
+
+      az functionapp function list \
+        --resource-group mbd-backend-rg \
+        --name "$APP_NAME" \
+        --query "[].{Name: name, Trigger: trigger.type}" -o table
+
+  functions:logs:
+    desc: View Azure Functions deployment logs
+    dir: tofu
+    cmds:
+    - |
+      APP_NAME=$(tofu output -raw function_app_name 2>/dev/null || echo "")
+      if [ -z "$APP_NAME" ]; then
+        echo "❌ Function app not deployed"
+        exit 1
+      fi
+
+      echo "📋 Latest deployment logs for $APP_NAME:"
+      echo "=========================================="
+      az functionapp log deployment show \
+        --resource-group mbd-backend-rg \
+        --name "$APP_NAME" \
+        --slot staging 2>/dev/null || az functionapp log deployment show \
+        --resource-group mbd-backend-rg \
+        --name "$APP_NAME"
+
+  functions:restart:
+    desc: Restart Azure Functions app
+    dir: tofu
+    cmds:
+    - |
+      APP_NAME=$(tofu output -raw function_app_name 2>/dev/null || echo "")
+      if [ -z "$APP_NAME" ]; then
+        echo "❌ Function app not deployed"
+        exit 1
+      fi
+
+      az functionapp restart \
+        --resource-group mbd-backend-rg \
+        --name "$APP_NAME"
+
+      echo "✅ Function app restarted"
+
+  functions:outputs:
+    desc: Display all Tofu outputs
+    dir: tofu
+    cmds:
+    - tofu output
+
+  functions:destroy:
+    desc: Destroy Azure Functions infrastructure
+    dir: tofu
+    cmds:
+    - |
+      echo "⚠️  This will DELETE all Azure Functions infrastructure!"
+      read -p "Type 'yes' to confirm: " -r
+      if [[ $REPLY == "yes" ]]; then
+        tofu destroy
+        echo "✅ Infrastructure destroyed"
+      else
+        echo "Cancelled"
+      fi
+
+  functions:full-setup:
+    desc: Complete end-to-end Azure Functions setup (infra + functions)
+    cmds:
+    - echo "🚀 Starting complete Azure Functions setup..."
+    - echo ""
+    - task: functions:deploy-infra
+    - echo ""
+    - task: functions:build
+    - echo ""
+    - task: functions:publish
+    - echo ""
+    - task: functions:info
+    - echo ""
+    - echo "✅ Azure Functions setup complete!"
+
+  functions:help:
+    desc: Show Azure Functions task documentation
+    cmds:
+    - |
+      echo "📘 Azure Functions with .NET 10 - OpenTofu"
+      echo "============================================="
+      echo ""
+      echo "Resource Groups:"
+      echo "  task functions:create-resource-group  # Create functions resource group"
+      echo "  task functions:show-resource-groups   # Show all resource groups"
+      echo ""
+      echo "Quick Start:"
+      echo "  task functions:check            # Verify prerequisites"
+      echo "  task functions:deploy-infra     # Deploy Azure infrastructure"
+      echo "  task functions:build            # Build .NET functions"
+      echo "  task functions:publish          # Deploy functions to Azure"
+      echo ""
+      echo "Monitoring:"
+      echo "  task functions:info             # Show deployment info"
+      echo "  task functions:list             # List deployed functions"
+      echo "  task functions:logs             # Stream live logs"
+      echo "  task functions:restart          # Restart function app"
+      echo ""
+      echo "Configuration:"
+      echo "  Edit tofu/terraform.tfvars before deploying"
+      echo "  See tofu/AZURE_FUNCTIONS_DOTNET10.md for detailed docs"
+      echo ""
+      echo "Full Deployment:"
+      echo "  task functions:full-setup       # One-command setup"
+      echo ""
+      echo "Cleanup:"
+      echo "  task functions:destroy          # Delete all infrastructure"
+
+  functions:create-resource-group:
+    desc: Create separate resource group for serverless functions
+    dir: tofu
+    cmds:
+    - |
+      echo "📦 Creating resource group for serverless functions..."
+      echo ""
+
+      RG_NAME=$(tofu output -raw functions_resource_group_name 2>/dev/null || echo "rg-mindbody-functions")
+      LOCATION=$(tofu output -raw location 2>/dev/null || echo "eastus" | grep -oE '[^/]+$')
+
+      # Check if resource group already exists
+      if az group show --name "$RG_NAME" --subscription 49fbd6b5-f722-420c-a6b1-961f1b03813c &>/dev/null; then
+        echo "✅ Resource group '$RG_NAME' already exists"
+      else
+        echo "Creating new resource group: $RG_NAME in $LOCATION"
+        az group create \
+          --name "$RG_NAME" \
+          --location "$LOCATION" \
+          --subscription 49fbd6b5-f722-420c-a6b1-961f1b03813c \
+          --tags Component=Serverless Purpose="Azure Functions and related resources"
+        
+        if [ $? -eq 0 ]; then
+          echo "✅ Resource group created successfully"
+        else
+          echo "❌ Failed to create resource group"
+          exit 1
+        fi
+      fi
+
+      echo ""
+      echo "Resource Group Details:"
+      az group show \
+        --name "$RG_NAME" \
+        --subscription 49fbd6b5-f722-420c-a6b1-961f1b03813c \
+        --query "{Name: name, Location: location, Id: id}" -o table
+
+  functions:show-resource-groups:
+    desc: Show both notification and functions resource groups
+    cmds:
+    - |
+      echo "📊 MindBody Dictionary Resource Groups"
+      echo "======================================"
+      echo ""
+
+      az group list \
+        --subscription 49fbd6b5-f722-420c-a6b1-961f1b03813c \
+        --query "[?contains(name, 'mindbody')].{Name: name, Location: location}" \
+        -o table
+
+      echo ""
+      echo "Detailed Status:"
+      echo ""
+
+      # Notifications RG
+      echo "🔔 Notifications Resource Group"
+      if az group show --name "rg-mindbody-notifications" --subscription 49fbd6b5-f722-420c-a6b1-961f1b03813c &>/dev/null; then
+        echo "   ✅ Status: Exists"
+        az group show \
+          --name "rg-mindbody-notifications" \
+          --subscription 49fbd6b5-f722-420c-a6b1-961f1b03813c \
+          --query "{Name: name, Location: location}" -o table
+      else
+        echo "   ❌ Status: Not found"
+      fi
+
+      echo ""
+
+      # Functions RG
+      echo "⚡ Functions Resource Group"
+      if az group show --name "rg-mindbody-functions" --subscription 49fbd6b5-f722-420c-a6b1-961f1b03813c &>/dev/null; then
+        echo "   ✅ Status: Exists"
+        az group show \
+          --name "rg-mindbody-functions" \
+          --subscription 49fbd6b5-f722-420c-a6b1-961f1b03813c \
+          --query "{Name: name, Location: location}" -o table
+        
+        echo ""
+        echo "📋 Resources in Functions RG:"
+        az resource list \
+          --resource-group "rg-mindbody-functions" \
+          --subscription 49fbd6b5-f722-420c-a6b1-961f1b03813c \
+          --query "[].{Name: name, Type: type}" -o table
+      else
+        echo "   ❌ Status: Not created yet"
+        echo "   Run: task functions:create-resource-group"
+      fi

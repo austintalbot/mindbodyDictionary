@@ -16,6 +16,12 @@ variable "location" {
   default     = "eastus"
 }
 
+variable "functions_resource_group_name" {
+  description = "Name of the resource group for serverless functions"
+  type        = string
+  default     = "rg-mindbody-functions"
+}
+
 variable "notification_hub_namespace_name" {
   description = "Name of the notification hub namespace"
   type        = string
@@ -87,4 +93,68 @@ variable "fcm_client_email" {
 variable "fcm_project_id" {
   description = "Firebase Cloud Messaging v1 project ID"
   type        = string
+}
+
+variable "enable_apns" {
+  description = "Enable APNS configuration (set to false if credentials don't validate with Apple)"
+  type        = bool
+  default     = true
+}
+
+variable "function_app_name" {
+  description = "Name of the Azure Function App for Admin API"
+  type        = string
+  default     = "mbd-admin-api"
+}
+
+variable "function_storage_account_name" {
+  description = "Name of the storage account for function app (must be globally unique, lowercase, 3-24 chars)"
+  type        = string
+  default     = "mbdfuncstore"
+  validation {
+    condition     = can(regex("^[a-z0-9]{3,24}$", var.function_storage_account_name))
+    error_message = "Storage account name must be 3-24 lowercase alphanumeric characters"
+  }
+}
+
+variable "function_service_plan_name" {
+  description = "Name of the function service plan"
+  type        = string
+  default     = "mbd-functions-plan"
+}
+
+variable "function_plan_sku" {
+  description = "SKU for the function service plan"
+  type        = string
+  default     = "Y1"
+  validation {
+    condition     = contains(["Y1", "B1", "B2", "B3", "S1", "S2", "S3"], var.function_plan_sku)
+    error_message = "Valid SKUs are Y1 (Consumption), B1-B3 (Basic), or S1-S3 (Standard)"
+  }
+}
+
+variable "existing_function_rg_name" {
+  description = "Name of the resource group containing the existing function app"
+  type        = string
+  default     = "mbd-backend-rg"
+}
+
+variable "staging_slot_name" {
+  description = "Name of the staging deployment slot"
+  type        = string
+  default     = "staging"
+}
+
+
+variable "storage_account_name" {
+  description = "Name of the storage account for staging slot (optional - will query Azure if not provided)"
+  type        = string
+  default     = ""
+}
+
+variable "storage_account_key" {
+  description = "Access key for storage account (optional - will query Azure if not provided)"
+  type        = string
+  sensitive   = true
+  default     = ""
 }

@@ -15,4 +15,10 @@ public static class NotificationConfig
     // NOTE: The above connection string has FULL access (Listen, Send, Manage).
     // For production, create a separate access policy with ONLY "Listen" permission
     // and use that connection string in the mobile app for security best practices.
+    
+    // Apple Push Notifications (APNS) Configuration
+    public const string ApnsApplicationMode = "Sandbox";
+    public const string ApnsBundleId = "com.mindbodydictionary.mindbodydictionarymobile";
+    public const string ApnsKeyId = "5R75Q6ALPT";
+    public const string ApnsTeamId = "UMDRT97472";
 }

@@ -1,170 +1,118 @@
-# Push Notifications Infrastructure
+# Notification Hub Infrastructure (OpenTofu)
 
-This directory contains OpenTofu configuration for deploying the Azure infrastructure needed for push notifications in the MindBody Dictionary app.
+This directory contains Terraform/OpenTofu configuration to manage Azure Notification Hub resources for push notifications.
+
+## Overview
+
+- **FCM v1 (Android)**: Firebase Cloud Messaging configured via `fcmV1Credential`
+- **APNS (iOS)**: Apple Push Notification service (manual Portal setup or via Terraform with valid credentials)
+
+## Files
+
+- `main.tf` - Notification hub and authorization resources
+- `variables.tf` - Input variables with validation
+- `outputs.tf` - Connection strings and resource names
+- `terraform.tfvars` - Variable values (credentials not committed)
 
 ## Prerequisites
 
-1. [OpenTofu](https://opentofu.org/) installed
-2. [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) installed
-3. Azure subscription
-4. Apple Developer Account (for iOS push notifications)
-5. Firebase project (for Android push notifications)
+1. **Azure CLI** authenticated: `az login`
+2. **OpenTofu** installed: `brew install opentofu`
+3. **Credentials**:
+   - `mindbody-dictionary-504ad7178568.json` (FCM service account)
+   - `AuthKey_5R75Q6ALPT_dev.p8` (APNS key - sandbox)
+   - `AuthKey_YRBWR72DCA_prod.p8` (APNS key - production)
 
-## Infrastructure Components
+## Configuration
 
-- **Azure Notification Hub Namespace**: Container for notification hubs
-- **Azure Notification Hub**: Manages push notification distribution to iOS and Android devices
+### FCM v1 (Android)
+✅ Automatically configured via Terraform with credentials from `mindbody-dictionary-504ad7178568.json`
 
-This configuration uses **direct client-to-hub communication** following the MAUI sample pattern:
-https://github.com/dotnet/maui-samples/tree/main/10.0/WebServices/PushNotificationsDemo
+### APNS (iOS)
+By default, APNS is **disabled in Terraform** (`enable_apns = false`) because Azure validates credentials with Apple's servers during deployment, which may fail with sandbox credentials.
 
-No backend API is required - the mobile app communicates directly with Azure Notification Hubs.
+**To enable APNS in Terraform:**
+1. Set `enable_apns = true` in `terraform.tfvars`
+2. Use production APNS credentials
+3. Run `tofu apply`
 
-## Setup Instructions
+**Manual APNS setup (recommended for sandbox):**
+1. Azure Portal → Notification Hubs → nh-mindbody
+2. Notification Services → Apple (APNS)
+3. Upload `.p8` key file
+4. Enter: Key ID, Team ID, Bundle ID
+5. Select: Sandbox or Production
 
-### 1. Azure Authentication
+## Usage
 
+### Initialize
 ```bash
-az login
-az account set --subscription "your-subscription-id"
-```
-
-### 2. Apple Push Notification Service (APNS) Setup
-
-1. Log in to [Apple Developer Portal](https://developer.apple.com/)
-2. Create an APNs Auth Key:
-   - Go to Certificates, Identifiers & Profiles
-   - Select Keys and create a new key
-   - Enable Apple Push Notifications service (APNs)
-   - Download the .p8 file
-3. Note your Key ID, Team ID, and Bundle ID
-
-### 3. Firebase Cloud Messaging (FCM) v1 Setup
-
-**Important**: Google deprecated the legacy FCM API. You must use FCM v1 credentials.
-
-1. Create a Firebase project at [Firebase Console](https://console.firebase.google.com/)
-2. Add an Android app to your project
-3. Download `google-services.json`
-4. Create a service account for FCM v1:
-   - Go to Project Settings > Service Accounts
-   - Click "Generate new private key"
-   - Download the JSON file (contains `private_key`, `client_email`, `project_id`)
-5. Extract the following from the service account JSON:
-   - `private_key`: The full private key including BEGIN/END markers
-   - `client_email`: The service account email
-   - `project_id`: Your Firebase project ID
-
-### 4. Configure Variables
-
-```bash
-cp terraform.tfvars.example terraform.tfvars
-```
-
-Edit `terraform.tfvars` with your actual values:
-- Replace placeholder values with your actual credentials
-- Update resource names as needed
-- Set appropriate SKUs for your environment
-
-### 5. Deploy Infrastructure
-
-```bash
-# Initialize OpenTofu
+cd tofu
 tofu init
+```
 
-# Review the deployment plan
+### Plan changes
+```bash
 tofu plan
+```
 
-# Deploy the infrastructure
+### Apply changes
+```bash
 tofu apply
 ```
 
-### 6. Retrieve Outputs
-
-After deployment, get the connection details:
-
-```bash
-# Get the notification hub connection string
-tofu output -raw notification_hub_connection_string
-
-# Get resource names
-tofu output notification_hub_name
-tofu output notification_hub_namespace
-```
-
-## Post-Deployment Configuration
-
-### Update Mobile App Configuration
-
-1. Copy the Notification Hub connection string from outputs
-2. Configure your .NET MAUI app with:
-   - Hub Name: `nh-mindbody`
-   - Namespace: `nhn-mindbody`
-   - Connection String: (from output above)
-   
-3. Add `google-services.json` to `Platforms/Android/` folder
-4. Update `ApplicationId` in the .csproj file to match your bundle ID
-
-### Configure iOS Entitlements
-
-Ensure `Entitlements.plist` includes:
-```xml
-<key>aps-environment</key>
-<string>development</string> <!-- or production -->
-```
-
-## Maintenance
-
-### Update Infrastructure
-
-```bash
-# Make changes to .tf files
-tofu plan
-tofu apply
-```
-
-### Destroy Infrastructure
-
+### Destroy resources (⚠️ use with caution)
 ```bash
 tofu destroy
 ```
 
-## Important Notes
+## Outputs
 
-### FCM v1 Migration
+```bash
+tofu output
+```
 
-This configuration uses **Firebase Cloud Messaging (FCM) v1 API** via the AzAPI provider because:
-- Google deprecated the legacy FCM API in June 2024
-- The standard `azurerm` provider doesn't yet support FCM v1 credentials natively
-- See: https://github.com/hashicorp/terraform-provider-azurerm/issues/25215
-
-The AzAPI provider allows us to use the latest Azure Notification Hub API that supports FCM v1.
-
-## Cost Considerations
-
-- **Free Tier**: Notification Hub Free SKU supports up to 1M pushes/month and 500 active devices
-- No additional costs for this configuration (no App Service)
-
-## Security Notes
-
-- Never commit `terraform.tfvars` or `terraform.tfstate` to version control
-- Store sensitive values in Azure Key Vault for production
-- Rotate API keys and credentials regularly
-- Use Managed Identity for App Service in production
+Returns:
+- `resource_group_name` - Azure resource group
+- `notification_hub_name` - Hub name for client apps
+- `notification_hub_namespace` - Namespace name
+- `notification_hub_connection_string` - API key (sensitive)
 
 ## Troubleshooting
 
-### Authentication Issues
-- Verify Azure CLI is authenticated: `az account show`
-- Check subscription access: `az account list`
+### APNS validation fails
+Azure validates APNS credentials with Apple's servers. If deployment fails:
+- Verify credentials are correct
+- Use production credentials for Production environment
+- Manually configure in Azure Portal instead
+- Check Azure activity logs for detailed error
 
-### Deployment Failures
-- Review error messages in OpenTofu output
-- Verify resource name uniqueness
-- Check Azure region availability for services
+### FCM v1 not working
+- Verify service account JSON has `project_id`, `client_email`, `private_key`
+- Ensure credentials are properly escaped in `terraform.tfvars` (newlines as `\n`)
 
-### Push Notification Issues
-- Verify APNS credentials and bundle ID match
-- Verify FCM v1 service account credentials are correct
-- Ensure Firebase Cloud Messaging API is enabled in Google Cloud Console
-- Test notification hub connection string
+## Environment-specific setup
+
+For different environments, create environment-specific `.tfvars` files:
+
+```bash
+# Development
+tofu apply -var-file="terraform.dev.tfvars"
+
+# Production  
+tofu apply -var-file="terraform.prod.tfvars"
+```
+
+Example `terraform.prod.tfvars`:
+```hcl
+enable_apns = true
+apns_application_mode = "Production"
+# Use prod APNS credentials
+```
+
+## References
+
+- [Azure Notification Hubs](https://learn.microsoft.com/en-us/azure/notification-hubs/)
+- [FCM v1 API](https://firebase.google.com/docs/cloud-messaging/migrate-v1)
+- [Apple Push Notification service](https://developer.apple.com/documentation/usernotifications/setting_up_a_remote_notification_server)
+- [Terraform AzAPI Provider](https://registry.terraform.io/providers/Azure/azapi/latest/docs)
