@@ -33,7 +33,7 @@ resource "azurerm_linux_function_app" "main" {
     always_on          = false
     
     application_stack {
-      dotnet_version = "8.0"
+      dotnet_version = "10.0"
     }
   }
 

@@ -379,3 +379,5 @@ AuthKey_5R75Q6ALPT_dev.p8
 AuthKey_YRBWR72DCA_prod.p8
 
 local.settings.json
+tofu/outputs.json
+tofu/terraform.tfvars.staging

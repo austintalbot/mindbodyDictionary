@@ -125,3 +125,48 @@ resource "azurerm_notification_hub_authorization_rule" "api_access" {
 # 
 #   https_only = true
 # }
+
+# Data source for existing function app
+data "azurerm_linux_function_app" "admin_api" {
+  name                = var.function_app_name
+  resource_group_name = var.existing_function_rg_name
+}
+
+# Data source for existing storage account
+data "azurerm_storage_account" "functions" {
+  count               = var.storage_account_name != "" ? 1 : 0
+  name                = var.storage_account_name
+  resource_group_name = var.existing_function_rg_name
+}
+
+# Staging deployment slot using AzAPI for .NET 10 support
+resource "azapi_resource" "staging_slot" {
+  type      = "Microsoft.Web/sites/slots@2023-12-01"
+  name      = var.staging_slot_name
+  parent_id = data.azurerm_linux_function_app.admin_api.id
+
+  body = {
+    properties = {
+      serverFarmId = data.azurerm_linux_function_app.admin_api.service_plan_id
+      siteConfig = {
+        linuxFxVersion = "DOTNET-ISOLATED|10"
+        alwaysOn       = false
+        numberOfWorkers = 1
+        appSettings = [
+          { name = "ENVIRONMENT", value = "Staging" },
+          { name = "FUNCTIONS_WORKER_RUNTIME", value = "dotnet-isolated" },
+          { name = "WEBSITE_RUN_FROM_PACKAGE", value = "1" },
+          { name = "WEBSITE_DYNAMIC_CACHE", value = "0" },
+          { name = "WEBSITE_LOCAL_CACHE_OPTION", value = "Never" },
+          { name = "SCM_DO_BUILD_DURING_DEPLOYMENT", value = "0" }
+        ]
+      }
+    }
+    tags = {
+      Environment = "Staging"
+      Component   = "AdminAPI"
+    }
+  }
+
+  depends_on = [data.azurerm_linux_function_app.admin_api]
+}

@@ -29,3 +29,13 @@ output "notification_hub_connection_string" {
 #   description = "Name of the API app service"
 #   value       = azurerm_linux_web_app.api.name
 # }
+
+output "function_app_name" {
+  description = "Name of the function app"
+  value       = data.azurerm_linux_function_app.admin_api.name
+}
+
+output "staging_slot_hostname" {
+  description = "Staging deployment slot hostname"
+  value       = try(jsondecode(azapi_resource.staging_slot.output).properties.defaultHostName, "")
+}
