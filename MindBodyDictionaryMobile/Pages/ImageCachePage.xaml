@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:MindBodyDictionaryMobile.PageModels"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="MindBodyDictionaryMobile.Pages.ImageCachePage"
+             x:DataType="vm:ImageCachePageModel"
+             Title="Image Cache (Debug)">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ContentPage.Behaviors>
+        <toolkit:EventToCommandBehavior
+            EventName="Appearing"
+            Command="{Binding AppearingCommand}" />
+    </ContentPage.Behaviors>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+
+            <!-- Header -->
+            <Label Text="Image Cache Debug"
+                   FontSize="24"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center" />
+
+            <!-- Status Message -->
+            <Border StrokeThickness="1"
+                    Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}"
+                    Padding="15"
+                    StrokeShape="RoundRectangle 10">
+                <Label Text="{Binding StatusMessage}"
+                       FontSize="14"
+                       LineBreakMode="WordWrap" />
+            </Border>
+
+            <!-- Cache Statistics -->
+            <Border StrokeThickness="1"
+                    Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}"
+                    Padding="15"
+                    StrokeShape="RoundRectangle 10">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Cache Summary"
+                           FontSize="16"
+                           FontAttributes="Bold" />
+
+                    <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto,Auto" ColumnSpacing="15" RowSpacing="10">
+
+                        <Label Text="Images in Resources:"
+                               FontSize="13"
+                               VerticalOptions="Center"
+                               Grid.Row="0"
+                               Grid.Column="0" />
+                        <Label Text="{Binding TotalImagesInResources}"
+                               FontSize="13"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource Primary}"
+                               VerticalOptions="Center"
+                               Grid.Row="0"
+                               Grid.Column="1" />
+
+                        <Label Text="Cached Images:"
+                               FontSize="13"
+                               VerticalOptions="Center"
+                               Grid.Row="1"
+                               Grid.Column="0" />
+                        <Label Text="{Binding CachedImages}"
+                               FontSize="13"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource Primary}"
+                               VerticalOptions="Center"
+                               Grid.Row="1"
+                               Grid.Column="1" />
+
+                        <Label Text="Cache Percentage:"
+                               FontSize="13"
+                               VerticalOptions="Center"
+                               Grid.Row="2"
+                               Grid.Column="0" />
+                        <Label Text="{Binding PercentageCached, StringFormat='{0}%'}"
+                               FontSize="13"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource Primary}"
+                               VerticalOptions="Center"
+                               Grid.Row="2"
+                               Grid.Column="1" />
+
+                        <Label Text="Total Cache Size:"
+                               FontSize="13"
+                               VerticalOptions="Center"
+                               Grid.Row="3"
+                               Grid.Column="0" />
+                        <Label x:Name="SizeLabel"
+                               FontSize="13"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource Primary}"
+                               VerticalOptions="Center"
+                               Grid.Row="3"
+                               Grid.Column="1" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Action Buttons -->
+            <VerticalStackLayout Spacing="10">
+                <Button Text="Refresh Cache from Resources"
+                        Command="{Binding RefreshCacheCommand}"
+                        BackgroundColor="{StaticResource Primary}"
+                        TextColor="White"
+                        HeightRequest="50"
+                        CornerRadius="10"
+                        IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}" />
+
+                <Button Text="Clear Cache"
+                        Command="{Binding ClearCacheCommand}"
+                        BackgroundColor="{StaticResource Secondary}"
+                        TextColor="White"
+                        HeightRequest="50"
+                        CornerRadius="10"
+                        IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}" />
+
+                <Button Text="Reload Stats"
+                        Command="{Binding LoadCacheStatsCommand}"
+                        BackgroundColor="{StaticResource Tertiary}"
+                        TextColor="White"
+                        HeightRequest="50"
+                        CornerRadius="10"
+                        IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}" />
+            </VerticalStackLayout>
+
+            <!-- Loading Indicator -->
+            <ActivityIndicator IsRunning="{Binding IsLoading}"
+                              IsVisible="{Binding IsLoading}"
+                              Color="{StaticResource Primary}"
+                              HeightRequest="40" />
+
+            <!-- Cached Images List -->
+            <Label Text="Cached Images"
+                   FontSize="16"
+                   FontAttributes="Bold"
+                   IsVisible="{Binding CachedImagesList, Converter={StaticResource IsNotNullOrEmptyConverter}}" />
+
+            <CollectionView ItemsSource="{Binding CachedImagesList}"
+                           IsVisible="{Binding CachedImagesList, Converter={StaticResource IsNotNullOrEmptyConverter}}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Border StrokeThickness="1"
+                                Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}"
+                                BackgroundColor="{AppThemeBinding Light={StaticResource Gray50}, Dark={StaticResource Gray800}}"
+                                Padding="12"
+                                Margin="0,5"
+                                StrokeShape="RoundRectangle 8">
+                            <VerticalStackLayout Spacing="4">
+                                <Label Text="{Binding FileName}"
+                                       FontSize="13"
+                                       FontAttributes="Bold"
+                                       LineBreakMode="TailTruncation" />
+                                <Label Text="{Binding ContentType, StringFormat='Type: {0}'}"
+                                       FontSize="11" />
+                                <Label Text="{Binding SizeKb, StringFormat='Size: {0:F2} KB'}"
+                                       FontSize="11" />
+                                <Label Text="{Binding CachedAt, StringFormat='Cached: {0:G}'}"
+                                       FontSize="10" />
+                            </VerticalStackLayout>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>
