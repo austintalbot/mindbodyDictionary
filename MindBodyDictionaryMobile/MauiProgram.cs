@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
 using Syncfusion.Maui.Toolkit.Hosting;
+using MindBodyDictionaryMobile.Services;
 
 namespace MindBodyDictionaryMobile;
 
@@ -30,6 +31,9 @@ public static class MauiProgram
 		builder.Services.AddSingleton<TaskRepository>();
 		builder.Services.AddSingleton<CategoryRepository>();
 		builder.Services.AddSingleton<TagRepository>();
+		builder.Services.AddSingleton<ImageCacheRepository>();
+		builder.Services.AddSingleton<ImageCacheService>();
+		builder.Services.AddSingleton<IImageCacheHelper, ImageCacheHelper>();
 		builder.Services.AddSingleton<SeedDataService>();
 		builder.Services.AddSingleton<ModalErrorHandler>();
 		builder.Services.AddSingleton<MainPageModel>();

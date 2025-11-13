@@ -10,15 +10,17 @@ public class SeedDataService
 	private readonly TaskRepository _taskRepository;
 	private readonly TagRepository _tagRepository;
 	private readonly CategoryRepository _categoryRepository;
+	private readonly ImageCacheService _imageCacheService;
 	private readonly string _seedDataFilePath = "SeedData.json";
 	private readonly ILogger<SeedDataService> _logger;
 
-	public SeedDataService(ProjectRepository projectRepository, TaskRepository taskRepository, TagRepository tagRepository, CategoryRepository categoryRepository, ILogger<SeedDataService> logger)
+	public SeedDataService(ProjectRepository projectRepository, TaskRepository taskRepository, TagRepository tagRepository, CategoryRepository categoryRepository, ImageCacheService imageCacheService, ILogger<SeedDataService> logger)
 	{
 		_projectRepository = projectRepository;
 		_taskRepository = taskRepository;
 		_tagRepository = tagRepository;
 		_categoryRepository = categoryRepository;
+		_imageCacheService = imageCacheService;
 		_logger = logger;
 	}
 
@@ -81,6 +83,9 @@ public class SeedDataService
 			_logger.LogError(e, "Error saving seed data");
 			throw;
 		}
+
+		// Load images into cache after seed data
+		await _imageCacheService.LoadImagesFromResourcesAsync();
 	}
 
 	private async void ClearTables()

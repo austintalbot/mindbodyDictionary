@@ -1,0 +1,91 @@
+using MindBodyDictionaryMobile.Models;
+using Microsoft.Extensions.Logging;
+
+namespace MindBodyDictionaryMobile.Services;
+
+/// <summary>
+/// Utility service for using cached images in XAML UI.
+/// </summary>
+public interface IImageCacheHelper
+{
+	/// <summary>
+	/// Gets an image source from cache. If not found, returns a default/placeholder image.
+	/// </summary>
+	Task<ImageSource> GetImageSourceAsync(string fileName);
+
+	/// <summary>
+	/// Gets an image source synchronously from cache (for binding).
+	/// Use with caution - blocking call. Prefer async version when possible.
+	/// </summary>
+	ImageSource GetImageSourceSync(string fileName);
+}
+
+/// <summary>
+/// Implementation of image cache helper.
+/// </summary>
+public class ImageCacheHelper : IImageCacheHelper
+{
+	private readonly Data.ImageCacheService _imageCacheService;
+	private readonly Microsoft.Extensions.Logging.ILogger<ImageCacheHelper> _logger;
+	private readonly Dictionary<string, ImageSource?> _memoryCache = [];
+
+	public ImageCacheHelper(Data.ImageCacheService imageCacheService, Microsoft.Extensions.Logging.ILogger<ImageCacheHelper> logger)
+	{
+		_imageCacheService = imageCacheService;
+		_logger = logger;
+	}
+
+	public async Task<ImageSource> GetImageSourceAsync(string fileName)
+	{
+		if (string.IsNullOrWhiteSpace(fileName))
+		{
+			return GetDefaultImageSource();
+		}
+
+		// Check memory cache first
+		if (_memoryCache.TryGetValue(fileName, out var cachedSource))
+		{
+			return cachedSource ?? GetDefaultImageSource();
+		}
+
+		try
+		{
+			var imageSource = await _imageCacheService.GetImageAsync(fileName);
+			_memoryCache[fileName] = imageSource;
+			return imageSource ?? GetDefaultImageSource();
+		}
+		catch (Exception e)
+		{
+			_logger.LogError(e, "Error loading image: {FileName}", fileName);
+			_memoryCache[fileName] = null;
+			return GetDefaultImageSource();
+		}
+	}
+
+	public ImageSource GetImageSourceSync(string fileName)
+	{
+		if (string.IsNullOrWhiteSpace(fileName))
+		{
+			return GetDefaultImageSource();
+		}
+
+		// Check memory cache
+		if (_memoryCache.TryGetValue(fileName, out var cachedSource))
+		{
+			return cachedSource ?? GetDefaultImageSource();
+		}
+
+		return GetDefaultImageSource();
+	}
+
+	public void ClearMemoryCache()
+	{
+		_memoryCache.Clear();
+	}
+
+	private ImageSource GetDefaultImageSource()
+	{
+		// Return transparent placeholder (will show nothing)
+		return ImageSource.FromFile(string.Empty);
+	}
+}

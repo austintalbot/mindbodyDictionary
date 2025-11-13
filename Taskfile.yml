@@ -10,7 +10,7 @@ vars:
   FIREBASE_PROJECT_ID: '{{.FIREBASE_PROJECT_ID | default "mindbody-dictionary"}}'
   APPLE_TEAM_ID: '{{.APPLE_TEAM_ID}}'
   APNS_KEY_NAME: MindBodyDictionaryAPNsKey
-  XCODE_VERSION: '26.0.1'
+  XCODE_VERSION: '26.1'
   XCODE_XIP_URL: 'REPLACE_WITH_ACTUAL_URL_FROM_DEVELOPER_APPLE_COM'
   XCODE_XIP_FILENAME: 'Xcode_{{.XCODE_VERSION}}_Apple_silicon.xip'
 
@@ -341,50 +341,6 @@ tasks:
     - rm -rf MindBodyDictionaryMobile/bin MindBodyDictionaryMobile/obj
     - rm -rf tofu/.terraform tofu/.terraform.lock.hcl
     - echo "✅ Cleaned build artifacts"
-
-  install-xcode:
-    desc: Install Xcode 26.0 using .xip download
-    cmds:
-    - |
-      echo "Checking for Xcode .xip file..."
-      if [ -f {{.XCODE_XIP_FILENAME}} ]; then
-        echo "Existing .xip file found, skipping download."
-      fi
-      if [ ! -f {{.XCODE_XIP_FILENAME}} ]; then
-        if [ "{{.XCODE_XIP_URL}}" = "REPLACE_WITH_ACTUAL_URL_FROM_DEVELOPER_APPLE_COM" ]; then
-          echo "Error: XCODE_XIP_URL must be set before first use. This is a one-time setup for Xcode 26.0.1. Please update Taskfile.yml with the download URL from https://developer.apple.com/download/all/?q=Xcode"
-          echo "Alternatively, download {{.XCODE_XIP_FILENAME}} (Xcode 26.0.1) manually and place it in the current directory, then run this task again."
-          exit 1
-        fi
-        curl -fS -O {{.XCODE_XIP_URL}}
-        if [ ! -f {{.XCODE_XIP_FILENAME}} ] || [ ! -s {{.XCODE_XIP_FILENAME}} ]; then
-          echo "Download failed or file is empty."
-          exit 1
-        fi
-        echo "Download complete. File size: $(ls -lh {{.XCODE_XIP_FILENAME}} | awk '{print $5}')"
-      fi
-      if [ -f {{.XCODE_XIP_FILENAME}} ]; then
-        if [ -d Xcode.app ]; then
-          echo "Xcode.app already extracted, skipping extraction."
-        else
-          echo "Extracting Xcode..."
-          echo "This may take 30+ minutes for large Xcode archives. Please wait..."
-          xip -x {{.XCODE_XIP_FILENAME}}
-        fi
-        echo "Moving Xcode to Applications..."
-        echo "Moving Xcode to Applications..."
-        if [ -d /Applications/Xcode_{{.XCODE_VERSION}}.app ]; then
-          echo "Removing existing /Applications/Xcode_{{.XCODE_VERSION}}.app..."
-          sudo rm -rf /Applications/Xcode_{{.XCODE_VERSION}}.app
-        fi
-        sudo mv Xcode.app /Applications/Xcode_{{.XCODE_VERSION}}.app
-        echo "Setting Xcode {{.XCODE_VERSION}} as the active developer directory..."
-        sudo xcode-select -s /Applications/Xcode_{{.XCODE_VERSION}}.app/Contents/Developer
-        echo "Verifying installation..."
-        xcodebuild -version
-        echo "No Xcode .xip file available. Installation aborted."
-        exit 1
-      fi
 
   run-ios:
     desc: Run the iOS app on iPhone 17 Pro simulator
