@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:MindBodyDictionaryMobile.PageModels"
+             xmlns:local="clr-namespace:MindBodyDictionaryMobile.Converter"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="MindBodyDictionaryMobile.Pages.ImageCachePage"
              x:DataType="vm:ImageCachePageModel"
@@ -10,14 +11,9 @@
     <ContentPage.Resources>
         <ResourceDictionary>
             <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+            <local:BytesToFormattedSizeConverter x:Key="BytesToFormattedSizeConverter" />
         </ResourceDictionary>
     </ContentPage.Resources>
-
-    <ContentPage.Behaviors>
-        <toolkit:EventToCommandBehavior
-            EventName="Appearing"
-            Command="{Binding AppearingCommand}" />
-    </ContentPage.Behaviors>
 
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="20">
@@ -49,6 +45,21 @@
                     <Label Text="Cache Summary"
                            FontSize="16"
                            FontAttributes="Bold" />
+
+                    <VerticalStackLayout Spacing="4" BackgroundColor="Yellow" Padding="10">
+                        <Label Text="{Binding TotalImagesInResources, StringFormat='DEBUG TotalImagesInResources: {0}'}"
+                               FontSize="12"
+                               TextColor="Red" />
+                        <Label Text="{Binding CachedImages, StringFormat='DEBUG CachedImages: {0}'}"
+                               FontSize="12"
+                               TextColor="Red" />
+                        <Label Text="{Binding PercentageCached, StringFormat='DEBUG PercentageCached: {0}'}"
+                               FontSize="12"
+                               TextColor="Red" />
+                        <Label Text="{Binding TotalCacheSize, StringFormat='DEBUG TotalCacheSize: {0}'}"
+                               FontSize="12"
+                               TextColor="Red" />
+                    </VerticalStackLayout>
 
                     <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto,Auto" ColumnSpacing="15" RowSpacing="10">
 
@@ -96,7 +107,7 @@
                                VerticalOptions="Center"
                                Grid.Row="3"
                                Grid.Column="0" />
-                        <Label x:Name="SizeLabel"
+                        <Label Text="{Binding TotalCacheSize, Converter={StaticResource BytesToFormattedSizeConverter}}"
                                FontSize="13"
                                FontAttributes="Bold"
                                TextColor="{StaticResource Primary}"
@@ -146,6 +157,10 @@
                    FontAttributes="Bold"
                    IsVisible="{Binding CachedImagesList, Converter={StaticResource IsNotNullOrEmptyConverter}}" />
 
+            <Label Text="{Binding CachedImagesList.Count, StringFormat='Total items in list: {0}'}"
+                   FontSize="12"
+                   TextColor="Blue" />
+
             <CollectionView ItemsSource="{Binding CachedImagesList}"
                            IsVisible="{Binding CachedImagesList, Converter={StaticResource IsNotNullOrEmptyConverter}}">
                 <CollectionView.ItemTemplate>
@@ -172,6 +187,57 @@
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
+
+            <!-- Debug Info Section -->
+            <Border StrokeThickness="2"
+                    Stroke="Red"
+                    BackgroundColor="{AppThemeBinding Light=#FFE6E6, Dark=#331111}"
+                    Padding="15"
+                    Margin="0,20,0,0"
+                    StrokeShape="RoundRectangle 10">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="🔧 Debug Info"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           TextColor="Red" />
+
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="{Binding DebugResourcesFound, StringFormat='Manifest Resources Found: {0}'}"
+                               FontSize="12"
+                               FontAttributes="Bold" />
+                        <Label Text="{Binding DebugImagesInResources, StringFormat='Images in Resources: {0}'}"
+                               FontSize="12" />
+                        <Label Text="{Binding DebugCachedCount, StringFormat='Images in Cache DB: {0}'}"
+                               FontSize="12" />
+                        <Label Text="{Binding DebugCacheDbPath, StringFormat='Cache DB Path: {0}'}"
+                               FontSize="10"
+                               LineBreakMode="TailTruncation" />
+                    </VerticalStackLayout>
+
+                    <Button Text="Load Debug Info"
+                            Command="{Binding LoadDebugInfoCommand}"
+                            BackgroundColor="Red"
+                            TextColor="White"
+                            HeightRequest="40"
+                            CornerRadius="8"
+                            FontSize="12" />
+
+                    <Button Text="Copy Debug Info"
+                            Command="{Binding CopyDebugInfoCommand}"
+                            BackgroundColor="Orange"
+                            TextColor="White"
+                            HeightRequest="40"
+                            CornerRadius="8"
+                            FontSize="12" />
+
+                    <ScrollView HeightRequest="150">
+                        <Label Text="{Binding DebugLog}"
+                               FontSize="10"
+                               LineBreakMode="CharacterWrap"
+                               TextColor="{AppThemeBinding Light=Black, Dark=White}" />
+                    </ScrollView>
+                </VerticalStackLayout>
+            </Border>
 
         </VerticalStackLayout>
     </ScrollView>

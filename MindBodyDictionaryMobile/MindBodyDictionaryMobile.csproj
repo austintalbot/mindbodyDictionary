@@ -49,6 +49,9 @@
 
 		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+
+		<!-- Embedded Images for cache -->
+		<EmbeddedResource Include="Resources\Raw\images\**" LogicalName="MindBodyDictionaryMobile.Resources.Raw.images.%(Filename)%(Extension)" />
 	</ItemGroup>
 
 	<ItemGroup>

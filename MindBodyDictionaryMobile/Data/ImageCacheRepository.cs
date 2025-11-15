@@ -1,6 +1,7 @@
 using MindBodyDictionaryMobile.Models;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Logging;
+using System.Text.RegularExpressions;
 
 namespace MindBodyDictionaryMobile.Data;
 
@@ -25,11 +26,34 @@ public class ImageCacheRepository
 		if (_hasBeenInitialized)
 			return;
 
-		await using var connection = new SqliteConnection(Constants.DatabasePath);
-		await connection.OpenAsync();
-
 		try
 		{
+			var dbPath = Constants.DatabasePath;
+			_logger.LogInformation("Init: DatabasePath = {Path}", dbPath);
+			
+			// Extract the file path from the connection string
+			var connectionString = dbPath;
+			var dataSourceMatch = Regex.Match(connectionString, @"Data Source=([^;]+)");
+			if (dataSourceMatch.Success)
+			{
+				var filePath = dataSourceMatch.Groups[1].Value;
+				_logger.LogInformation("Init: Extracted file path = {FilePath}", filePath);
+				
+				var directory = Path.GetDirectoryName(filePath);
+				_logger.LogInformation("Init: Directory = {Directory}", directory);
+				
+				if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+				{
+					_logger.LogInformation("Init: Creating directory {Directory}", directory);
+					Directory.CreateDirectory(directory);
+				}
+			}
+
+			_logger.LogInformation("Init: Opening connection to {Path}", dbPath);
+			await using var connection = new SqliteConnection(dbPath);
+			await connection.OpenAsync();
+			_logger.LogInformation("Init: Connection opened successfully");
+
 			var createTableCmd = connection.CreateCommand();
 			createTableCmd.CommandText = @"
             CREATE TABLE IF NOT EXISTS ImageCache (
@@ -40,19 +64,22 @@ public class ImageCacheRepository
                 ContentType TEXT NOT NULL
             );";
 			await createTableCmd.ExecuteNonQueryAsync();
+			_logger.LogInformation("Init: ImageCache table created/verified");
 
 			// Create index for faster lookups by filename
 			var createIndexCmd = connection.CreateCommand();
 			createIndexCmd.CommandText = "CREATE INDEX IF NOT EXISTS idx_imagecache_filename ON ImageCache(FileName);";
 			await createIndexCmd.ExecuteNonQueryAsync();
+			_logger.LogInformation("Init: Index created/verified");
+			
+			_hasBeenInitialized = true;
+			_logger.LogInformation("Init: Initialization complete");
 		}
 		catch (Exception e)
 		{
-			_logger.LogError(e, "Error creating ImageCache table");
+			_logger.LogError(e, "Init: Error creating ImageCache table - {Message}", e.Message);
 			throw;
 		}
-
-		_hasBeenInitialized = true;
 	}
 
 	/// <summary>
@@ -110,6 +137,7 @@ public class ImageCacheRepository
 			});
 		}
 
+		_logger.LogInformation("ListAsync: Retrieved {Count} images from cache", images.Count);
 		return images;
 	}
 
@@ -118,12 +146,16 @@ public class ImageCacheRepository
 	/// </summary>
 	public async Task SaveItemAsync(ImageCache image)
 	{
-		await Init();
-		await using var connection = new SqliteConnection(Constants.DatabasePath);
-		await connection.OpenAsync();
-
 		try
 		{
+			_logger.LogInformation("SaveItemAsync: Starting for {FileName}", image.FileName);
+			await Init();
+			_logger.LogInformation("SaveItemAsync: Init complete, opening connection");
+			
+			await using var connection = new SqliteConnection(Constants.DatabasePath);
+			await connection.OpenAsync();
+			_logger.LogInformation("SaveItemAsync: Connection opened");
+
 			var insertCmd = connection.CreateCommand();
 			insertCmd.CommandText = @"
             INSERT OR REPLACE INTO ImageCache (FileName, ImageData, CachedAt, ContentType)
@@ -134,11 +166,14 @@ public class ImageCacheRepository
 			insertCmd.Parameters.AddWithValue("@CachedAt", image.CachedAt);
 			insertCmd.Parameters.AddWithValue("@ContentType", image.ContentType);
 
-			await insertCmd.ExecuteNonQueryAsync();
+			_logger.LogInformation("SaveItemAsync: Executing insert for {FileName}", image.FileName);
+			var result = await insertCmd.ExecuteNonQueryAsync();
+			_logger.LogInformation("SaveItemAsync: Insert complete - {FileName} ({Size} bytes), rows affected: {RowsAffected}", 
+				image.FileName, image.ImageData.Length, result);
 		}
 		catch (Exception e)
 		{
-			_logger.LogError(e, "Error saving image to cache: {FileName}", image.FileName);
+			_logger.LogError(e, "SaveItemAsync: ERROR saving image to cache: {FileName} - {Message}", image.FileName, e.Message);
 			throw;
 		}
 	}
@@ -200,7 +235,9 @@ public class ImageCacheRepository
 
 		var countCmd = connection.CreateCommand();
 		countCmd.CommandText = "SELECT COUNT(*) FROM ImageCache";
-		return (int)(long)await countCmd.ExecuteScalarAsync();
+		var count = (int)(long)await countCmd.ExecuteScalarAsync();
+		_logger.LogInformation("GetCountAsync: Found {Count} cached images", count);
+		return count;
 	}
 
 	/// <summary>

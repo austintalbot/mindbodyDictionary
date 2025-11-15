@@ -150,26 +150,47 @@ public class ImageCacheService
 		}
 	}
 
-	private async Task CacheImageAsync(string filePath)
+	private async Task CacheImageAsync(string fileName)
 	{
 		try
 		{
-			var fileName = Path.GetFileName(filePath);
+			_logger.LogInformation("CacheImageAsync: Starting for {FileName}", fileName);
 			
 			// Check if already cached
 			var existing = await _imageCacheRepository.GetByFileNameAsync(fileName);
 			if (existing != null)
 			{
-				_logger.LogDebug("Image already cached: {FileName}", fileName);
+				_logger.LogDebug("CacheImageAsync: Image already cached: {FileName}", fileName);
 				return;
 			}
 
-			// Load image from resources
-			var imagePath = $"{ImagesResourcePath}/{fileName}";
-			await using var stream = await FileSystem.OpenAppPackageFileAsync(imagePath);
+			// Load image from manifest resources
+			var assembly = typeof(ImageCacheService).Assembly;
+			_logger.LogInformation("CacheImageAsync: Searching for resource matching {FileName}", fileName);
+			
+			var resourceName = assembly.GetManifestResourceNames()
+				.FirstOrDefault(name => name.EndsWith($".{fileName}", StringComparison.OrdinalIgnoreCase));
+
+			if (resourceName == null)
+			{
+				_logger.LogWarning("CacheImageAsync: Image resource not found for {FileName}", fileName);
+				return;
+			}
+
+			_logger.LogInformation("CacheImageAsync: Found resource {ResourceName}", resourceName);
+
+			await using var stream = assembly.GetManifestResourceStream(resourceName);
+			if (stream == null)
+			{
+				_logger.LogWarning("CacheImageAsync: Failed to open resource stream: {ResourceName}", resourceName);
+				return;
+			}
+
 			var memoryStream = new MemoryStream();
 			await stream.CopyToAsync(memoryStream);
 			var imageData = memoryStream.ToArray();
+
+			_logger.LogInformation("CacheImageAsync: Loaded {Size} bytes for {FileName}", imageData.Length, fileName);
 
 			// Save to database
 			var imageCache = new ImageCache
@@ -181,11 +202,12 @@ public class ImageCacheService
 			};
 
 			await _imageCacheRepository.SaveItemAsync(imageCache);
-			_logger.LogDebug("Cached image: {FileName} ({Size} bytes)", fileName, imageData.Length);
+			_logger.LogInformation("CacheImageAsync: Successfully cached {FileName} ({Size} bytes) from {ResourceName}", 
+				fileName, imageData.Length, resourceName);
 		}
 		catch (Exception e)
 		{
-			_logger.LogWarning(e, "Error caching image: {FilePath}", filePath);
+			_logger.LogError(e, "CacheImageAsync: Error caching image: {FileName} - {Message}", fileName, e.Message);
 		}
 	}
 
@@ -195,34 +217,40 @@ public class ImageCacheService
 
 		try
 		{
-			// Get all files from the images folder in Resources/Raw
-			var basePath = Path.Combine(FileSystem.AppDataDirectory, "..", "..", "Resources", "Raw", ImagesResourcePath);
-			basePath = Path.GetFullPath(basePath);
+			// In MAUI, we need to enumerate resources from the assembly
+			var assembly = typeof(ImageCacheService).Assembly;
+			var resourceNames = assembly.GetManifestResourceNames();
 			
-			if (!Directory.Exists(basePath))
-			{
-				_logger.LogWarning("Images directory not found at {Path}", basePath);
-				return imageFiles;
-			}
+			_logger.LogInformation("GetImageFilesFromResourcesAsync: Found {Count} total manifest resources", resourceNames.Length);
 
-			var files = Directory.GetFiles(basePath, "*.*", SearchOption.TopDirectoryOnly);
-
-			foreach (var file in files)
+			foreach (var resourceName in resourceNames)
 			{
-				var fileName = Path.GetFileName(file);
-				if (IsImageFile(fileName))
+				// Check if resource is in the images folder - match pattern like "MindBodyDictionaryMobile.Resources.Raw.images.imagename.png"
+				if (resourceName.Contains(".images.") && (resourceName.EndsWith(".png") || resourceName.EndsWith(".jpg") || 
+					resourceName.EndsWith(".jpeg") || resourceName.EndsWith(".gif") || resourceName.EndsWith(".svg") || 
+					resourceName.EndsWith(".webp")))
 				{
-					imageFiles.Add(fileName);
+					// Extract the file name from the resource name
+					// Pattern: MindBodyDictionaryMobile.Resources.Raw.images.FileName.png
+					var imagesIndex = resourceName.IndexOf(".images.", StringComparison.Ordinal);
+					if (imagesIndex >= 0)
+					{
+						var fileName = resourceName.Substring(imagesIndex + ".images.".Length);
+						
+						if (IsImageFile(fileName))
+						{
+							imageFiles.Add(fileName);
+							_logger.LogDebug("GetImageFilesFromResourcesAsync: Found image {ResourceName} -> {FileName}", resourceName, fileName);
+						}
+					}
 				}
 			}
-		}
-		catch (DirectoryNotFoundException e)
-		{
-			_logger.LogWarning(e, "Images directory not found");
+
+			_logger.LogInformation("GetImageFilesFromResourcesAsync: Found {Count} image files in resources", imageFiles.Count);
 		}
 		catch (Exception e)
 		{
-			_logger.LogError(e, "Error reading images from resources");
+			_logger.LogError(e, "GetImageFilesFromResourcesAsync: Error reading images from resources - {Message}", e.Message);
 		}
 
 		return imageFiles;

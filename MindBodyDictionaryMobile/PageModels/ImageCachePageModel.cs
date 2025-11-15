@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using MindBodyDictionaryMobile.Data;
 using MindBodyDictionaryMobile.Models;
 using Microsoft.Extensions.Logging;
+using System.Text;
 
 namespace MindBodyDictionaryMobile.PageModels;
 
@@ -33,6 +34,21 @@ public partial class ImageCachePageModel : ObservableObject
     [ObservableProperty]
     bool isLoading;
 
+    [ObservableProperty]
+    int debugResourcesFound;
+
+    [ObservableProperty]
+    int debugImagesInResources;
+
+    [ObservableProperty]
+    int debugCachedCount;
+
+    [ObservableProperty]
+    string debugCacheDbPath = string.Empty;
+
+    [ObservableProperty]
+    string debugLog = string.Empty;
+
     public ImageCachePageModel(
         ImageCacheRepository imageCacheRepository,
         ImageCacheService imageCacheService,
@@ -41,12 +57,7 @@ public partial class ImageCachePageModel : ObservableObject
         _imageCacheRepository = imageCacheRepository;
         _imageCacheService = imageCacheService;
         _logger = logger;
-    }
-
-    [RelayCommand]
-    async Task Appearing()
-    {
-        await LoadCacheStats();
+        _logger.LogInformation("ImageCachePageModel: Constructor complete");
     }
 
     [RelayCommand]
@@ -56,13 +67,20 @@ public partial class ImageCachePageModel : ObservableObject
         {
             IsLoading = true;
             StatusMessage = "Loading cache statistics...";
+            _logger.LogInformation("LoadCacheStats: Starting");
 
             var stats = await _imageCacheService.GetCacheStatsAsync();
+            _logger.LogInformation("LoadCacheStats: Got stats - Total: {Total}, Cached: {Cached}, Resources: {Resources}",
+                stats.CachedImages, stats.CachedImages, stats.TotalImagesInResources);
+            
             TotalImagesInResources = stats.TotalImagesInResources;
             CachedImages = stats.CachedImages;
             PercentageCached = stats.PercentageCached;
+            _logger.LogInformation("LoadCacheStats: Properties updated - TotalImagesInResources={Total}, CachedImages={Cached}, PercentageCached={Percent}",
+                TotalImagesInResources, CachedImages, PercentageCached);
 
             var cachedItems = await _imageCacheRepository.ListAsync();
+            _logger.LogInformation("LoadCacheStats: Got {Count} cached items from repository", cachedItems.Count);
             long totalSize = 0;
 
             var items = cachedItems.Select(img =>
@@ -77,26 +95,35 @@ public partial class ImageCachePageModel : ObservableObject
                 };
             }).OrderBy(x => x.FileName).ToList();
 
+            _logger.LogInformation("LoadCacheStats: Created {Count} ImageCacheItems", items.Count);
             CachedImagesList = items;
+            _logger.LogInformation("LoadCacheStats: CachedImagesList set to {Count} items", CachedImagesList.Count);
+            
             TotalCacheSize = totalSize;
+            _logger.LogInformation("LoadCacheStats: TotalCacheSize set to {Size}", TotalCacheSize);
 
             StatusMessage = $"Cache loaded: {CachedImages} images cached ({GetFormattedSize(totalSize)})";
-            _logger.LogInformation("Cache stats loaded - Total: {Total}, Cached: {Cached}, Resources: {Resources}",
-                CachedImages, CachedImages, TotalImagesInResources);
+            _logger.LogInformation("LoadCacheStats: Completed - StatusMessage: {Message}", StatusMessage);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error loading cache statistics");
+            _logger.LogError(ex, "LoadCacheStats: ERROR - {Message}", ex.Message);
             StatusMessage = $"Error loading cache: {ex.Message}";
         }
         finally
         {
             IsLoading = false;
+            _logger.LogInformation("LoadCacheStats: Finally block - IsLoading=false");
         }
     }
 
     [RelayCommand]
     async Task RefreshCache()
+    {
+        await RefreshCacheAsync();
+    }
+
+    private async Task RefreshCacheAsync()
     {
         try
         {
@@ -142,6 +169,72 @@ public partial class ImageCachePageModel : ObservableObject
         finally
         {
             IsLoading = false;
+        }
+    }
+
+    [RelayCommand]
+    async Task LoadDebugInfo()
+    {
+        try
+        {
+            DebugLog = string.Empty;
+            var logBuilder = new StringBuilder();
+
+            // Get assembly info
+            var assembly = typeof(ImageCachePageModel).Assembly;
+            var resourceNames = assembly.GetManifestResourceNames();
+            DebugResourcesFound = resourceNames.Length;
+            logBuilder.AppendLine($"Total manifest resources: {resourceNames.Length}");
+
+            // Count image resources
+            var imageResources = resourceNames
+                .Where(r => r.Contains("images") && 
+                    (r.EndsWith(".png") || r.EndsWith(".jpg") || r.EndsWith(".jpeg") || 
+                     r.EndsWith(".gif") || r.EndsWith(".svg") || r.EndsWith(".webp")))
+                .ToList();
+            DebugImagesInResources = imageResources.Count;
+            logBuilder.AppendLine($"Image resources found: {imageResources.Count}");
+
+            if (imageResources.Count > 0)
+            {
+                logBuilder.AppendLine("First 5 images:");
+                foreach (var res in imageResources.Take(5))
+                {
+                    logBuilder.AppendLine($"  - {res}");
+                }
+            }
+
+            // Check database
+            DebugCacheDbPath = Constants.DatabasePath;
+            logBuilder.AppendLine($"\nDatabase path: {DebugCacheDbPath}");
+            logBuilder.AppendLine($"Database exists: {File.Exists(DebugCacheDbPath)}");
+
+            DebugCachedCount = await _imageCacheRepository.GetCountAsync();
+            logBuilder.AppendLine($"Images in cache DB: {DebugCachedCount}");
+
+            DebugLog = logBuilder.ToString();
+            _logger.LogInformation("Debug info loaded:\n{DebugInfo}", DebugLog);
+        }
+        catch (Exception ex)
+        {
+            DebugLog = $"Error: {ex.Message}\n\n{ex.StackTrace}";
+            _logger.LogError(ex, "Error loading debug info");
+        }
+    }
+
+    [RelayCommand]
+    async Task CopyDebugInfo()
+    {
+        try
+        {
+            await Clipboard.Default.SetTextAsync(DebugLog);
+            StatusMessage = "Debug info copied to clipboard";
+            _logger.LogInformation("Debug info copied to clipboard");
+        }
+        catch (Exception ex)
+        {
+            StatusMessage = $"Error copying to clipboard: {ex.Message}";
+            _logger.LogError(ex, "Error copying debug info");
         }
     }
 

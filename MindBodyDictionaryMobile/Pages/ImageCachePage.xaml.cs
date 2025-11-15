@@ -2,30 +2,46 @@ namespace MindBodyDictionaryMobile.Pages;
 
 public partial class ImageCachePage : ContentPage
 {
-	public ImageCachePage()
+	private bool _hasLoadedOnce = false;
+
+	public ImageCachePage(PageModels.ImageCachePageModel model)
 	{
 		InitializeComponent();
+		System.Diagnostics.Debug.WriteLine("ImageCachePage: Constructor called");
+		BindingContext = model;
+		System.Diagnostics.Debug.WriteLine($"ImageCachePage: BindingContext set to {model?.GetType().Name}");
 	}
 
 	protected override void OnAppearing()
 	{
 		base.OnAppearing();
-		UpdateSizeLabel();
+		System.Diagnostics.Debug.WriteLine("ImageCachePage: OnAppearing called");
+		
+		if (!_hasLoadedOnce && BindingContext is PageModels.ImageCachePageModel model)
+		{
+			_hasLoadedOnce = true;
+			System.Diagnostics.Debug.WriteLine("ImageCachePage: First load - invoking LoadCacheStats");
+			
+			// Fire and forget - the command will update bindings
+			_ = MainThread.InvokeOnMainThreadAsync(async () =>
+			{
+				try
+				{
+					await model.LoadCacheStatsCommand.ExecuteAsync(null);
+					System.Diagnostics.Debug.WriteLine("ImageCachePage: LoadCacheStats completed");
+				}
+				catch (Exception ex)
+				{
+					System.Diagnostics.Debug.WriteLine($"ImageCachePage: Error: {ex}");
+				}
+			});
+		}
 	}
 
-	private void UpdateSizeLabel()
+	protected override void OnDisappearing()
 	{
-		var bindingContext = this.BindingContext as PageModels.ImageCachePageModel;
-		if (bindingContext != null && SizeLabel is not null)
-		{
-			var bytes = bindingContext.TotalCacheSize;
-			if (bytes < 1024)
-				SizeLabel.Text = $"{bytes} B";
-			else if (bytes < 1024 * 1024)
-				SizeLabel.Text = $"{bytes / 1024.0:F2} KB";
-			else
-				SizeLabel.Text = $"{bytes / (1024.0 * 1024):F2} MB";
-		}
+		base.OnDisappearing();
+		System.Diagnostics.Debug.WriteLine("ImageCachePage: OnDisappearing called");
 	}
 }
 
