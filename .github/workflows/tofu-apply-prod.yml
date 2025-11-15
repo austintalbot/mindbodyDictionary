@@ -1,0 +1,116 @@
+name: Tofu Apply - Prod
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type "apply" to confirm deployment to production'
+        required: true
+        default: ''
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+  ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+  ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+  ARM_USE_OIDC: true
+
+jobs:
+  validate-input:
+    name: Validate Input
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check confirmation
+        run: |
+          if [ "${{ github.event.inputs.confirm }}" != "apply" ]; then
+            echo "::error::Confirmation failed. You must type 'apply' to proceed."
+            exit 1
+          fi
+
+  apply-prod:
+    name: Apply to Production Environment
+    needs: validate-input
+    runs-on: ubuntu-latest
+    environment: 
+      name: prod
+      # Note: Configure deployment protection rules in GitHub repo settings
+    concurrency:
+      group: tofu-prod
+      cancel-in-progress: false
+    timeout-minutes: 30
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Setup OpenTofu
+        uses: opentofu/setup-opentofu@v1
+        with:
+          tofu_version: 1.6.0
+
+      - name: Tofu Init
+        run: |
+          cd tofu
+          tofu init \
+            -backend-config="resource_group_name=rg-tofu-state-prod" \
+            -backend-config="storage_account_name=tfstateprod" \
+            -backend-config="container_name=tfstate" \
+            -backend-config="key=prod.tfstate"
+
+      - name: Tofu Plan
+        id: plan
+        run: |
+          cd tofu
+          tofu plan \
+            -var-file=environments/prod.tfvars \
+            -var="fcm_project_id=${{ secrets.FCM_PROJECT_ID }}" \
+            -var="fcm_client_email=${{ secrets.FCM_CLIENT_EMAIL }}" \
+            -var="fcm_private_key=${{ secrets.FCM_PRIVATE_KEY }}" \
+            -var="apns_key_id=${{ secrets.APNS_KEY_ID }}" \
+            -var="apns_team_id=${{ secrets.APNS_TEAM_ID }}" \
+            -var="apns_bundle_id=${{ secrets.APNS_BUNDLE_ID }}" \
+            -var="apns_token=${{ secrets.APNS_TOKEN_PROD }}" \
+            -out=tfplan \
+            -no-color
+
+      - name: Tofu Apply
+        id: apply
+        run: |
+          cd tofu
+          tofu apply tfplan -no-color
+
+      - name: Output Summary
+        if: always()
+        run: |
+          cd tofu
+          echo "## Tofu Apply - Production Environment" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Status:** ${{ steps.apply.outcome }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Triggered by:** @${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+
+      - name: Tofu Output
+        if: success()
+        run: |
+          cd tofu
+          tofu output -json > outputs.json
+          cat outputs.json
+
+      - name: Upload Outputs
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tofu-outputs-prod
+          path: tofu/outputs.json
+          retention-days: 90
