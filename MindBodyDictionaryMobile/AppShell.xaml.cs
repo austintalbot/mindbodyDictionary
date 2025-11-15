@@ -10,6 +10,14 @@ public partial class AppShell : Shell
 		InitializeComponent();
 		var currentTheme = Application.Current!.RequestedTheme;		
 		ThemeSegmentedControl.SelectedIndex = currentTheme == AppTheme.Light ? 0 : 1;
+
+#if !DEBUG
+		// Hide the Image Cache menu in release builds
+		if (ImageCacheContent != null)
+		{
+			ImageCacheContent.IsVisible = false;
+		}
+#endif
 	}
 	public static async Task DisplaySnackbarAsync(string message)
 	{
