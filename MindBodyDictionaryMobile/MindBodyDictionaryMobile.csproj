@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<TargetFrameworks>net10.0-android;net10.0-ios;</TargetFrameworks>
-
+		<MauiVersion>10.0.10</MauiVersion>
 
 		<OutputType>Exe</OutputType>
 		<RootNamespace>MindBodyDictionaryMobile</RootNamespace>
@@ -49,18 +49,21 @@
 
 		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+
+		<!-- Embedded Images for cache -->
+		<EmbeddedResource Include="Resources\Raw\images\**" LogicalName="MindBodyDictionaryMobile.Resources.Raw.images.%(Filename)%(Extension)" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.0-rc.2.25502.107" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
-		<PackageReference Include="CommunityToolkit.Maui" Version="11.2.0" />
-		<PackageReference Include="Microsoft.Data.Sqlite.Core" Version="8.0.10" />
-		<PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.1.10" />
+		<PackageReference Include="CommunityToolkit.Maui" Version="13.0.0" />
+		<PackageReference Include="Microsoft.Data.Sqlite.Core" Version="10.0.0" />
+		<PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.1.11" />
 		<PackageReference Include="Syncfusion.Maui.Toolkit" Version="1.0.7" />
 		<PackageReference Include="Microsoft.Azure.NotificationHubs" Version="4.2.0" />
 	</ItemGroup>
