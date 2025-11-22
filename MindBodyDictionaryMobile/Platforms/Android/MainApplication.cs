@@ -4,14 +4,9 @@ using Android.Runtime;
 namespace MindBodyDictionaryMobile;
 
 [Application]
-public class MainApplication : MauiApplication
+public class MainApplication(IntPtr handle, JniHandleOwnership ownership) : MauiApplication(handle, ownership)
 {
-	public MainApplication(IntPtr handle, JniHandleOwnership ownership)
-		: base(handle, ownership)
-	{
-	}
-
-	protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
+    protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
 	
 	public override void OnCreate()
 	{
@@ -19,6 +14,6 @@ public class MainApplication : MauiApplication
 		
 		// Initialize Firebase
 		Firebase.FirebaseApp.InitializeApp(this);
-		global::Android.Util.Log.Info("Firebase", "Firebase initialized");
+        Android.Util.Log.Info("Firebase", "Firebase initialized");
 	}
 }

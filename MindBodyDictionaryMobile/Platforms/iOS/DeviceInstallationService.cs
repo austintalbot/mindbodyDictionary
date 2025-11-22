@@ -21,10 +21,7 @@ public class DeviceInstallationService : IDeviceInstallationService
     
     public bool NotificationsSupported => true;
 
-    public string GetDeviceId()
-    {
-        return UIDevice.CurrentDevice.IdentifierForVendor?.AsString() ?? Guid.NewGuid().ToString();
-    }
+    public string GetDeviceId() => UIDevice.CurrentDevice.IdentifierForVendor?.AsString() ?? Guid.NewGuid().ToString();
 
     public DeviceInstallation GetDeviceInstallation(params string[] tags)
     {
@@ -56,7 +53,7 @@ public class DeviceInstallationService : IDeviceInstallationService
         // Generate a realistic-looking mock APNS token for simulator testing
         // Real tokens are 64 hex characters
         var deviceId = GetDeviceId();
-        var mockToken = $"{deviceId.Replace("-", "").Substring(0, 32)}{Guid.NewGuid().ToString().Replace("-", "").Substring(0, 32)}".ToLower();
+        var mockToken = $"{deviceId.Replace("-", "")[..32]}{Guid.NewGuid().ToString().Replace("-", "")[..32]}".ToLower();
         Debug.WriteLine($"iOS Simulator: Using mock APNS token for testing: {mockToken}");
         return mockToken;
     }

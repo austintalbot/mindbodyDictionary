@@ -4,27 +4,17 @@ using Microsoft.Extensions.Logging;
 
 namespace MindBodyDictionaryMobile.Data;
 
-public class SeedDataService
+public class SeedDataService(ProjectRepository projectRepository, TaskRepository taskRepository, TagRepository tagRepository, CategoryRepository categoryRepository, ImageCacheService imageCacheService, ILogger<SeedDataService> logger)
 {
-	private readonly ProjectRepository _projectRepository;
-	private readonly TaskRepository _taskRepository;
-	private readonly TagRepository _tagRepository;
-	private readonly CategoryRepository _categoryRepository;
-	private readonly ImageCacheService _imageCacheService;
+	private readonly ProjectRepository _projectRepository = projectRepository;
+	private readonly TaskRepository _taskRepository = taskRepository;
+	private readonly TagRepository _tagRepository = tagRepository;
+	private readonly CategoryRepository _categoryRepository = categoryRepository;
+	private readonly ImageCacheService _imageCacheService = imageCacheService;
 	private readonly string _seedDataFilePath = "SeedData.json";
-	private readonly ILogger<SeedDataService> _logger;
+	private readonly ILogger<SeedDataService> _logger = logger;
 
-	public SeedDataService(ProjectRepository projectRepository, TaskRepository taskRepository, TagRepository tagRepository, CategoryRepository categoryRepository, ImageCacheService imageCacheService, ILogger<SeedDataService> logger)
-	{
-		_projectRepository = projectRepository;
-		_taskRepository = taskRepository;
-		_tagRepository = tagRepository;
-		_categoryRepository = categoryRepository;
-		_imageCacheService = imageCacheService;
-		_logger = logger;
-	}
-
-	public async Task LoadSeedDataAsync()
+    public async Task LoadSeedDataAsync()
 	{
 		ClearTables();
 

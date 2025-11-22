@@ -57,8 +57,8 @@ public static class MauiProgram
 		builder.Services.AddTransient<NotificationSettingsPage>();
 
 #if DEBUG
-		builder.Services.AddTransient<PageModels.ImageCachePageModel>();
-		builder.Services.AddTransient<Pages.ImageCachePage>();
+		builder.Services.AddTransient<ImageCachePageModel>();
+		builder.Services.AddTransient<ImageCachePage>();
 #endif
 
 		builder.Services.AddTransientWithShellRoute<ProjectDetailPage, ProjectDetailPageModel>("project");

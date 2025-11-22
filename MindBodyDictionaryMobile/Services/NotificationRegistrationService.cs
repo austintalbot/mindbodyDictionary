@@ -102,8 +102,8 @@ public class NotificationRegistrationService : INotificationRegistrationService
             _logger.LogInformation("  InstallationId: {InstallationId}", deviceInstallation.InstallationId);
             _logger.LogInformation("  Platform: {Platform}", deviceInstallation.Platform);
             _logger.LogInformation("  PushChannel: {PushChannel}", 
-                string.IsNullOrEmpty(deviceInstallation.PushChannel) ? "EMPTY/NULL" : $"{deviceInstallation.PushChannel.Substring(0, Math.Min(20, deviceInstallation.PushChannel.Length))}...");
-            _logger.LogInformation("  Tags: {Tags}", string.Join(", ", deviceInstallation.Tags ?? new List<string>()));
+                string.IsNullOrEmpty(deviceInstallation.PushChannel) ? "EMPTY/NULL" : $"{deviceInstallation.PushChannel[..Math.Min(20, deviceInstallation.PushChannel.Length)]}...");
+            _logger.LogInformation("  Tags: {Tags}", string.Join(", ", deviceInstallation.Tags ?? []));
 
             // Create Installation object for Azure Notification Hub
             var installation = new Installation

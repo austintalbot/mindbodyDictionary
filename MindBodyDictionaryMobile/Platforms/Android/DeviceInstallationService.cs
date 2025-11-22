@@ -5,15 +5,12 @@ namespace MindBodyDictionaryMobile.Platforms.Android;
 
 public class DeviceInstallationService : IDeviceInstallationService
 {
-    public string Token { get; set; }
+    public required string Token { get; set; }
     public bool NotificationsSupported => true;
 
-    public string GetDeviceId()
-    {
-        return global::Android.Provider.Settings.Secure.GetString(
+    public string GetDeviceId() => global::Android.Provider.Settings.Secure.GetString(
             Platform.AppContext.ContentResolver,
-            global::Android.Provider.Settings.Secure.AndroidId);
-    }
+            global::Android.Provider.Settings.Secure.AndroidId) ?? throw new InvalidOperationException("Unable to get device ID");
 
     public DeviceInstallation GetDeviceInstallation(params string[] tags)
     {

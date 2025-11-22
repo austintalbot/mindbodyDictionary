@@ -4,7 +4,7 @@ public partial class ImageCachePage : ContentPage
 {
 	private bool _hasLoadedOnce = false;
 
-	public ImageCachePage(PageModels.ImageCachePageModel model)
+	public ImageCachePage(ImageCachePageModel model)
 	{
 		InitializeComponent();
 		System.Diagnostics.Debug.WriteLine("ImageCachePage: Constructor called");
@@ -17,7 +17,7 @@ public partial class ImageCachePage : ContentPage
 		base.OnAppearing();
 		System.Diagnostics.Debug.WriteLine("ImageCachePage: OnAppearing called");
 		
-		if (!_hasLoadedOnce && BindingContext is PageModels.ImageCachePageModel model)
+		if (!_hasLoadedOnce && BindingContext is ImageCachePageModel model)
 		{
 			_hasLoadedOnce = true;
 			System.Diagnostics.Debug.WriteLine("ImageCachePage: First load - invoking LoadCacheStats");

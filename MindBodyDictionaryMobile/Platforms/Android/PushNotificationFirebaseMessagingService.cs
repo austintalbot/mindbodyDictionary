@@ -5,13 +5,13 @@ using Microsoft.Extensions.Logging;
 namespace MindBodyDictionaryMobile.Platforms.Android;
 
 [Service(Exported = true)]
-[IntentFilter(new[] { "com.google.firebase.MESSAGING_EVENT" })]
+[IntentFilter(["com.google.firebase.MESSAGING_EVENT"])]
 public class PushNotificationFirebaseMessagingService : FirebaseMessagingService
 {
     public override void OnNewToken(string token)
     {
         global::Android.Util.Log.Info("FCM", "=== OnNewToken called ===");
-        global::Android.Util.Log.Info("FCM", $"New token: {token.Substring(0, Math.Min(20, token.Length))}...");
+        global::Android.Util.Log.Info("FCM", $"New token: {token[..Math.Min(20, token.Length)]}...");
         
         try
         {
@@ -50,8 +50,11 @@ public class PushNotificationFirebaseMessagingService : FirebaseMessagingService
             if (message.GetNotification() != null)
             {
                 var notification = message.GetNotification();
-                title = notification.Title ?? title;
-                body = notification.Body ?? "";
+                if (notification != null)
+                {
+                    title = notification.Title ?? title;
+                    body = notification.Body ?? "";
+                }
                 global::Android.Util.Log.Info("FCM", $"Notification payload - Title: {title}, Body: {body}");
             }
             // Check for data payload
@@ -105,16 +108,21 @@ public class PushNotificationFirebaseMessagingService : FirebaseMessagingService
                 intent,
                 pendingFlags);
 
-            Notification.Builder notificationBuilder;
-            if (global::Android.OS.Build.VERSION.SdkInt >= global::Android.OS.BuildVersionCodes.O)
-            {
-                notificationBuilder = new Notification.Builder(this, MainActivity.CHANNEL_ID);
-            }
-            else
-            {
-                notificationBuilder = new Notification.Builder(this);
-            }
+                        Notification.Builder notificationBuilder;
+                        if (global::Android.OS.Build.VERSION.SdkInt >= global::Android.OS.BuildVersionCodes.O)
+                        {
+                            notificationBuilder = new Notification.Builder(this, MainActivity.CHANNEL_ID);
+                        }
+                        else
+                        {
+                            notificationBuilder = new Notification.Builder(this);
+                        }
 
+            if (ApplicationInfo == null)
+            {
+                global::Android.Util.Log.Error("FCM", "❌ ApplicationInfo is null, cannot set notification icon");
+                return;
+            }
             notificationBuilder
                 .SetSmallIcon(ApplicationInfo.Icon)
                 .SetContentTitle(title)
@@ -122,12 +130,17 @@ public class PushNotificationFirebaseMessagingService : FirebaseMessagingService
                 .SetAutoCancel(true)
                 .SetContentIntent(pendingIntent);
 
+
+            
             // Only set priority/defaults on pre-O devices (methods obsolete / ignored on O+)
-            if (global::Android.OS.Build.VERSION.SdkInt < global::Android.OS.BuildVersionCodes.O)
+            if (global::Android.OS.Build.VERSION.SdkInt < global::Android.OS.BuildVersionCodes.O )
             {
-                notificationBuilder
-                    .SetPriority((int)NotificationPriority.High)
+                var priority = Convert.ToInt32(NotificationPriority.High);
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+                _ = notificationBuilder
+                    .SetPriority(priority)
                     .SetDefaults(NotificationDefaults.All);
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
             }
 
             var notification = notificationBuilder.Build();

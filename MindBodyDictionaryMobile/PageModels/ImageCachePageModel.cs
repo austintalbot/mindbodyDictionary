@@ -118,10 +118,7 @@ public partial class ImageCachePageModel : ObservableObject
     }
 
     [RelayCommand]
-    async Task RefreshCache()
-    {
-        await RefreshCacheAsync();
-    }
+    async Task RefreshCache() => await RefreshCacheAsync();
 
     private async Task RefreshCacheAsync()
     {

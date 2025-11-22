@@ -23,19 +23,13 @@ public interface IImageCacheHelper
 /// <summary>
 /// Implementation of image cache helper.
 /// </summary>
-public class ImageCacheHelper : IImageCacheHelper
+public class ImageCacheHelper(ImageCacheService imageCacheService, ILogger<ImageCacheHelper> logger) : IImageCacheHelper
 {
-	private readonly Data.ImageCacheService _imageCacheService;
-	private readonly Microsoft.Extensions.Logging.ILogger<ImageCacheHelper> _logger;
+	private readonly ImageCacheService _imageCacheService = imageCacheService;
+	private readonly ILogger<ImageCacheHelper> _logger = logger;
 	private readonly Dictionary<string, ImageSource?> _memoryCache = [];
 
-	public ImageCacheHelper(Data.ImageCacheService imageCacheService, Microsoft.Extensions.Logging.ILogger<ImageCacheHelper> logger)
-	{
-		_imageCacheService = imageCacheService;
-		_logger = logger;
-	}
-
-	public async Task<ImageSource> GetImageSourceAsync(string fileName)
+    public async Task<ImageSource> GetImageSourceAsync(string fileName)
 	{
 		if (string.IsNullOrWhiteSpace(fileName))
 		{
@@ -78,14 +72,9 @@ public class ImageCacheHelper : IImageCacheHelper
 		return GetDefaultImageSource();
 	}
 
-	public void ClearMemoryCache()
-	{
-		_memoryCache.Clear();
-	}
+    public void ClearMemoryCache() => _memoryCache.Clear();
 
-	private ImageSource GetDefaultImageSource()
-	{
-		// Return transparent placeholder (will show nothing)
-		return ImageSource.FromFile(string.Empty);
-	}
+    private ImageSource GetDefaultImageSource() =>
+        // Return transparent placeholder (will show nothing)
+        ImageSource.FromFile(string.Empty);
 }

@@ -6,14 +6,14 @@ using MindBodyDictionaryMobile.Services;
 
 namespace MindBodyDictionaryMobile.PageModels;
 
-public partial class TaskDetailPageModel : ObservableObject, IQueryAttributable
+public partial class TaskDetailPageModel(ProjectRepository projectRepository, TaskRepository taskRepository, ModalErrorHandler errorHandler) : ObservableObject, IQueryAttributable
 {
 	public const string ProjectQueryKey = "project";
 	private ProjectTask? _task;
 	private bool _canDelete;
-	private readonly ProjectRepository _projectRepository;
-	private readonly TaskRepository _taskRepository;
-	private readonly ModalErrorHandler _errorHandler;
+	private readonly ProjectRepository _projectRepository = projectRepository;
+	private readonly TaskRepository _taskRepository = taskRepository;
+	private readonly ModalErrorHandler _errorHandler = errorHandler;
 
 	[ObservableProperty]
 	private string _title = string.Empty;
@@ -34,19 +34,9 @@ public partial class TaskDetailPageModel : ObservableObject, IQueryAttributable
 	[ObservableProperty]
 	private bool _isExistingProject;
 
-	public TaskDetailPageModel(ProjectRepository projectRepository, TaskRepository taskRepository, ModalErrorHandler errorHandler)
-	{
-		_projectRepository = projectRepository;
-		_taskRepository = taskRepository;
-		_errorHandler = errorHandler;
-	}
+    public void ApplyQueryAttributes(IDictionary<string, object> query) => LoadTaskAsync(query).FireAndForgetSafeAsync(_errorHandler);
 
-	public void ApplyQueryAttributes(IDictionary<string, object> query)
-	{
-		LoadTaskAsync(query).FireAndForgetSafeAsync(_errorHandler);
-	}
-
-	private async Task LoadTaskAsync(IDictionary<string, object> query)
+    private async Task LoadTaskAsync(IDictionary<string, object> query)
 	{
 		if (query.TryGetValue(ProjectQueryKey, out var project))
 			Project = (Project)project;

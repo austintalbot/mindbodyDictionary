@@ -22,7 +22,7 @@ public class MainActivity : MauiAppCompatActivity
     
     void CreateNotificationChannel()
     {
-        global::Android.Util.Log.Info("Notifications", "Creating notification channel...");
+        Android.Util.Log.Info("Notifications", "Creating notification channel...");
         
         if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
         {
@@ -40,8 +40,8 @@ public class MainActivity : MauiAppCompatActivity
             
             var notificationManager = GetSystemService(NotificationService) as NotificationManager;
             notificationManager?.CreateNotificationChannel(channel);
-            
-            global::Android.Util.Log.Info("Notifications", $"✅ Channel created: {CHANNEL_ID}");
+
+            Android.Util.Log.Info("Notifications", $"✅ Channel created: {CHANNEL_ID}");
         }
     }
     
@@ -50,21 +50,21 @@ public class MainActivity : MauiAppCompatActivity
         // Android 13 (API 33) and above requires runtime permission for notifications
         if (Build.VERSION.SdkInt >= BuildVersionCodes.Tiramisu)
         {
-            global::Android.Util.Log.Info("Permissions", "Checking notification permission (Android 13+)...");
+            Android.Util.Log.Info("Permissions", "Checking notification permission (Android 13+)...");
             
-            if (CheckSelfPermission(global::Android.Manifest.Permission.PostNotifications) != Permission.Granted)
+            if (CheckSelfPermission(Android.Manifest.Permission.PostNotifications) != Permission.Granted)
             {
-                global::Android.Util.Log.Info("Permissions", "Requesting POST_NOTIFICATIONS permission...");
-                RequestPermissions(new[] { global::Android.Manifest.Permission.PostNotifications }, REQUEST_NOTIFICATION_PERMISSION);
+                Android.Util.Log.Info("Permissions", "Requesting POST_NOTIFICATIONS permission...");
+                RequestPermissions([Android.Manifest.Permission.PostNotifications], REQUEST_NOTIFICATION_PERMISSION);
             }
             else
             {
-                global::Android.Util.Log.Info("Permissions", "✅ POST_NOTIFICATIONS already granted");
+                Android.Util.Log.Info("Permissions", "✅ POST_NOTIFICATIONS already granted");
             }
         }
         else
         {
-            global::Android.Util.Log.Info("Permissions", "Notification permission not required (< Android 13)");
+            Android.Util.Log.Info("Permissions", "Notification permission not required (< Android 13)");
         }
     }
     
@@ -76,11 +76,11 @@ public class MainActivity : MauiAppCompatActivity
         {
             if (grantResults.Length > 0 && grantResults[0] == Permission.Granted)
             {
-                global::Android.Util.Log.Info("Permissions", "✅ Notification permission granted");
+                Android.Util.Log.Info("Permissions", "✅ Notification permission granted");
             }
             else
             {
-                global::Android.Util.Log.Warn("Permissions", "⚠️ Notification permission denied");
+                Android.Util.Log.Warn("Permissions", "⚠️ Notification permission denied");
             }
         }
     }
@@ -89,52 +89,47 @@ public class MainActivity : MauiAppCompatActivity
     {
         try
         {
-            global::Android.Util.Log.Info("FCM", "Requesting Firebase token...");
+            Android.Util.Log.Info("FCM", "Requesting Firebase token...");
             
             FirebaseMessaging.Instance.GetToken().AddOnCompleteListener(new TokenCompleteListener(this));
         }
         catch (Exception ex)
         {
-            global::Android.Util.Log.Error("FCM", $"Error requesting FCM token: {ex.Message}");
+            Android.Util.Log.Error("FCM", $"Error requesting FCM token: {ex.Message}");
         }
     }
     
-    class TokenCompleteListener : Java.Lang.Object, Android.Gms.Tasks.IOnCompleteListener
+    class TokenCompleteListener(MainActivity activity) : Java.Lang.Object, Android.Gms.Tasks.IOnCompleteListener
     {
-        readonly MainActivity _activity;
-        
-        public TokenCompleteListener(MainActivity activity)
-        {
-            _activity = activity;
-        }
-        
+        readonly MainActivity _activity = activity;
+
         public void OnComplete(Android.Gms.Tasks.Task task)
         {
             if (!task.IsSuccessful)
             {
-                global::Android.Util.Log.Error("FCM", $"❌ Token request failed: {task.Exception?.Message}");
+                Android.Util.Log.Error("FCM", $"❌ Token request failed: {task.Exception?.Message}");
                 return;
             }
             
             var token = task.Result?.ToString();
             if (string.IsNullOrEmpty(token))
             {
-                global::Android.Util.Log.Error("FCM", "❌ Token is null or empty");
+                Android.Util.Log.Error("FCM", "❌ Token is null or empty");
                 return;
             }
-            
-            global::Android.Util.Log.Info("FCM", $"✅ Token received: {token.Substring(0, Math.Min(20, token.Length))}...");
+
+            Android.Util.Log.Info("FCM", $"✅ Token received: {token[..Math.Min(20, token.Length)]}...");
             
             // Store token in DeviceInstallationService
             var deviceInstallationService = IPlatformApplication.Current?.Services?.GetService<IDeviceInstallationService>();
             if (deviceInstallationService is Platforms.Android.DeviceInstallationService androidService)
             {
                 androidService.Token = token;
-                global::Android.Util.Log.Info("FCM", "✅ Token stored in DeviceInstallationService");
+                Android.Util.Log.Info("FCM", "✅ Token stored in DeviceInstallationService");
             }
             else
             {
-                global::Android.Util.Log.Warn("FCM", "⚠️ Could not get DeviceInstallationService");
+                Android.Util.Log.Warn("FCM", "⚠️ Could not get DeviceInstallationService");
             }
         }
     }
