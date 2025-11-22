@@ -14,5 +14,5 @@ public class DeviceInstallation
     public string PushChannel { get; set; } = string.Empty;
 
     [JsonPropertyName("tags")]
-    public List<string> Tags { get; set; } = new List<string>();
+    public List<string> Tags { get; set; } = [];
 }

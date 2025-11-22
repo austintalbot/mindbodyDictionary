@@ -118,7 +118,7 @@ public class MainActivity : MauiAppCompatActivity
                 return;
             }
 
-            Android.Util.Log.Info("FCM", $"✅ Token received: {token.Substring(0, Math.Min(20, token.Length))}...");
+            Android.Util.Log.Info("FCM", $"✅ Token received: {token[..Math.Min(20, token.Length)]}...");
             
             // Store token in DeviceInstallationService
             var deviceInstallationService = IPlatformApplication.Current?.Services?.GetService<IDeviceInstallationService>();

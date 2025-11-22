@@ -229,7 +229,7 @@ public class ImageCacheService(ImageCacheRepository imageCacheRepository, ILogge
 					var imagesIndex = resourceName.IndexOf(".images.", StringComparison.Ordinal);
 					if (imagesIndex >= 0)
 					{
-						var fileName = resourceName.Substring(imagesIndex + ".images.".Length);
+						var fileName = resourceName[(imagesIndex + ".images.".Length)..];
 						
 						if (IsImageFile(fileName))
 						{

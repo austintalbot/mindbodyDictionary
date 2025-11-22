@@ -11,7 +11,7 @@ public class PushNotificationFirebaseMessagingService : FirebaseMessagingService
     public override void OnNewToken(string token)
     {
         global::Android.Util.Log.Info("FCM", "=== OnNewToken called ===");
-        global::Android.Util.Log.Info("FCM", $"New token: {token.Substring(0, Math.Min(20, token.Length))}...");
+        global::Android.Util.Log.Info("FCM", $"New token: {token[..Math.Min(20, token.Length)]}...");
         
         try
         {

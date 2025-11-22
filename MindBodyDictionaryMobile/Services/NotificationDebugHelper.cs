@@ -30,7 +30,7 @@ public static class NotificationDebugHelper
                         // Mask the access key for security
                         if (key.Contains("Key", StringComparison.OrdinalIgnoreCase))
                         {
-                            value = value.Length > 8 ? $"{value.Substring(0, 4)}...{value.Substring(value.Length - 4)}" : "***";
+                            value = value.Length > 8 ? $"{value[..4]}...{value[^4..]}" : "***";
                         }
                         
                         sb.AppendLine($"  {key} = {value}");
@@ -57,7 +57,7 @@ public static class NotificationDebugHelper
             sb.AppendLine("=== DEVICE INSTALLATION SERVICE ===");
             sb.AppendLine($"Notifications Supported: {deviceService.NotificationsSupported}");
             sb.AppendLine($"Device ID: {deviceService.GetDeviceId() ?? "NULL"}");
-            sb.AppendLine($"Token: {(string.IsNullOrEmpty(deviceService.Token) ? "NOT SET" : $"{deviceService.Token.Substring(0, Math.Min(20, deviceService.Token.Length))}...")}");
+            sb.AppendLine($"Token: {(string.IsNullOrEmpty(deviceService.Token) ? "NOT SET" : $"{deviceService.Token[..Math.Min(20, deviceService.Token.Length)]}...")}");
             
             try
             {
@@ -66,8 +66,8 @@ public static class NotificationDebugHelper
                 {
                     sb.AppendLine($"Installation ID: {installation.InstallationId}");
                     sb.AppendLine($"Platform: {installation.Platform}");
-                    sb.AppendLine($"Push Channel: {(string.IsNullOrEmpty(installation.PushChannel) ? "EMPTY" : $"{installation.PushChannel.Substring(0, Math.Min(20, installation.PushChannel.Length))}...")}");
-                    sb.AppendLine($"Tags: {string.Join(", ", installation.Tags ?? new List<string> { "None" })}");
+                    sb.AppendLine($"Push Channel: {(string.IsNullOrEmpty(installation.PushChannel) ? "EMPTY" : $"{installation.PushChannel[..Math.Min(20, installation.PushChannel.Length)]}...")}");
+                    sb.AppendLine($"Tags: {string.Join(", ", installation.Tags ?? ["None"])}");
                 }
                 else
                 {
@@ -85,7 +85,7 @@ public static class NotificationDebugHelper
         try
         {
             var cachedToken = SecureStorage.GetAsync("cached_device_token").GetAwaiter().GetResult();
-            sb.AppendLine($"Cached Device Token: {(string.IsNullOrEmpty(cachedToken) ? "NOT SET" : $"{cachedToken.Substring(0, Math.Min(20, cachedToken.Length))}...")}");
+            sb.AppendLine($"Cached Device Token: {(string.IsNullOrEmpty(cachedToken) ? "NOT SET" : $"{cachedToken[..Math.Min(20, cachedToken.Length)]}...")}");
             
             var cachedTags = SecureStorage.GetAsync("cached_tags").GetAwaiter().GetResult();
             sb.AppendLine($"Cached Tags: {cachedTags ?? "NOT SET"}");
