@@ -118,6 +118,11 @@ public class PushNotificationFirebaseMessagingService : FirebaseMessagingService
                             notificationBuilder = new Notification.Builder(this);
                         }
 
+            if (ApplicationInfo == null)
+            {
+                global::Android.Util.Log.Error("FCM", "❌ ApplicationInfo is null, cannot set notification icon");
+                return;
+            }
             notificationBuilder
                 .SetSmallIcon(ApplicationInfo.Icon)
                 .SetContentTitle(title)
@@ -125,12 +130,17 @@ public class PushNotificationFirebaseMessagingService : FirebaseMessagingService
                 .SetAutoCancel(true)
                 .SetContentIntent(pendingIntent);
 
+
+            
             // Only set priority/defaults on pre-O devices (methods obsolete / ignored on O+)
-            if (global::Android.OS.Build.VERSION.SdkInt < global::Android.OS.BuildVersionCodes.O && notificationBuilder != null)
+            if (global::Android.OS.Build.VERSION.SdkInt < global::Android.OS.BuildVersionCodes.O )
             {
-                notificationBuilder
-                    .SetPriority((int)NotificationPriority.High)
+                var priority = Convert.ToInt32(NotificationPriority.High);
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+                _ = notificationBuilder
+                    .SetPriority(priority)
                     .SetDefaults(NotificationDefaults.All);
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
             }
 
             var notification = notificationBuilder.Build();
