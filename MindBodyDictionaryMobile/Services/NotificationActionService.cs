@@ -4,7 +4,7 @@ namespace MindBodyDictionaryMobile.Services;
 
 public class NotificationActionService : INotificationActionServiceExtended
 {
-    readonly Dictionary<string, NotificationAction> _actionMappings = new Dictionary<string, NotificationAction>
+    readonly Dictionary<string, NotificationAction> _actionMappings = new()
     {
         { "project_update", NotificationAction.ProjectUpdate },
         { "task_reminder", NotificationAction.TaskReminder },
@@ -18,7 +18,7 @@ public class NotificationActionService : INotificationActionServiceExtended
         if (!_actionMappings.TryGetValue(action, out var notificationAction))
             return;
 
-        List<Exception> exceptions = new List<Exception>();
+        List<Exception> exceptions = [];
 
         var handlers = ActionTriggered?.GetInvocationList() ?? Array.Empty<Delegate>();
         foreach (var handler in handlers)

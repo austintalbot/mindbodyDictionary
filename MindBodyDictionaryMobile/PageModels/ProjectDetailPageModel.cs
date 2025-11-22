@@ -41,16 +41,16 @@ public partial class ProjectDetailPageModel : ObservableObject, IQueryAttributab
 	bool _isBusy;
 
 	[ObservableProperty]
-	private List<IconData> _icons =	new List<IconData>
-	{
-		new IconData { Icon = FluentUI.ribbon_24_regular, Description = "Ribbon Icon" },
+	private List<IconData> _icons =
+    [
+        new IconData { Icon = FluentUI.ribbon_24_regular, Description = "Ribbon Icon" },
 		new IconData { Icon = FluentUI.ribbon_star_24_regular, Description = "Ribbon Star Icon" },
 		new IconData { Icon = FluentUI.trophy_24_regular, Description = "Trophy Icon" },
 		new IconData { Icon = FluentUI.badge_24_regular, Description = "Badge Icon" },
 		new IconData { Icon = FluentUI.book_24_regular, Description = "Book Icon" },
 		new IconData { Icon = FluentUI.people_24_regular, Description = "People Icon" },
 		new IconData { Icon = FluentUI.bot_24_regular, Description = "Bot Icon" }
-	};
+	];
 
 	private bool _canDelete;
 
