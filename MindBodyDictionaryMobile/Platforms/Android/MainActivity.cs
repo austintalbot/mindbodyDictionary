@@ -55,7 +55,7 @@ public class MainActivity : MauiAppCompatActivity
             if (CheckSelfPermission(Android.Manifest.Permission.PostNotifications) != Permission.Granted)
             {
                 Android.Util.Log.Info("Permissions", "Requesting POST_NOTIFICATIONS permission...");
-                RequestPermissions(new[] { Android.Manifest.Permission.PostNotifications }, REQUEST_NOTIFICATION_PERMISSION);
+                RequestPermissions([Android.Manifest.Permission.PostNotifications], REQUEST_NOTIFICATION_PERMISSION);
             }
             else
             {

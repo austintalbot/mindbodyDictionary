@@ -240,7 +240,7 @@ public partial class NotificationSettingsPageModel : ObservableObject
             return;
 
         IsRegistering = true;
-        StatusMessage = "Deregistering device...";
+        StatusMessage = "De-registering device...";
         
         _logger.LogInformation("=== STARTING DEVICE DEREGISTRATION ===");
 

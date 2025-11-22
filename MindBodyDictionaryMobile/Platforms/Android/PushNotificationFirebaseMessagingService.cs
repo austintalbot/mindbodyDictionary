@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 namespace MindBodyDictionaryMobile.Platforms.Android;
 
 [Service(Exported = true)]
-[IntentFilter(new[] { "com.google.firebase.MESSAGING_EVENT" })]
+[IntentFilter(["com.google.firebase.MESSAGING_EVENT"])]
 public class PushNotificationFirebaseMessagingService : FirebaseMessagingService
 {
     public override void OnNewToken(string token)
@@ -50,8 +50,11 @@ public class PushNotificationFirebaseMessagingService : FirebaseMessagingService
             if (message.GetNotification() != null)
             {
                 var notification = message.GetNotification();
-                title = notification.Title ?? title;
-                body = notification.Body ?? "";
+                if (notification != null)
+                {
+                    title = notification.Title ?? title;
+                    body = notification.Body ?? "";
+                }
                 global::Android.Util.Log.Info("FCM", $"Notification payload - Title: {title}, Body: {body}");
             }
             // Check for data payload
@@ -105,15 +108,15 @@ public class PushNotificationFirebaseMessagingService : FirebaseMessagingService
                 intent,
                 pendingFlags);
 
-            Notification.Builder notificationBuilder;
-            if (global::Android.OS.Build.VERSION.SdkInt >= global::Android.OS.BuildVersionCodes.O)
-            {
-                notificationBuilder = new Notification.Builder(this, MainActivity.CHANNEL_ID);
-            }
-            else
-            {
-                notificationBuilder = new Notification.Builder(this);
-            }
+                        Notification.Builder notificationBuilder;
+                        if (global::Android.OS.Build.VERSION.SdkInt >= global::Android.OS.BuildVersionCodes.O)
+                        {
+                            notificationBuilder = new Notification.Builder(this, MainActivity.CHANNEL_ID);
+                        }
+                        else
+                        {
+                            notificationBuilder = new Notification.Builder(this);
+                        }
 
             notificationBuilder
                 .SetSmallIcon(ApplicationInfo.Icon)
@@ -123,7 +126,7 @@ public class PushNotificationFirebaseMessagingService : FirebaseMessagingService
                 .SetContentIntent(pendingIntent);
 
             // Only set priority/defaults on pre-O devices (methods obsolete / ignored on O+)
-            if (global::Android.OS.Build.VERSION.SdkInt < global::Android.OS.BuildVersionCodes.O)
+            if (global::Android.OS.Build.VERSION.SdkInt < global::Android.OS.BuildVersionCodes.O && notificationBuilder != null)
             {
                 notificationBuilder
                     .SetPriority((int)NotificationPriority.High)
