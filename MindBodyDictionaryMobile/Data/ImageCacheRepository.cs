@@ -8,20 +8,15 @@ namespace MindBodyDictionaryMobile.Data;
 /// <summary>
 /// Repository class for managing cached images in the local database.
 /// </summary>
-public class ImageCacheRepository
+public class ImageCacheRepository(ILogger<ImageCacheRepository> logger)
 {
 	private bool _hasBeenInitialized = false;
-	private readonly ILogger<ImageCacheRepository> _logger;
+	private readonly ILogger<ImageCacheRepository> _logger = logger;
 
-	public ImageCacheRepository(ILogger<ImageCacheRepository> logger)
-	{
-		_logger = logger;
-	}
-
-	/// <summary>
-	/// Initializes the database connection and creates the ImageCache table if it does not exist.
-	/// </summary>
-	private async Task Init()
+    /// <summary>
+    /// Initializes the database connection and creates the ImageCache table if it does not exist.
+    /// </summary>
+    private async Task Init()
 	{
 		if (_hasBeenInitialized)
 			return;
@@ -235,7 +230,8 @@ public class ImageCacheRepository
 
 		var countCmd = connection.CreateCommand();
 		countCmd.CommandText = "SELECT COUNT(*) FROM ImageCache";
-		var count = (int)(long)await countCmd.ExecuteScalarAsync();
+		var result = await countCmd.ExecuteScalarAsync();
+		var count = result != null ? (int)(long)result : 0;
 		_logger.LogInformation("GetCountAsync: Found {Count} cached images", count);
 		return count;
 	}

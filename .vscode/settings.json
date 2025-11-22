@@ -20,5 +20,10 @@
         "titleBar.inactiveForeground": "#e7e7e799"
     },
     "peacock.color": "#215732",
-    "azureFunctions.projectSubpath": "backend/src/MindBodyDictionary.AdminApi/bin/Release/net10.0"
+    "azureFunctions.projectSubpath": "backend/src/MindBodyDictionary.AdminApi/bin/Release/net10.0",
+    "cSpell.words": [
+        "AUTOINCREMENT",
+        "mindbody",
+        "Mvvm"
+    ]
 }

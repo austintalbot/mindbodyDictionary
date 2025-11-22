@@ -6,22 +6,16 @@ namespace MindBodyDictionaryMobile.Data;
 /// <summary>
 /// Service for loading and caching images from the app's embedded resources into the local database.
 /// </summary>
-public class ImageCacheService
+public class ImageCacheService(ImageCacheRepository imageCacheRepository, ILogger<ImageCacheService> logger)
 {
-	private readonly ImageCacheRepository _imageCacheRepository;
-	private readonly ILogger<ImageCacheService> _logger;
+	private readonly ImageCacheRepository _imageCacheRepository = imageCacheRepository;
+	private readonly ILogger<ImageCacheService> _logger = logger;
 	private const string ImagesResourcePath = "images";
 
-	public ImageCacheService(ImageCacheRepository imageCacheRepository, ILogger<ImageCacheService> logger)
-	{
-		_imageCacheRepository = imageCacheRepository;
-		_logger = logger;
-	}
-
-	/// <summary>
-	/// Loads all images from Resources/Raw/images into the local cache database.
-	/// </summary>
-	public async Task LoadImagesFromResourcesAsync()
+    /// <summary>
+    /// Loads all images from Resources/Raw/images into the local cache database.
+    /// </summary>
+    public async Task LoadImagesFromResourcesAsync()
 	{
 		try
 		{
@@ -225,7 +219,7 @@ public class ImageCacheService
 
 			foreach (var resourceName in resourceNames)
 			{
-				// Check if resource is in the images folder - match pattern like "MindBodyDictionaryMobile.Resources.Raw.images.imagename.png"
+				// Check if resource is in the images folder - match pattern like "MindBodyDictionaryMobile.Resources.Raw.images.imageName.png"
 				if (resourceName.Contains(".images.") && (resourceName.EndsWith(".png") || resourceName.EndsWith(".jpg") || 
 					resourceName.EndsWith(".jpeg") || resourceName.EndsWith(".gif") || resourceName.EndsWith(".svg") || 
 					resourceName.EndsWith(".webp")))
@@ -262,19 +256,16 @@ public class ImageCacheService
 		return extension is ".png" or ".jpg" or ".jpeg" or ".gif" or ".svg" or ".webp";
 	}
 
-	private string GetContentType(string fileName)
-	{
-		return Path.GetExtension(fileName).ToLowerInvariant() switch
-		{
-			".png" => "image/png",
-			".jpg" => "image/jpeg",
-			".jpeg" => "image/jpeg",
-			".gif" => "image/gif",
-			".svg" => "image/svg+xml",
-			".webp" => "image/webp",
-			_ => "application/octet-stream"
-		};
-	}
+    private string GetContentType(string fileName) => Path.GetExtension(fileName).ToLowerInvariant() switch
+    {
+        ".png" => "image/png",
+        ".jpg" => "image/jpeg",
+        ".jpeg" => "image/jpeg",
+        ".gif" => "image/gif",
+        ".svg" => "image/svg+xml",
+        ".webp" => "image/webp",
+        _ => "application/octet-stream"
+    };
 }
 
 /// <summary>

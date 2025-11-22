@@ -8,12 +8,9 @@ public class DeviceInstallationService : IDeviceInstallationService
     public string Token { get; set; }
     public bool NotificationsSupported => true;
 
-    public string GetDeviceId()
-    {
-        return global::Android.Provider.Settings.Secure.GetString(
+    public string GetDeviceId() => global::Android.Provider.Settings.Secure.GetString(
             Platform.AppContext.ContentResolver,
             global::Android.Provider.Settings.Secure.AndroidId);
-    }
 
     public DeviceInstallation GetDeviceInstallation(params string[] tags)
     {
