@@ -7,16 +7,13 @@ public class ModalErrorHandler : IErrorHandler
 {
 	SemaphoreSlim _semaphore = new(1, 1);
 
-	/// <summary>
-	/// Handle error in UI.
-	/// </summary>
-	/// <param name="ex">Exception.</param>
-	public void HandleError(Exception ex)
-	{
-		DisplayAlertAsync(ex).FireAndForgetSafeAsync();
-	}
+    /// <summary>
+    /// Handle error in UI.
+    /// </summary>
+    /// <param name="ex">Exception.</param>
+    public void HandleError(Exception ex) => DisplayAlertAsync(ex).FireAndForgetSafeAsync();
 
-	async Task DisplayAlertAsync(Exception ex)
+    async Task DisplayAlertAsync(Exception ex)
 	{
 		try{
 			await _semaphore.WaitAsync();

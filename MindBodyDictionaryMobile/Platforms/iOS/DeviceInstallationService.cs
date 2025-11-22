@@ -21,10 +21,7 @@ public class DeviceInstallationService : IDeviceInstallationService
     
     public bool NotificationsSupported => true;
 
-    public string GetDeviceId()
-    {
-        return UIDevice.CurrentDevice.IdentifierForVendor?.AsString() ?? Guid.NewGuid().ToString();
-    }
+    public string GetDeviceId() => UIDevice.CurrentDevice.IdentifierForVendor?.AsString() ?? Guid.NewGuid().ToString();
 
     public DeviceInstallation GetDeviceInstallation(params string[] tags)
     {

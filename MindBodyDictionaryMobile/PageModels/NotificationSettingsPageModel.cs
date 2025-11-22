@@ -124,14 +124,11 @@ public partial class NotificationSettingsPageModel : ObservableObject
             _logger.LogError(ex, "Failed to verify registration with Azure");
         }
     }
-    
-    void UpdateStatusMessage()
-    {
-        StatusMessage = IsRegistered 
-            ? "Device is registered for notifications" 
+
+    void UpdateStatusMessage() => StatusMessage = IsRegistered
+            ? "Device is registered for notifications"
             : (NotificationsSupported ? "Ready to register" : "Notifications not supported on this device");
-    }
-    
+
     void SaveRegistrationStatus(bool registered)
     {
         try

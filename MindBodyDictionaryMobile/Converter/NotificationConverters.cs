@@ -4,28 +4,16 @@ namespace MindBodyDictionaryMobile.Converter;
 
 public class IsNotNullOrEmptyConverter : IValueConverter
 {
-    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
-    {
-        return value is string str && !string.IsNullOrWhiteSpace(str);
-    }
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture) => value is string str && !string.IsNullOrWhiteSpace(str);
 
-    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
-    {
-        throw new NotImplementedException();
-    }
+    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) => throw new NotImplementedException();
 }
 
 public class BoolToRegisteredTextConverter : IValueConverter
 {
-    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
-    {
-        return value is bool isRegistered && isRegistered ? "Registered" : "Not Registered";
-    }
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture) => value is bool isRegistered && isRegistered ? "Registered" : "Not Registered";
 
-    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
-    {
-        throw new NotImplementedException();
-    }
+    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) => throw new NotImplementedException();
 }
 
 public class BoolToColorConverter : IValueConverter
@@ -45,8 +33,5 @@ public class BoolToColorConverter : IValueConverter
         return isRegistered ? primaryColor : tertiaryColor;
     }
 
-    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
-    {
-        throw new NotImplementedException();
-    }
+    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) => throw new NotImplementedException();
 }

@@ -22,8 +22,12 @@
     "peacock.color": "#215732",
     "azureFunctions.projectSubpath": "backend/src/MindBodyDictionary.AdminApi/bin/Release/net10.0",
     "cSpell.words": [
+        "Argb",
         "AUTOINCREMENT",
         "mindbody",
-        "Mvvm"
+        "Mvvm",
+        "Segoe",
+        "Syncfusion",
+        "Theanine"
     ]
 }
