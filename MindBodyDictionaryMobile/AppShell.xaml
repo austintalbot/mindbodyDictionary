@@ -21,6 +21,12 @@
         Route="projects" />
 
     <ShellContent
+        Title="Conditions"
+        Icon="{StaticResource IconProjects}"
+        ContentTemplate="{DataTemplate pages:ConditionListPage}"
+        Route="conditions" />
+
+    <ShellContent
         Title="Manage Meta"
         Icon="{StaticResource IconMeta}"
         ContentTemplate="{DataTemplate pages:ManageMetaPage}"

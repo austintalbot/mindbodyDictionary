@@ -58,7 +58,7 @@ public class CategoryRepository(ILogger<CategoryRepository> logger)
 		await connection.OpenAsync();
 
 		var selectCmd = connection.CreateCommand();
-		selectCmd.CommandText = "SELECT * FROM Category";
+		selectCmd.CommandText = "SELECT DISTINCT ID, Title, Color FROM Category ORDER BY Title";
 		var categories = new List<Category>();
 
 		await using var reader = await selectCmd.ExecuteReaderAsync();
@@ -175,5 +175,81 @@ public class CategoryRepository(ILogger<CategoryRepository> logger)
 
 		await dropTableCmd.ExecuteNonQueryAsync();
 		_hasBeenInitialized = false;
+	}
+
+	/// <summary>
+	/// Deduplicates categories by merging categories with the same title.
+	/// </summary>
+	public async Task DeduplicateAsync()
+	{
+		await Init();
+		await using var connection = new SqliteConnection(Constants.DatabasePath);
+		await connection.OpenAsync();
+
+		try
+		{
+			var cmd = connection.CreateCommand();
+			// Find duplicate categories (same title)
+			cmd.CommandText = @"
+			SELECT Title, GROUP_CONCAT(ID) as IDs
+			FROM Category
+			GROUP BY Title
+			HAVING COUNT(*) > 1";
+
+			var duplicates = new Dictionary<string, List<int>>();
+			
+			await using var reader = await cmd.ExecuteReaderAsync();
+			while (await reader.ReadAsync())
+			{
+				var title = reader.GetString(0);
+				var ids = reader.GetString(1).Split(',').Select(int.Parse).ToList();
+				if (ids.Count > 1)
+				{
+					duplicates[title] = ids;
+				}
+			}
+
+			// For each duplicate set, keep the first ID and update all references
+			foreach (var kvp in duplicates)
+			{
+				var ids = kvp.Value;
+				var keepId = ids.First();
+				var deleteIds = ids.Skip(1).ToList();
+
+				foreach (var deleteId in deleteIds)
+				{
+					// Update Project references to point to keepId instead of deleteId
+					var updateCmd = connection.CreateCommand();
+					updateCmd.CommandText = @"
+					UPDATE Project 
+					SET CategoryID = @keepId 
+					WHERE CategoryID = @deleteId";
+					updateCmd.Parameters.AddWithValue("@keepId", keepId);
+					updateCmd.Parameters.AddWithValue("@deleteId", deleteId);
+					await updateCmd.ExecuteNonQueryAsync();
+
+					// Update Condition references to point to keepId instead of deleteId
+					updateCmd = connection.CreateCommand();
+					updateCmd.CommandText = @"
+					UPDATE Condition 
+					SET CategoryID = @keepId 
+					WHERE CategoryID = @deleteId";
+					updateCmd.Parameters.AddWithValue("@keepId", keepId);
+					updateCmd.Parameters.AddWithValue("@deleteId", deleteId);
+					await updateCmd.ExecuteNonQueryAsync();
+
+					// Delete the duplicate category
+					var deleteCmd = connection.CreateCommand();
+					deleteCmd.CommandText = "DELETE FROM Category WHERE ID = @id";
+					deleteCmd.Parameters.AddWithValue("@id", deleteId);
+					await deleteCmd.ExecuteNonQueryAsync();
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			_logger.LogError(e, "Error deduplicating categories");
+			throw;
+		}
 	}
 }

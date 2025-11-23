@@ -17,7 +17,7 @@ public class SeedDataService(ProjectRepository projectRepository, TaskRepository
 
     public async Task LoadSeedDataAsync()
 	{
-		ClearTables();
+		await ClearTables();
 
 		await using Stream templateStream = await FileSystem.OpenAppPackageFileAsync(_seedDataFilePath);
 
@@ -35,6 +35,68 @@ public class SeedDataService(ProjectRepository projectRepository, TaskRepository
 		{
 			if (payload is not null)
 			{
+				// Collect all unique categories first
+				var categoryMap = new Dictionary<string, Category>();
+				
+				foreach (var project in payload.Projects)
+				{
+					if (project?.Category is not null && !categoryMap.ContainsKey(project.Category.Title))
+					{
+						categoryMap[project.Category.Title] = project.Category;
+					}
+				}
+
+				foreach (var condition in payload.Conditions)
+				{
+					if (condition?.Category is not null && !categoryMap.ContainsKey(condition.Category.Title))
+					{
+						categoryMap[condition.Category.Title] = condition.Category;
+					}
+				}
+
+				// Save all unique categories
+				foreach (var category in categoryMap.Values)
+				{
+					await _categoryRepository.SaveItemAsync(category);
+				}
+
+				// Collect all unique tags first
+				var tagMap = new Dictionary<string, Tag>();
+				
+				foreach (var project in payload.Projects)
+				{
+					if (project?.Tags is not null)
+					{
+						foreach (var tag in project.Tags)
+						{
+							if (!tagMap.ContainsKey(tag.Title))
+							{
+								tagMap[tag.Title] = tag;
+							}
+						}
+					}
+				}
+
+				foreach (var condition in payload.Conditions)
+				{
+					if (condition?.Tags is not null)
+					{
+						foreach (var tag in condition.Tags)
+						{
+							if (!tagMap.ContainsKey(tag.Title))
+							{
+								tagMap[tag.Title] = tag;
+							}
+						}
+					}
+				}
+
+				// Save all unique tags
+				foreach (var tag in tagMap.Values)
+				{
+					await _tagRepository.SaveItemAsync(tag);
+				}
+
 				// Load projects
 				foreach (var project in payload.Projects)
 				{
@@ -45,8 +107,7 @@ public class SeedDataService(ProjectRepository projectRepository, TaskRepository
 
 					if (project.Category is not null)
 					{
-						await _categoryRepository.SaveItemAsync(project.Category);
-						project.CategoryID = project.Category.ID;
+						project.CategoryID = categoryMap[project.Category.Title].ID;
 					}
 
 					await _projectRepository.SaveItemAsync(project);
@@ -64,7 +125,8 @@ public class SeedDataService(ProjectRepository projectRepository, TaskRepository
 					{
 						foreach (var tag in project.Tags)
 						{
-							await _tagRepository.SaveItemAsync(tag, project.ID);
+							var tagToSave = tagMap[tag.Title];
+							await _tagRepository.SaveItemAsync(tagToSave, project.ID);
 						}
 					}
 				}
@@ -79,8 +141,7 @@ public class SeedDataService(ProjectRepository projectRepository, TaskRepository
 
 					if (condition.Category is not null)
 					{
-						await _categoryRepository.SaveItemAsync(condition.Category);
-						condition.CategoryID = condition.Category.ID;
+						condition.CategoryID = categoryMap[condition.Category.Title].ID;
 					}
 
 					await _conditionRepository.SaveItemAsync(condition);
@@ -98,7 +159,8 @@ public class SeedDataService(ProjectRepository projectRepository, TaskRepository
 					{
 						foreach (var tag in condition.Tags)
 						{
-							await _tagRepository.SaveItemAsync(tag, condition.ID);
+							var tagToSave = tagMap[tag.Title];
+							await _tagRepository.SaveItemAsync(tagToSave, condition.ID);
 						}
 					}
 				}
@@ -110,11 +172,15 @@ public class SeedDataService(ProjectRepository projectRepository, TaskRepository
 			throw;
 		}
 
+		// Deduplicate any existing duplicates
+		await _categoryRepository.DeduplicateAsync();
+		await _tagRepository.DeduplicateAsync();
+
 		// Load images into cache after seed data
 		await _imageCacheService.LoadImagesFromResourcesAsync();
 	}
 
-	private async void ClearTables()
+	private async Task ClearTables()
 	{
 		try
 		{
