@@ -4,12 +4,13 @@ using Microsoft.Extensions.Logging;
 
 namespace MindBodyDictionaryMobile.Data;
 
-public class SeedDataService(ProjectRepository projectRepository, TaskRepository taskRepository, TagRepository tagRepository, CategoryRepository categoryRepository, ImageCacheService imageCacheService, ILogger<SeedDataService> logger)
+public class SeedDataService(ProjectRepository projectRepository, TaskRepository taskRepository, TagRepository tagRepository, CategoryRepository categoryRepository, ConditionRepository conditionRepository, ImageCacheService imageCacheService, ILogger<SeedDataService> logger)
 {
 	private readonly ProjectRepository _projectRepository = projectRepository;
 	private readonly TaskRepository _taskRepository = taskRepository;
 	private readonly TagRepository _tagRepository = tagRepository;
 	private readonly CategoryRepository _categoryRepository = categoryRepository;
+	private readonly ConditionRepository _conditionRepository = conditionRepository;
 	private readonly ImageCacheService _imageCacheService = imageCacheService;
 	private readonly string _seedDataFilePath = "SeedData.json";
 	private readonly ILogger<SeedDataService> _logger = logger;
@@ -34,6 +35,7 @@ public class SeedDataService(ProjectRepository projectRepository, TaskRepository
 		{
 			if (payload is not null)
 			{
+				// Load projects
 				foreach (var project in payload.Projects)
 				{
 					if (project is null)
@@ -66,6 +68,40 @@ public class SeedDataService(ProjectRepository projectRepository, TaskRepository
 						}
 					}
 				}
+
+				// Load conditions
+				foreach (var condition in payload.Conditions)
+				{
+					if (condition is null)
+					{
+						continue;
+					}
+
+					if (condition.Category is not null)
+					{
+						await _categoryRepository.SaveItemAsync(condition.Category);
+						condition.CategoryID = condition.Category.ID;
+					}
+
+					await _conditionRepository.SaveItemAsync(condition);
+
+					if (condition?.Tasks is not null)
+					{
+						foreach (var task in condition.Tasks)
+						{
+							task.ProjectID = condition.ID;
+							await _taskRepository.SaveItemAsync(task);
+						}
+					}
+
+					if (condition?.Tags is not null)
+					{
+						foreach (var tag in condition.Tags)
+						{
+							await _tagRepository.SaveItemAsync(tag, condition.ID);
+						}
+					}
+				}
 			}
 		}
 		catch (Exception e)
@@ -86,7 +122,8 @@ public class SeedDataService(ProjectRepository projectRepository, TaskRepository
 				_projectRepository.DropTableAsync(),
 				_taskRepository.DropTableAsync(),
 				_tagRepository.DropTableAsync(),
-				_categoryRepository.DropTableAsync());
+				_categoryRepository.DropTableAsync(),
+				_conditionRepository.DropTableAsync());
 		}
 		catch (Exception e)
 		{
