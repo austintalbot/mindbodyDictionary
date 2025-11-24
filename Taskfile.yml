@@ -358,6 +358,22 @@ tasks:
       dotnet build -f net10.0-ios -c Debug
       dotnet build -f net10.0-ios -c Debug -t:Run -p:_DeviceName=":v2:udid=$UDID"
 
+  run-ios-release:
+    desc: Run the iOS app on iPhone 17 Pro Max simulator
+    dir: MindBodyDictionaryMobile
+    cmds:
+    - |
+      # Get the UDID of the first available iPhone 17 Pro Max
+      UDID=$(xcrun simctl list devices available | grep "iPhone 17 Pro Max" | head -1 | grep -o '([A-F0-9-]*)' | tr -d '()')
+      if [ -z "$UDID" ]; then
+        echo "❌ iPhone 17 Pro Max simulator not found. Available devices:"
+        xcrun simctl list devices available | grep iPhone
+        exit 1
+      fi
+      echo "Running on iPhone 17 Pro Max (UDID: $UDID)"
+      dotnet build -f net10.0-ios -c release
+      dotnet build -f net10.0-ios -c release -t:Run -p:_DeviceName=":v2:udid=$UDID"
+
   test:notifications:
     desc: Test push notifications on Android and iOS
     cmds:
