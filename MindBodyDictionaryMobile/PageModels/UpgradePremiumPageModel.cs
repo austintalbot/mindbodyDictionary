@@ -2,45 +2,35 @@ using System.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MindBodyDictionaryMobile.Services.billing;
-using MindBodyDictionaryMobile.Models;
 
 namespace MindBodyDictionaryMobile.PageModels;
 
 public partial class UpgradePremiumPageModel : ObservableObject
 {
     private readonly IBillingService _billingService;
-    private readonly ModalErrorHandler _errorHandler;
     private string _premiumProductId = string.Empty;
 
     [ObservableProperty]
-    private Product? premiumProduct;
+    private string title = "Premium Upgrade";
 
     [ObservableProperty]
-    private bool isPremium;
+    private bool notSubscribed = true;
 
     [ObservableProperty]
     private bool isBusy;
 
-    [ObservableProperty]
-    private string buttonText = "Upgrade to Premium";
-
-    [ObservableProperty]
-    private bool canPurchase = true;
-
-    public UpgradePremiumPageModel(IBillingService billingService, ModalErrorHandler errorHandler)
+    public UpgradePremiumPageModel(IBillingService billingService)
     {
         _billingService = billingService;
-        _errorHandler = errorHandler;
     }
 
     [RelayCommand]
-    public async Task NavigatedTo()
+    public async Task Navigated()
     {
         try
         {
             IsBusy = true;
 
-            // Get product ID based on platform
 #if IOS
             _premiumProductId = "MBDPremiumYr";
 #elif ANDROID
@@ -49,38 +39,12 @@ public partial class UpgradePremiumPageModel : ObservableObject
             _premiumProductId = "MBDPremiumYr";
 #endif
 
-            // Check premium status
-            IsPremium = await _billingService.IsProductOwnedAsync(_premiumProductId);
-            UpdateUI();
-
-            // Load product details
-            var products = await _billingService.GetProductsAsync([_premiumProductId]);
-            var product = products.FirstOrDefault();
-
-            if (product != null)
-            {
-                PremiumProduct = product;
-                PremiumProduct.IsOwned = IsPremium;
-            }
-            else
-            {
-                // Provide a default product if none is available (e.g., stub implementation)
-                PremiumProduct = new Product
-                {
-                    Id = _premiumProductId,
-                    Name = "MindBody Dictionary Premium",
-                    Description = "Annual Subscription",
-                    Price = "Contact for pricing",
-                    PriceAmount = 0m,
-                    ImageUrl = string.Empty,
-                    IsOwned = IsPremium
-                };
-            }
+            NotSubscribed = !await _billingService.IsProductOwnedAsync(_premiumProductId);
         }
         catch (Exception ex)
         {
             Debug.WriteLine($"Error loading upgrade page: {ex.Message}");
-            _errorHandler.HandleError(ex);
+            await Shell.Current.DisplayAlertAsync("Error", ex.Message, "OK");
         }
         finally
         {
@@ -89,20 +53,46 @@ public partial class UpgradePremiumPageModel : ObservableObject
     }
 
     [RelayCommand]
-    public async Task RestorePurchases()
+    public async Task Purchase()
     {
         try
         {
             IsBusy = true;
-            var restored = await _billingService.RestorePurchasesAsync();
+            var success = await _billingService.PurchaseProductAsync(_premiumProductId);
 
-            if (restored)
+            if (success)
             {
-                var ownedProducts = await _billingService.GetPurchasedProductsAsync();
-                IsPremium = ownedProducts.Contains(_premiumProductId);
-                UpdateUI();
+                await Task.Delay(1000);
+                NotSubscribed = !await _billingService.IsProductOwnedAsync(_premiumProductId);
+                if (!NotSubscribed)
+                {
+                    await Shell.Current.DisplayAlertAsync("Success", "Welcome to Premium!", "OK");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Error purchasing premium: {ex.Message}");
+            await Shell.Current.DisplayAlertAsync("Error", ex.Message, "OK");
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
 
-                if (IsPremium)
+    [RelayCommand]
+    public async Task Restore()
+    {
+        try
+        {
+            IsBusy = true;
+            var success = await _billingService.RestorePurchasesAsync();
+
+            if (success)
+            {
+                NotSubscribed = !await _billingService.IsProductOwnedAsync(_premiumProductId);
+                if (!NotSubscribed)
                 {
                     await Shell.Current.DisplayAlertAsync("Success", "Premium subscription restored!", "OK");
                 }
@@ -119,7 +109,7 @@ public partial class UpgradePremiumPageModel : ObservableObject
         catch (Exception ex)
         {
             Debug.WriteLine($"Error restoring purchases: {ex.Message}");
-            _errorHandler.HandleError(ex);
+            await Shell.Current.DisplayAlertAsync("Error", ex.Message, "OK");
         }
         finally
         {
@@ -128,57 +118,28 @@ public partial class UpgradePremiumPageModel : ObservableObject
     }
 
     [RelayCommand]
-    public async Task PurchasePremium()
+    public async Task Privacy()
     {
         try
         {
-            if (IsPremium)
-            {
-                await Shell.Current.DisplayAlertAsync("Info", "You already have premium!", "OK");
-                return;
-            }
-
-            IsBusy = true;
-            CanPurchase = false;
-
-            var success = await _billingService.PurchaseProductAsync(_premiumProductId);
-
-            if (success)
-            {
-                await Task.Delay(2000);
-                IsPremium = await _billingService.IsProductOwnedAsync(_premiumProductId);
-
-                if (IsPremium && PremiumProduct != null)
-                {
-                    PremiumProduct.IsOwned = true;
-                    UpdateUI();
-                    await Shell.Current.DisplayAlertAsync("Success", "Welcome to Premium!", "OK");
-                }
-            }
+            await Browser.Default.OpenAsync("https://www.mindbodydictionary.com/privacy", BrowserLaunchMode.SystemPreferred);
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"Error purchasing premium: {ex.Message}");
-            _errorHandler.HandleError(ex);
-        }
-        finally
-        {
-            IsBusy = false;
-            CanPurchase = true;
+            Debug.WriteLine($"Error opening privacy policy: {ex.Message}");
         }
     }
 
-    private void UpdateUI()
+    [RelayCommand]
+    public async Task Terms(string url)
     {
-        if (IsPremium)
+        try
         {
-            ButtonText = "Premium Active ✓";
-            CanPurchase = false;
+            await Browser.Default.OpenAsync(url, BrowserLaunchMode.SystemPreferred);
         }
-        else
+        catch (Exception ex)
         {
-            ButtonText = "Upgrade to Premium";
-            CanPurchase = true;
+            Debug.WriteLine($"Error opening terms: {ex.Message}");
         }
     }
 }
