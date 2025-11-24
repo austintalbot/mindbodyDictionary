@@ -371,8 +371,8 @@ tasks:
         exit 1
       fi
       echo "Running on iPhone 17 Pro Max (UDID: $UDID)"
-      dotnet build -f net10.0-ios -c release
-      dotnet build -f net10.0-ios -c release -t:Run -p:_DeviceName=":v2:udid=$UDID"
+      dotnet build -f net10.0-ios -c Release
+      dotnet build -f net10.0-ios -c Release -t:Run -p:_DeviceName=":v2:udid=$UDID"
 
   test:notifications:
     desc: Test push notifications on Android and iOS

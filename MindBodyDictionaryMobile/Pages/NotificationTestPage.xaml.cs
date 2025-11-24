@@ -4,7 +4,7 @@ public partial class NotificationTestPage : ContentPage
 {
 public NotificationTestPage()
 {
-InitializeComponent();
+    InitializeComponent();
 }
 
 private async void OnTestLocalNotificationClicked(object sender, EventArgs e)
