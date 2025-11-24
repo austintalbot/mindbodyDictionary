@@ -27,6 +27,28 @@ public class AppDelegate : MauiUIApplicationDelegate, IUNUserNotificationCenterD
 			}
 		});
 
+		// Handle notification launched from background
+		if (launchOptions?.ContainsKey(UIKit.UIApplication.LaunchOptionsRemoteNotificationKey) == true)
+		{
+			var remoteNotification = launchOptions[UIKit.UIApplication.LaunchOptionsRemoteNotificationKey] as NSDictionary;
+			if (remoteNotification != null)
+			{
+				System.Diagnostics.Debug.WriteLine("=== App launched from remote notification ===");
+				ProcessNotification(remoteNotification);
+			}
+		}
+
+		// Handle local notification launched from background
+		if (launchOptions?.ContainsKey(UIKit.UIApplication.LaunchOptionsLocalNotificationKey) == true)
+		{
+			var localNotification = launchOptions[UIKit.UIApplication.LaunchOptionsLocalNotificationKey] as UIKit.UILocalNotification;
+			if (localNotification != null)
+			{
+				System.Diagnostics.Debug.WriteLine("=== App launched from local notification ===");
+				ProcessNotification(localNotification.UserInfo);
+			}
+		}
+
 		return base.FinishedLaunching(application, launchOptions);
 	}
 
@@ -105,8 +127,8 @@ public class AppDelegate : MauiUIApplicationDelegate, IUNUserNotificationCenterD
 			System.Diagnostics.Debug.WriteLine($"Error processing notification: {ex.Message}");
 		}
 
-		// Show notification in foreground
-		completionHandler(UNNotificationPresentationOptions.Banner | UNNotificationPresentationOptions.Sound | UNNotificationPresentationOptions.Badge);
+		// Show notification in foreground with all options
+		completionHandler(UNNotificationPresentationOptions.List | UNNotificationPresentationOptions.Banner | UNNotificationPresentationOptions.Sound | UNNotificationPresentationOptions.Badge);
 	}
 
 	[Export("userNotificationCenter:didReceiveNotificationResponse:withCompletionHandler:")]

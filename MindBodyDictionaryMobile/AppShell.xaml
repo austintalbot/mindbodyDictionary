@@ -45,6 +45,12 @@
         ContentTemplate="{DataTemplate pages:ImageCachePage}"
         Route="imagecache" />
 
+    <ShellContent
+        Title="Notification Test (Debug)"
+        Icon="{StaticResource IconNotifications}"
+        ContentTemplate="{DataTemplate pages:NotificationTestPage}"
+        Route="notificationtest" />
+
   <Shell.FlyoutFooter>
     <Grid Padding="15">
       <sf:SfSegmentedControl x:Name="ThemeSegmentedControl"

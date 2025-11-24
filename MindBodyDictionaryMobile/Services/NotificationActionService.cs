@@ -33,7 +33,7 @@ public class NotificationActionService : INotificationActionServiceExtended
             }
         }
 
-        if (exceptions.Any())
+        if (exceptions.Count != 0)
             throw new AggregateException(exceptions);
     }
 }
