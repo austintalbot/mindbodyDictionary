@@ -39,6 +39,12 @@
         Route="notifications" />
 
     <ShellContent
+        Title="Premium"
+        Icon="{StaticResource IconNotifications}"
+        ContentTemplate="{DataTemplate pages:UpgradePremiumPage}"
+        Route="premium" />
+
+    <ShellContent
         Title="Image Cache (Debug)"
         x:Name="ImageCacheContent"
         Icon="{StaticResource IconNotifications}"

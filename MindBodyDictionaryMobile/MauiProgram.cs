@@ -43,10 +43,12 @@ public static class MauiProgram
 
 #if ANDROID
 		builder.Services.AddSingleton<IDeviceInstallationService, Platforms.Android.DeviceInstallationService>();
+		builder.Services.AddSingleton<IBillingService, Platforms.Android.BillingService>();
 #elif IOS
 		var iosDeviceService = new Platforms.iOS.DeviceInstallationService();
 		builder.Services.AddSingleton<IDeviceInstallationService>(iosDeviceService);
 		builder.Services.AddSingleton(iosDeviceService);
+		builder.Services.AddSingleton<IBillingService, Platforms.iOS.BillingService>();
 #endif
 
 		builder.Services.AddSingleton<INotificationActionServiceExtended, NotificationActionService>();
@@ -61,6 +63,9 @@ public static class MauiProgram
 		builder.Services.AddTransient<ImageCachePageModel>();
 		builder.Services.AddTransient<ImageCachePage>();
 #endif
+
+		builder.Services.AddSingleton<UpgradePremiumPageModel>();
+		builder.Services.AddSingleton<UpgradePremiumPage>();
 
 		builder.Services.AddTransientWithShellRoute<ProjectDetailPage, ProjectDetailPageModel>("project");
 		builder.Services.AddTransientWithShellRoute<TaskDetailPage, TaskDetailPageModel>("task");
