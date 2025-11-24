@@ -34,8 +34,8 @@
                     
                     <!-- Feature 1 -->
                     <Border Style="{StaticResource CardStyle}">
-                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="{StaticResource LayoutPadding}">
-                            <Label Grid.Column="0" Text="✓" FontSize="24" FontAttributes="Bold" />
+                        <Grid ColumnDefinitions="Auto,*">
+                            <Label Grid.Column="0" Text="✓" FontSize="24" FontAttributes="Bold" Margin="0,0,12,0" />
                             <VerticalStackLayout Grid.Column="1" Spacing="5">
                                 <Label Text="Unlimited Projects" Style="{StaticResource Body1Strong}" />
                                 <Label Text="Create and manage unlimited projects" Style="{StaticResource Caption1}" Opacity="0.7" />
@@ -45,8 +45,8 @@
 
                     <!-- Feature 2 -->
                     <Border Style="{StaticResource CardStyle}">
-                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="{StaticResource LayoutPadding}">
-                            <Label Grid.Column="0" Text="✓" FontSize="24" FontAttributes="Bold" />
+                        <Grid ColumnDefinitions="Auto,*">
+                            <Label Grid.Column="0" Text="✓" FontSize="24" FontAttributes="Bold" Margin="0,0,12,0" />
                             <VerticalStackLayout Grid.Column="1" Spacing="5">
                                 <Label Text="Custom Lists" Style="{StaticResource Body1Strong}" />
                                 <Label Text="Organize with unlimited custom lists" Style="{StaticResource Caption1}" Opacity="0.7" />
@@ -56,8 +56,8 @@
 
                     <!-- Feature 3 -->
                     <Border Style="{StaticResource CardStyle}">
-                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="{StaticResource LayoutPadding}">
-                            <Label Grid.Column="0" Text="✓" FontSize="24" FontAttributes="Bold" />
+                        <Grid ColumnDefinitions="Auto,*">
+                            <Label Grid.Column="0" Text="✓" FontSize="24" FontAttributes="Bold" Margin="0,0,12,0" />
                             <VerticalStackLayout Grid.Column="1" Spacing="5">
                                 <Label Text="Advanced Analytics" Style="{StaticResource Body1Strong}" />
                                 <Label Text="Detailed insights and progress tracking" Style="{StaticResource Caption1}" Opacity="0.7" />
@@ -67,8 +67,8 @@
 
                     <!-- Feature 4 -->
                     <Border Style="{StaticResource CardStyle}">
-                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="{StaticResource LayoutPadding}">
-                            <Label Grid.Column="0" Text="✓" FontSize="24" FontAttributes="Bold" />
+                        <Grid ColumnDefinitions="Auto,*">
+                            <Label Grid.Column="0" Text="✓" FontSize="24" FontAttributes="Bold" Margin="0,0,12,0" />
                             <VerticalStackLayout Grid.Column="1" Spacing="5">
                                 <Label Text="Priority Support" Style="{StaticResource Body1Strong}" />
                                 <Label Text="Get help faster with priority support" Style="{StaticResource Caption1}" Opacity="0.7" />
@@ -115,7 +115,10 @@
                             Command="{Binding RestorePurchasesCommand}"
                             IsEnabled="{Binding IsBusy, StringFormat='!{0}'}"
                             Padding="15,12"
-                            Style="{StaticResource OutlineButton}" />
+                            BackgroundColor="Transparent"
+                            BorderColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"
+                            BorderWidth="1"
+                            TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}" />
                 </VerticalStackLayout>
             </VerticalStackLayout>
         </ScrollView>
