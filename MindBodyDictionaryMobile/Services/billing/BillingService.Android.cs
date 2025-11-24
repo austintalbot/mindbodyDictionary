@@ -6,14 +6,14 @@ using AndroidBillingResult = Android.BillingClient.Api.BillingResult;
 
 namespace MindBodyDictionaryMobile.Services.billing;
 
-public class BillingService : BaseBillingService
+public class AndroidBillingService : BaseBillingService
 {
     private BillingClient? _billingClient;
     private readonly object _lockObject = new();
     private BillingClientStateListener? _stateListener;
     private PurchasesUpdatedListener? _purchaseListener;
 
-    public BillingService(ILogger<BaseBillingService> logger) : base(logger)
+    public AndroidBillingService(ILogger<BaseBillingService> logger) : base(logger)
     {
         InitializeListeners();
     }
@@ -106,12 +106,12 @@ public class BillingService : BaseBillingService
 
             var productResult = await _billingClient.QueryProductDetailsAsync(queryParams);
 
-            if (productResult.Result.ResponseCode == BillingResponseCode.Ok)
+            if (productResult.BillingResult.ResponseCode == BillingResponseCode.Ok)
             {
                 _logger.LogInformation("Successfully retrieved {Count} product details", productResult.ProductDetails.Count);
 
                 // Create a dictionary for quick lookup of ProductDetails by ID
-                var productDetailsDict = productResult.ProductDetails.ToDictionary(pd => pd.ProductId, pd => pd);
+                var productDetailsDict = productResult.ProductDetailsList.ToDictionary(pd => pd.ProductId, pd => pd);
 
                 foreach (var baseProduct in baseProducts)
                 {
@@ -165,7 +165,7 @@ public class BillingService : BaseBillingService
             else
             {
                 _logger.LogError("Failed to query product details: {ResponseCode} {DebugMessage}",
-                    productResult.Result.ResponseCode, productResult.Result.DebugMessage);
+                    productResult.BillingResult.ResponseCode, productResult.BillingResult.DebugMessage);
 
                 // Even if query fails, update ownership status
                 foreach (var product in baseProducts)
@@ -456,9 +456,9 @@ public class BillingService : BaseBillingService
 
 internal class BillingClientStateListener : Java.Lang.Object, IBillingClientStateListener
 {
-    private readonly BillingService _service;
+    private readonly AndroidBillingService _service;
 
-    public BillingClientStateListener(BillingService service)
+    public BillingClientStateListener(AndroidBillingService service)
     {
         _service = service;
     }
@@ -476,9 +476,9 @@ internal class BillingClientStateListener : Java.Lang.Object, IBillingClientStat
 
 internal class PurchasesUpdatedListener : Java.Lang.Object, IPurchasesUpdatedListener
 {
-    private readonly BillingService _service;
+    private readonly AndroidBillingService _service;
 
-    public PurchasesUpdatedListener(BillingService service)
+    public PurchasesUpdatedListener(AndroidBillingService service)
     {
         _service = service;
     }

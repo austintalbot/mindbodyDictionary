@@ -11,6 +11,7 @@ public abstract class BaseBillingService(ILogger<BaseBillingService> logger) : I
 {
     protected readonly ILogger<BaseBillingService> _logger = logger;
     protected bool _isInitialized;
+    protected readonly HashSet<string> _ownedProducts = new();
 
     // // Sample product definitions - shared across all platforms
     protected readonly List<Product> _sampleProducts = new()
@@ -153,9 +154,6 @@ public abstract class BaseBillingService(ILogger<BaseBillingService> logger) : I
     protected abstract Task<PurchaseResult> PurchasePlatformProductAsync(string productId);
     protected abstract Task<List<string>> GetPlatformPurchasedProductsAsync();
     protected abstract Task<bool> RestorePlatformPurchasesAsync();
-
-    Task<List<Product>> IBillingService.GetProductsAsync()
-    {
-        throw new NotImplementedException();
     }
+    
 }

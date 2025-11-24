@@ -15,6 +15,7 @@ public class BillingService : BaseBillingService
 {
     private PaymentTransactionObserver? _paymentObserver;
     private TaskCompletionSource<bool>? _purchaseTaskCompletionSource;
+    private readonly HashSet<string> _ownedProducts = [];
 
     public BillingService(ILogger<BaseBillingService> logger) : base(logger)
     {
