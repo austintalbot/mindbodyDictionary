@@ -22,7 +22,7 @@
 
     <ShellContent
         Title="Conditions"
-        Icon="{StaticResource IconProjects}"
+        Icon="{StaticResource IconMeta}"
         ContentTemplate="{DataTemplate pages:ConditionListPage}"
         Route="conditions" />
 
@@ -40,20 +40,20 @@
 
     <ShellContent
         Title="Premium"
-        Icon="{StaticResource IconNotifications}"
+        Icon="{StaticResource IconPremium}"
         ContentTemplate="{DataTemplate pages:UpgradePremiumPage}"
         Route="premium" />
 
     <ShellContent
         Title="Image Cache (Debug)"
         x:Name="ImageCacheContent"
-        Icon="{StaticResource IconNotifications}"
+        Icon="{StaticResource IconImageCache}"
         ContentTemplate="{DataTemplate pages:ImageCachePage}"
         Route="imagecache" />
 
     <ShellContent
         Title="Notification Test (Debug)"
-        Icon="{StaticResource IconNotifications}"
+        Icon="{StaticResource IconTest}"
         ContentTemplate="{DataTemplate pages:NotificationTestPage}"
         Route="notificationtest" />
 
