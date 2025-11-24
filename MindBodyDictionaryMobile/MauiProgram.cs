@@ -31,6 +31,7 @@ public static class MauiProgram
 		builder.Services.AddSingleton<TaskRepository>();
 		builder.Services.AddSingleton<CategoryRepository>();
 		builder.Services.AddSingleton<TagRepository>();
+		builder.Services.AddSingleton<ConditionRepository>();
 		builder.Services.AddSingleton<ImageCacheRepository>();
 		builder.Services.AddSingleton<ImageCacheService>();
 		builder.Services.AddSingleton<IImageCacheHelper, ImageCacheHelper>();
@@ -63,6 +64,8 @@ public static class MauiProgram
 
 		builder.Services.AddTransientWithShellRoute<ProjectDetailPage, ProjectDetailPageModel>("project");
 		builder.Services.AddTransientWithShellRoute<TaskDetailPage, TaskDetailPageModel>("task");
+		builder.Services.AddTransientWithShellRoute<ConditionDetailPage, ConditionDetailPageModel>("condition");
+		builder.Services.AddSingleton<ConditionListPageModel>();
 		
 		return builder.Build();
 	}

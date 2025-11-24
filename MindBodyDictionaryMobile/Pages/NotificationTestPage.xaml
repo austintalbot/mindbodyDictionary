@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MindBodyDictionaryMobile.Pages.NotificationTestPage"
+             Title="Notification Test">
+    <VerticalStackLayout Padding="20" Spacing="10">
+        <Label Text="iOS APNS Testing" FontSize="24" FontAttributes="Bold"/>
+        
+        <Button x:Name="TestLocalNotificationBtn" 
+                Text="Send Test Local Notification (5 sec delay)"
+                Clicked="OnTestLocalNotificationClicked"/>
+        
+        <Frame BorderColor="Orange" Padding="10" Margin="0,20,0,0">
+            <VerticalStackLayout Spacing="5">
+                <Label Text="Instructions:" FontAttributes="Bold"/>
+                <Label Text="1. Click 'Send Test Local Notification'"/>
+                <Label Text="2. Wait 5 seconds for notification to appear"/>
+                <Label Text="3. Check Xcode console for debug output"/>
+                <Label Text="4. For remote APNS testing, use: xcrun simctl push booted com.minbodydictionary.mindbodydictionarymobile payload.apns"/>
+            </VerticalStackLayout>
+        </Frame>
+    </VerticalStackLayout>
+</ContentPage>

@@ -57,5 +57,127 @@
                 { "Title": "Weekly Phone Calls", "IsCompleted": false }
             ]
         }
+    ],
+    "Conditions": [
+        {
+            "Name": "Anxiety Disorder",
+            "Description": "Characterized by persistent worry, fear, and physical symptoms. Mind-body practices like meditation and breathing exercises can help manage symptoms.",
+            "Icon": "\uf5a8",
+            "Category": { "Title": "mental health", "Color": "#7B68EE" },
+            "Tags": [
+                { "Title": "mental health", "Color": "#7B68EE" },
+                { "Title": "stress", "Color": "#FF6347" }
+            ],
+            "Tasks": [
+                { "Title": "Practice deep breathing techniques", "IsCompleted": false },
+                { "Title": "Daily meditation session", "IsCompleted": false },
+                { "Title": "Progressive muscle relaxation", "IsCompleted": false }
+            ]
+        },
+        {
+            "Name": "Chronic Pain",
+            "Description": "Long-lasting pain that can benefit from mind-body therapies, yoga, and mindfulness practices to reduce perceived pain and improve mobility.",
+            "Icon": "\uf565",
+            "Category": { "Title": "physical health", "Color": "#FF6B6B" },
+            "Tags": [
+                { "Title": "pain management", "Color": "#FF6B6B" },
+                { "Title": "wellness", "Color": "#32CD32" }
+            ],
+            "Tasks": [
+                { "Title": "Gentle yoga practice", "IsCompleted": false },
+                { "Title": "Body scan meditation", "IsCompleted": false },
+                { "Title": "Hot/cold therapy sessions", "IsCompleted": false }
+            ]
+        },
+        {
+            "Name": "Insomnia",
+            "Description": "Sleep disorder that can be improved through relaxation techniques, mindfulness, and body awareness practices.",
+            "Icon": "\uf186",
+            "Category": { "Title": "sleep health", "Color": "#1E3A8A" },
+            "Tags": [
+                { "Title": "sleep", "Color": "#1E3A8A" },
+                { "Title": "relaxation", "Color": "#87CEEB" }
+            ],
+            "Tasks": [
+                { "Title": "Evening meditation routine", "IsCompleted": false },
+                { "Title": "Progressive relaxation before bed", "IsCompleted": false },
+                { "Title": "Breathing exercises", "IsCompleted": false }
+            ]
+        },
+        {
+            "Name": "Depression",
+            "Description": "Mood disorder that can benefit from physical activity, yoga, mindfulness, and supportive mind-body interventions.",
+            "Icon": "\uf4ad",
+            "Category": { "Title": "mental health", "Color": "#7B68EE" },
+            "Tags": [
+                { "Title": "mental health", "Color": "#7B68EE" },
+                { "Title": "mood", "Color": "#FFD700" }
+            ],
+            "Tasks": [
+                { "Title": "Daily movement/exercise", "IsCompleted": false },
+                { "Title": "Gratitude meditation", "IsCompleted": false },
+                { "Title": "Outdoor walking session", "IsCompleted": false }
+            ]
+        },
+        {
+            "Name": "High Blood Pressure",
+            "Description": "Hypertension can be managed with stress reduction techniques, yoga, meditation, and breathing exercises.",
+            "Icon": "\uf21e",
+            "Category": { "Title": "physical health", "Color": "#FF6B6B" },
+            "Tags": [
+                { "Title": "cardiovascular", "Color": "#DC143C" },
+                { "Title": "stress relief", "Color": "#FF6347" }
+            ],
+            "Tasks": [
+                { "Title": "Daily meditation practice", "IsCompleted": false },
+                { "Title": "Yoga session focused on relaxation", "IsCompleted": false },
+                { "Title": "Cardiovascular exercise", "IsCompleted": false }
+            ]
+        },
+        {
+            "Name": "Fibromyalgia",
+            "Description": "Widespread pain condition benefiting from gentle exercise, mindfulness, and stress management techniques.",
+            "Icon": "\uf550",
+            "Category": { "Title": "physical health", "Color": "#FF6B6B" },
+            "Tags": [
+                { "Title": "chronic condition", "Color": "#8B4513" },
+                { "Title": "pain", "Color": "#FF6B6B" }
+            ],
+            "Tasks": [
+                { "Title": "Gentle stretching routine", "IsCompleted": false },
+                { "Title": "Mindfulness meditation", "IsCompleted": false },
+                { "Title": "Low-impact exercise", "IsCompleted": false }
+            ]
+        },
+        {
+            "Name": "ADHD",
+            "Description": "Attention deficit condition that can benefit from mindfulness, body awareness, and focused breathing practices.",
+            "Icon": "\uf192",
+            "Category": { "Title": "mental health", "Color": "#7B68EE" },
+            "Tags": [
+                { "Title": "focus", "Color": "#4169E1" },
+                { "Title": "mindfulness", "Color": "#9370DB" }
+            ],
+            "Tasks": [
+                { "Title": "Focused breathing exercises", "IsCompleted": false },
+                { "Title": "Mindfulness meditation session", "IsCompleted": false },
+                { "Title": "Body awareness practice", "IsCompleted": false }
+            ]
+        },
+        {
+            "Name": "Headaches/Migraines",
+            "Description": "Recurring headaches can be reduced through relaxation, tension release, and stress management mind-body techniques.",
+            "Icon": "\uf48f",
+            "Category": { "Title": "physical health", "Color": "#FF6B6B" },
+            "Tags": [
+                { "Title": "pain relief", "Color": "#FF6347" },
+                { "Title": "tension", "Color": "#DAA520" }
+            ],
+            "Tasks": [
+                { "Title": "Progressive muscle relaxation", "IsCompleted": false },
+                { "Title": "Neck and shoulder stretches", "IsCompleted": false },
+                { "Title": "Breathing and meditation", "IsCompleted": false }
+            ]
+        }
     ]
 }

@@ -21,6 +21,12 @@
         Route="projects" />
 
     <ShellContent
+        Title="Conditions"
+        Icon="{StaticResource IconProjects}"
+        ContentTemplate="{DataTemplate pages:ConditionListPage}"
+        Route="conditions" />
+
+    <ShellContent
         Title="Manage Meta"
         Icon="{StaticResource IconMeta}"
         ContentTemplate="{DataTemplate pages:ManageMetaPage}"
@@ -38,6 +44,12 @@
         Icon="{StaticResource IconNotifications}"
         ContentTemplate="{DataTemplate pages:ImageCachePage}"
         Route="imagecache" />
+
+    <ShellContent
+        Title="Notification Test (Debug)"
+        Icon="{StaticResource IconNotifications}"
+        ContentTemplate="{DataTemplate pages:NotificationTestPage}"
+        Route="notificationtest" />
 
   <Shell.FlyoutFooter>
     <Grid Padding="15">

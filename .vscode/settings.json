@@ -26,12 +26,16 @@
         "appiconfg",
         "Argb",
         "AUTOINCREMENT",
+        "Bitcode",
+        "Codesign",
         "mindbody",
         "mindbodydictionary",
         "mindbodydictionarymobile",
+        "Mtouch",
         "Mvvm",
         "Segoe",
         "Syncfusion",
-        "Theanine"
+        "Theanine",
+        "UMDRT"
     ]
 }

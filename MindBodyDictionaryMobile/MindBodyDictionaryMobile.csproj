@@ -13,6 +13,13 @@
 		<!-- https://github.com/CommunityToolkit/Maui/issues/2205 -->
 		<NoWarn>XC0103</NoWarn>
 		<MauiEnableXamlCBindingWithSourceCompilation>true</MauiEnableXamlCBindingWithSourceCompilation>
+		<AssemblyTitle>MindBodyDictionaryMobile</AssemblyTitle>
+		<AssemblyCompany>MindBody Dictionary, LLC</AssemblyCompany>
+		<AssemblyProduct>MindBodyDictionaryMobile</AssemblyProduct>
+		<AssemblyVersion>1.0.0.0</AssemblyVersion>
+		<AssemblyFileVersion>1.0.0.0</AssemblyFileVersion>
+		<AssemblyInformationalVersion>1.0.0</AssemblyInformationalVersion>
+		<RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
 
 		<!-- Display name -->
 		<ApplicationTitle>MindBodyDictionaryMobile</ApplicationTitle>
@@ -23,12 +30,41 @@
 		<!-- Versions -->
 		<ApplicationDisplayVersion>2.0</ApplicationDisplayVersion>
 		<ApplicationVersion>2</ApplicationVersion>
+		<NoWarn>$(NoWarn),CS8618,CS8602,XC0045,XC0103,XC0022</NoWarn>
 
 
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">23.0</SupportedOSPlatformVersion>
 	</PropertyGroup>
-
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net10.0-ios|AnyCPU'">
+		<CreatePackage>false</CreatePackage>
+		<CodesignKey>Apple Distribution: MindBody Dictionary, LLC (UMDRT97472)</CodesignKey>
+		<MtouchLink>None</MtouchLink>
+		<BuildIpa>true</BuildIpa>
+		<CodesignProvision>Automatic</CodesignProvision>
+		<MtouchEnableBitcode>false</MtouchEnableBitcode>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-ios|AnyCPU'">
+		<CreatePackage>false</CreatePackage>
+		<MtouchLink>None</MtouchLink>
+		<CodesignProvision>Automatic</CodesignProvision>
+		<CodesignKey>Apple Distribution: MindBody Dictionary, LLC (UMDRT97472)</CodesignKey>
+		<MtouchEnableBitcode>false</MtouchEnableBitcode>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net10.0-android|AnyCPU'">
+		<AndroidKeyStore>True</AndroidKeyStore>
+		<AndroidSigningKeyStore>mbd.jks</AndroidSigningKeyStore>
+		<AndroidSigningStorePass>puckerUp@501</AndroidSigningStorePass>
+		<AndroidSigningKeyAlias>key0</AndroidSigningKeyAlias>
+		<AndroidSigningKeyPass>puckerUpLemon</AndroidSigningKeyPass>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-android|AnyCPU'">
+		<AndroidKeyStore>True</AndroidKeyStore>
+		<AndroidSigningKeyStore>mbd.jks</AndroidSigningKeyStore>
+		<AndroidSigningStorePass>puckerUp@501</AndroidSigningStorePass>
+		<AndroidSigningKeyAlias>key0</AndroidSigningKeyAlias>
+		<AndroidSigningKeyPass>puckerUpLemon</AndroidSigningKeyPass>
+	</PropertyGroup>
 	<ItemGroup>
 		<!-- App Icon -->
 

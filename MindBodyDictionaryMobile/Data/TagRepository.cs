@@ -66,7 +66,7 @@ public class TagRepository(ILogger<TagRepository> logger)
 		await connection.OpenAsync();
 
 		var selectCmd = connection.CreateCommand();
-		selectCmd.CommandText = "SELECT * FROM Tag";
+		selectCmd.CommandText = "SELECT DISTINCT ID, Title, Color FROM Tag ORDER BY Title";
 		var tags = new List<Tag>();
 
 		await using var reader = await selectCmd.ExecuteReaderAsync();
@@ -200,7 +200,7 @@ public class TagRepository(ILogger<TagRepository> logger)
 
 		var saveCmd = connection.CreateCommand();
 		saveCmd.CommandText = @"
-        INSERT INTO ProjectsTags (ProjectID, TagID) VALUES (@projectID, @tagID)";
+        INSERT OR IGNORE INTO ProjectsTags (ProjectID, TagID) VALUES (@projectID, @tagID)";
 		saveCmd.Parameters.AddWithValue("@projectID", projectID);
 		saveCmd.Parameters.AddWithValue("@tagID", item.ID);
 
@@ -262,5 +262,71 @@ public class TagRepository(ILogger<TagRepository> logger)
 		await dropTableCmd.ExecuteNonQueryAsync();
 
 		_hasBeenInitialized = false;
+	}
+
+	/// <summary>
+	/// Deduplicates tags by merging tags with the same title and updating all references.
+	/// </summary>
+	public async Task DeduplicateAsync()
+	{
+		await Init();
+		await using var connection = new SqliteConnection(Constants.DatabasePath);
+		await connection.OpenAsync();
+
+		try
+		{
+			var cmd = connection.CreateCommand();
+			// Find duplicate tags (same title)
+			cmd.CommandText = @"
+			SELECT Title, GROUP_CONCAT(ID) as IDs
+			FROM Tag
+			GROUP BY Title
+			HAVING COUNT(*) > 1";
+
+			var duplicates = new Dictionary<string, List<int>>();
+			
+			await using var reader = await cmd.ExecuteReaderAsync();
+			while (await reader.ReadAsync())
+			{
+				var title = reader.GetString(0);
+				var ids = reader.GetString(1).Split(',').Select(int.Parse).ToList();
+				if (ids.Count > 1)
+				{
+					duplicates[title] = ids;
+				}
+			}
+
+			// For each duplicate set, keep the first ID and update all references
+			foreach (var kvp in duplicates)
+			{
+				var ids = kvp.Value;
+				var keepId = ids.First();
+				var deleteIds = ids.Skip(1).ToList();
+
+				foreach (var deleteId in deleteIds)
+				{
+					// Update ProjectsTags to point to keepId instead of deleteId
+					var updateCmd = connection.CreateCommand();
+					updateCmd.CommandText = @"
+					UPDATE ProjectsTags 
+					SET TagID = @keepId 
+					WHERE TagID = @deleteId";
+					updateCmd.Parameters.AddWithValue("@keepId", keepId);
+					updateCmd.Parameters.AddWithValue("@deleteId", deleteId);
+					await updateCmd.ExecuteNonQueryAsync();
+
+					// Delete the duplicate tag
+					var deleteCmd = connection.CreateCommand();
+					deleteCmd.CommandText = "DELETE FROM Tag WHERE ID = @id";
+					deleteCmd.Parameters.AddWithValue("@id", deleteId);
+					await deleteCmd.ExecuteNonQueryAsync();
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			_logger.LogError(e, "Error deduplicating tags");
+			throw;
+		}
 	}
 }

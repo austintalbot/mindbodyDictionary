@@ -29,4 +29,5 @@ public class Project
 public class ProjectsJson
 {
 	public List<Project> Projects { get; set; } = [];
+	public List<Condition> Conditions { get; set; } = [];
 }
