@@ -31,8 +31,10 @@
       "Bitcode",
       "Codesign",
       "dotenv",
+      "eastus",
       "functionapp",
       "Inapp",
+      "mbdstoragesa",
       "mindbody",
       "mindbodydictionary",
       "mindbodydictionarymobile",
@@ -48,6 +50,7 @@
       "Theanine",
       "UDID",
       "UMDRT",
+      "xcassets",
       "xcrun"
     ]
 }
