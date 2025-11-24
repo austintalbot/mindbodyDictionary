@@ -95,6 +95,23 @@
         "resolved": "1.0.8",
         "contentHash": "YJOKFG25bQNyBV4M/fwxriusodbyKY+oWcOJWIL+fj0RIVLb7Q73zarR2HZ+OOlirTqXeSscgCu1AzjZnyQy/A=="
       },
+      "Xamarin.Android.Google.BillingClient": {
+        "type": "Direct",
+        "requested": "[8.0.0, )",
+        "resolved": "8.0.0",
+        "contentHash": "z+Aupf779zs18UKb+C4mZ9l0v/COt3JpyXKjzXH/x4mprD2nZArVBZfkl+Dbk/kKPkhvyZs82ywNbtHwxmyLpQ==",
+        "dependencies": {
+          "Xamarin.AndroidX.Activity": "1.10.1.2",
+          "Xamarin.Build.Download": "0.11.4",
+          "Xamarin.Google.Android.DataTransport.TransportApi": "4.0.0.4",
+          "Xamarin.Google.Android.DataTransport.TransportBackendCct": "4.0.0.4",
+          "Xamarin.Google.Android.DataTransport.TransportRuntime": "4.0.0.4",
+          "Xamarin.GooglePlayServices.Base": "118.7.1",
+          "Xamarin.GooglePlayServices.Basement": "118.7.1",
+          "Xamarin.GooglePlayServices.Location": "121.3.0.6",
+          "Xamarin.GooglePlayServices.Tasks": "118.3.1"
+        }
+      },
       "Xamarin.Firebase.Messaging": {
         "type": "Direct",
         "requested": "[125.0.1, )",
@@ -1710,6 +1727,20 @@
           "Xamarin.GooglePlayServices.Tasks": "118.3.2.1"
         }
       },
+      "Xamarin.GooglePlayServices.Location": {
+        "type": "Transitive",
+        "resolved": "121.3.0.6",
+        "contentHash": "tkRrKF5HsohrHWLj7F/1MBDMX61VSYn4oA5c+eNhCVrUo1iNYHnPMFYDlROiBc8YaP5KTIBptOLlJEEdae4iwg==",
+        "dependencies": {
+          "Xamarin.Build.Download": "0.11.4",
+          "Xamarin.GooglePlayServices.Base": "118.7.0.2",
+          "Xamarin.GooglePlayServices.Basement": "118.7.0.2",
+          "Xamarin.GooglePlayServices.Tasks": "118.3.0.2",
+          "Xamarin.Kotlin.StdLib": "2.0.21.4",
+          "Xamarin.KotlinX.Coroutines.Android": "1.9.0.4",
+          "Xamarin.KotlinX.Coroutines.Core": "1.9.0.4"
+        }
+      },
       "Xamarin.GooglePlayServices.Stats": {
         "type": "Transitive",
         "resolved": "117.1.0.7",
@@ -1875,7 +1906,7 @@
     "net10.0-android36.0/android-arm64": {},
     "net10.0-android36.0/android-x64": {},
     "net10.0-android36.0/iossimulator-arm64": {},
-    "net10.0-ios26.0": {
+    "net10.0-ios26.1": {
       "CommunityToolkit.Maui": {
         "type": "Direct",
         "requested": "[13.0.0, )",
@@ -2164,8 +2195,8 @@
         "contentHash": "vq+81ZqZz9oHV6iWgGXFnxHAyO5xA73nfvDNu5LwymIK294is5bRo3P063VToAbDRyyc0qq/YFRYjHmiD6Cv8Q=="
       }
     },
-    "net10.0-ios26.0/android-arm64": {},
-    "net10.0-ios26.0/android-x64": {},
-    "net10.0-ios26.0/iossimulator-arm64": {}
+    "net10.0-ios26.1/android-arm64": {},
+    "net10.0-ios26.1/android-x64": {},
+    "net10.0-ios26.1/iossimulator-arm64": {}
   }
 }

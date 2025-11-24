@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MindBodyDictionaryMobile.Services;
@@ -60,11 +61,23 @@ public partial class UpgradePremiumPageModel : ObservableObject
                 PremiumProduct = product;
                 PremiumProduct.IsOwned = IsPremium;
             }
+            else
+            {
+                // Provide a default product if none is available (e.g., stub implementation)
+                PremiumProduct = new BillingProduct
+                {
+                    ProductId = _premiumProductId,
+                    Title = "MindBody Dictionary Premium",
+                    Description = "Annual Subscription",
+                    Price = "Contact for pricing",
+                    IsOwned = IsPremium
+                };
+            }
         }
         catch (Exception ex)
         {
             Debug.WriteLine($"Error loading upgrade page: {ex.Message}");
-            await _errorHandler.Handle(ex, "Failed to load premium options");
+            _errorHandler.HandleError(ex);
         }
         finally
         {
@@ -95,7 +108,7 @@ public partial class UpgradePremiumPageModel : ObservableObject
         catch (Exception ex)
         {
             Debug.WriteLine($"Error restoring purchases: {ex.Message}");
-            await _errorHandler.Handle(ex, "Failed to restore purchases");
+            _errorHandler.HandleError(ex);
         }
         finally
         {
@@ -136,7 +149,7 @@ public partial class UpgradePremiumPageModel : ObservableObject
         catch (Exception ex)
         {
             Debug.WriteLine($"Error purchasing premium: {ex.Message}");
-            await _errorHandler.Handle(ex, "Purchase failed");
+            _errorHandler.HandleError(ex);
         }
         finally
         {
