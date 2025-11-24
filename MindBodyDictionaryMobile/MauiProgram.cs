@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
 using Syncfusion.Maui.Toolkit.Hosting;
-using MindBodyDictionaryMobile.Services;
+using MindBodyDictionaryMobile.Services.billing;
 
 namespace MindBodyDictionaryMobile;
 
@@ -40,15 +40,14 @@ public static class MauiProgram
 		builder.Services.AddSingleton<MainPageModel>();
 		builder.Services.AddSingleton<ProjectListPageModel>();
 		builder.Services.AddSingleton<ManageMetaPageModel>();
+		builder.Services.AddTransient<IBillingService, BillingService>();
 
 #if ANDROID
 		builder.Services.AddSingleton<IDeviceInstallationService, Platforms.Android.DeviceInstallationService>();
-		builder.Services.AddSingleton<IBillingService, Platforms.Android.BillingService>();
 #elif IOS
 		var iosDeviceService = new Platforms.iOS.DeviceInstallationService();
 		builder.Services.AddSingleton<IDeviceInstallationService>(iosDeviceService);
 		builder.Services.AddSingleton(iosDeviceService);
-		builder.Services.AddSingleton<IBillingService, Platforms.iOS.BillingService>();
 #endif
 
 		builder.Services.AddSingleton<INotificationActionServiceExtended, NotificationActionService>();

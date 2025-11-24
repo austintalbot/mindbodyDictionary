@@ -22,20 +22,31 @@
     "peacock.color": "#215732",
     "azureFunctions.projectSubpath": "backend/src/MindBodyDictionary.AdminApi/bin/Release/net10.0",
     "cSpell.words": [
+        "ALPT",
         "appicon",
         "appiconfg",
+        "appiconset",
         "Argb",
         "AUTOINCREMENT",
         "Bitcode",
         "Codesign",
+        "dotenv",
+        "functionapp",
         "mindbody",
         "mindbodydictionary",
         "mindbodydictionarymobile",
         "Mtouch",
         "Mvvm",
+        "prereqs",
+        "sdkconfig",
         "Segoe",
+        "simctl",
         "Syncfusion",
+        "Taskfile",
+        "tfvars",
         "Theanine",
-        "UMDRT"
+        "UDID",
+        "UMDRT",
+        "xcrun"
     ]
 }
