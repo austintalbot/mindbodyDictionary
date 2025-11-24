@@ -14,7 +14,7 @@ public partial class UpgradePremiumPageModel : ObservableObject
     private string title = "Premium Upgrade";
 
     [ObservableProperty]
-    private bool notSubscribed = true;
+    private bool isSubscribed;
 
     [ObservableProperty]
     private bool isBusy;
@@ -22,6 +22,19 @@ public partial class UpgradePremiumPageModel : ObservableObject
     public UpgradePremiumPageModel(IBillingService billingService)
     {
         _billingService = billingService;
+    }
+
+    private async Task CheckSubscriptionStatus()
+    {
+        try
+        {
+            IsSubscribed = await _billingService.IsProductOwnedAsync(_premiumProductId);
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Error checking subscription: {ex.Message}");
+            IsSubscribed = false;
+        }
     }
 
     [RelayCommand]
@@ -39,7 +52,7 @@ public partial class UpgradePremiumPageModel : ObservableObject
             _premiumProductId = "MBDPremiumYr";
 #endif
 
-            NotSubscribed = !await _billingService.IsProductOwnedAsync(_premiumProductId);
+            await CheckSubscriptionStatus();
         }
         catch (Exception ex)
         {
@@ -63,8 +76,8 @@ public partial class UpgradePremiumPageModel : ObservableObject
             if (success)
             {
                 await Task.Delay(1000);
-                NotSubscribed = !await _billingService.IsProductOwnedAsync(_premiumProductId);
-                if (!NotSubscribed)
+                await CheckSubscriptionStatus();
+                if (IsSubscribed)
                 {
                     await Shell.Current.DisplayAlertAsync("Success", "Welcome to Premium!", "OK");
                 }
@@ -91,8 +104,8 @@ public partial class UpgradePremiumPageModel : ObservableObject
 
             if (success)
             {
-                NotSubscribed = !await _billingService.IsProductOwnedAsync(_premiumProductId);
-                if (!NotSubscribed)
+                await CheckSubscriptionStatus();
+                if (IsSubscribed)
                 {
                     await Shell.Current.DisplayAlertAsync("Success", "Premium subscription restored!", "OK");
                 }

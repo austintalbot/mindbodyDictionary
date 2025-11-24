@@ -27,33 +27,43 @@
 
                 <!-- Description -->
                 <Label Text="Enjoy an ad free experience while helping support development."
-                       IsVisible="{Binding NotSubscribed}"
+                       IsVisible="{Binding IsSubscribed, StringFormat='!{0}'}"
                        HorizontalOptions="CenterAndExpand"
                        HorizontalTextAlignment="Center"
                        FontSize="20" />
 
                 <!-- Terms -->
                 <Label Text="No trial period, and the subscription will be renewed automatically on the subscription date, unless canceled before the renewal date."
-                       IsVisible="{Binding NotSubscribed}"
+                       IsVisible="{Binding IsSubscribed, StringFormat='!{0}'}"
                        HorizontalOptions="CenterAndExpand"
                        HorizontalTextAlignment="Center"
                        FontSize="16" />
 
                 <!-- Subscription Buttons -->
                 <VerticalStackLayout Spacing="10" Padding="0,20,0,0">
-                    <Button Text="Subscribe for $9.99/year"
+                    <Button Text="{Binding IsBusy, StringFormat='Loading...', TargetNullValue='Subscribe for $9.99/year'}"
                             Command="{Binding PurchaseCommand}"
-                            IsVisible="{Binding NotSubscribed}"
+                            IsVisible="{Binding IsSubscribed, StringFormat='!{0}'}"
+                            IsEnabled="{Binding IsBusy, StringFormat='!{0}'}"
                             Padding="15,12" />
 
-                    <Button Text="Restore Subscription"
+                    <Button Text="{Binding IsBusy, StringFormat='Restoring...', TargetNullValue='Restore Subscription'}"
                             Command="{Binding RestoreCommand}"
-                            IsVisible="{Binding NotSubscribed}"
+                            IsVisible="{Binding IsSubscribed, StringFormat='!{0}'}"
+                            IsEnabled="{Binding IsBusy, StringFormat='!{0}'}"
                             Padding="15,12"
                             BackgroundColor="Transparent"
                             BorderColor="{AppThemeBinding Light=#000000, Dark=#FFFFFF}"
                             BorderWidth="1" />
                 </VerticalStackLayout>
+
+                <!-- Subscription Active Message -->
+                <Label Text="✓ Premium Active"
+                       IsVisible="{Binding IsSubscribed}"
+                       HorizontalOptions="CenterAndExpand"
+                       FontSize="18"
+                       FontAttributes="Bold"
+                       TextColor="Green" />
 
                 <!-- Legal Links -->
                 <VerticalStackLayout Spacing="10" Padding="0,20,0,0">
