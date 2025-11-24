@@ -107,5 +107,13 @@
 		<PackageReference Include="Xamarin.Android.Google.BillingClient" Version="8.0.0" />
 		<GoogleServicesJson Include="Platforms\Android\google-services.json" />
 	</ItemGroup>
+
+	<!-- Platform-specific billing implementations -->
+	<ItemGroup Condition="'$(TargetFramework)' != 'net10.0-android'">
+		<Compile Remove="Services\billing\BillingService.Android.cs" />
+	</ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)' != 'net10.0-ios'">
+		<Compile Remove="Services\billing\BillingService.Ios.cs" />
+	</ItemGroup>
 	
 </Project>

@@ -148,12 +148,29 @@ public abstract class BaseBillingService(ILogger<BaseBillingService> logger) : I
         }
     }
 
+    public async Task<List<Product>> GetProductsAsync(string[] productIds)
+    {
+        var allProducts = await GetProductsAsync();
+        var productSet = new HashSet<string>(productIds);
+        return allProducts.Where(p => productSet.Contains(p.Id)).ToList();
+    }
+
+    public async Task<bool> IsProductOwnedAsync(string productId)
+    {
+        var purchased = await GetPurchasedProductsAsync();
+        return purchased.Contains(productId);
+    }
+
+    public async Task<bool> PurchaseProductAsync(string productId)
+    {
+        var result = await PurchaseAsync(productId);
+        return result.IsSuccess;
+    }
+
     // Abstract methods to be implemented by platform-specific classes
     protected abstract Task<bool> InitializePlatformAsync();
     protected abstract Task<List<Product>> GetPlatformProductsAsync(List<Product> baseProducts);
     protected abstract Task<PurchaseResult> PurchasePlatformProductAsync(string productId);
     protected abstract Task<List<string>> GetPlatformPurchasedProductsAsync();
     protected abstract Task<bool> RestorePlatformPurchasesAsync();
-    }
-    
 }

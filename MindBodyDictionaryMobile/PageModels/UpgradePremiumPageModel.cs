@@ -2,6 +2,7 @@ using System.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MindBodyDictionaryMobile.Services.billing;
+using MindBodyDictionaryMobile.Models;
 
 namespace MindBodyDictionaryMobile.PageModels;
 
@@ -12,7 +13,7 @@ public partial class UpgradePremiumPageModel : ObservableObject
     private string _premiumProductId = string.Empty;
 
     [ObservableProperty]
-    private BillingProduct? premiumProduct;
+    private Product? premiumProduct;
 
     [ObservableProperty]
     private bool isPremium;
@@ -64,12 +65,14 @@ public partial class UpgradePremiumPageModel : ObservableObject
             else
             {
                 // Provide a default product if none is available (e.g., stub implementation)
-                PremiumProduct = new BillingProduct
+                PremiumProduct = new Product
                 {
-                    ProductId = _premiumProductId,
-                    Title = "MindBody Dictionary Premium",
+                    Id = _premiumProductId,
+                    Name = "MindBody Dictionary Premium",
                     Description = "Annual Subscription",
                     Price = "Contact for pricing",
+                    PriceAmount = 0m,
+                    ImageUrl = string.Empty,
                     IsOwned = IsPremium
                 };
             }
@@ -91,18 +94,26 @@ public partial class UpgradePremiumPageModel : ObservableObject
         try
         {
             IsBusy = true;
-            var ownedProducts = await _billingService.RestorePurchasesAsync();
+            var restored = await _billingService.RestorePurchasesAsync();
 
-            IsPremium = ownedProducts.Contains(_premiumProductId);
-            UpdateUI();
-
-            if (IsPremium)
+            if (restored)
             {
-                await Shell.Current.DisplayAlert("Success", "Premium subscription restored!", "OK");
+                var ownedProducts = await _billingService.GetPurchasedProductsAsync();
+                IsPremium = ownedProducts.Contains(_premiumProductId);
+                UpdateUI();
+
+                if (IsPremium)
+                {
+                    await Shell.Current.DisplayAlertAsync("Success", "Premium subscription restored!", "OK");
+                }
+                else
+                {
+                    await Shell.Current.DisplayAlertAsync("Info", "No premium subscription found", "OK");
+                }
             }
             else
             {
-                await Shell.Current.DisplayAlert("Info", "No premium subscription found", "OK");
+                await Shell.Current.DisplayAlertAsync("Info", "Restore failed", "OK");
             }
         }
         catch (Exception ex)
@@ -123,7 +134,7 @@ public partial class UpgradePremiumPageModel : ObservableObject
         {
             if (IsPremium)
             {
-                await Shell.Current.DisplayAlert("Info", "You already have premium!", "OK");
+                await Shell.Current.DisplayAlertAsync("Info", "You already have premium!", "OK");
                 return;
             }
 
@@ -134,15 +145,14 @@ public partial class UpgradePremiumPageModel : ObservableObject
 
             if (success)
             {
-                // Check if purchase was successful
-                await Task.Delay(2000); // Give some time for the purchase to be processed
+                await Task.Delay(2000);
                 IsPremium = await _billingService.IsProductOwnedAsync(_premiumProductId);
 
                 if (IsPremium && PremiumProduct != null)
                 {
                     PremiumProduct.IsOwned = true;
                     UpdateUI();
-                    await Shell.Current.DisplayAlert("Success", "Welcome to Premium!", "OK");
+                    await Shell.Current.DisplayAlertAsync("Success", "Welcome to Premium!", "OK");
                 }
             }
         }
