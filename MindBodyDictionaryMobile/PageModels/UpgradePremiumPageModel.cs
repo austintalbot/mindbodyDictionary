@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using MindBodyDictionaryMobile.Services;
+using MindBodyDictionaryMobile.Services.billing;
 
 namespace MindBodyDictionaryMobile.PageModels;
 
