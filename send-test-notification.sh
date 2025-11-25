@@ -19,7 +19,7 @@ generate_sas_token() {
     local string_to_sign
     local signature
     local encoded_sig
-    
+
     expiry=$(($(date +%s) + 3600))
 
     # URL encode the URI
