@@ -1,66 +1,87 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Shell
     x:Class="MindBodyDictionaryMobile.AppShell"
- xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
- xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
- xmlns:sf="clr-namespace:Syncfusion.Maui.Toolkit.SegmentedControl;assembly=Syncfusion.Maui.Toolkit"
- xmlns:pages="clr-namespace:MindBodyDictionaryMobile.Pages"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:sf="clr-namespace:Syncfusion.Maui.Toolkit.SegmentedControl;assembly=Syncfusion.Maui.Toolkit"
+    xmlns:pages="clr-namespace:MindBodyDictionaryMobile.Pages"
     Shell.FlyoutBehavior="Flyout"
-    Title="MindBodyDictionaryMobile">
+    Title="Mind Body Dictionary">
+
+  <!-- Flyout Header with Logo -->
+  <Shell.FlyoutHeader>
+    <pages:FlyoutHeaderView />
+  </Shell.FlyoutHeader>
+
+  <!-- Main Navigation Items -->
+  <ShellContent
+    Title="Dashboard" 
+    Icon="{StaticResource IconDashboard}"
+    ContentTemplate="{DataTemplate pages:MainPage}"
+    Route="main" />
 
   <ShellContent
-   Title="Dashboard" 
-   Icon="{StaticResource IconDashboard}"
-   ContentTemplate="{DataTemplate pages:MainPage}"
-   Route="main" />
+    Title="Projects"
+    Icon="{StaticResource IconProjects}"
+    ContentTemplate="{DataTemplate pages:ProjectListPage}"
+    Route="projects" />
 
   <ShellContent
-   Title="Projects"
-        Icon="{StaticResource IconProjects}"
-        ContentTemplate="{DataTemplate pages:ProjectListPage}"
-        Route="projects" />
+    Title="Conditions"
+    Icon="{StaticResource IconMeta}"
+    ContentTemplate="{DataTemplate pages:ConditionListPage}"
+    Route="conditions" />
 
-    <ShellContent
-        Title="Conditions"
-        Icon="{StaticResource IconMeta}"
-        ContentTemplate="{DataTemplate pages:ConditionListPage}"
-        Route="conditions" />
+  <ShellContent
+    Title="Manage Meta"
+    Icon="{StaticResource IconMeta}"
+    ContentTemplate="{DataTemplate pages:ManageMetaPage}"
+    Route="manage" />
 
-    <ShellContent
-        Title="Manage Meta"
-        Icon="{StaticResource IconMeta}"
-        ContentTemplate="{DataTemplate pages:ManageMetaPage}"
-        Route="manage" />
+  <ShellContent
+    Title="Notifications"
+    Icon="{StaticResource IconNotifications}"
+    ContentTemplate="{DataTemplate pages:NotificationSettingsPage}"
+    Route="notifications" />
 
-    <ShellContent
-        Title="Notifications"
-        Icon="{StaticResource IconNotifications}"
-        ContentTemplate="{DataTemplate pages:NotificationSettingsPage}"
-        Route="notifications" />
+  <ShellContent
+    Title="Premium"
+    Icon="{StaticResource IconPremium}"
+    ContentTemplate="{DataTemplate pages:UpgradePremiumPage}"
+    Route="premium" />
 
-    <ShellContent
-        Title="Premium"
-        Icon="{StaticResource IconPremium}"
-        ContentTemplate="{DataTemplate pages:UpgradePremiumPage}"
-        Route="premium" />
+  <!-- Debug Pages -->
+  <ShellContent
+    Title="Image Cache (Debug)"
+    x:Name="ImageCacheContent"
+    Icon="{StaticResource IconImageCache}"
+    ContentTemplate="{DataTemplate pages:ImageCachePage}"
+    Route="imagecache" />
 
-    <ShellContent
-        Title="Image Cache (Debug)"
-        x:Name="ImageCacheContent"
-        Icon="{StaticResource IconImageCache}"
-        ContentTemplate="{DataTemplate pages:ImageCachePage}"
-        Route="imagecache" />
+  <ShellContent
+    Title="Notification Test (Debug)"
+    Icon="{StaticResource IconTest}"
+    ContentTemplate="{DataTemplate pages:NotificationTestPage}"
+    Route="notificationtest" />
 
-    <ShellContent
-        Title="Notification Test (Debug)"
-        Icon="{StaticResource IconTest}"
-        ContentTemplate="{DataTemplate pages:NotificationTestPage}"
-        Route="notificationtest" />
-
+  <!-- Flyout Footer with Theme Selector -->
   <Shell.FlyoutFooter>
-    <Grid Padding="15">
-      <sf:SfSegmentedControl x:Name="ThemeSegmentedControl"
- VerticalOptions="Center" HorizontalOptions="Center" SelectionChanged="SfSegmentedControl_SelectionChanged" SegmentWidth="40" SegmentHeight="40">
+    <Grid Padding="15" RowDefinitions="Auto">
+      <Label 
+        Grid.Row="0"
+        Text="Theme"
+        FontSize="12"
+        TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}"
+        Margin="0,0,0,10" />
+      
+      <sf:SfSegmentedControl 
+        x:Name="ThemeSegmentedControl"
+        Grid.Row="1"
+        VerticalOptions="Center" 
+        HorizontalOptions="Center" 
+        SelectionChanged="SfSegmentedControl_SelectionChanged" 
+        SegmentWidth="40" 
+        SegmentHeight="40">
         <sf:SfSegmentedControl.ItemsSource>
           <x:Array Type="{x:Type sf:SfSegmentItem}">
             <sf:SfSegmentItem ImageSource="{StaticResource IconLight}"/>
