@@ -5,16 +5,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MindBodyDictionary.AdminApi
 {
-	public class AilmentsTable
-	{
-		private readonly ILogger<AilmentsTable> _logger;
+	public class AilmentsTable(ILogger<AilmentsTable> logger)
+    {
+		private readonly ILogger<AilmentsTable> _logger = logger;
 
-		public AilmentsTable(ILogger<AilmentsTable> logger)
-		{
-			_logger = logger;
-		}
-
-		[Function("AilmentsTable")]
+        [Function("AilmentsTable")]
 		public IActionResult Run([HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequest req,
          [CosmosDBInput(  databaseName: Core.CosmosDB.DatabaseName,
 				containerName: Core.CosmosDB.Containers.Ailments,
