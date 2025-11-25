@@ -12,14 +12,10 @@ namespace MindBodyDictionaryMobile.Services.billing;
 // StoreKit 2 (modern replacement) lacks comprehensive C# bindings in .NET MAUI
 // This implementation is standard practice for .NET MAUI apps as of 2025
 #pragma warning disable CA1422 // Validate platform compatibility
-public class BillingService : BaseBillingService
+public class BillingService(ILogger<BaseBillingService> logger) : BaseBillingService(logger)
 {
     private PaymentTransactionObserver? _paymentObserver;
     private TaskCompletionSource<bool>? _purchaseTaskCompletionSource;
-
-    public BillingService(ILogger<BaseBillingService> logger) : base(logger)
-    {
-    }
 
     protected override Task<bool> InitializePlatformAsync()
     {
@@ -92,7 +88,7 @@ public class BillingService : BaseBillingService
         try
         {
             // Get product name for better error messages
-            var productName = _sampleProducts.FirstOrDefault(p => p.Id == productId)?.Name ?? productId;
+            var productName = _products.First(p => p.Id == productId).Name;
 
             // Check if payments are available
             if (!SKPaymentQueue.CanMakePayments)
@@ -176,7 +172,7 @@ public class BillingService : BaseBillingService
         try
         {
             var tcs = new TaskCompletionSource<bool>();
-            var validProductIds = _sampleProducts.Select(p => p.Id).ToHashSet();
+            var validProductIds = _products.Select(p => p.Id).ToHashSet();
 
             EventHandler? completedHandler = null;
             EventHandler<NSError>? errorHandler = null;
@@ -278,6 +274,8 @@ public class BillingService : BaseBillingService
                 break;
         }
     }
+
+
 
     ~BillingService()
     {

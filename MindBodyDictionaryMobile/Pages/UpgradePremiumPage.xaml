@@ -10,7 +10,7 @@
 
     <ContentPage.Behaviors>
         <toolkit:EventToCommandBehavior
-            EventName="NavigatedTo"
+            EventName="Appearing"
             Command="{Binding NavigatedCommand}" />
     </ContentPage.Behaviors>
 
@@ -54,14 +54,14 @@
                 <VerticalStackLayout Spacing="{StaticResource LayoutSpacing}" 
                                      Padding="0,20,0,0"
                                      IsVisible="{Binding IsSubscribed, StringFormat='!{0}'}">
-                    <Button Text="{Binding IsBusy, StringFormat='Loading...', TargetNullValue='Subscribe for $9.99/year'}"
+                    <Button Text="{Binding IsBusy, Converter={StaticResource BoolToTextConverter}, ConverterParameter='Loading...|Subscribe for $9.99/year'}"
                             Command="{Binding PurchaseCommand}"
-                            IsEnabled="{Binding IsBusy, StringFormat='!{0}'}"
+                            IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
                             Padding="15,12" />
 
-                    <Button Text="{Binding IsBusy, StringFormat='Restoring...', TargetNullValue='Restore Subscription'}"
+                    <Button Text="{Binding IsBusy, Converter={StaticResource BoolToTextConverter}, ConverterParameter='Restoring...|Restore Subscription'}"
                             Command="{Binding RestoreCommand}"
-                            IsEnabled="{Binding IsBusy, StringFormat='!{0}'}"
+                            IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
                             Padding="15,12"
                             BackgroundColor="Transparent"
                             TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Primary}}"
@@ -102,6 +102,60 @@
                             FontSize="16"
                             Padding="10,8" />
                 </VerticalStackLayout>
+
+                <!-- Debug Billing Information -->
+                <BoxView BackgroundColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray800}}" 
+                         HeightRequest="1" 
+                         Margin="0,20,0,0"
+                         IsVisible="{Binding IsDebug}" />
+                
+                <Label Text="🐛 DEBUG BILLING INFO" 
+                       FontSize="14" 
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource Primary}"
+                       Margin="0,15,0,10"
+                       IsVisible="{Binding IsDebug}" />
+                
+                <Frame BorderColor="{StaticResource Primary}" 
+                       CornerRadius="8"
+                       Padding="12"
+                       HasShadow="False"
+                       IsVisible="{Binding IsDebug}"
+                       BackgroundColor="{AppThemeBinding Light={StaticResource LightSecondaryBackground}, Dark={StaticResource DarkSecondaryBackground}}">
+                    <VerticalStackLayout Spacing="10">
+                        <Editor x:Name="DebugInfoEditor"
+                                Text="{Binding DebugInfo}"
+                                IsReadOnly="True"
+                                HeightRequest="200"
+                                FontSize="11"
+                                FontFamily="Courier"
+                                BackgroundColor="Transparent"
+                                TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}" />
+                        
+                        <HorizontalStackLayout Spacing="10">
+                            <Button Text="📋 Copy"
+                                    Command="{Binding CopyDebugInfoCommand}"
+                                    HorizontalOptions="FillAndExpand"
+                                    Padding="10,8"
+                                    FontSize="12" />
+                            
+                            <Button Text="🗑️ Clear"
+                                    Command="{Binding ClearDebugInfoCommand}"
+                                    HorizontalOptions="FillAndExpand"
+                                    Padding="10,8"
+                                    FontSize="12"
+                                    BackgroundColor="Transparent"
+                                    TextColor="{StaticResource Primary}"
+                                    BorderColor="{StaticResource Primary}"
+                                    BorderWidth="1" />
+                        </HorizontalStackLayout>
+                        
+                        <Label Text="This debug section only appears in DEBUG builds. Use Copy to share billing logs."
+                               FontSize="11"
+                               TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray400}}"
+                               Opacity="0.7" />
+                    </VerticalStackLayout>
+                </Frame>
             </VerticalStackLayout>
         </ScrollView>
 

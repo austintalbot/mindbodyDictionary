@@ -13,15 +13,12 @@ public abstract class BaseBillingService(ILogger<BaseBillingService> logger) : I
     protected bool _isInitialized;
     protected readonly HashSet<string> _ownedProducts = new();
 
-    // // Sample product definitions - shared across all platforms
-    protected readonly List<Product> _sampleProducts = new()
+    // Sample product definitions - shared across all platforms
+    protected readonly List<Product> _products = new()
     {
-        new Product { Id = "Team_license", Name = "Team License", Description = "Team licenses offer the best value to get started", Price = "$300.99", PriceAmount = 400.99m, ImageUrl = "Team.png" },
-        new Product { Id = "Global_license", Name = "Global License", Description = "Get Our Entire Product Line for Free", Price = "$600.99", PriceAmount = 700.99m, ImageUrl = "Global_license.png" },
-        new Product { Id = "Unlimited_license", Name = "Unlimited License", Description = "Cover everyone for one low, annual fee", Price = "$700.99", PriceAmount = 600.99m, ImageUrl = "no_ads.png" }
+        new Product { Id = "mbdpremiumyr", Name = "Premium Annual", Description = "Unlock premium features for one year", Price = "$9.99", PriceAmount = 9.99m, ImageUrl = "premium.png" },
+        new Product { Id = "MBDPremiumYr", Name = "Premium Annual", Description = "Unlock premium features for one year", Price = "$9.99", PriceAmount = 9.99m, ImageUrl = "premium.png" }
     };
-
-    // For demo purposes, simulate 2 owned items initially
 
     public bool IsInitialized => _isInitialized;
 
@@ -54,7 +51,7 @@ public abstract class BaseBillingService(ILogger<BaseBillingService> logger) : I
         try
         {
             // Get platform-specific product details
-            var products = await GetPlatformProductsAsync(_sampleProducts);
+            var products = await GetPlatformProductsAsync([]);
 
             // Mark owned products
             foreach (var product in products)
@@ -68,16 +65,7 @@ public abstract class BaseBillingService(ILogger<BaseBillingService> logger) : I
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to get products");
-            return _sampleProducts.Select(p => new Product
-            {
-                Id = p.Id,
-                Name = p.Name,
-                Description = p.Description,
-                Price = p.Price,
-                PriceAmount = p.PriceAmount,
-                ImageUrl = p.ImageUrl,
-                IsOwned = _ownedProducts.Contains(p.Id)
-            }).ToList();
+            return [];
         }
     }
 

@@ -25,11 +25,11 @@
 		<ApplicationTitle>MindBodyDictionaryMobile</ApplicationTitle>
 
 		<!-- App Identifier -->
-		<ApplicationId>com.mindbodydictionary.mindbodydictionarymobile</ApplicationId>
+		<ApplicationId>com.mbd.mindbodydictionarymobile</ApplicationId>
 
 		<!-- Versions -->
 		<ApplicationDisplayVersion>2.0</ApplicationDisplayVersion>
-		<ApplicationVersion>2</ApplicationVersion>
+		<ApplicationVersion>3</ApplicationVersion>
 		<NoWarn>$(NoWarn),CS8618,CS8602,XC0045,XC0103,XC0022</NoWarn>
 
 

@@ -30,24 +30,22 @@ public class AppDelegate : MauiUIApplicationDelegate, IUNUserNotificationCenterD
 		// Handle notification launched from background
 		if (launchOptions?.ContainsKey(UIKit.UIApplication.LaunchOptionsRemoteNotificationKey) == true)
 		{
-			var remoteNotification = launchOptions[UIKit.UIApplication.LaunchOptionsRemoteNotificationKey] as NSDictionary;
-			if (remoteNotification != null)
-			{
-				System.Diagnostics.Debug.WriteLine("=== App launched from remote notification ===");
-				ProcessNotification(remoteNotification);
-			}
-		}
+            if (launchOptions[UIKit.UIApplication.LaunchOptionsRemoteNotificationKey] is NSDictionary remoteNotification)
+            {
+                System.Diagnostics.Debug.WriteLine("=== App launched from remote notification ===");
+                ProcessNotification(remoteNotification);
+            }
+        }
 
 		// Handle local notification launched from background
 		if (launchOptions?.ContainsKey(UIKit.UIApplication.LaunchOptionsLocalNotificationKey) == true)
 		{
-			var localNotification = launchOptions[UIKit.UIApplication.LaunchOptionsLocalNotificationKey] as UIKit.UILocalNotification;
-			if (localNotification != null)
-			{
-				System.Diagnostics.Debug.WriteLine("=== App launched from local notification ===");
-				ProcessNotification(localNotification.UserInfo);
-			}
-		}
+            if (launchOptions[UIKit.UIApplication.LaunchOptionsLocalNotificationKey] is UIKit.UILocalNotification localNotification)
+            {
+                System.Diagnostics.Debug.WriteLine("=== App launched from local notification ===");
+                ProcessNotification(localNotification.UserInfo);
+            }
+        }
 
 		return base.FinishedLaunching(application, launchOptions);
 	}

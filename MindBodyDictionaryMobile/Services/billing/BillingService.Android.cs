@@ -111,9 +111,9 @@ public class BillingService : BaseBillingService
             {
                 // Access products from the result - v8 may use different property names
                 var products = productResult.ProductDetailsList ?? 
-                             (IList<ProductDetails>)productResult.GetType()
-                                 .GetProperty("Products")?.GetValue(productResult) ??
-                             new List<ProductDetails>();
+                             productResult.GetType()
+                                 .GetProperty("Products")?.GetValue(productResult) as IList<ProductDetails> ??
+                             [];
 
                 var productDict = new Dictionary<string, ProductDetails>();
                 foreach (var pd in products)
@@ -215,19 +215,43 @@ public class BillingService : BaseBillingService
     {
         try
         {
-            _logger.LogInformation("Initiating purchase for product {ProductId}", productId);
+            _logger.LogInformation("PurchasePlatformProductAsync called for product {ProductId}", productId);
+
+            if (string.IsNullOrEmpty(productId))
+            {
+                _logger.LogError("ProductId is null or empty");
+                return new PurchaseResult { IsSuccess = false, ProductId = productId, ErrorMessage = "Product ID is empty" };
+            }
 
             var activity = Platform.CurrentActivity ?? Microsoft.Maui.ApplicationModel.Platform.CurrentActivity;
             if (activity == null)
             {
+                _logger.LogError("No current activity available");
                 return new PurchaseResult { IsSuccess = false, ProductId = productId, ErrorMessage = "No activity" };
             }
 
             if (_billingClient == null)
             {
-                return new PurchaseResult { IsSuccess = false, ProductId = productId, ErrorMessage = "Billing client not initialized" };
+                _logger.LogError("Billing client is null - may not be initialized");
+                var initResult = await InitializeAsync();
+                _logger.LogInformation("Attempted re-initialization: {Result}", initResult);
+                
+                if (_billingClient == null)
+                {
+                    _logger.LogError("Billing client still null after re-initialization attempt");
+                    return new PurchaseResult { IsSuccess = false, ProductId = productId, ErrorMessage = "Billing client not initialized" };
+                }
             }
 
+            // Check if billing client is connected
+            if (!_billingClient.IsReady)
+            {
+                _logger.LogWarning("Billing client not ready, attempting connection...");
+                return new PurchaseResult { IsSuccess = false, ProductId = productId, ErrorMessage = "Billing service not ready" };
+            }
+
+            _logger.LogInformation("Querying product details for {ProductId}", productId);
+            
             // Query product details first (v8 API requirement)
             var productList = new List<QueryProductDetailsParams.Product>();
             var queryProduct = QueryProductDetailsParams.Product.NewBuilder()
@@ -240,24 +264,32 @@ public class BillingService : BaseBillingService
                 .SetProductList(productList)
                 .Build();
 
+            _logger.LogInformation("Calling QueryProductDetailsAsync");
             var productResult = await _billingClient.QueryProductDetailsAsync(queryParams);
             
+            _logger.LogInformation("QueryProductDetailsAsync completed");
+
             var products = productResult?.ProductDetailsList ?? 
-                         (IList<ProductDetails>)productResult?.GetType()
-                             .GetProperty("Products")?.GetValue(productResult) ??
-                         new List<ProductDetails>();
+                         productResult?.GetType()
+                             .GetProperty("Products")?.GetValue(productResult) as IList<ProductDetails> ??
+                         [];
+
+            _logger.LogInformation("Product list contains {Count} products", products.Count);
 
             if (products.Count == 0)
             {
-                _logger.LogWarning("Product {ProductId} not found", productId);
-                return new PurchaseResult { IsSuccess = false, ProductId = productId, ErrorMessage = "Product not found" };
+                _logger.LogWarning("Product {ProductId} not found in Play Store", productId);
+                return new PurchaseResult { IsSuccess = false, ProductId = productId, ErrorMessage = "Product not found in Play Store" };
             }
 
             var productDetails = products.FirstOrDefault();
             if (productDetails == null)
             {
+                _logger.LogWarning("Product details are null even though list has items");
                 return new PurchaseResult { IsSuccess = false, ProductId = productId, ErrorMessage = "Product unavailable" };
             }
+
+            _logger.LogInformation("Building billing flow params for {ProductId}", productId);
 
             // Build billing flow params
             var detailsParams = BillingFlowParams.ProductDetailsParams.NewBuilder()
@@ -268,24 +300,28 @@ public class BillingService : BaseBillingService
                 .SetProductDetailsParamsList(new[] { detailsParams })
                 .Build();
 
+            _logger.LogInformation("Launching billing flow");
+            
             // Launch billing flow
             var result = _billingClient.LaunchBillingFlow(activity, flowParams);
             
+            _logger.LogInformation("LaunchBillingFlow returned with code {ResponseCode}", result?.ResponseCode);
+
             if (result?.ResponseCode == BillingResponseCode.Ok)
             {
-                _logger.LogInformation("Billing flow started for {ProductId}", productId);
+                _logger.LogInformation("Billing flow started successfully for {ProductId}", productId);
                 return new PurchaseResult { IsSuccess = true, ProductId = productId };
             }
             else
             {
                 var error = result?.DebugMessage ?? "Unknown error";
-                _logger.LogError("Launch failed: {Error}", error);
+                _logger.LogError("Launch failed with response code {ResponseCode}: {Error}", result?.ResponseCode, error);
                 return new PurchaseResult { IsSuccess = false, ProductId = productId, ErrorMessage = error };
             }
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Purchase error for {ProductId}", productId);
+            _logger.LogError(ex, "Exception in PurchasePlatformProductAsync for {ProductId}", productId);
             return new PurchaseResult { IsSuccess = false, ProductId = productId, ErrorMessage = ex.Message };
         }
     }
@@ -325,18 +361,30 @@ public class BillingService : BaseBillingService
         var responseCode = billingResult.ResponseCode;
         var debugMessage = billingResult.DebugMessage;
 
-        _logger.LogInformation("Billing setup finished: {ResponseCode} {DebugMessage}", responseCode, debugMessage);
-
+        _logger.LogInformation("Billing setup finished - ResponseCode: {ResponseCode}, Message: {DebugMessage}", responseCode, debugMessage);
+        
+        if (responseCode == BillingResponseCode.Ok)
+        {
+            _logger.LogInformation("Billing client ready for purchases");
+        }
+        else
+        {
+            _logger.LogError("Billing setup failed with code {ResponseCode}: {DebugMessage}", responseCode, debugMessage);
+        }
     }
 
     internal void OnPurchasesUpdated(AndroidBillingResult billingResult, IList<Purchase>? purchases)
     {
+        _logger.LogInformation("OnPurchasesUpdated called - ResponseCode: {ResponseCode}", billingResult.ResponseCode);
+        
         if (billingResult.ResponseCode == BillingResponseCode.Ok && purchases != null)
         {
-            _logger.LogInformation("Purchase updated: {Count} purchases", purchases.Count);
+            _logger.LogInformation("Purchase updated: {Count} purchases received", purchases.Count);
 
             foreach (var purchase in purchases)
             {
+                _logger.LogInformation("Processing purchase - ProductId: {ProductId}, State: {State}, Token: {Token}",
+                    string.Join(",", purchase.Products), purchase.PurchaseState, purchase.PurchaseToken);
                 ProcessPurchase(purchase);
             }
         }
@@ -346,7 +394,7 @@ public class BillingService : BaseBillingService
         }
         else
         {
-            _logger.LogError("Purchase failed: {ResponseCode} {DebugMessage}",
+            _logger.LogError("Purchase failed - ResponseCode: {ResponseCode}, Debug: {DebugMessage}",
                 billingResult.ResponseCode, billingResult.DebugMessage);
         }
     }
@@ -383,18 +431,30 @@ public class BillingService : BaseBillingService
     {
         try
         {
+            _logger.LogInformation("ProcessPurchase called - ProductIds: {ProductIds}, State: {PurchaseState}, Token: {PurchaseToken}",
+                string.Join(",", purchase.Products), purchase.PurchaseState, purchase.PurchaseToken);
+            
             if (purchase.PurchaseState == PurchaseState.Purchased)
             {
-                // Add to owned products
                 foreach (var productId in purchase.Products)
                 {
                     _ownedProducts.Add(productId);
+                    _logger.LogInformation("Product {ProductId} marked as owned", productId);
                 }
+            }
+            else if (purchase.PurchaseState == PurchaseState.Pending)
+            {
+                _logger.LogWarning("Purchase is pending - user may have pending payment");
+            }
+            else
+            {
+                _logger.LogWarning("Purchase state {PurchaseState} not yet handled", purchase.PurchaseState);
             }
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error processing purchase");
+            _logger.LogError(ex, "Error processing purchase for products {ProductIds}", 
+                string.Join(",", purchase.Products));
         }
     }
 
