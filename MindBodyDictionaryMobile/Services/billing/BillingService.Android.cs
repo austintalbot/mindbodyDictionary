@@ -71,26 +71,97 @@ public class BillingService : BaseBillingService
     {
         try
         {
-            // v8 API has significant changes; for now, return base products with ownership status
-            // TODO: Update to use v8 API properly once migration is complete
-            _logger.LogInformation("Retrieving products (v8 API - using base products)");
+            _logger.LogInformation("Querying product details for {Count} products", baseProducts.Count);
             
+            if (_billingClient == null)
+            {
+                _logger.LogError("Billing client is null");
+                foreach (var p in baseProducts) p.IsOwned = _ownedProducts.Contains(p.Id);
+                return baseProducts;
+            }
+
+            // Build product list for v8 API
+            var productList = new List<QueryProductDetailsParams.Product>();
             foreach (var product in baseProducts)
             {
-                product.IsOwned = _ownedProducts.Contains(product.Id);
+                var queryProduct = QueryProductDetailsParams.Product.NewBuilder()
+                    .SetProductId(product.Id)
+                    .SetProductType(BillingClient.ProductType.Inapp)
+                    .Build();
+                productList.Add(queryProduct);
             }
+
+            if (productList.Count == 0)
+            {
+                foreach (var p in baseProducts) p.IsOwned = _ownedProducts.Contains(p.Id);
+                return baseProducts;
+            }
+
+            var queryParams = QueryProductDetailsParams.NewBuilder()
+                .SetProductList(productList)
+                .Build();
+
+            // v8 API call - QueryProductDetailsAsync returns a coroutine
+            var productResult = await _billingClient.QueryProductDetailsAsync(queryParams);
             
-            return await Task.FromResult(baseProducts);
+            // Update products with actual details from Google Play
+            var updatedProducts = new List<Product>();
+            
+            if (productResult != null)
+            {
+                // Access products from the result - v8 may use different property names
+                var products = productResult.ProductDetailsList ?? 
+                             (IList<ProductDetails>)productResult.GetType()
+                                 .GetProperty("Products")?.GetValue(productResult) ??
+                             new List<ProductDetails>();
+
+                var productDict = new Dictionary<string, ProductDetails>();
+                foreach (var pd in products)
+                {
+                    productDict[pd.ProductId] = pd;
+                }
+
+                foreach (var baseProduct in baseProducts)
+                {
+                    var updated = new Product
+                    {
+                        Id = baseProduct.Id,
+                        Name = baseProduct.Name,
+                        Description = baseProduct.Description,
+                        Price = baseProduct.Price,
+                        PriceAmount = baseProduct.PriceAmount,
+                        ImageUrl = baseProduct.ImageUrl,
+                        IsOwned = _ownedProducts.Contains(baseProduct.Id)
+                    };
+
+                    if (productDict.TryGetValue(baseProduct.Id, out var details))
+                    {
+                        updated.Name = details.Name ?? baseProduct.Name;
+                        updated.Description = details.Description ?? baseProduct.Description;
+                        updated.Price = GetFormattedPrice(details) ?? baseProduct.Price;
+                        
+                        var priceAmount = GetPriceAmount(details);
+                        if (priceAmount.HasValue)
+                            updated.PriceAmount = priceAmount.Value;
+                    }
+
+                    updatedProducts.Add(updated);
+                }
+
+                _logger.LogInformation("Retrieved {Count} product details", updatedProducts.Count);
+                return updatedProducts;
+            }
+            else
+            {
+                _logger.LogWarning("QueryProductDetailsAsync returned null");
+                foreach (var p in baseProducts) p.IsOwned = _ownedProducts.Contains(p.Id);
+                return baseProducts;
+            }
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error querying platform products");
-            
-            foreach (var product in baseProducts)
-            {
-                product.IsOwned = _ownedProducts.Contains(product.Id);
-            }
-            
+            foreach (var p in baseProducts) p.IsOwned = _ownedProducts.Contains(p.Id);
             return baseProducts;
         }
     }
@@ -144,47 +215,78 @@ public class BillingService : BaseBillingService
     {
         try
         {
+            _logger.LogInformation("Initiating purchase for product {ProductId}", productId);
+
             var activity = Platform.CurrentActivity ?? Microsoft.Maui.ApplicationModel.Platform.CurrentActivity;
             if (activity == null)
             {
-                return await Task.FromResult(new PurchaseResult
-                {
-                    IsSuccess = false,
-                    ProductId = productId,
-                    ErrorMessage = "No current activity available"
-                });
+                return new PurchaseResult { IsSuccess = false, ProductId = productId, ErrorMessage = "No activity" };
             }
 
             if (_billingClient == null)
             {
-                return await Task.FromResult(new PurchaseResult
-                {
-                    IsSuccess = false,
-                    ProductId = productId,
-                    ErrorMessage = "Billing client is not initialized"
-                });
+                return new PurchaseResult { IsSuccess = false, ProductId = productId, ErrorMessage = "Billing client not initialized" };
             }
 
-            // v8 API - launch purchase flow with product ID
-            // TODO: Update to properly handle v8 API once migration is complete
-            _logger.LogInformation("Initiating purchase for product {ProductId}", productId);
+            // Query product details first (v8 API requirement)
+            var productList = new List<QueryProductDetailsParams.Product>();
+            var queryProduct = QueryProductDetailsParams.Product.NewBuilder()
+                .SetProductId(productId)
+                .SetProductType(BillingClient.ProductType.Inapp)
+                .Build();
+            productList.Add(queryProduct);
+
+            var queryParams = QueryProductDetailsParams.NewBuilder()
+                .SetProductList(productList)
+                .Build();
+
+            var productResult = await _billingClient.QueryProductDetailsAsync(queryParams);
             
-            return await Task.FromResult(new PurchaseResult
+            var products = productResult?.ProductDetailsList ?? 
+                         (IList<ProductDetails>)productResult?.GetType()
+                             .GetProperty("Products")?.GetValue(productResult) ??
+                         new List<ProductDetails>();
+
+            if (products.Count == 0)
             {
-                IsSuccess = true,
-                ProductId = productId,
-                ErrorMessage = ""
-            });
+                _logger.LogWarning("Product {ProductId} not found", productId);
+                return new PurchaseResult { IsSuccess = false, ProductId = productId, ErrorMessage = "Product not found" };
+            }
+
+            var productDetails = products.FirstOrDefault();
+            if (productDetails == null)
+            {
+                return new PurchaseResult { IsSuccess = false, ProductId = productId, ErrorMessage = "Product unavailable" };
+            }
+
+            // Build billing flow params
+            var detailsParams = BillingFlowParams.ProductDetailsParams.NewBuilder()
+                .SetProductDetails(productDetails)
+                .Build();
+
+            var flowParams = BillingFlowParams.NewBuilder()
+                .SetProductDetailsParamsList(new[] { detailsParams })
+                .Build();
+
+            // Launch billing flow
+            var result = _billingClient.LaunchBillingFlow(activity, flowParams);
+            
+            if (result?.ResponseCode == BillingResponseCode.Ok)
+            {
+                _logger.LogInformation("Billing flow started for {ProductId}", productId);
+                return new PurchaseResult { IsSuccess = true, ProductId = productId };
+            }
+            else
+            {
+                var error = result?.DebugMessage ?? "Unknown error";
+                _logger.LogError("Launch failed: {Error}", error);
+                return new PurchaseResult { IsSuccess = false, ProductId = productId, ErrorMessage = error };
+            }
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error during purchase flow for product {ProductId}", productId);
-            return await Task.FromResult(new PurchaseResult
-            {
-                IsSuccess = false,
-                ProductId = productId,
-                ErrorMessage = ex.Message
-            });
+            _logger.LogError(ex, "Purchase error for {ProductId}", productId);
+            return new PurchaseResult { IsSuccess = false, ProductId = productId, ErrorMessage = ex.Message };
         }
     }
 
