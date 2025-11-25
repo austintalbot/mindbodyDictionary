@@ -21,7 +21,7 @@ public class ConditionRepository(TaskRepository taskRepository, TagRepository ta
 	private readonly TagRepository _tagRepository = tagRepository;
 
     /// <summary>
-    /// Initializes the database connection and creates the Condition table if it does not exist.
+    /// Initializes the database connection and creates the MbdCondition table if it does not exist.
     /// </summary>
     private async Task Init()
 	{
@@ -46,7 +46,7 @@ public class ConditionRepository(TaskRepository taskRepository, TagRepository ta
 		}
 		catch (Exception e)
 		{
-			_logger.LogError(e, "Error creating Condition table");
+			_logger.LogError(e, "Error creating MbdCondition table");
 			throw;
 		}
 
@@ -56,8 +56,8 @@ public class ConditionRepository(TaskRepository taskRepository, TagRepository ta
 	/// <summary>
 	/// Retrieves a list of all conditions from the database.
 	/// </summary>
-	/// <returns>A list of <see cref="Condition"/> objects.</returns>
-	public async Task<List<Models.Condition>> ListAsync()
+	/// <returns>A list of <see cref="MbdCondition"/> objects.</returns>
+	public async Task<List<MbdCondition>> ListAsync()
 	{
 		await Init();
 		await using var connection = new SqliteConnection(Constants.DatabasePath);
@@ -65,12 +65,12 @@ public class ConditionRepository(TaskRepository taskRepository, TagRepository ta
 
 		var selectCmd = connection.CreateCommand();
 		selectCmd.CommandText = "SELECT * FROM Condition";
-		var conditions = new List<Models.Condition>();
+		var conditions = new List<MbdCondition>();
 
 		await using var reader = await selectCmd.ExecuteReaderAsync();
 		while (await reader.ReadAsync())
 		{
-			conditions.Add(new Models.Condition
+			conditions.Add(new MbdCondition
 			{
 				ID = reader.GetInt32(0),
 				Name = reader.GetString(1),
@@ -93,8 +93,8 @@ public class ConditionRepository(TaskRepository taskRepository, TagRepository ta
 	/// Retrieves a specific condition by its ID.
 	/// </summary>
 	/// <param name="id">The ID of the condition.</param>
-	/// <returns>A <see cref="Condition"/> object if found; otherwise, null.</returns>
-	public async Task<Models.Condition?> GetAsync(int id)
+	/// <returns>A <see cref="MbdCondition"/> object if found; otherwise, null.</returns>
+	public async Task<MbdCondition?> GetAsync(int id)
 	{
 		await Init();
 		await using var connection = new SqliteConnection(Constants.DatabasePath);
@@ -107,7 +107,7 @@ public class ConditionRepository(TaskRepository taskRepository, TagRepository ta
 		await using var reader = await selectCmd.ExecuteReaderAsync();
 		if (await reader.ReadAsync())
 		{
-			var condition = new Models.Condition
+			var condition = new MbdCondition
 			{
 				ID = reader.GetInt32(0),
 				Name = reader.GetString(1),
@@ -130,7 +130,7 @@ public class ConditionRepository(TaskRepository taskRepository, TagRepository ta
 	/// </summary>
 	/// <param name="item">The condition to save.</param>
 	/// <returns>The ID of the saved condition.</returns>
-	public async Task<int> SaveItemAsync(Models.Condition item)
+	public async Task<int> SaveItemAsync(MbdCondition item)
 	{
 		await Init();
 		await using var connection = new SqliteConnection(Constants.DatabasePath);
@@ -172,7 +172,7 @@ public class ConditionRepository(TaskRepository taskRepository, TagRepository ta
 	/// </summary>
 	/// <param name="item">The condition to delete.</param>
 	/// <returns>The number of rows affected.</returns>
-	public async Task<int> DeleteItemAsync(Models.Condition item)
+	public async Task<int> DeleteItemAsync(MbdCondition item)
 	{
 		await Init();
 		await using var connection = new SqliteConnection(Constants.DatabasePath);
@@ -186,7 +186,7 @@ public class ConditionRepository(TaskRepository taskRepository, TagRepository ta
 	}
 
 	/// <summary>
-	/// Drops the Condition table from the database.
+	/// Drops the MbdCondition table from the database.
 	/// </summary>
 	public async Task DropTableAsync()
 	{

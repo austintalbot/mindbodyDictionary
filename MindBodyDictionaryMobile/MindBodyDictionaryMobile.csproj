@@ -3,6 +3,7 @@
 	<PropertyGroup>
 		<TargetFrameworks>net10.0-android;net10.0-ios;</TargetFrameworks>
 		<MauiVersion>10.0.10</MauiVersion>
+		<LangVersion>14</LangVersion>
 
 		<OutputType>Exe</OutputType>
 		<RootNamespace>MindBodyDictionaryMobile</RootNamespace>

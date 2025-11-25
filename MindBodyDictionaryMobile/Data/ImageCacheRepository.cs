@@ -10,7 +10,7 @@ namespace MindBodyDictionaryMobile.Data;
 /// </summary>
 public class ImageCacheRepository(ILogger<ImageCacheRepository> logger)
 {
-	private bool _hasBeenInitialized = false;
+	private bool _hasBeenInitialized;
 	private readonly ILogger<ImageCacheRepository> _logger = logger;
 
     /// <summary>
@@ -27,8 +27,7 @@ public class ImageCacheRepository(ILogger<ImageCacheRepository> logger)
 			_logger.LogInformation("Init: DatabasePath = {Path}", dbPath);
 			
 			// Extract the file path from the connection string
-			var connectionString = dbPath;
-			var dataSourceMatch = Regex.Match(connectionString, @"Data Source=([^;]+)");
+			var dataSourceMatch = Regex.Match(dbPath, @"Data Source=([^;]+)");
 			if (dataSourceMatch.Success)
 			{
 				var filePath = dataSourceMatch.Groups[1].Value;
@@ -91,19 +90,16 @@ public class ImageCacheRepository(ILogger<ImageCacheRepository> logger)
 		selectCmd.Parameters.AddWithValue("@FileName", fileName);
 
 		await using var reader = await selectCmd.ExecuteReaderAsync();
-		if (await reader.ReadAsync())
-		{
-			return new ImageCache
+		return await reader.ReadAsync() 
+			? new ImageCache
 			{
 				ID = reader.GetInt32(0),
 				FileName = reader.GetString(1),
 				ImageData = (byte[])reader.GetValue(2),
 				CachedAt = reader.GetDateTime(3),
 				ContentType = reader.GetString(4)
-			};
-		}
-
-		return null;
+			}
+			: null;
 	}
 
 	/// <summary>
@@ -231,7 +227,7 @@ public class ImageCacheRepository(ILogger<ImageCacheRepository> logger)
 		var countCmd = connection.CreateCommand();
 		countCmd.CommandText = "SELECT COUNT(*) FROM ImageCache";
 		var result = await countCmd.ExecuteScalarAsync();
-		var count = result != null ? (int)(long)result : 0;
+		var count = result is not null ? (int)(long)result : 0;
 		_logger.LogInformation("GetCountAsync: Found {Count} cached images", count);
 		return count;
 	}

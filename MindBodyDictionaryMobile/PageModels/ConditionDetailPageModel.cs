@@ -6,7 +6,7 @@ namespace MindBodyDictionaryMobile.PageModels;
 
 public partial class ConditionDetailPageModel : ObservableObject, IQueryAttributable, IProjectTaskPageModel
 {
-	private Models.Condition? _condition;
+	private MbdCondition? _condition;
 	private readonly ConditionRepository _conditionRepository;
 	private readonly TaskRepository _taskRepository;
 	private readonly CategoryRepository _categoryRepository;

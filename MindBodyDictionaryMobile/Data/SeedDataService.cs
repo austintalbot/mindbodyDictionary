@@ -46,7 +46,7 @@ public class SeedDataService(ProjectRepository projectRepository, TaskRepository
 					}
 				}
 
-				foreach (var condition in payload.Conditions)
+				foreach (var condition in payload.MbdConditions)
 				{
 					if (condition?.Category is not null && !categoryMap.ContainsKey(condition.Category.Title))
 					{
@@ -77,7 +77,7 @@ public class SeedDataService(ProjectRepository projectRepository, TaskRepository
 					}
 				}
 
-				foreach (var condition in payload.Conditions)
+				foreach (var condition in payload.MbdConditions)
 				{
 					if (condition?.Tags is not null)
 					{
@@ -132,7 +132,7 @@ public class SeedDataService(ProjectRepository projectRepository, TaskRepository
 				}
 
 				// Load conditions
-				foreach (var condition in payload.Conditions)
+				foreach (var condition in payload.MbdConditions)
 				{
 					if (condition is null)
 					{

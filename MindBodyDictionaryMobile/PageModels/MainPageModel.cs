@@ -5,7 +5,8 @@ using MindBodyDictionaryMobile.Models;
 namespace MindBodyDictionaryMobile.PageModels;
 
 public partial class MainPageModel(SeedDataService seedDataService, ProjectRepository projectRepository,
-    TaskRepository taskRepository, CategoryRepository categoryRepository, ModalErrorHandler errorHandler) : ObservableObject, IProjectTaskPageModel
+    TaskRepository taskRepository, CategoryRepository categoryRepository, ModalErrorHandler errorHandler) 
+    : ObservableObject, IProjectTaskPageModel
 {
 	private bool _isNavigatedTo;
 	private bool _dataLoaded;
@@ -16,30 +17,29 @@ public partial class MainPageModel(SeedDataService seedDataService, ProjectRepos
 	private readonly SeedDataService _seedDataService = seedDataService;
 
 	[ObservableProperty]
-	private List<CategoryChartData> _todoCategoryData = [];
+	private List<CategoryChartData> todoCategoryData = [];
 
 	[ObservableProperty]
-	private List<Brush> _todoCategoryColors = [];
+	private List<Brush> todoCategoryColors = [];
 
 	[ObservableProperty]
-	private List<ProjectTask> _tasks = [];
+	private List<ProjectTask> tasks = [];
 
 	[ObservableProperty]
-	private List<Project> _projects = [];
+	private List<Project> projects = [];
 
 	[ObservableProperty]
-	bool _isBusy;
+	private bool isBusy;
 
 	[ObservableProperty]
-	bool _isRefreshing;
+	private bool isRefreshing;
 
 	[ObservableProperty]
-	private string _today = DateTime.Now.ToString("dddd, MMM d");
+	private string today = DateTime.Now.ToString("dddd, MMM d");
 
-	public bool HasCompletedTasks
-		=> Tasks?.Any(t => t.IsCompleted) ?? false;
+	public bool HasCompletedTasks => Tasks?.Any(t => t.IsCompleted) ?? false;
 
-    private async Task LoadData()
+	private async Task LoadData()
 	{
 		try
 		{
@@ -105,12 +105,10 @@ public partial class MainPageModel(SeedDataService seedDataService, ProjectRepos
 	}
 
 	[RelayCommand]
-	private void NavigatedTo() =>
-		_isNavigatedTo = true;
+	private void NavigatedTo() => _isNavigatedTo = true;
 
 	[RelayCommand]
-	private void NavigatedFrom() =>
-		_isNavigatedTo = false;
+	private void NavigatedFrom() => _isNavigatedTo = false;
 
 	[RelayCommand]
 	private async Task Appearing()
@@ -121,7 +119,6 @@ public partial class MainPageModel(SeedDataService seedDataService, ProjectRepos
 			_dataLoaded = true;
 			await Refresh();
 		}
-		// This means we are being navigated to
 		else if (!_isNavigatedTo)
 		{
 			await Refresh();
@@ -136,16 +133,13 @@ public partial class MainPageModel(SeedDataService seedDataService, ProjectRepos
 	}
 
 	[RelayCommand]
-	private Task AddTask()
-		=> Shell.Current.GoToAsync($"task");
+	private Task AddTask() => Shell.Current.GoToAsync($"task");
 
 	[RelayCommand]
-	private Task NavigateToProject(Project project)
-		=> Shell.Current.GoToAsync($"project?id={project.ID}");
+	private Task NavigateToProject(Project project) => Shell.Current.GoToAsync($"project?id={project.ID}");
 
 	[RelayCommand]
-	private Task NavigateToTask(ProjectTask task)
-		=> Shell.Current.GoToAsync($"task?id={task.ID}");
+	private Task NavigateToTask(ProjectTask task) => Shell.Current.GoToAsync($"task?id={task.ID}");
 
 	[RelayCommand]
 	private async Task CleanTasks()
