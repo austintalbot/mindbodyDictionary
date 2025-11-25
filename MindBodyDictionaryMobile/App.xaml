@@ -16,6 +16,8 @@
             <converter:IsNotNullOrEmptyConverter x:Key="IsNotNullOrEmptyConverter" />
             <converter:BoolToRegisteredTextConverter x:Key="BoolToRegisteredTextConverter" />
             <converter:BoolToColorConverter x:Key="BoolToColorConverter" />
+            <converter:InverseBoolConverter x:Key="InverseBoolConverter" />
+            <converter:BoolToTextConverter x:Key="BoolToTextConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

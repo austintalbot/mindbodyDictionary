@@ -18,7 +18,7 @@ public static class NotificationConfig
     
     // Apple Push Notifications (APNS) Configuration
     public const string ApnsApplicationMode = "Sandbox";
-    public const string ApnsBundleId = "com.mindbodydictionary.mindbodydictionarymobile";
+    public const string ApnsBundleId = "com.mbd.mindbodydictionarymobile";
     public const string ApnsKeyId = "5R75Q6ALPT";
     public const string ApnsTeamId = "UMDRT97472";
 }

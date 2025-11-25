@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
 using Syncfusion.Maui.Toolkit.Hosting;
-using MindBodyDictionaryMobile.Services;
+using MindBodyDictionaryMobile.Services.billing;
 
 namespace MindBodyDictionaryMobile;
 
@@ -40,6 +40,7 @@ public static class MauiProgram
 		builder.Services.AddSingleton<MainPageModel>();
 		builder.Services.AddSingleton<ProjectListPageModel>();
 		builder.Services.AddSingleton<ManageMetaPageModel>();
+		builder.Services.AddTransient<IBillingService, BillingService>();
 
 #if ANDROID
 		builder.Services.AddSingleton<IDeviceInstallationService, Platforms.Android.DeviceInstallationService>();
@@ -61,6 +62,9 @@ public static class MauiProgram
 		builder.Services.AddTransient<ImageCachePageModel>();
 		builder.Services.AddTransient<ImageCachePage>();
 #endif
+
+		builder.Services.AddSingleton<UpgradePremiumPageModel>();
+		builder.Services.AddSingleton<UpgradePremiumPage>();
 
 		builder.Services.AddTransientWithShellRoute<ProjectDetailPage, ProjectDetailPageModel>("project");
 		builder.Services.AddTransientWithShellRoute<TaskDetailPage, TaskDetailPageModel>("task");
