@@ -21,7 +21,8 @@
 
         public static class Containers
         {
-            public const string Ailments = "Ailments";
+            public const string Ailments = "Ailments"; // Legacy - kept for backward compatibility
+            public const string MbdConditions = "MbdConditions"; // New container for conditions
             public const string Faqs = "Faqs";
             public const string Emails = "Emails";
         }
@@ -32,4 +33,3 @@
         public const string HubName = "mbdnotificationshub";
     }
 }
-
