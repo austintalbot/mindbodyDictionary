@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:pm="clr-namespace:MindBodyDictionaryMobile.PageModels"
+    x:DataType="pm:AboutPageModel"
+    x:Class="MindBodyDictionaryMobile.Pages.AboutPage"
+    Title="About">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+            
+            <!-- Logo -->
+            <Image
+                Source="mbd_logo.png"
+                HeightRequest="120"
+                HorizontalOptions="Center"
+                Aspect="AspectFit"
+                SemanticProperties.Description="Mind Body Dictionary Logo"/>
+
+            <!-- App Name and Version -->
+            <VerticalStackLayout HorizontalOptions="Center" Spacing="5">
+                <Label
+                    Text="{Binding AppName}"
+                    FontSize="24"
+                    FontAttributes="Bold"
+                    HorizontalTextAlignment="Center"
+                    TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}"/>
+                
+                <Label
+                    Text="{Binding AppVersion}"
+                    FontSize="14"
+                    HorizontalTextAlignment="Center"
+                    TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}"/>
+            </VerticalStackLayout>
+
+            <!-- Divider -->
+            <BoxView HeightRequest="1" Color="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray700}}"/>
+
+            <!-- About Description -->
+            <Label
+                Text="Discover the mind-body connection and explore how physical symptoms relate to emotional and psychological states."
+                FontSize="14"
+                LineHeight="1.5"
+                TextColor="{AppThemeBinding Light={StaticResource Gray700}, Dark={StaticResource Gray200}}"
+                HorizontalTextAlignment="Center"/>
+
+            <!-- Website Button -->
+            <Button
+                Text="Visit Website"
+                Command="{Binding VisitWebsiteCommand}"
+                BackgroundColor="{StaticResource Primary}"
+                TextColor="White"
+                Padding="15"
+                CornerRadius="8"/>
+
+            <!-- Email Button -->
+            <Button
+                Text="Send Feedback"
+                Command="{Binding SendEmailCommand}"
+                BackgroundColor="{StaticResource Secondary}"
+                TextColor="White"
+                Padding="15"
+                CornerRadius="8"/>
+
+            <!-- Copyright -->
+            <Label
+                Text="© 2025 Mind Body Dictionary, LLC. All rights reserved."
+                FontSize="12"
+                HorizontalTextAlignment="Center"
+                TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}"
+                Margin="0,20,0,0"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

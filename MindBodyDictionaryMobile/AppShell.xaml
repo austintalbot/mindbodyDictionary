@@ -21,6 +21,12 @@
     Route="main" />
 
   <ShellContent
+    Title="Search"
+    Icon="{StaticResource IconMeta}"
+    ContentTemplate="{DataTemplate pages:SearchPage}"
+    Route="search" />
+
+  <ShellContent
     Title="Projects"
     Icon="{StaticResource IconProjects}"
     ContentTemplate="{DataTemplate pages:ProjectListPage}"
@@ -49,6 +55,18 @@
     Icon="{StaticResource IconPremium}"
     ContentTemplate="{DataTemplate pages:UpgradePremiumPage}"
     Route="premium" />
+
+  <ShellContent
+    Title="About"
+    Icon="{StaticResource IconMeta}"
+    ContentTemplate="{DataTemplate pages:AboutPage}"
+    Route="about" />
+
+  <ShellContent
+    Title="FAQ"
+    Icon="{StaticResource IconMeta}"
+    ContentTemplate="{DataTemplate pages:FaqPage}"
+    Route="faq" />
 
   <!-- Debug Pages -->
   <ShellContent
