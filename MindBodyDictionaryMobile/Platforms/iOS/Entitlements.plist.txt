@@ -5,10 +5,10 @@
 	<!-- Push Notifications Entitlement -->
 	<key>aps-environment</key>
 	<string>development</string>
-	
-	<!-- NOTE: This file is named Entitlements.plist.txt to allow the project to build 
+
+	<!-- NOTE: This file is named Entitlements.plist.txt to allow the project to build
 	     without requiring a valid provisioning profile during development.
-	     
+
 	     To enable iOS push notifications for deployment:
 	     1. Rename this file to Entitlements.plist
 	     2. Configure proper iOS code signing in the project properties

@@ -16,10 +16,10 @@ namespace MindBodyDictionary.Core.Entities
 
         [JsonProperty(PropertyName = "summaryPositive", NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string SummaryPositive { get; set; }
-        
+
         [JsonProperty(PropertyName = "affirmations", NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<string> Affirmations { get; set; }
-        
+
         [JsonProperty(PropertyName = "physicalConnections", NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<string> PhysicalConnections { get; set; }
 
@@ -28,7 +28,7 @@ namespace MindBodyDictionary.Core.Entities
 
         [JsonProperty(PropertyName = "recommendations", NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<Recommendation> Recommendations { get; set; }
-        
+
         [JsonProperty(PropertyName = "imageShareOverrideAilmentName", NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string ImageShareOverrideAilmentName { get; set; }
 
@@ -48,7 +48,7 @@ namespace MindBodyDictionary.Core.Entities
                 {
                     return $"{Storage.ImageBasePath}/{Name}1.png";
                 }
-               
+
             }
         }
 

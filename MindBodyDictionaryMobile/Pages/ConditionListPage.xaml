@@ -19,9 +19,9 @@
     </ContentPage.Behaviors>
     <Grid>
       <ScrollView>
-        <VerticalStackLayout 
-            BindableLayout.ItemsSource="{Binding Conditions}" 
-            Margin="{StaticResource LayoutPadding}" 
+        <VerticalStackLayout
+            BindableLayout.ItemsSource="{Binding Conditions}"
+            Margin="{StaticResource LayoutPadding}"
             Spacing="{StaticResource LayoutSpacing}">
             <BindableLayout.ItemTemplate>
                 <DataTemplate x:DataType="models:Condition">
@@ -39,7 +39,7 @@
         </VerticalStackLayout>
       </ScrollView>
 
-        <controls:AddButton 
+        <controls:AddButton
             Command="{Binding AddConditionCommand}"
             SemanticProperties.Description="Add condition" />
     </Grid>

@@ -15,7 +15,7 @@ public static class LocalNotificationService
         };
 
         var request = UNNotificationRequest.FromIdentifier("test-notification", content, UNTimeIntervalNotificationTrigger.CreateTrigger(5, false));
-        
+
         try
         {
             await UNUserNotificationCenter.Current.AddNotificationRequestAsync(request);

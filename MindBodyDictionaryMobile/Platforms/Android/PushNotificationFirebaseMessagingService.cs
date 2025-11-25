@@ -12,7 +12,7 @@ public class PushNotificationFirebaseMessagingService : FirebaseMessagingService
     {
         global::Android.Util.Log.Info("FCM", "=== OnNewToken called ===");
         global::Android.Util.Log.Info("FCM", $"New token: {token[..Math.Min(20, token.Length)]}...");
-        
+
         try
         {
             // Update the token in DeviceInstallationService
@@ -40,12 +40,12 @@ public class PushNotificationFirebaseMessagingService : FirebaseMessagingService
         global::Android.Util.Log.Info("FCM", $"Message ID: {message.MessageId}");
         global::Android.Util.Log.Info("FCM", $"Notification: {(message.GetNotification() != null ? "YES" : "NO")}");
         global::Android.Util.Log.Info("FCM", $"Data count: {message.Data?.Count ?? 0}");
-        
+
         try
         {
             string title = "Notification";
             string body = "";
-            
+
             // Check for notification payload
             if (message.GetNotification() != null)
             {
@@ -65,16 +65,16 @@ public class PushNotificationFirebaseMessagingService : FirebaseMessagingService
                 {
                     global::Android.Util.Log.Info("FCM", $"  {kvp.Key} = {kvp.Value}");
                 }
-                
+
                 title = message.Data.ContainsKey("title") ? message.Data["title"] : title;
-                body = message.Data.ContainsKey("body") ? message.Data["body"] : 
+                body = message.Data.ContainsKey("body") ? message.Data["body"] :
                        message.Data.ContainsKey("message") ? message.Data["message"] : "";
             }
             else
             {
                 global::Android.Util.Log.Warn("FCM", "⚠️ No notification or data payload found");
             }
-            
+
             global::Android.Util.Log.Info("FCM", $"Showing notification: {title} - {body}");
             SendNotification(title, body);
         }
@@ -90,14 +90,14 @@ public class PushNotificationFirebaseMessagingService : FirebaseMessagingService
         global::Android.Util.Log.Info("FCM", $"=== SendNotification called ===");
         global::Android.Util.Log.Info("FCM", $"Title: {title}");
         global::Android.Util.Log.Info("FCM", $"Body: {body}");
-        
+
         try
         {
             var intent = new global::Android.Content.Intent(this, typeof(MainActivity));
             intent.AddFlags(global::Android.Content.ActivityFlags.ClearTop);
             intent.PutExtra("notification_title", title);
             intent.PutExtra("notification_body", body);
-            
+
             var pendingFlags = global::Android.App.PendingIntentFlags.UpdateCurrent;
             if (global::Android.OS.Build.VERSION.SdkInt >= global::Android.OS.BuildVersionCodes.M)
                 pendingFlags |= global::Android.App.PendingIntentFlags.Immutable;
@@ -131,7 +131,7 @@ public class PushNotificationFirebaseMessagingService : FirebaseMessagingService
                 .SetContentIntent(pendingIntent);
 
 
-            
+
             // Only set priority/defaults on pre-O devices (methods obsolete / ignored on O+)
             if (global::Android.OS.Build.VERSION.SdkInt < global::Android.OS.BuildVersionCodes.O )
             {
@@ -145,13 +145,13 @@ public class PushNotificationFirebaseMessagingService : FirebaseMessagingService
 
             var notification = notificationBuilder.Build();
             var notificationManager = NotificationManager.FromContext(this);
-            
+
             if (notificationManager == null)
             {
                 global::Android.Util.Log.Error("FCM", "❌ NotificationManager is null");
                 return;
             }
-            
+
             var notificationId = new Random().Next();
             global::Android.Util.Log.Info("FCM", $"Posting notification with ID: {notificationId}");
             notificationManager.Notify(notificationId, notification);

@@ -38,7 +38,7 @@ public class BillingService(ILogger<BaseBillingService> logger) : BaseBillingSer
             // Initialize and register transaction observer
             _paymentObserver = new PaymentTransactionObserver(this);
             SKPaymentQueue.DefaultQueue.AddTransactionObserver(_paymentObserver);
-            
+
             _logger.LogInformation("iOS billing service initialized successfully");
             return Task.FromResult(true);
         }
@@ -72,13 +72,13 @@ public class BillingService(ILogger<BaseBillingService> logger) : BaseBillingSer
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error getting platform products");
-            
+
             // Return base products with ownership status on error
             foreach (var product in baseProducts)
             {
                 product.IsOwned = _ownedProducts.Contains(product.Id);
             }
-            
+
             return Task.FromResult(baseProducts);
         }
     }
@@ -226,7 +226,7 @@ public class BillingService(ILogger<BaseBillingService> logger) : BaseBillingSer
                 _paymentObserver.RestoreCompletedTransactionsFailedEvent += errorHandler;
 
                 SKPaymentQueue.DefaultQueue.RestoreCompletedTransactions();
-                
+
                 var result = await tcs.Task;
                 _logger.LogInformation("Restored purchases: {Success}", result);
                 return result;

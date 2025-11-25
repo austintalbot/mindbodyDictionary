@@ -72,7 +72,7 @@ public class BillingService : BaseBillingService
         try
         {
             _logger.LogInformation("Querying product details for {Count} products", baseProducts.Count);
-            
+
             if (_billingClient == null)
             {
                 _logger.LogError("Billing client is null");
@@ -103,14 +103,14 @@ public class BillingService : BaseBillingService
 
             // v8 API call - QueryProductDetailsAsync returns a coroutine
             var productResult = await _billingClient.QueryProductDetailsAsync(queryParams);
-            
+
             // Update products with actual details from Google Play
             var updatedProducts = new List<Product>();
-            
+
             if (productResult != null)
             {
                 // Access products from the result - v8 may use different property names
-                var products = productResult.ProductDetailsList ?? 
+                var products = productResult.ProductDetailsList ??
                              productResult.GetType()
                                  .GetProperty("Products")?.GetValue(productResult) as IList<ProductDetails> ??
                              [];
@@ -139,7 +139,7 @@ public class BillingService : BaseBillingService
                         updated.Name = details.Name ?? baseProduct.Name;
                         updated.Description = details.Description ?? baseProduct.Description;
                         updated.Price = GetFormattedPrice(details) ?? baseProduct.Price;
-                        
+
                         var priceAmount = GetPriceAmount(details);
                         if (priceAmount.HasValue)
                             updated.PriceAmount = priceAmount.Value;
@@ -235,7 +235,7 @@ public class BillingService : BaseBillingService
                 _logger.LogError("Billing client is null - may not be initialized");
                 var initResult = await InitializeAsync();
                 _logger.LogInformation("Attempted re-initialization: {Result}", initResult);
-                
+
                 if (_billingClient == null)
                 {
                     _logger.LogError("Billing client still null after re-initialization attempt");
@@ -251,7 +251,7 @@ public class BillingService : BaseBillingService
             }
 
             _logger.LogInformation("Querying product details for {ProductId}", productId);
-            
+
             // Query product details first (v8 API requirement)
             var productList = new List<QueryProductDetailsParams.Product>();
             var queryProduct = QueryProductDetailsParams.Product.NewBuilder()
@@ -266,10 +266,10 @@ public class BillingService : BaseBillingService
 
             _logger.LogInformation("Calling QueryProductDetailsAsync");
             var productResult = await _billingClient.QueryProductDetailsAsync(queryParams);
-            
+
             _logger.LogInformation("QueryProductDetailsAsync completed");
 
-            var products = productResult?.ProductDetailsList ?? 
+            var products = productResult?.ProductDetailsList ??
                          productResult?.GetType()
                              .GetProperty("Products")?.GetValue(productResult) as IList<ProductDetails> ??
                          [];
@@ -301,10 +301,10 @@ public class BillingService : BaseBillingService
                 .Build();
 
             _logger.LogInformation("Launching billing flow");
-            
+
             // Launch billing flow
             var result = _billingClient.LaunchBillingFlow(activity, flowParams);
-            
+
             _logger.LogInformation("LaunchBillingFlow returned with code {ResponseCode}", result?.ResponseCode);
 
             if (result?.ResponseCode == BillingResponseCode.Ok)
@@ -362,7 +362,7 @@ public class BillingService : BaseBillingService
         var debugMessage = billingResult.DebugMessage;
 
         _logger.LogInformation("Billing setup finished - ResponseCode: {ResponseCode}, Message: {DebugMessage}", responseCode, debugMessage);
-        
+
         if (responseCode == BillingResponseCode.Ok)
         {
             _logger.LogInformation("Billing client ready for purchases");
@@ -376,7 +376,7 @@ public class BillingService : BaseBillingService
     internal void OnPurchasesUpdated(AndroidBillingResult billingResult, IList<Purchase>? purchases)
     {
         _logger.LogInformation("OnPurchasesUpdated called - ResponseCode: {ResponseCode}", billingResult.ResponseCode);
-        
+
         if (billingResult.ResponseCode == BillingResponseCode.Ok && purchases != null)
         {
             _logger.LogInformation("Purchase updated: {Count} purchases received", purchases.Count);
@@ -433,7 +433,7 @@ public class BillingService : BaseBillingService
         {
             _logger.LogInformation("ProcessPurchase called - ProductIds: {ProductIds}, State: {PurchaseState}, Token: {PurchaseToken}",
                 string.Join(",", purchase.Products), purchase.PurchaseState, purchase.PurchaseToken);
-            
+
             if (purchase.PurchaseState == PurchaseState.Purchased)
             {
                 foreach (var productId in purchase.Products)
@@ -453,7 +453,7 @@ public class BillingService : BaseBillingService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error processing purchase for products {ProductIds}", 
+            _logger.LogError(ex, "Error processing purchase for products {ProductIds}",
                 string.Join(",", purchase.Products));
         }
     }

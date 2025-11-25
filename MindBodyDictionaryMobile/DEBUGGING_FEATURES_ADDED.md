@@ -118,12 +118,12 @@ adb logcat *:E
 [INFO] Hub Name: nh-mindbody
 [INFO] Namespace: nhn-mindbody
 [INFO] NotificationHubClient created successfully
-[INFO] RegisterDeviceAsync called with tags: 
+[INFO] RegisterDeviceAsync called with tags:
 [INFO] Device Installation Details:
 [INFO]   InstallationId: abc123...
 [INFO]   Platform: Fcm
 [INFO]   PushChannel: eyJhbG...
-[INFO]   Tags: 
+[INFO]   Tags:
 [INFO] Platform set to: FCM (Android)
 [INFO] Sending installation to Azure Notification Hub...
 [INFO] Successfully registered with Azure Notification Hub

@@ -128,4 +128,3 @@ namespace MindBodyDictionary.Core.Client
         }
     }
 }
-

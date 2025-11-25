@@ -30,7 +30,7 @@ namespace MindBodyDictionary.AdminApi
 
                 }
                 _logger.LogInformation(message: $"""Found {ailments.Count()} ailments""");
-              
+
                 var result = new { data = ailments.OrderBy(a => a.Name) };
                 return new JsonResult(result);
             }

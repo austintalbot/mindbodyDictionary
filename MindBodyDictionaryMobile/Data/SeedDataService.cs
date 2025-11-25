@@ -37,7 +37,7 @@ public class SeedDataService(ProjectRepository projectRepository, TaskRepository
 			{
 				// Collect all unique categories first
 				var categoryMap = new Dictionary<string, Category>();
-				
+
 				foreach (var project in payload.Projects)
 				{
 					if (project?.Category is not null && !categoryMap.ContainsKey(project.Category.Title))
@@ -62,7 +62,7 @@ public class SeedDataService(ProjectRepository projectRepository, TaskRepository
 
 				// Collect all unique tags first
 				var tagMap = new Dictionary<string, Tag>();
-				
+
 				foreach (var project in payload.Projects)
 				{
 					if (project?.Tags is not null)

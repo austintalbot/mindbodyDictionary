@@ -6,36 +6,36 @@ namespace MindBodyDictionaryMobile.Pages;
 public partial class NotificationSettingsPage : ContentPage
 {
     readonly NotificationSettingsPageModel _viewModel;
-    
+
     public NotificationSettingsPage(NotificationSettingsPageModel viewModel)
     {
         InitializeComponent();
         _viewModel = viewModel;
         BindingContext = viewModel;
-        
+
         // Add debug section only in DEBUG builds
         AddDebugSection();
     }
-    
+
     protected override void OnAppearing()
     {
         base.OnAppearing();
-        
+
         // Reload registration status when page appears
         _viewModel.ReloadRegistrationStatus();
     }
-    
+
     void AddDebugSection()
     {
 #if DEBUG
         var debugBorder = new Border
         {
             StrokeThickness = 1,
-            Stroke = (Application.Current?.RequestedTheme == AppTheme.Dark) 
-                ? Color.FromArgb("#4A4A4A") 
+            Stroke = (Application.Current?.RequestedTheme == AppTheme.Dark)
+                ? Color.FromArgb("#4A4A4A")
                 : Color.FromArgb("#E0E0E0"),
-            BackgroundColor = (Application.Current?.RequestedTheme == AppTheme.Dark) 
-                ? Color.FromArgb("#1A1A1A") 
+            BackgroundColor = (Application.Current?.RequestedTheme == AppTheme.Dark)
+                ? Color.FromArgb("#1A1A1A")
                 : Color.FromArgb("#F5F5F5"),
             Padding = 15,
             StrokeShape = new RoundRectangle { CornerRadius = 10 }
@@ -103,7 +103,7 @@ public partial class NotificationSettingsPage : ContentPage
         debugBorder.Content = stackLayout;
 
         // Find the main VerticalStackLayout and add the debug section
-        if (Content is ScrollView mainScrollView && 
+        if (Content is ScrollView mainScrollView &&
             mainScrollView.Content is VerticalStackLayout mainStack)
         {
             mainStack.Add(debugBorder);

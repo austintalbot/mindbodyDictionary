@@ -5,7 +5,7 @@ using MindBodyDictionaryMobile.Models;
 namespace MindBodyDictionaryMobile.PageModels;
 
 public partial class MainPageModel(SeedDataService seedDataService, ProjectRepository projectRepository,
-    TaskRepository taskRepository, CategoryRepository categoryRepository, ModalErrorHandler errorHandler) 
+    TaskRepository taskRepository, CategoryRepository categoryRepository, ModalErrorHandler errorHandler)
     : ObservableObject, IProjectTaskPageModel
 {
 	private bool _isNavigatedTo;

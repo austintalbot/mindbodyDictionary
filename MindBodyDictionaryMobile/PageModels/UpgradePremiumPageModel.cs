@@ -150,7 +150,7 @@ public partial class UpgradePremiumPageModel : ObservableObject
 #if DEBUG
             UpdateDebugInfo("PURCHASE_INITIATED", $"Product: {_premiumProductId}\nPlatform: {GetPlatform()}\nTime: {DateTime.Now:u}");
 #endif
-            
+
             if (string.IsNullOrEmpty(_premiumProductId))
             {
 #if DEBUG

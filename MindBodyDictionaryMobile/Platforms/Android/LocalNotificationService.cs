@@ -12,12 +12,12 @@ public static class LocalNotificationService
             try
             {
                 var context = Microsoft.Maui.Controls.Application.Current!.Handler!.MauiContext!.Context!;
-                
+
                 var intent = new Intent(context, typeof(MainActivity));
                 intent.AddFlags(ActivityFlags.ClearTop);
                 intent.PutExtra("notification_title", title);
                 intent.PutExtra("notification_body", body);
-                
+
                 var pendingFlags = PendingIntentFlags.UpdateCurrent;
                 if (global::Android.OS.Build.VERSION.SdkInt >= global::Android.OS.BuildVersionCodes.M)
                     pendingFlags |= PendingIntentFlags.Immutable;
@@ -59,7 +59,7 @@ public static class LocalNotificationService
 
                 var notification = notificationBuilder.Build();
                 var notificationManager = NotificationManager.FromContext(context);
-                
+
                 if (notificationManager != null)
                 {
                     var notificationId = new Random().Next();

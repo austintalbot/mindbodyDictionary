@@ -25,17 +25,17 @@ public class ImageCacheRepository(ILogger<ImageCacheRepository> logger)
 		{
 			var dbPath = Constants.DatabasePath;
 			_logger.LogInformation("Init: DatabasePath = {Path}", dbPath);
-			
+
 			// Extract the file path from the connection string
 			var dataSourceMatch = Regex.Match(dbPath, @"Data Source=([^;]+)");
 			if (dataSourceMatch.Success)
 			{
 				var filePath = dataSourceMatch.Groups[1].Value;
 				_logger.LogInformation("Init: Extracted file path = {FilePath}", filePath);
-				
+
 				var directory = Path.GetDirectoryName(filePath);
 				_logger.LogInformation("Init: Directory = {Directory}", directory);
-				
+
 				if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
 				{
 					_logger.LogInformation("Init: Creating directory {Directory}", directory);
@@ -65,7 +65,7 @@ public class ImageCacheRepository(ILogger<ImageCacheRepository> logger)
 			createIndexCmd.CommandText = "CREATE INDEX IF NOT EXISTS idx_imagecache_filename ON ImageCache(FileName);";
 			await createIndexCmd.ExecuteNonQueryAsync();
 			_logger.LogInformation("Init: Index created/verified");
-			
+
 			_hasBeenInitialized = true;
 			_logger.LogInformation("Init: Initialization complete");
 		}
@@ -90,7 +90,7 @@ public class ImageCacheRepository(ILogger<ImageCacheRepository> logger)
 		selectCmd.Parameters.AddWithValue("@FileName", fileName);
 
 		await using var reader = await selectCmd.ExecuteReaderAsync();
-		return await reader.ReadAsync() 
+		return await reader.ReadAsync()
 			? new ImageCache
 			{
 				ID = reader.GetInt32(0),
@@ -142,7 +142,7 @@ public class ImageCacheRepository(ILogger<ImageCacheRepository> logger)
 			_logger.LogInformation("SaveItemAsync: Starting for {FileName}", image.FileName);
 			await Init();
 			_logger.LogInformation("SaveItemAsync: Init complete, opening connection");
-			
+
 			await using var connection = new SqliteConnection(Constants.DatabasePath);
 			await connection.OpenAsync();
 			_logger.LogInformation("SaveItemAsync: Connection opened");
@@ -151,7 +151,7 @@ public class ImageCacheRepository(ILogger<ImageCacheRepository> logger)
 			insertCmd.CommandText = @"
             INSERT OR REPLACE INTO ImageCache (FileName, ImageData, CachedAt, ContentType)
             VALUES (@FileName, @ImageData, @CachedAt, @ContentType)";
-			
+
 			insertCmd.Parameters.AddWithValue("@FileName", image.FileName);
 			insertCmd.Parameters.AddWithValue("@ImageData", image.ImageData);
 			insertCmd.Parameters.AddWithValue("@CachedAt", image.CachedAt);
@@ -159,7 +159,7 @@ public class ImageCacheRepository(ILogger<ImageCacheRepository> logger)
 
 			_logger.LogInformation("SaveItemAsync: Executing insert for {FileName}", image.FileName);
 			var result = await insertCmd.ExecuteNonQueryAsync();
-			_logger.LogInformation("SaveItemAsync: Insert complete - {FileName} ({Size} bytes), rows affected: {RowsAffected}", 
+			_logger.LogInformation("SaveItemAsync: Insert complete - {FileName} ({Size} bytes), rows affected: {RowsAffected}",
 				image.FileName, image.ImageData.Length, result);
 		}
 		catch (Exception e)

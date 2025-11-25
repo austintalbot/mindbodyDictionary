@@ -149,7 +149,7 @@ public class ImageCacheService(ImageCacheRepository imageCacheRepository, ILogge
 		try
 		{
 			_logger.LogInformation("CacheImageAsync: Starting for {FileName}", fileName);
-			
+
 			// Check if already cached
 			var existing = await _imageCacheRepository.GetByFileNameAsync(fileName);
 			if (existing != null)
@@ -161,7 +161,7 @@ public class ImageCacheService(ImageCacheRepository imageCacheRepository, ILogge
 			// Load image from manifest resources
 			var assembly = typeof(ImageCacheService).Assembly;
 			_logger.LogInformation("CacheImageAsync: Searching for resource matching {FileName}", fileName);
-			
+
 			var resourceName = assembly.GetManifestResourceNames()
 				.FirstOrDefault(name => name.EndsWith($".{fileName}", StringComparison.OrdinalIgnoreCase));
 
@@ -196,7 +196,7 @@ public class ImageCacheService(ImageCacheRepository imageCacheRepository, ILogge
 			};
 
 			await _imageCacheRepository.SaveItemAsync(imageCache);
-			_logger.LogInformation("CacheImageAsync: Successfully cached {FileName} ({Size} bytes) from {ResourceName}", 
+			_logger.LogInformation("CacheImageAsync: Successfully cached {FileName} ({Size} bytes) from {ResourceName}",
 				fileName, imageData.Length, resourceName);
 		}
 		catch (Exception e)
@@ -214,14 +214,14 @@ public class ImageCacheService(ImageCacheRepository imageCacheRepository, ILogge
 			// In MAUI, we need to enumerate resources from the assembly
 			var assembly = typeof(ImageCacheService).Assembly;
 			var resourceNames = assembly.GetManifestResourceNames();
-			
+
 			_logger.LogInformation("GetImageFilesFromResourcesAsync: Found {Count} total manifest resources", resourceNames.Length);
 
 			foreach (var resourceName in resourceNames)
 			{
 				// Check if resource is in the images folder - match pattern like "MindBodyDictionaryMobile.Resources.Raw.images.imageName.png"
-				if (resourceName.Contains(".images.") && (resourceName.EndsWith(".png") || resourceName.EndsWith(".jpg") || 
-					resourceName.EndsWith(".jpeg") || resourceName.EndsWith(".gif") || resourceName.EndsWith(".svg") || 
+				if (resourceName.Contains(".images.") && (resourceName.EndsWith(".png") || resourceName.EndsWith(".jpg") ||
+					resourceName.EndsWith(".jpeg") || resourceName.EndsWith(".gif") || resourceName.EndsWith(".svg") ||
 					resourceName.EndsWith(".webp")))
 				{
 					// Extract the file name from the resource name
@@ -230,7 +230,7 @@ public class ImageCacheService(ImageCacheRepository imageCacheRepository, ILogge
 					if (imagesIndex >= 0)
 					{
 						var fileName = resourceName[(imagesIndex + ".images.".Length)..];
-						
+
 						if (IsImageFile(fileName))
 						{
 							imageFiles.Add(fileName);

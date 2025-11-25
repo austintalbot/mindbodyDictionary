@@ -12,7 +12,7 @@ public static class NotificationDebugHelper
         sb.AppendLine($"Namespace: {NotificationConfig.NotificationHubNamespace}");
         sb.AppendLine($"Connection String: {(string.IsNullOrEmpty(NotificationConfig.ListenConnectionString) ? "MISSING" : "Configured")}");
         sb.AppendLine();
-        
+
         sb.AppendLine("=== CONNECTION STRING DETAILS ===");
         if (!string.IsNullOrEmpty(NotificationConfig.ListenConnectionString))
         {
@@ -26,13 +26,13 @@ public static class NotificationDebugHelper
                         var kvp = part.Split('=', 2);
                         var key = kvp[0];
                         var value = kvp[1];
-                        
+
                         // Mask the access key for security
                         if (key.Contains("Key", StringComparison.OrdinalIgnoreCase))
                         {
                             value = value.Length > 8 ? $"{value[..4]}...{value[^4..]}" : "***";
                         }
-                        
+
                         sb.AppendLine($"  {key} = {value}");
                     }
                 }
@@ -43,7 +43,7 @@ public static class NotificationDebugHelper
             }
         }
         sb.AppendLine();
-        
+
         sb.AppendLine("=== DEVICE INFORMATION ===");
         sb.AppendLine($"Platform: {DeviceInfo.Platform}");
         sb.AppendLine($"Version: {DeviceInfo.VersionString}");
@@ -51,14 +51,14 @@ public static class NotificationDebugHelper
         sb.AppendLine($"Manufacturer: {DeviceInfo.Manufacturer}");
         sb.AppendLine($"Device Type: {DeviceInfo.DeviceType}");
         sb.AppendLine();
-        
+
         if (deviceService != null)
         {
             sb.AppendLine("=== DEVICE INSTALLATION SERVICE ===");
             sb.AppendLine($"Notifications Supported: {deviceService.NotificationsSupported}");
             sb.AppendLine($"Device ID: {deviceService.GetDeviceId() ?? "NULL"}");
             sb.AppendLine($"Token: {(string.IsNullOrEmpty(deviceService.Token) ? "NOT SET" : $"{deviceService.Token[..Math.Min(20, deviceService.Token.Length)]}...")}");
-            
+
             try
             {
                 var installation = deviceService.GetDeviceInstallation();
@@ -80,13 +80,13 @@ public static class NotificationDebugHelper
             }
         }
         sb.AppendLine();
-        
+
         sb.AppendLine("=== CACHED TOKENS ===");
         try
         {
             var cachedToken = SecureStorage.GetAsync("cached_device_token").GetAwaiter().GetResult();
             sb.AppendLine($"Cached Device Token: {(string.IsNullOrEmpty(cachedToken) ? "NOT SET" : $"{cachedToken[..Math.Min(20, cachedToken.Length)]}...")}");
-            
+
             var cachedTags = SecureStorage.GetAsync("cached_tags").GetAwaiter().GetResult();
             sb.AppendLine($"Cached Tags: {cachedTags ?? "NOT SET"}");
         }
@@ -95,7 +95,7 @@ public static class NotificationDebugHelper
             sb.AppendLine($"Error reading cached tokens: {ex.Message}");
         }
         sb.AppendLine();
-        
+
         sb.AppendLine("=== FIREBASE CONFIGURATION (Android) ===");
 #if ANDROID
         sb.AppendLine("Platform: ANDROID");
@@ -107,23 +107,23 @@ public static class NotificationDebugHelper
 #else
         sb.AppendLine("Platform: UNKNOWN");
 #endif
-        
+
         return sb.ToString();
     }
-    
+
     public static async Task<string> TestConnectionAsync()
     {
         var sb = new StringBuilder();
         sb.AppendLine("=== TESTING NOTIFICATION HUB CONNECTION ===");
-        
+
         try
         {
             var hubClient = Microsoft.Azure.NotificationHubs.NotificationHubClient.CreateClientFromConnectionString(
                 NotificationConfig.ListenConnectionString,
                 NotificationConfig.NotificationHubName);
-                
+
             sb.AppendLine("✅ Successfully created NotificationHubClient");
-            
+
             // Try to get registration description count (this validates the connection)
             try
             {
@@ -146,7 +146,7 @@ public static class NotificationDebugHelper
                 sb.AppendLine($"   Inner: {ex.InnerException.Message}");
             }
         }
-        
+
         return sb.ToString();
     }
 }

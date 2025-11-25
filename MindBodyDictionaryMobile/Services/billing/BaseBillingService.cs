@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using MindBodyDictionaryMobile.Models;
 
-namespace MindBodyDictionaryMobile.Services.billing;    
+namespace MindBodyDictionaryMobile.Services.billing;
 
 public abstract class BaseBillingService(ILogger<BaseBillingService> logger) : IBillingService
 {

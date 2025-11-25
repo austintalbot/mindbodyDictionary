@@ -81,8 +81,8 @@ namespace MindBodyDictionary.AdminApi
                 {
                     var response = await container.UpsertItemAsync(ailmentObject, partitionKey: new PartitionKey(ailmentObject.id));
                     _logger?.LogInformation($"Upserted Ailment: {response.Resource}");
-                    
-                    
+
+
                     // Get the last updated time
                     var lastUpdatedTime = new Core.Entities.LastUpdatedTime
                     {

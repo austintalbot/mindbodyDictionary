@@ -15,19 +15,19 @@ generate_sas_token() {
     local key=$2
     local keyname=$3
     local expiry=$(($(date +%s) + 3600))
-    
+
     # URL encode the URI
     local encoded_uri=$(printf %s "$uri" | jq -sRr @uri)
-    
+
     # Create string to sign
     local string_to_sign="${encoded_uri}\n${expiry}"
-    
+
     # Generate signature
     local signature=$(printf "%b" "$string_to_sign" | openssl dgst -sha256 -hmac "$key" -binary | base64)
-    
+
     # URL encode signature
     local encoded_sig=$(printf %s "$signature" | jq -sRr @uri)
-    
+
     # Build SAS token
     echo "SharedAccessSignature sr=${encoded_uri}&sig=${encoded_sig}&se=${expiry}&skn=${keyname}"
 }

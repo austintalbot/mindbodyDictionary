@@ -9,7 +9,7 @@
 
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="20">
-            
+
             <!-- Logo -->
             <Image
                 Source="mbd_logo.png"
@@ -26,7 +26,7 @@
                     FontAttributes="Bold"
                     HorizontalTextAlignment="Center"
                     TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}"/>
-                
+
                 <Label
                     Text="{Binding AppVersion}"
                     FontSize="14"

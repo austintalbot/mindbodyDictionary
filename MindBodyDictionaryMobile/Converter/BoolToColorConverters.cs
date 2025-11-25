@@ -38,7 +38,7 @@ public class BoolToColorConverter : IValueConverter
                 {
                     if (colorString.Equals("LightGray", StringComparison.OrdinalIgnoreCase))
                         return Colors.LightGray;
-                    
+
                     return Color.FromArgb(colorString);
                 }
                 catch

@@ -16,7 +16,7 @@
                         Padding="15"
                         BorderColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray700}}"
                         HasShadow="False">
-                        
+
                         <VerticalStackLayout Spacing="10">
                             <!-- Question Header -->
                             <Label

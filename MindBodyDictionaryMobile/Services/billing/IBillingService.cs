@@ -7,7 +7,7 @@ namespace MindBodyDictionaryMobile.Services.billing;
 /// </summary>
 public interface IBillingService
 {
-    Task<bool> InitializeAsync(); 
+    Task<bool> InitializeAsync();
     Task<List<Product>> GetProductsAsync();
     Task<List<Product>> GetProductsAsync(string[] productIds);
     Task<PurchaseResult> PurchaseAsync(string productId);
@@ -17,4 +17,3 @@ public interface IBillingService
     Task<bool> PurchaseProductAsync(string productId);
     bool IsInitialized { get; }
 }
-

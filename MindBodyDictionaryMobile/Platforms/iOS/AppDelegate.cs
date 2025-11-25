@@ -55,9 +55,9 @@ public class AppDelegate : MauiUIApplicationDelegate, IUNUserNotificationCenterD
 	{
 		// Convert token to string
 		var token = BitConverter.ToString(deviceToken.ToArray()).Replace("-", "").ToLower();
-		
+
 		System.Diagnostics.Debug.WriteLine($"APNS Token Received: {token}");
-		
+
 		// Set the token in the service
 		var currentApp = IPlatformApplication.Current;
 		if (currentApp != null)
@@ -104,13 +104,13 @@ public class AppDelegate : MauiUIApplicationDelegate, IUNUserNotificationCenterD
 	public void WillPresentNotification(UNUserNotificationCenter center, UNNotification notification, Action<UNNotificationPresentationOptions> completionHandler)
 	{
 		System.Diagnostics.Debug.WriteLine("=== WillPresentNotification called ===");
-		
+
 		var userInfo = notification.Request.Content.UserInfo;
-		
+
 		System.Diagnostics.Debug.WriteLine($"Notification title: {notification.Request.Content.Title}");
 		System.Diagnostics.Debug.WriteLine($"Notification body: {notification.Request.Content.Body}");
 		System.Diagnostics.Debug.WriteLine($"UserInfo count: {userInfo.Count}");
-		
+
 		foreach (var key in userInfo.Keys)
 		{
 			System.Diagnostics.Debug.WriteLine($"  {key} = {userInfo[key]}");
@@ -133,13 +133,13 @@ public class AppDelegate : MauiUIApplicationDelegate, IUNUserNotificationCenterD
 	public void DidReceiveNotificationResponse(UNUserNotificationCenter center, UNNotificationResponse response, Action completionHandler)
 	{
 		System.Diagnostics.Debug.WriteLine("=== DidReceiveNotificationResponse called ===");
-		
+
 		var userInfo = response.Notification.Request.Content.UserInfo;
-		
+
 		System.Diagnostics.Debug.WriteLine($"Notification title: {response.Notification.Request.Content.Title}");
 		System.Diagnostics.Debug.WriteLine($"Notification body: {response.Notification.Request.Content.Body}");
 		System.Diagnostics.Debug.WriteLine($"UserInfo count: {userInfo.Count}");
-		
+
 		foreach (var key in userInfo.Keys)
 		{
 			System.Diagnostics.Debug.WriteLine($"  {key} = {userInfo[key]}");

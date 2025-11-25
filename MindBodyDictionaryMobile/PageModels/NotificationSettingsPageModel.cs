@@ -27,7 +27,7 @@ public partial class NotificationSettingsPageModel : ObservableObject
 
     [ObservableProperty]
     string lastActionReceived = string.Empty;
-    
+
     [ObservableProperty]
     string debugInfo = string.Empty;
 
@@ -43,16 +43,16 @@ public partial class NotificationSettingsPageModel : ObservableObject
         _logger = logger;
 
         NotificationsSupported = _deviceInstallationService?.NotificationsSupported ?? false;
-        
+
         // Load registration status from storage
         LoadRegistrationStatus();
 
         _notificationActionService.ActionTriggered += OnNotificationActionTriggered;
-        
+
         // Generate debug info
         RefreshDebugInfo();
     }
-    
+
     void LoadRegistrationStatus()
     {
         try
@@ -60,7 +60,7 @@ public partial class NotificationSettingsPageModel : ObservableObject
             var isRegisteredStr = Preferences.Get("notification_is_registered", "false");
             IsRegistered = bool.Parse(isRegisteredStr);
             _logger.LogInformation("Loaded registration status: {IsRegistered}", IsRegistered);
-            
+
             // Update status message
             UpdateStatusMessage();
         }
@@ -70,33 +70,33 @@ public partial class NotificationSettingsPageModel : ObservableObject
             IsRegistered = false;
         }
     }
-    
+
     public void ReloadRegistrationStatus()
     {
         LoadRegistrationStatus();
         RefreshDebugInfo();
-        
+
         // Verify with Azure in background
         _ = VerifyRegistrationWithAzure();
     }
-    
+
     async Task VerifyRegistrationWithAzure()
     {
         try
         {
             _logger.LogInformation("Verifying registration status with Azure...");
-            
+
             var deviceInstallation = _deviceInstallationService?.GetDeviceInstallation();
             if (deviceInstallation == null)
             {
                 _logger.LogWarning("Cannot verify - device installation is null");
                 return;
             }
-            
+
             var isRegisteredInAzure = await _notificationRegistrationService.CheckRegistrationAsync(deviceInstallation.InstallationId);
-            
+
             _logger.LogInformation("Azure registration check: Local={Local}, Azure={Azure}", IsRegistered, isRegisteredInAzure);
-            
+
             // If local state doesn't match Azure, update it
             if (IsRegistered != isRegisteredInAzure)
             {
@@ -104,7 +104,7 @@ public partial class NotificationSettingsPageModel : ObservableObject
                 IsRegistered = isRegisteredInAzure;
                 SaveRegistrationStatus(isRegisteredInAzure);
                 UpdateStatusMessage();
-                
+
                 if (isRegisteredInAzure)
                 {
                     StatusMessage += " (verified with Azure)";
@@ -141,7 +141,7 @@ public partial class NotificationSettingsPageModel : ObservableObject
             _logger.LogError(ex, "Failed to save registration status");
         }
     }
-    
+
     [RelayCommand]
     void RefreshDebugInfo()
     {
@@ -156,7 +156,7 @@ public partial class NotificationSettingsPageModel : ObservableObject
             DebugInfo = $"Error getting debug info: {ex.Message}";
         }
     }
-    
+
     [RelayCommand]
     async Task TestConnection()
     {
@@ -174,7 +174,7 @@ public partial class NotificationSettingsPageModel : ObservableObject
             StatusMessage = $"Connection test failed: {ex.Message}";
         }
     }
-    
+
     [RelayCommand]
     async Task CopyDebugInfo()
     {
@@ -197,19 +197,19 @@ public partial class NotificationSettingsPageModel : ObservableObject
 
         IsRegistering = true;
         StatusMessage = "Registering device...";
-        
+
         _logger.LogInformation("=== STARTING DEVICE REGISTRATION ===");
 
         try
         {
             _logger.LogInformation("Calling RegisterDeviceAsync...");
             await _notificationRegistrationService.RegisterDeviceAsync();
-            
+
             IsRegistered = true;
             SaveRegistrationStatus(true);
             StatusMessage = "✅ Device registered successfully";
             _logger.LogInformation("Device registration completed successfully");
-            
+
             RefreshDebugInfo();
         }
         catch (Exception ex)
@@ -218,7 +218,7 @@ public partial class NotificationSettingsPageModel : ObservableObject
             StatusMessage = $"❌ Registration failed: {ex.Message}";
             IsRegistered = false;
             SaveRegistrationStatus(false);
-            
+
             // Add detailed error info to debug output
             DebugInfo = $"=== REGISTRATION ERROR ===\n" +
                        $"Message: {ex.Message}\n" +
@@ -241,26 +241,26 @@ public partial class NotificationSettingsPageModel : ObservableObject
 
         IsRegistering = true;
         StatusMessage = "De-registering device...";
-        
+
         _logger.LogInformation("=== STARTING DEVICE DEREGISTRATION ===");
 
         try
         {
             _logger.LogInformation("Calling DeregisterDeviceAsync...");
             await _notificationRegistrationService.DeregisterDeviceAsync();
-            
+
             IsRegistered = false;
             SaveRegistrationStatus(false);
             StatusMessage = "✅ Device deregistered successfully";
             _logger.LogInformation("Device deregistration completed successfully");
-            
+
             RefreshDebugInfo();
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Device deregistration failed");
             StatusMessage = $"❌ Deregistration failed: {ex.Message}";
-            
+
             // Add detailed error info to debug output
             DebugInfo = $"=== DEREGISTRATION ERROR ===\n" +
                        $"Message: {ex.Message}\n" +

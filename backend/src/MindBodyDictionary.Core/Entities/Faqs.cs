@@ -4,7 +4,7 @@ namespace MindBodyDictionary.Core.Entities
 {
     public class Faqs
 	{
-		
+
 
             [JsonProperty(PropertyName = "question")]
             public string Question { get; set; }
@@ -16,4 +16,3 @@ namespace MindBodyDictionary.Core.Entities
 
     }
 }
-

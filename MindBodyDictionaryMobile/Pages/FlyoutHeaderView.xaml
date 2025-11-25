@@ -4,8 +4,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Class="MindBodyDictionaryMobile.Pages.FlyoutHeaderView"
     HeightRequest="180">
-    
-    <Grid 
+
+    <Grid
         BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}">
         <Image
             Source="mbd_logo.png"

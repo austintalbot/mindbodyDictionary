@@ -8,17 +8,17 @@ namespace MindBodyDictionaryMobile.Platforms.iOS;
 public class DeviceInstallationService : IDeviceInstallationService
 {
     private string _token = string.Empty;
-    
-    public string Token 
-    { 
+
+    public string Token
+    {
         get => _token;
-        set 
+        set
         {
             _token = value;
             Debug.WriteLine($"iOS Token set: {value}");
         }
     }
-    
+
     public bool NotificationsSupported => true;
 
     public string GetDeviceId() => UIDevice.CurrentDevice.IdentifierForVendor?.AsString() ?? Guid.NewGuid().ToString();
@@ -29,8 +29,8 @@ public class DeviceInstallationService : IDeviceInstallationService
             throw new Exception("This device does not support push notifications");
 
         // For simulator testing: if token is not set, generate a mock token
-        var token = string.IsNullOrWhiteSpace(Token) 
-            ? GenerateMockToken() 
+        var token = string.IsNullOrWhiteSpace(Token)
+            ? GenerateMockToken()
             : Token;
 
         if (string.IsNullOrWhiteSpace(token))

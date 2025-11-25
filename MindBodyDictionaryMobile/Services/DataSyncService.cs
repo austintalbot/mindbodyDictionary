@@ -71,7 +71,7 @@ return true;
 var daysSinceSync = (DateTime.UtcNow - lastSync.Value).TotalDays;
 var shouldRefresh = daysSinceSync > CacheExpiryDays;
 
-Debug.WriteLine($"[DataSyncService] ShouldRefreshFromBackend - Days since sync: {daysSinceSync:F1}, Should refresh: {shouldRefresh}");
+			Debug.WriteLine($"[DataSyncService] ShouldRefreshFromBackend - Days since sync: {daysSinceSync:F1}, Should refresh: {shouldRefresh}");
 
 return shouldRefresh;
 }

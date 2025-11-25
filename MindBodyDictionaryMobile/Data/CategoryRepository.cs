@@ -197,7 +197,7 @@ public class CategoryRepository(ILogger<CategoryRepository> logger)
 			HAVING COUNT(*) > 1";
 
 			var duplicates = new Dictionary<string, List<int>>();
-			
+
 			await using var reader = await cmd.ExecuteReaderAsync();
 			while (await reader.ReadAsync())
 			{
@@ -221,8 +221,8 @@ public class CategoryRepository(ILogger<CategoryRepository> logger)
 					// Update Project references to point to keepId instead of deleteId
 					var updateCmd = connection.CreateCommand();
 					updateCmd.CommandText = @"
-					UPDATE Project 
-					SET CategoryID = @keepId 
+					UPDATE Project
+					SET CategoryID = @keepId
 					WHERE CategoryID = @deleteId";
 					updateCmd.Parameters.AddWithValue("@keepId", keepId);
 					updateCmd.Parameters.AddWithValue("@deleteId", deleteId);
@@ -231,8 +231,8 @@ public class CategoryRepository(ILogger<CategoryRepository> logger)
 					// Update Condition references to point to keepId instead of deleteId
 					updateCmd = connection.CreateCommand();
 					updateCmd.CommandText = @"
-					UPDATE Condition 
-					SET CategoryID = @keepId 
+					UPDATE Condition
+					SET CategoryID = @keepId
 					WHERE CategoryID = @deleteId";
 					updateCmd.Parameters.AddWithValue("@keepId", keepId);
 					updateCmd.Parameters.AddWithValue("@deleteId", deleteId);

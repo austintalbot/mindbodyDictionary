@@ -10,24 +10,24 @@
     StrokeShape="RoundRectangle 20"
     Background="{AppThemeBinding Light={StaticResource LightSecondaryBackground}, Dark={StaticResource DarkSecondaryBackground}}"
     x:DataType="models:ProjectTask">
-    
+
     <effectsView:SfEffectsView
         TouchDownEffects="Highlight"
         HighlightBackground="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}">
         <shimmer:SfShimmer
             BackgroundColor="Transparent"
-            VerticalOptions="Fill"               
+            VerticalOptions="Fill"
             IsActive="{Binding IsBusy, Source={RelativeSource AncestorType={x:Type pageModels:IProjectTaskPageModel}}, x:DataType=pageModels:IProjectTaskPageModel}">
             <shimmer:SfShimmer.CustomView>
-                <Grid 
+                <Grid
                     ColumnDefinitions="Auto,*"
                     Padding="{OnIdiom 15, Desktop=20}">
-                    <BoxView 
+                    <BoxView
                         WidthRequest="24"
                         HeightRequest="24"
                         Margin="12, 0"
                         Style="{StaticResource ShimmerCustomViewStyle}"/>
-                    <BoxView 
+                    <BoxView
                         Grid.Column="1"
                         HeightRequest="24"
                         Margin="12, 0"
@@ -37,11 +37,11 @@
             <shimmer:SfShimmer.Content>
                 <Grid ColumnDefinitions="Auto,*" ColumnSpacing="15" Padding="{OnIdiom 15, Desktop=20}">
                     <Grid.GestureRecognizers>
-                        <TapGestureRecognizer 
-                            Command="{Binding NavigateToTaskCommand, Source={RelativeSource AncestorType={x:Type pageModels:IProjectTaskPageModel}}, x:DataType=pageModels:IProjectTaskPageModel}" 
+                        <TapGestureRecognizer
+                            Command="{Binding NavigateToTaskCommand, Source={RelativeSource AncestorType={x:Type pageModels:IProjectTaskPageModel}}, x:DataType=pageModels:IProjectTaskPageModel}"
                             CommandParameter="{Binding .}"/>
                     </Grid.GestureRecognizers>
-                    
+
                     <CheckBox Grid.Column="0"
                         IsChecked="{Binding IsCompleted, Mode=OneTime}"
                         VerticalOptions="Center"

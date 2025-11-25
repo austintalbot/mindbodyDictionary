@@ -27,7 +27,7 @@
 
 **Location**: `Platforms/Android/google-services.json`
 
-**Status**: 
+**Status**:
 - ✅ File exists
 - ✅ Added to .csproj as `<GoogleServicesJson>`
 - ✅ Package name matches: `com.mindbodydictionary.mindbodydictionarymobile`
@@ -37,7 +37,7 @@
 
 **Location**: `Platforms/iOS/Entitlements.plist.txt`
 
-**Status**: 
+**Status**:
 - ✅ File created with push notification entitlement
 - ✅ Named `.txt` to allow building without provisioning profile
 - ⚠️ Environment set to `development`

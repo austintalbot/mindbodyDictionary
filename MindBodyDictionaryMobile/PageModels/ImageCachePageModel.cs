@@ -72,7 +72,7 @@ public partial class ImageCachePageModel : ObservableObject
             var stats = await _imageCacheService.GetCacheStatsAsync();
             _logger.LogInformation("LoadCacheStats: Got stats - Total: {Total}, Cached: {Cached}, Resources: {Resources}",
                 stats.CachedImages, stats.CachedImages, stats.TotalImagesInResources);
-            
+
             TotalImagesInResources = stats.TotalImagesInResources;
             CachedImages = stats.CachedImages;
             PercentageCached = stats.PercentageCached;
@@ -98,7 +98,7 @@ public partial class ImageCachePageModel : ObservableObject
             _logger.LogInformation("LoadCacheStats: Created {Count} ImageCacheItems", items.Count);
             CachedImagesList = items;
             _logger.LogInformation("LoadCacheStats: CachedImagesList set to {Count} items", CachedImagesList.Count);
-            
+
             TotalCacheSize = totalSize;
             _logger.LogInformation("LoadCacheStats: TotalCacheSize set to {Size}", TotalCacheSize);
 
@@ -185,8 +185,8 @@ public partial class ImageCachePageModel : ObservableObject
 
             // Count image resources
             var imageResources = resourceNames
-                .Where(r => r.Contains("images") && 
-                    (r.EndsWith(".png") || r.EndsWith(".jpg") || r.EndsWith(".jpeg") || 
+                .Where(r => r.Contains("images") &&
+                    (r.EndsWith(".png") || r.EndsWith(".jpg") || r.EndsWith(".jpeg") ||
                      r.EndsWith(".gif") || r.EndsWith(".svg") || r.EndsWith(".webp")))
                 .ToList();
             DebugImagesInResources = imageResources.Count;
@@ -252,4 +252,3 @@ public class ImageCacheItem
     public string ContentType { get; set; } = string.Empty;
     public DateTime CachedAt { get; set; }
 }
-

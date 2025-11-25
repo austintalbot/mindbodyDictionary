@@ -16,7 +16,7 @@
             Priority="0"
             IconImageSource="{StaticResource IconDelete}"
             SemanticProperties.Description="Delete Task" />
-    </ContentPage.ToolbarItems>        
+    </ContentPage.ToolbarItems>
 
     <Grid>
         <ScrollView>
@@ -35,12 +35,12 @@
                         SemanticProperties.Hint="Indicates if this task is completed" />
                 </sf:SfTextInputLayout>
 
-                <sf:SfTextInputLayout 
-                    IsVisible="{Binding IsExistingProject}" 
+                <sf:SfTextInputLayout
+                    IsVisible="{Binding IsExistingProject}"
                     SemanticProperties.Description="ComboBox to select Project"
                     SemanticProperties.Hint="State Collapsed"
                     Hint="Project">
-                    <Picker 
+                    <Picker
                         ItemsSource="{Binding Projects}"
                         ItemDisplayBinding="{Binding Name, x:DataType=models:Project}"
                         SelectedItem="{Binding Project}"
@@ -49,7 +49,7 @@
                         SemanticProperties.Hint="Which project this task belongs to"/>
                 </sf:SfTextInputLayout>
 
-                <Button 
+                <Button
                     MinimumHeightRequest="{OnIdiom 44, Desktop=60}"
                     Text="Save"
                     Command="{Binding SaveCommand}"/>

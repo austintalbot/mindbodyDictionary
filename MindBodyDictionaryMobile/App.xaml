@@ -11,7 +11,7 @@
                 <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
                 <ResourceDictionary Source="Resources/Styles/AppStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            
+
             <!-- Notification Converters -->
             <converter:IsNotNullOrEmptyConverter x:Key="IsNotNullOrEmptyConverter" />
             <converter:BoolToRegisteredTextConverter x:Key="BoolToRegisteredTextConverter" />

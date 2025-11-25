@@ -15,7 +15,7 @@ public partial class UpgradePremiumPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-        
+
         if (!_isInitialized && BindingContext is UpgradePremiumPageModel model)
         {
             _isInitialized = true;

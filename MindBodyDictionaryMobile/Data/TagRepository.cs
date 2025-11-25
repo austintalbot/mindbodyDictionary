@@ -284,7 +284,7 @@ public class TagRepository(ILogger<TagRepository> logger)
 			HAVING COUNT(*) > 1";
 
 			var duplicates = new Dictionary<string, List<int>>();
-			
+
 			await using var reader = await cmd.ExecuteReaderAsync();
 			while (await reader.ReadAsync())
 			{
@@ -308,8 +308,8 @@ public class TagRepository(ILogger<TagRepository> logger)
 					// Update ProjectsTags to point to keepId instead of deleteId
 					var updateCmd = connection.CreateCommand();
 					updateCmd.CommandText = @"
-					UPDATE ProjectsTags 
-					SET TagID = @keepId 
+					UPDATE ProjectsTags
+					SET TagID = @keepId
 					WHERE TagID = @deleteId";
 					updateCmd.Parameters.AddWithValue("@keepId", keepId);
 					updateCmd.Parameters.AddWithValue("@deleteId", deleteId);

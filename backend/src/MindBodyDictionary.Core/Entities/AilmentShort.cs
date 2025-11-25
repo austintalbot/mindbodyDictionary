@@ -51,7 +51,7 @@ namespace MindBodyDictionary.Core.Entities
 
         #endregion
 
-       
+
         public override string ToString()
         {
             return JsonConvert.SerializeObject(this);

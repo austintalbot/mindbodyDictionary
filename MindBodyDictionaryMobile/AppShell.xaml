@@ -15,7 +15,7 @@
 
   <!-- Main Navigation Items -->
   <ShellContent
-    Title="Dashboard" 
+    Title="Dashboard"
     Icon="{StaticResource IconDashboard}"
     ContentTemplate="{DataTemplate pages:MainPage}"
     Route="main" />
@@ -85,20 +85,20 @@
   <!-- Flyout Footer with Theme Selector -->
   <Shell.FlyoutFooter>
     <Grid Padding="15" RowDefinitions="Auto">
-      <Label 
+      <Label
         Grid.Row="0"
         Text="Theme"
         FontSize="12"
         TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}"
         Margin="0,0,0,10" />
-      
-      <sf:SfSegmentedControl 
+
+      <sf:SfSegmentedControl
         x:Name="ThemeSegmentedControl"
         Grid.Row="1"
-        VerticalOptions="Center" 
-        HorizontalOptions="Center" 
-        SelectionChanged="SfSegmentedControl_SelectionChanged" 
-        SegmentWidth="40" 
+        VerticalOptions="Center"
+        HorizontalOptions="Center"
+        SelectionChanged="SfSegmentedControl_SelectionChanged"
+        SegmentWidth="40"
         SegmentHeight="40">
         <sf:SfSegmentedControl.ItemsSource>
           <x:Array Type="{x:Type sf:SfSegmentItem}">

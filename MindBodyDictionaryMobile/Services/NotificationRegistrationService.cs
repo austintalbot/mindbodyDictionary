@@ -21,18 +21,18 @@ public class NotificationRegistrationService : INotificationRegistrationService
     public NotificationRegistrationService(ILogger<NotificationRegistrationService> logger)
     {
         _logger = logger;
-        
+
         try
         {
             _logger.LogInformation("Initializing NotificationRegistrationService");
             _logger.LogInformation("Hub Name: {HubName}", NotificationConfig.NotificationHubName);
             _logger.LogInformation("Namespace: {Namespace}", NotificationConfig.NotificationHubNamespace);
-            
+
             // Create NotificationHubClient for direct registration
             _hubClient = NotificationHubClient.CreateClientFromConnectionString(
                 NotificationConfig.ListenConnectionString,
                 NotificationConfig.NotificationHubName);
-                
+
             _logger.LogInformation("NotificationHubClient created successfully");
         }
         catch (Exception ex)
@@ -45,7 +45,7 @@ public class NotificationRegistrationService : INotificationRegistrationService
     public async Task DeregisterDeviceAsync()
     {
         _logger.LogInformation("DeregisterDeviceAsync called");
-        
+
         var cachedToken = await SecureStorage.GetAsync(CachedDeviceTokenKey)
             .ConfigureAwait(false);
 
@@ -69,12 +69,12 @@ public class NotificationRegistrationService : INotificationRegistrationService
             _logger.LogInformation("Deleting installation from Azure Notification Hub...");
             // Delete registration from Azure Notification Hub
             await _hubClient.DeleteInstallationAsync(deviceId);
-            
+
             _logger.LogInformation("Successfully deleted installation");
-            
+
             SecureStorage.Remove(CachedDeviceTokenKey);
             SecureStorage.Remove(CachedTagsKey);
-            
+
             _logger.LogInformation("Cleared cached tokens");
         }
         catch (Exception ex)
@@ -87,7 +87,7 @@ public class NotificationRegistrationService : INotificationRegistrationService
     public async Task RegisterDeviceAsync(params string[] tags)
     {
         _logger.LogInformation("RegisterDeviceAsync called with tags: {Tags}", string.Join(", ", tags ?? Array.Empty<string>()));
-        
+
         try
         {
             var deviceInstallation = DeviceInstallationService.GetDeviceInstallation(tags ?? Array.Empty<string>());
@@ -101,7 +101,7 @@ public class NotificationRegistrationService : INotificationRegistrationService
             _logger.LogInformation("Device Installation Details:");
             _logger.LogInformation("  InstallationId: {InstallationId}", deviceInstallation.InstallationId);
             _logger.LogInformation("  Platform: {Platform}", deviceInstallation.Platform);
-            _logger.LogInformation("  PushChannel: {PushChannel}", 
+            _logger.LogInformation("  PushChannel: {PushChannel}",
                 string.IsNullOrEmpty(deviceInstallation.PushChannel) ? "EMPTY/NULL" : $"{deviceInstallation.PushChannel[..Math.Min(20, deviceInstallation.PushChannel.Length)]}...");
             _logger.LogInformation("  Tags: {Tags}", string.Join(", ", deviceInstallation.Tags ?? []));
 
@@ -123,7 +123,7 @@ public class NotificationRegistrationService : INotificationRegistrationService
 #endif
 
             _logger.LogInformation("Sending installation to Azure Notification Hub...");
-            
+
             // Register with Azure Notification Hub
             await _hubClient.CreateOrUpdateInstallationAsync(installation);
 
@@ -133,7 +133,7 @@ public class NotificationRegistrationService : INotificationRegistrationService
                 .ConfigureAwait(false);
 
             await SecureStorage.SetAsync(CachedTagsKey, JsonSerializer.Serialize(tags));
-            
+
             _logger.LogInformation("Cached device token and tags");
         }
         catch (Exception ex)
@@ -150,7 +150,7 @@ public class NotificationRegistrationService : INotificationRegistrationService
     public async Task RefreshRegistrationAsync()
     {
         _logger.LogInformation("RefreshRegistrationAsync called");
-        
+
         var cachedToken = await SecureStorage.GetAsync(CachedDeviceTokenKey)
             .ConfigureAwait(false);
 
@@ -175,26 +175,26 @@ public class NotificationRegistrationService : INotificationRegistrationService
 
         await RegisterDeviceAsync(tags ?? Array.Empty<string>());
     }
-    
+
     public async Task<bool> CheckRegistrationAsync(string installationId)
     {
         try
         {
             _logger.LogInformation("Checking registration status for installation: {InstallationId}", installationId);
-            
+
             if (_hubClient == null)
             {
                 _logger.LogError("NotificationHubClient is null, cannot check registration");
                 return false;
             }
-            
+
             // Try to get the installation from Azure
             var installation = await _hubClient.GetInstallationAsync(installationId);
-            
+
             if (installation != null)
             {
-                _logger.LogInformation("✅ Installation found in Azure - Platform: {Platform}, PushChannel exists: {HasChannel}", 
-                    installation.Platform, 
+                _logger.LogInformation("✅ Installation found in Azure - Platform: {Platform}, PushChannel exists: {HasChannel}",
+                    installation.Platform,
                     !string.IsNullOrEmpty(installation.PushChannel));
                 return true;
             }
@@ -212,7 +212,7 @@ public class NotificationRegistrationService : INotificationRegistrationService
                 _logger.LogInformation("Installation not found in Azure (404)");
                 return false;
             }
-            
+
             _logger.LogError(ex, "Error checking registration status");
             throw;
         }
