@@ -2,14 +2,14 @@ namespace MindBodyDictionaryMobile.Pages;
 
 public partial class NotificationTestPage : ContentPage
 {
-    public NotificationTestPage()
-    {
-        InitializeComponent();
-    }
+	public NotificationTestPage()
+	{
+		InitializeComponent();
+	}
 
-    private async void OnTestLocalNotificationClicked(object sender, EventArgs e)
-    {
-        await Services.LocalNotificationService.SendTestNotification();
-        await DisplayAlertAsync("Success", "Local notification sent", "OK");
-    }
+	private async void OnTestLocalNotificationClicked(object sender, EventArgs e)
+	{
+		await Services.LocalNotificationService.SendTestNotification();
+		await DisplayAlertAsync("Success", "Local notification sent", "OK");
+	}
 }

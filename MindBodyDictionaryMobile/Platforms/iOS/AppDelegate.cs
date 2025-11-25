@@ -30,22 +30,22 @@ public class AppDelegate : MauiUIApplicationDelegate, IUNUserNotificationCenterD
 		// Handle notification launched from background
 		if (launchOptions?.ContainsKey(UIKit.UIApplication.LaunchOptionsRemoteNotificationKey) == true)
 		{
-            if (launchOptions[UIKit.UIApplication.LaunchOptionsRemoteNotificationKey] is NSDictionary remoteNotification)
-            {
-                System.Diagnostics.Debug.WriteLine("=== App launched from remote notification ===");
-                ProcessNotification(remoteNotification);
-            }
-        }
+			if (launchOptions[UIKit.UIApplication.LaunchOptionsRemoteNotificationKey] is NSDictionary remoteNotification)
+			{
+				System.Diagnostics.Debug.WriteLine("=== App launched from remote notification ===");
+				ProcessNotification(remoteNotification);
+			}
+		}
 
 		// Handle local notification launched from background
 		if (launchOptions?.ContainsKey(UIKit.UIApplication.LaunchOptionsLocalNotificationKey) == true)
 		{
-            if (launchOptions[UIKit.UIApplication.LaunchOptionsLocalNotificationKey] is UIKit.UILocalNotification localNotification)
-            {
-                System.Diagnostics.Debug.WriteLine("=== App launched from local notification ===");
-                ProcessNotification(localNotification.UserInfo);
-            }
-        }
+			if (launchOptions[UIKit.UIApplication.LaunchOptionsLocalNotificationKey] is UIKit.UILocalNotification localNotification)
+			{
+				System.Diagnostics.Debug.WriteLine("=== App launched from local notification ===");
+				ProcessNotification(localNotification.UserInfo);
+			}
+		}
 
 		return base.FinishedLaunching(application, launchOptions);
 	}
@@ -93,14 +93,14 @@ public class AppDelegate : MauiUIApplicationDelegate, IUNUserNotificationCenterD
 		}
 	}
 
-    [Export("application:didFailToRegisterForRemoteNotificationsWithError:")]
-    public void DidFailToRegisterForRemoteNotifications(UIKit.UIApplication application, NSError error) =>
-        // Handle registration failure
-        System.Diagnostics.Debug.WriteLine($"Failed to register for remote notifications: {error}");
+	[Export("application:didFailToRegisterForRemoteNotificationsWithError:")]
+	public void DidFailToRegisterForRemoteNotifications(UIKit.UIApplication application, NSError error) =>
+		// Handle registration failure
+		System.Diagnostics.Debug.WriteLine($"Failed to register for remote notifications: {error}");
 
-    // MARK: UNUserNotificationCenterDelegate Methods
+	// MARK: UNUserNotificationCenterDelegate Methods
 
-    [Export("userNotificationCenter:willPresentNotification:withCompletionHandler:")]
+	[Export("userNotificationCenter:willPresentNotification:withCompletionHandler:")]
 	public void WillPresentNotification(UNUserNotificationCenter center, UNNotification notification, Action<UNNotificationPresentationOptions> completionHandler)
 	{
 		System.Diagnostics.Debug.WriteLine("=== WillPresentNotification called ===");

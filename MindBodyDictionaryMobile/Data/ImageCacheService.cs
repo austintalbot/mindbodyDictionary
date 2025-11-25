@@ -12,10 +12,10 @@ public class ImageCacheService(ImageCacheRepository imageCacheRepository, ILogge
 	private readonly ILogger<ImageCacheService> _logger = logger;
 	private const string ImagesResourcePath = "images";
 
-    /// <summary>
-    /// Loads all images from Resources/Raw/images into the local cache database.
-    /// </summary>
-    public async Task LoadImagesFromResourcesAsync()
+	/// <summary>
+	/// Loads all images from Resources/Raw/images into the local cache database.
+	/// </summary>
+	public async Task LoadImagesFromResourcesAsync()
 	{
 		try
 		{
@@ -256,16 +256,16 @@ public class ImageCacheService(ImageCacheRepository imageCacheRepository, ILogge
 		return extension is ".png" or ".jpg" or ".jpeg" or ".gif" or ".svg" or ".webp";
 	}
 
-    private string GetContentType(string fileName) => Path.GetExtension(fileName).ToLowerInvariant() switch
-    {
-        ".png" => "image/png",
-        ".jpg" => "image/jpeg",
-        ".jpeg" => "image/jpeg",
-        ".gif" => "image/gif",
-        ".svg" => "image/svg+xml",
-        ".webp" => "image/webp",
-        _ => "application/octet-stream"
-    };
+	private string GetContentType(string fileName) => Path.GetExtension(fileName).ToLowerInvariant() switch
+	{
+		".png" => "image/png",
+		".jpg" => "image/jpeg",
+		".jpeg" => "image/jpeg",
+		".gif" => "image/gif",
+		".svg" => "image/svg+xml",
+		".webp" => "image/webp",
+		_ => "application/octet-stream"
+	};
 }
 
 /// <summary>

@@ -2,37 +2,37 @@ namespace MindBodyDictionary.AdminApi;
 
 public class AilmentsTable
 {
-    private readonly ILogger<AilmentsTable> _logger;
+	private readonly ILogger<AilmentsTable> _logger;
 
-    public AilmentsTable(ILogger<AilmentsTable> logger)
-    {
-        _logger = logger;
-    }
+	public AilmentsTable(ILogger<AilmentsTable> logger)
+	{
+		_logger = logger;
+	}
 
-    [Function("AilmentsTable")]
-    public IActionResult Run([HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequest req,
+	[Function("AilmentsTable")]
+	public IActionResult Run([HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequest req,
      [CosmosDBInput(  databaseName: Core.CosmosDB.DatabaseName,
-            containerName: Core.CosmosDB.Containers.Ailments,
-            Connection = Core.CosmosDB.ConnectionStringSetting,
-            SqlQuery = "SELECT * FROM Ailments")] IEnumerable<Core.Entities.Ailment> ailments)
-    {
-        _logger.LogInformation("Ailments Table function processed a request.");
-        try
-        {
-            if (ailments is null)
-            {
-                return new NotFoundResult();
+			containerName: Core.CosmosDB.Containers.Ailments,
+			Connection = Core.CosmosDB.ConnectionStringSetting,
+			SqlQuery = "SELECT * FROM Ailments")] IEnumerable<Core.Entities.Ailment> ailments)
+	{
+		_logger.LogInformation("Ailments Table function processed a request.");
+		try
+		{
+			if (ailments is null)
+			{
+				return new NotFoundResult();
 
-            }
-            _logger.LogInformation(message: $"""Found {ailments.Count()} ailments""");
+			}
+			_logger.LogInformation(message: $"""Found {ailments.Count()} ailments""");
 
-            var result = new { data = ailments.OrderBy(a => a.Name) };
-            return new JsonResult(result);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error getting ailments");
-            return new StatusCodeResult(StatusCodes.Status500InternalServerError);
-        }
-    }
+			var result = new { data = ailments.OrderBy(a => a.Name) };
+			return new JsonResult(result);
+		}
+		catch (Exception ex)
+		{
+			_logger.LogError(ex, "Error getting ailments");
+			return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+		}
+	}
 }

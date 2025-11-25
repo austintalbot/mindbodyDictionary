@@ -20,10 +20,10 @@ public class ConditionRepository(TaskRepository taskRepository, TagRepository ta
 	private readonly TaskRepository _taskRepository = taskRepository;
 	private readonly TagRepository _tagRepository = tagRepository;
 
-    /// <summary>
-    /// Initializes the database connection and creates the MbdCondition table if it does not exist.
-    /// </summary>
-    private async Task Init()
+	/// <summary>
+	/// Initializes the database connection and creates the MbdCondition table if it does not exist.
+	/// </summary>
+	private async Task Init()
 	{
 		if (_hasBeenInitialized)
 			return;
@@ -35,13 +35,13 @@ public class ConditionRepository(TaskRepository taskRepository, TagRepository ta
 		{
 			var createTableCmd = connection.CreateCommand();
 			createTableCmd.CommandText = @"
-            CREATE TABLE IF NOT EXISTS Condition (
-                ID INTEGER PRIMARY KEY AUTOINCREMENT,
-                Name TEXT NOT NULL,
-                Description TEXT NOT NULL,
-                Icon TEXT NOT NULL,
-                CategoryID INTEGER NOT NULL
-            );";
+			CREATE TABLE IF NOT EXISTS Condition (
+				ID INTEGER PRIMARY KEY AUTOINCREMENT,
+				Name TEXT NOT NULL,
+				Description TEXT NOT NULL,
+				Icon TEXT NOT NULL,
+				CategoryID INTEGER NOT NULL
+			);";
 			await createTableCmd.ExecuteNonQueryAsync();
 		}
 		catch (Exception e)
@@ -140,16 +140,16 @@ public class ConditionRepository(TaskRepository taskRepository, TagRepository ta
 		if (item.ID == 0)
 		{
 			saveCmd.CommandText = @"
-                INSERT INTO Condition (Name, Description, Icon, CategoryID)
-                VALUES (@Name, @Description, @Icon, @CategoryID);
-                SELECT last_insert_rowid();";
+				INSERT INTO Condition (Name, Description, Icon, CategoryID)
+				VALUES (@Name, @Description, @Icon, @CategoryID);
+				SELECT last_insert_rowid();";
 		}
 		else
 		{
 			saveCmd.CommandText = @"
-                UPDATE Condition
-                SET Name = @Name, Description = @Description, Icon = @Icon, CategoryID = @CategoryID
-                WHERE ID = @ID";
+				UPDATE Condition
+				SET Name = @Name, Description = @Description, Icon = @Icon, CategoryID = @CategoryID
+				WHERE ID = @ID";
 			saveCmd.Parameters.AddWithValue("@ID", item.ID);
 		}
 

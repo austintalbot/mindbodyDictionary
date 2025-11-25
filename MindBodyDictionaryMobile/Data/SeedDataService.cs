@@ -15,7 +15,7 @@ public class SeedDataService(ProjectRepository projectRepository, TaskRepository
 	private readonly string _seedDataFilePath = "SeedData.json";
 	private readonly ILogger<SeedDataService> _logger = logger;
 
-    public async Task LoadSeedDataAsync()
+	public async Task LoadSeedDataAsync()
 	{
 		await ClearTables();
 

@@ -2,8 +2,8 @@
 
 namespace MindBodyDictionary.Core.Client
 {
-    public interface IEmailsClient
-    {
-        Task<bool> Post(string email);
-    }
+	public interface IEmailsClient
+	{
+		Task<bool> Post(string email);
+	}
 }

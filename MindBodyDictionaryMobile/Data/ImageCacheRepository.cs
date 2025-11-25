@@ -13,10 +13,10 @@ public class ImageCacheRepository(ILogger<ImageCacheRepository> logger)
 	private bool _hasBeenInitialized;
 	private readonly ILogger<ImageCacheRepository> _logger = logger;
 
-    /// <summary>
-    /// Initializes the database connection and creates the ImageCache table if it does not exist.
-    /// </summary>
-    private async Task Init()
+	/// <summary>
+	/// Initializes the database connection and creates the ImageCache table if it does not exist.
+	/// </summary>
+	private async Task Init()
 	{
 		if (_hasBeenInitialized)
 			return;
@@ -50,13 +50,13 @@ public class ImageCacheRepository(ILogger<ImageCacheRepository> logger)
 
 			var createTableCmd = connection.CreateCommand();
 			createTableCmd.CommandText = @"
-            CREATE TABLE IF NOT EXISTS ImageCache (
-                ID INTEGER PRIMARY KEY AUTOINCREMENT,
-                FileName TEXT NOT NULL UNIQUE,
-                ImageData BLOB NOT NULL,
-                CachedAt DATETIME NOT NULL,
-                ContentType TEXT NOT NULL
-            );";
+			CREATE TABLE IF NOT EXISTS ImageCache (
+				ID INTEGER PRIMARY KEY AUTOINCREMENT,
+				FileName TEXT NOT NULL UNIQUE,
+				ImageData BLOB NOT NULL,
+				CachedAt DATETIME NOT NULL,
+				ContentType TEXT NOT NULL
+			);";
 			await createTableCmd.ExecuteNonQueryAsync();
 			_logger.LogInformation("Init: ImageCache table created/verified");
 
@@ -149,8 +149,8 @@ public class ImageCacheRepository(ILogger<ImageCacheRepository> logger)
 
 			var insertCmd = connection.CreateCommand();
 			insertCmd.CommandText = @"
-            INSERT OR REPLACE INTO ImageCache (FileName, ImageData, CachedAt, ContentType)
-            VALUES (@FileName, @ImageData, @CachedAt, @ContentType)";
+			INSERT OR REPLACE INTO ImageCache (FileName, ImageData, CachedAt, ContentType)
+			VALUES (@FileName, @ImageData, @CachedAt, @ContentType)";
 
 			insertCmd.Parameters.AddWithValue("@FileName", image.FileName);
 			insertCmd.Parameters.AddWithValue("@ImageData", image.ImageData);

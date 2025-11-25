@@ -14,6 +14,7 @@ HUB_NAMESPACE="nhn-mindbody"
 HUB_NAME="nh-mindbody"
 APNS_KEY_ID="5R75Q6ALPT"
 APNS_TEAM_ID="UMDRT97472"
+export APNS_TEAM_ID
 BUNDLE_ID="com.mindbodydictionary.mindbodydictionarymobile"
 APNS_MODE="${1:-Sandbox}"  # Default to Sandbox, can pass "Production"
 

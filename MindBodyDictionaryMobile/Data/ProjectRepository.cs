@@ -20,10 +20,10 @@ public class ProjectRepository(TaskRepository taskRepository, TagRepository tagR
 	private readonly TaskRepository _taskRepository = taskRepository;
 	private readonly TagRepository _tagRepository = tagRepository;
 
-    /// <summary>
-    /// Initializes the database connection and creates the Project table if it does not exist.
-    /// </summary>
-    private async Task Init()
+	/// <summary>
+	/// Initializes the database connection and creates the Project table if it does not exist.
+	/// </summary>
+	private async Task Init()
 	{
 		if (_hasBeenInitialized)
 			return;
@@ -35,13 +35,13 @@ public class ProjectRepository(TaskRepository taskRepository, TagRepository tagR
 		{
 			var createTableCmd = connection.CreateCommand();
 			createTableCmd.CommandText = @"
-            CREATE TABLE IF NOT EXISTS Project (
-                ID INTEGER PRIMARY KEY AUTOINCREMENT,
-                Name TEXT NOT NULL,
-                Description TEXT NOT NULL,
-                Icon TEXT NOT NULL,
-                CategoryID INTEGER NOT NULL
-            );";
+			CREATE TABLE IF NOT EXISTS Project (
+				ID INTEGER PRIMARY KEY AUTOINCREMENT,
+				Name TEXT NOT NULL,
+				Description TEXT NOT NULL,
+				Icon TEXT NOT NULL,
+				CategoryID INTEGER NOT NULL
+			);";
 			await createTableCmd.ExecuteNonQueryAsync();
 		}
 		catch (Exception e)
@@ -140,16 +140,16 @@ public class ProjectRepository(TaskRepository taskRepository, TagRepository tagR
 		if (item.ID == 0)
 		{
 			saveCmd.CommandText = @"
-                INSERT INTO Project (Name, Description, Icon, CategoryID)
-                VALUES (@Name, @Description, @Icon, @CategoryID);
-                SELECT last_insert_rowid();";
+				INSERT INTO Project (Name, Description, Icon, CategoryID)
+				VALUES (@Name, @Description, @Icon, @CategoryID);
+				SELECT last_insert_rowid();";
 		}
 		else
 		{
 			saveCmd.CommandText = @"
-                UPDATE Project
-                SET Name = @Name, Description = @Description, Icon = @Icon, CategoryID = @CategoryID
-                WHERE ID = @ID";
+				UPDATE Project
+				SET Name = @Name, Description = @Description, Icon = @Icon, CategoryID = @CategoryID
+				WHERE ID = @ID";
 			saveCmd.Parameters.AddWithValue("@ID", item.ID);
 		}
 

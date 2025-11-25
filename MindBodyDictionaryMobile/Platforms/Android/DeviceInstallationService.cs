@@ -5,30 +5,30 @@ namespace MindBodyDictionaryMobile.Platforms.Android;
 
 public class DeviceInstallationService : IDeviceInstallationService
 {
-    public required string Token { get; set; }
-    public bool NotificationsSupported => true;
+	public required string Token { get; set; }
+	public bool NotificationsSupported => true;
 
-    public string GetDeviceId() => global::Android.Provider.Settings.Secure.GetString(
-            Platform.AppContext.ContentResolver,
-            global::Android.Provider.Settings.Secure.AndroidId) ?? throw new InvalidOperationException("Unable to get device ID");
+	public string GetDeviceId() => global::Android.Provider.Settings.Secure.GetString(
+			Platform.AppContext.ContentResolver,
+			global::Android.Provider.Settings.Secure.AndroidId) ?? throw new InvalidOperationException("Unable to get device ID");
 
-    public DeviceInstallation GetDeviceInstallation(params string[] tags)
-    {
-        if (!NotificationsSupported)
-            throw new Exception("This device does not support push notifications");
+	public DeviceInstallation GetDeviceInstallation(params string[] tags)
+	{
+		if (!NotificationsSupported)
+			throw new Exception("This device does not support push notifications");
 
-        if (string.IsNullOrWhiteSpace(Token))
-            throw new Exception("Unable to resolve token for FCM");
+		if (string.IsNullOrWhiteSpace(Token))
+			throw new Exception("Unable to resolve token for FCM");
 
-        var installation = new DeviceInstallation
-        {
-            InstallationId = GetDeviceId(),
-            Platform = "fcm",
-            PushChannel = Token
-        };
+		var installation = new DeviceInstallation
+		{
+			InstallationId = GetDeviceId(),
+			Platform = "fcm",
+			PushChannel = Token
+		};
 
-        installation.Tags.AddRange(tags);
+		installation.Tags.AddRange(tags);
 
-        return installation;
-    }
+		return installation;
+	}
 }

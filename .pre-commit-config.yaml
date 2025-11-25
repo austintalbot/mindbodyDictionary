@@ -20,7 +20,14 @@ repos:
             obj/|
             packages/|
             \.vs/|
-            \.vscode/
+            \.vscode/|
+            MindBodyDictionaryMobile/|
+            backend/|
+            mbd/|
+            tofu/|
+            cosmosDb/|
+            README\.md|
+            ARCHITECTURE_ANALYSIS\.md
           )
 
   # JSON, YAML, XML validation

@@ -53,15 +53,15 @@ FCM_END
 )
 
 # Escape and replace
-FCM_PAYLOAD=$(echo "$FCM_PAYLOAD" | sed "s|PROJECT_ID_PLACEHOLDER|$FCM_PROJECT_ID|g")
-FCM_PAYLOAD=$(echo "$FCM_PAYLOAD" | sed "s|CLIENT_EMAIL_PLACEHOLDER|$FCM_CLIENT_EMAIL|g")
+FCM_PAYLOAD="${FCM_PAYLOAD//PROJECT_ID_PLACEHOLDER/$FCM_PROJECT_ID}"
+FCM_PAYLOAD="${FCM_PAYLOAD//CLIENT_EMAIL_PLACEHOLDER/$FCM_CLIENT_EMAIL}"
 FCM_PRIVATE_KEY_ESCAPED=$(echo "$FCM_PRIVATE_KEY" | sed 's/"/\\"/g' | sed ':a;N;$!ba;s/\n/\\n/g')
-FCM_PAYLOAD=$(echo "$FCM_PAYLOAD" | sed "s|PRIVATE_KEY_PLACEHOLDER|$FCM_PRIVATE_KEY_ESCAPED|g")
+FCM_PAYLOAD="${FCM_PAYLOAD//PRIVATE_KEY_PLACEHOLDER/$FCM_PRIVATE_KEY_ESCAPED}"
 
 echo "Sending FCM configuration..."
 az rest --method patch \
   --uri "https://management.azure.com${RESOURCE_ID}?api-version=2023-10-01-preview" \
-  --body "$(echo $FCM_PAYLOAD | jq -c .)" \
+  --body "$(echo "$FCM_PAYLOAD" | jq -c .)" \
   --headers "Content-Type=application/json" 2>&1 | grep -i "error\|success" || echo -e "${GREEN}✓ FCM configuration sent${NC}"
 
 echo ""
@@ -94,12 +94,12 @@ APNS_END
 
 # Escape and replace
 APNS_TOKEN_ESCAPED=$(echo "$APNS_TOKEN" | sed 's/"/\\"/g' | sed ':a;N;$!ba;s/\n/\\n/g')
-APNS_PAYLOAD=$(echo "$APNS_PAYLOAD" | sed "s|TOKEN_PLACEHOLDER|$APNS_TOKEN_ESCAPED|g")
+APNS_PAYLOAD="${APNS_PAYLOAD//TOKEN_PLACEHOLDER/$APNS_TOKEN_ESCAPED}"
 
 echo "Sending APNS configuration..."
 az rest --method patch \
   --uri "https://management.azure.com${RESOURCE_ID}?api-version=2023-10-01-preview" \
-  --body "$(echo $APNS_PAYLOAD | jq -c .)" \
+  --body "$(echo "$APNS_PAYLOAD" | jq -c .)" \
   --headers "Content-Type=application/json" 2>&1 | grep -i "error\|success" || echo -e "${GREEN}✓ APNS configuration sent${NC}"
 
 echo ""

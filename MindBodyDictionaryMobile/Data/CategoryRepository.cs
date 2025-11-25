@@ -16,10 +16,10 @@ public class CategoryRepository(ILogger<CategoryRepository> logger)
 	private bool _hasBeenInitialized = false;
 	private readonly ILogger _logger = logger;
 
-    /// <summary>
-    /// Initializes the database connection and creates the Category table if it does not exist.
-    /// </summary>
-    private async Task Init()
+	/// <summary>
+	/// Initializes the database connection and creates the Category table if it does not exist.
+	/// </summary>
+	private async Task Init()
 	{
 		if (_hasBeenInitialized)
 			return;
@@ -31,11 +31,11 @@ public class CategoryRepository(ILogger<CategoryRepository> logger)
 		{
 			var createTableCmd = connection.CreateCommand();
 			createTableCmd.CommandText = @"
-            CREATE TABLE IF NOT EXISTS Category (
-                ID INTEGER PRIMARY KEY AUTOINCREMENT,
-                Title TEXT NOT NULL,
-                Color TEXT NOT NULL
-            );";
+			CREATE TABLE IF NOT EXISTS Category (
+				ID INTEGER PRIMARY KEY AUTOINCREMENT,
+				Title TEXT NOT NULL,
+				Color TEXT NOT NULL
+			);";
 			await createTableCmd.ExecuteNonQueryAsync();
 		}
 		catch (Exception e)
@@ -119,15 +119,15 @@ public class CategoryRepository(ILogger<CategoryRepository> logger)
 		if (item.ID == 0)
 		{
 			saveCmd.CommandText = @"
-                INSERT INTO Category (Title, Color)
-                VALUES (@Title, @Color);
-                SELECT last_insert_rowid();";
+				INSERT INTO Category (Title, Color)
+				VALUES (@Title, @Color);
+				SELECT last_insert_rowid();";
 		}
 		else
 		{
 			saveCmd.CommandText = @"
-                UPDATE Category SET Title = @Title, Color = @Color
-                WHERE ID = @ID";
+				UPDATE Category SET Title = @Title, Color = @Color
+				WHERE ID = @ID";
 			saveCmd.Parameters.AddWithValue("@ID", item.ID);
 		}
 

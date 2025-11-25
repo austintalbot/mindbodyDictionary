@@ -42,8 +42,8 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 
 	[ObservableProperty]
 	private List<IconData> _icons =
-    [
-        new IconData { Icon = FluentUI.ribbon_24_regular, Description = "Ribbon Icon" },
+	[
+		new IconData { Icon = FluentUI.ribbon_24_regular, Description = "Ribbon Icon" },
 		new IconData { Icon = FluentUI.ribbon_star_24_regular, Description = "Ribbon Star Icon" },
 		new IconData { Icon = FluentUI.trophy_24_regular, Description = "Trophy Icon" },
 		new IconData { Icon = FluentUI.badge_24_regular, Description = "Badge Icon" },
@@ -61,10 +61,10 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 		{
 			_canDelete = value;
 			DeleteCommand.NotifyCanExecuteChanged();
-        }
-    }
+		}
+	}
 
-    public bool HasCompletedTasks
+	public bool HasCompletedTasks
 		=> _condition?.Tasks.Any(t => t.IsCompleted) ?? false;
 
 	public ConditionDetailPageModel(ConditionRepository conditionRepository, TaskRepository taskRepository, CategoryRepository categoryRepository, TagRepository tagRepository, ModalErrorHandler errorHandler)
@@ -158,7 +158,7 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 		{
 			IsBusy = false;
 			CanDelete = !_condition.IsNullOrNew();
-            OnPropertyChanged(nameof(HasCompletedTasks));
+			OnPropertyChanged(nameof(HasCompletedTasks));
 		}
 	}
 

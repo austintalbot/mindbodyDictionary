@@ -29,7 +29,7 @@ public class ImageCacheHelper(ImageCacheService imageCacheService, ILogger<Image
 	private readonly ILogger<ImageCacheHelper> _logger = logger;
 	private readonly Dictionary<string, ImageSource?> _memoryCache = [];
 
-    public async Task<ImageSource> GetImageSourceAsync(string fileName)
+	public async Task<ImageSource> GetImageSourceAsync(string fileName)
 	{
 		if (string.IsNullOrWhiteSpace(fileName))
 		{
@@ -72,9 +72,9 @@ public class ImageCacheHelper(ImageCacheService imageCacheService, ILogger<Image
 		return GetDefaultImageSource();
 	}
 
-    public void ClearMemoryCache() => _memoryCache.Clear();
+	public void ClearMemoryCache() => _memoryCache.Clear();
 
-    private ImageSource GetDefaultImageSource() =>
-        // Return transparent placeholder (will show nothing)
-        ImageSource.FromFile(string.Empty);
+	private ImageSource GetDefaultImageSource() =>
+		// Return transparent placeholder (will show nothing)
+		ImageSource.FromFile(string.Empty);
 }
