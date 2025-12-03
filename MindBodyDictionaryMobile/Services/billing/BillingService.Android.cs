@@ -207,7 +207,7 @@ public class BillingService : BaseBillingService
 		catch (Exception ex)
 		{
 			_logger.LogError(ex, "Error querying purchased products");
-			return new List<string>();
+			return [];
 		}
 	}
 
@@ -413,7 +413,7 @@ public class BillingService : BaseBillingService
 			if (_billingClient == null)
 			{
 				_logger.LogWarning("Billing client is null");
-				return new List<Purchase>();
+				return [];
 			}
 
 			var purchasesResult = await _billingClient.QueryPurchasesAsync(queryParams);
@@ -423,7 +423,7 @@ public class BillingService : BaseBillingService
 		catch (Exception ex)
 		{
 			_logger.LogError(ex, "Error querying existing purchases");
-			return new List<Purchase>();
+			return [];
 		}
 	}
 

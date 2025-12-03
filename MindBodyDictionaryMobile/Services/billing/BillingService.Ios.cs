@@ -296,7 +296,7 @@ internal class ProductsRequestDelegate : NSObject, ISKProductsRequestDelegate, I
 	[Export("productsRequest:didReceiveResponse:")]
 	public void ReceivedResponse(SKProductsRequest request, SKProductsResponse response)
 	{
-		_taskCompletionSource.TrySetResult(response.Products?.ToList() ?? new List<SKProduct>());
+		_taskCompletionSource.TrySetResult(response.Products?.ToList() ?? []);
 	}
 
 	[Export("request:didFailWithError:")]

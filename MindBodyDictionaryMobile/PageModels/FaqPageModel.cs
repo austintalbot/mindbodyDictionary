@@ -18,8 +18,8 @@ InitializeFaqItems();
 
 private void InitializeFaqItems()
 {
-FaqItems = new ObservableCollection<FaqItem>
-{
+FaqItems =
+[
 new FaqItem
 {
 Question = "What is the Mind Body Dictionary?",
@@ -45,7 +45,7 @@ new FaqItem
 Question = "Is my data private?",
 Answer = "Yes, your data is kept private. We never share personal information with third parties."
 }
-};
+];
 }
 }
 

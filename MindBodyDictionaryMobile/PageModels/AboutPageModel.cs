@@ -35,7 +35,7 @@ try
 var message = new EmailMessage
 {
 Subject = "Mind Body Dictionary Feedback",
-To = new List<string> { "support@mindbodydictionary.com" }
+To = ["support@mindbodydictionary.com"]
 };
 await Email.Default.ComposeAsync(message);
 }

@@ -11,14 +11,14 @@ public abstract class BaseBillingService(ILogger<BaseBillingService> logger) : I
 {
 	protected readonly ILogger<BaseBillingService> _logger = logger;
 	protected bool _isInitialized;
-	protected readonly HashSet<string> _ownedProducts = new();
+	protected readonly HashSet<string> _ownedProducts = [];
 
 	// Sample product definitions - shared across all platforms
-	protected readonly List<Product> _products = new()
-	{
+	protected readonly List<Product> _products =
+	[
 		new Product { Id = "mbdpremiumyr", Name = "Premium Annual", Description = "Unlock premium features for one year", Price = "$9.99", PriceAmount = 9.99m, ImageUrl = "premium.png" },
 		new Product { Id = "MBDPremiumYr", Name = "Premium Annual", Description = "Unlock premium features for one year", Price = "$9.99", PriceAmount = 9.99m, ImageUrl = "premium.png" }
-	};
+	];
 
 	public bool IsInitialized => _isInitialized;
 
