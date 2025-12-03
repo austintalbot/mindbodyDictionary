@@ -3,7 +3,6 @@
 	public enum RecommendationType
 	{
 		Product,
-		Practitioner,
 		Book,
 		Food
 	}
