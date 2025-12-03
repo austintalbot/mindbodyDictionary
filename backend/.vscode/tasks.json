@@ -12,7 +12,7 @@
 			"type": "process",
 			"problemMatcher": "$msCompile",
 			"options": {
-				"cwd": "${workspaceFolder}/MindBodyDictionary.AdminApi"
+				"cwd": "${workspaceFolder}/src/MindBodyDictionary.AdminApi"
 			}
 		},
 		{
@@ -31,7 +31,7 @@
 			},
 			"problemMatcher": "$msCompile",
 			"options": {
-				"cwd": "${workspaceFolder}/MindBodyDictionary.AdminApi"
+				"cwd": "${workspaceFolder}/src/MindBodyDictionary.AdminApi"
 			}
 		},
 		{
@@ -47,7 +47,7 @@
 			"type": "process",
 			"problemMatcher": "$msCompile",
 			"options": {
-				"cwd": "${workspaceFolder}/MindBodyDictionary.AdminApi"
+				"cwd": "${workspaceFolder}/src/MindBodyDictionary.AdminApi"
 			}
 		},
 		{
@@ -64,14 +64,14 @@
 			"dependsOn": "clean release (functions)",
 			"problemMatcher": "$msCompile",
 			"options": {
-				"cwd": "${workspaceFolder}/MindBodyDictionary.AdminApi"
+				"cwd": "${workspaceFolder}/src/MindBodyDictionary.AdminApi"
 			}
 		},
 		{
 			"type": "func",
 			"dependsOn": "build (functions)",
 			"options": {
-				"cwd": "${workspaceFolder}/MindBodyDictionary.AdminApi/bin/Debug/net8.0"
+				"cwd": "${workspaceFolder}/src/MindBodyDictionary.AdminApi/bin/Debug/net10.0"
 			},
 			"command": "host start",
 			"isBackground": true,

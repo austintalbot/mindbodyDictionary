@@ -26,7 +26,7 @@ namespace MindBodyDictionary.AdminApi
 			try
 			{
 				var id = req.Query["id"];
-				_logger.LogInformation($" Get Condition Id = {id}");
+				_logger.LogInformation("Get Condition Id = {id}", id);
 
 				// When we query for a single item it finds results, but fails to get them
 				// We are getting the list so we work around by doing that.  This only works for small
@@ -37,15 +37,8 @@ namespace MindBodyDictionary.AdminApi
 					query: "SELECT * FROM c",
 					itemSelector: x => x.Id == id);
 
-				if (item != null)
-				{
-					return new OkObjectResult(item);
-				}
-				else
-				{
-					return new NotFoundResult();
-				}
-			}
+                return item != null ? new OkObjectResult(item) : new NotFoundResult();
+            }
 			catch (Exception ex)
 			{
 				return new BadRequestObjectResult(ex.ToString());

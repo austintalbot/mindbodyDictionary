@@ -14,10 +14,10 @@ public class BoolToColorConverter : IValueConverter
 				var colorString = boolValue ? options[0] : options[1];
 
 				// Handle static resource references
-				if (colorString.StartsWith("{StaticResource ") && colorString.EndsWith("}"))
+				if (colorString.StartsWith("{StaticResource ") && colorString.EndsWith('}'))
 				{
-					var resourceKey = colorString.Substring(16, colorString.Length - 17);
-					if (Application.Current?.Resources.TryGetValue(resourceKey, out var resource) == true)
+					string resourceKey = colorString[16..^1];
+					if (Application.Current?.Resources.TryGetValue(resourceKey, out object? resource) == true)
 					{
 						if (resource is Color color)
 							return color;

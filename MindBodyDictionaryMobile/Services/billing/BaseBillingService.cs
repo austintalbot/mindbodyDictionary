@@ -143,13 +143,6 @@ public abstract class BaseBillingService(ILogger<BaseBillingService> logger) : I
 		}
 	}
 
-	public async Task<List<Product>> GetProductsAsync(string[] productIds)
-	{
-		var allProducts = await GetProductsAsync();
-		var productSet = new HashSet<string>(productIds);
-		return allProducts.Where(p => productSet.Contains(p.Id)).ToList();
-	}
-
 	public async Task<bool> IsProductOwnedAsync(string productId)
 	{
 		var purchased = await GetPurchasedProductsAsync();
