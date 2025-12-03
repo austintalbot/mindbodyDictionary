@@ -1,14 +1,19 @@
-using Microsoft.Azure.Functions.Worker;
-using Microsoft.Azure.Functions.Worker.Builder;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+
 
 var builder = FunctionsApplication.CreateBuilder(args);
 
 builder.ConfigureFunctionsWebApplication();
 
+
 builder.Services
     .AddApplicationInsightsTelemetryWorkerService()
     .ConfigureFunctionsApplicationInsights();
 
-builder.Build().Run();
+// Register CosmosClient for DI
+builder.Services.AddSingleton(sp =>
+{
+    var connectionString = Environment.GetEnvironmentVariable("CosmosDbConnectionString");
+    return new Microsoft.Azure.Cosmos.CosmosClient(connectionString);
+});
+
+await builder.Build().RunAsync();
