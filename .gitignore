@@ -381,7 +381,7 @@ AuthKey_YRBWR72DCA_prod.p8
 local.settings.json
 tofu/outputs.json
 tofu/terraform.tfvars.staging
-CosmosDB
+/CosmosDB
 20251112_064146_database.zip
 MindBodyDictionaryMobile/old_files
 old_code
