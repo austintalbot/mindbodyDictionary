@@ -1,29 +1,22 @@
-using Microsoft.Azure.Functions.Worker;
-using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.Cosmos;
-using MindBodyDictionary.CosmosDB;
-
 namespace MindBodyDictionary.AdminApi
 {
-	public class Ailment
+	public class Condition
 	{
-		private readonly ILogger<Ailment> _logger;
+		private readonly ILogger<Condition> _logger;
 
-		public Ailment(ILogger<Ailment> logger)
+		public Condition(ILogger<Condition> logger)
 		{
 			_logger = logger;
 		}
 
-             /// <summary>
-		/// Called to retrieve the full Ailment object based on a query string passed in
+		/// <summary>
+		/// Called to retrieve the full Condition object based on a query string passed in
 		/// </summary>
 		/// <param name="req"></param>
 		/// <param name="log"></param>
-		/// <param name="ailment"></param>
-		/// <returns>Ailment</returns>
-		[Function("Ailment")]
+		/// <param name="condition"></param>
+		/// <returns>Condition</returns>
+		[Function("Condition")]
 		public  async Task<IActionResult> Run(
 			[HttpTrigger(AuthorizationLevel.Function, "get", Route = null)] HttpRequest req,
 			[CosmosDBInput(
@@ -33,16 +26,16 @@ namespace MindBodyDictionary.AdminApi
 			try
 			{
 				var id = req.Query["id"];
-				_logger.LogInformation($" Get Ailment Id = {id}");
+				_logger.LogInformation($" Get Condition Id = {id}");
 
 				// When we query for a single item it finds results, but fails to get them
 				// We are getting the list so we work around by doing that.  This only works for small
 				// data sets and will not be scalable
-				var item = await client.GetItemAsync<Core.Entities.Ailment>(
+				var item = await client.GetItemAsync<Core.Entities.Condition>(
 					databaseName: Core.CosmosDB.DatabaseName,
 					containerName: Core.CosmosDB.Containers.Ailments,
 					query: "SELECT * FROM c",
-					itemSelector: x => x.id == id);
+					itemSelector: x => x.Id == id);
 
 				if (item != null)
 				{

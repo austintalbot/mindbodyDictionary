@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace MindBodyDictionary.Core.Entities
 {
-	public class AilmentShort
+	public class Condition
 	{
 		[JsonProperty(PropertyName = "id")] public string Id { get; set; }
 		public string Name { get; set; }

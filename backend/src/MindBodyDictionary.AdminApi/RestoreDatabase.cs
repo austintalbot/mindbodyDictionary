@@ -1,12 +1,3 @@
-using Microsoft.Azure.Functions.Worker;
-using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System.IO.Compression;
-using Microsoft.Azure.Cosmos;
-using Newtonsoft.Json;
-
-
 namespace MindBodyDictionary.AdminApi
 {
 	public class RestoreDatabase
@@ -51,7 +42,7 @@ namespace MindBodyDictionary.AdminApi
 				}
 				ZipFile.ExtractToDirectory(archiveFilename, Path.GetTempPath());
 
-				_logger.LogInformation("Import Ailments...");
+				_logger.LogInformation("Import Conditions...");
 				if (Directory.Exists(Path.Combine(dbDirectory, Core.CosmosDB.Containers.Ailments)))
 				{
 					var directory = Path.Combine(dbDirectory, Core.CosmosDB.Containers.Ailments);
@@ -60,14 +51,14 @@ namespace MindBodyDictionary.AdminApi
 					foreach (var importFile in files)
 					{
 						var json = File.ReadAllText(importFile);
-						var item = JsonConvert.DeserializeObject<Core.Entities.Ailment>(json);
-						_logger.LogInformation($"Importing Ailment[{item?.id}]: {item?.Name}");
+						var item = JsonConvert.DeserializeObject<Core.Entities.Condition>(json);
+						_logger.LogInformation($"Importing Condition[{item?.Id}]: {item?.Name}");
 						await container.UpsertItemAsync(item);
 					}
 				}
 				else
 				{
-					throw new Exception("Could not find Ailments in the database backup!");
+					throw new Exception("Could not find Conditions in the database backup!");
 				}
 
 				_logger.LogInformation("Import Emails...");

@@ -1,13 +1,3 @@
-using Microsoft.AspNetCore.Http;
-using Microsoft.Azure.Functions.Worker;
-using Microsoft.Azure.Functions.Worker.Http;
-using Azure.Storage.Blobs;
-using Azure.Storage.Blobs.Models;
-using MindBodyDictionary.Core;
-using Microsoft.AspNetCore.Http.Features;
-using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.Mvc;
-
 namespace MindBodyDictionary.AdminApi
 {
 	public class Image

@@ -1,12 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.Azure.Functions.Worker;
-using Microsoft.Azure.Functions.Worker.Http;
-using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.Mvc;
-using MindBodyDictionary.Core.Entities;
-
 namespace MindBodyDictionary.AdminApi
 {
     public class ImageFilesTable

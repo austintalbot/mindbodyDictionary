@@ -18,9 +18,7 @@
 │   │   ├── AilmentClient.cs
 │   │   └── Interfaces/IAilmentClient.cs
 │   ├── Entities/                       # Data models
-│   │   ├── Ailment.cs                  # Full ailment model
-│   │   ├── AilmentShort.cs             # Lightweight version
-│   │   ├── AilmentRandom.cs            # Random ailment subset
+│   │   ├── Condition.cs             # Lightweight version
 │   │   ├── Recommendation.cs
 │   │   └── Others (FAQ, Email, etc.)
 │   └── Constants.cs                    # Config (ConnectionStrings, Container names)
@@ -126,7 +124,7 @@
    - Data shows this is already a mixed-purpose container, just not designed for it
 
 2. **Poor Separation of Concerns**
-   - Multiple entity variations (Ailment, AilmentShort, AilmentRandom) created ad-hoc
+   - Multiple entity variations (Ailment, Condition, AilmentRandom) created ad-hoc
    - No clear view/DTO pattern for different use cases
    - API clients hardcode function URLs with API keys in source code
    - Single container mixing detailed content with simple lookups
@@ -149,7 +147,7 @@
    - **No timestamps**: Cannot track when conditions were created/updated
    - **No versioning**: No audit trail for content changes
    - **No standardization**: Tags are free-form strings, can have duplicates (e.g., "Stomach" vs "stomach")
-   - **Image URL generation duplicated** in Ailment.cs and AilmentShort.cs (inconsistency risk)
+   - **Image URL generation duplicated** in Ailment.cs and Condition.cs (inconsistency risk)
    - **Empty URLs**: Recommendation URLs often empty string `"url": ""`
    - **Physical connections are strings**: Should be structured for better querying/organization
    - **Recommendation types hardcoded**: Magic numbers (0, 2, 3) without semantic meaning
@@ -654,7 +652,7 @@ namespace MindBodyDictionary.Core
 - Better aligns with holistic mind-body philosophy
 
 ### ✅ **Reduced Complexity**
-- Single Condition model replaces Ailment/AilmentShort/AilmentRandom
+- Single Condition model replaces Ailment/Condition/AilmentRandom
 - Single DTO pattern for all views (ConditionDetailView, ConditionSummaryView, ConditionInsightView)
 - Eliminates code duplication (image URL generation, etc.)
 
@@ -697,7 +695,7 @@ namespace MindBodyDictionary.Core
 
 ### Phase 4: Cleanup
 1. Deprecate old endpoints (keep for backward compatibility for 1-2 releases)
-2. Remove Ailment/AilmentShort/AilmentRandom entities
+2. Remove Ailment/Condition/AilmentRandom entities
 3. Update documentation and clients
 
 ### Phase 5: Expansion

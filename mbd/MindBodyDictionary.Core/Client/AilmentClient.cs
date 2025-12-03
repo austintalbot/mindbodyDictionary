@@ -1,16 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using MindBodyDictionary.Core.Entities;
-
-namespace MindBodyDictionary.Core.Client
+﻿namespace MindBodyDictionary.Core.Client
 {
 	public class AilmentClient : MindBodyClient, IAilmentClient
 	{
 		/// <summary>
-		/// Returns all ailments stored using the AilmentShort class
+		/// Returns all ailments stored using the Condition class
 		/// </summary>
 		/// <returns></returns>
-		public async Task<IEnumerable<AilmentShort>> Get()
+		public async Task<IEnumerable<Condition>> Get()
 		{
 			return await TryGet("Ailments?code=fPyqDy7DQ14z0zbNAKgDaYXWQl9NTWP9Puejl9IahUlhEp/1lpsWig==", Get);
 		}
@@ -27,18 +23,18 @@ namespace MindBodyDictionary.Core.Client
 		}
 
 		/// <summary>
-		/// returns the AilmentShort object based on Id and name Match
+		/// returns the Condition object based on Id and name Match
 		/// </summary>
 		/// <param name="ailmentId"></param>
 		/// <param name="name"></param>
 		/// <returns></returns>
 		public async Task<Ailment> GetShort(int ailmentId, string name)
 		{
-			return await TryGet($"AilmentShort?code=MS2fzcLNVJdTfIjGeavNFRcYUQera3Cb2ebYSRxnyGWEAwM9UTX3PA==&id={ailmentId}&name={name}", () => GetShort(ailmentId,name));
+			return await TryGet($"Condition?code=MS2fzcLNVJdTfIjGeavNFRcYUQera3Cb2ebYSRxnyGWEAwM9UTX3PA==&id={ailmentId}&name={name}", () => GetShort(ailmentId,name));
 		}
 
 		/// <summary>
-		/// goes to the API and returns a random 5 Ailments using the AilmentShort Class
+		/// goes to the API and returns a random 5 Ailments using the Condition Class
 		/// </summary>
 		/// <returns></returns>
 		public async Task<IEnumerable<AilmentRandom>> GetRandom()

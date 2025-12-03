@@ -1,12 +1,3 @@
-using Microsoft.Azure.Functions.Worker;
-using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Azure.Storage.Blobs;
-using Azure.Storage.Blobs.Models;
-using MindBodyDictionary.Core;
-
-
 namespace MindBodyDictionary.AdminApi
 {
 	public class ImagesTable

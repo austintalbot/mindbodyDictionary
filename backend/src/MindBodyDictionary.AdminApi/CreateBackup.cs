@@ -35,26 +35,26 @@ namespace MindBodyDictionary.AdminApi
 					Directory.CreateDirectory(dbTempExportDirectory);
 				}
 
-				_logger.LogInformation("Export Aliments...");
+				_logger.LogInformation("Export Conditions...");
 				var directory = Path.Combine(dbTempExportDirectory, Core.CosmosDB.Containers.Ailments);
 				if (!Directory.Exists(directory))
 				{
-					_logger.LogInformation($"Create directory ${directory}");
+					_logger.LogInformation($"Create directory {directory}");
 					Directory.CreateDirectory(directory);
 				}
-				var ailments = await client.QueryAsync<Core.Entities.Ailment>(
+				var conditions = await client.QueryAsync<Core.Entities.Condition>(
 					databaseName: Core.CosmosDB.DatabaseName,
 					containerName: Core.CosmosDB.Containers.Ailments,
 					query: "SELECT * FROM c");
-				var total = ailments.Count;
+				var total = conditions.Count;
 				var working = 0;
-				_logger.LogInformation($"Found ${total}");
-				foreach (var item in ailments)
+				_logger.LogInformation($"Found {total}");
+				foreach (var item in conditions)
 				{
 					working++;
-					var file = Path.Combine(directory, $"{item.id}.json");
+					var file = Path.Combine(directory, $"{item.Id}.json");
 					var json = JsonConvert.SerializeObject(item);
-					_logger.LogInformation($"${working} of ${total}: ${file}");
+					_logger.LogInformation($"{working} of {total}: {file}");
 					File.WriteAllText(file, json);
 				}
 

@@ -1,8 +1,3 @@
-using Microsoft.Azure.Functions.Worker;
-using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-
 namespace MindBodyDictionary.AdminApi;
 
 /// <summary>
@@ -16,12 +11,12 @@ private readonly ILogger<MbdConditionsTable> _logger = logger;
 [Function("MbdConditions")]
 public IActionResult Run(
 [HttpTrigger(AuthorizationLevel.Function, "get", Route = "MbdConditions")] HttpRequest req,
-[CosmosDBInput(
-databaseName: Core.CosmosDB.DatabaseName,
-containerName: Core.CosmosDB.Containers.MbdConditions,
-Connection = Core.CosmosDB.ConnectionStringSetting,
-SqlQuery = "SELECT * FROM c ORDER BY c.name")]
-IEnumerable<Core.Entities.MbdCondition> conditions)
+		[CosmosDBInput(
+			databaseName: Core.CosmosDB.DatabaseName,
+			containerName: Core.CosmosDB.Containers.MbdConditions,
+			Connection = Core.CosmosDB.ConnectionStringSetting,
+			SqlQuery = "SELECT * FROM c ORDER BY c.name")]
+		IEnumerable<Core.Entities.Condition> conditions)
 {
 _logger.LogInformation("MbdConditions function processed a request.");
 try
@@ -32,8 +27,8 @@ _logger.LogWarning("No conditions found in CosmosDB");
 return new NotFoundResult();
 }
 
-var conditionList = conditions.ToList();
-_logger.LogInformation($"Found {conditionList.Count} conditions");
+	var conditionList = conditions.ToList();
+	_logger.LogInformation($"Found {conditionList.Count} conditions");
 
 // Return structured response
 var result = new

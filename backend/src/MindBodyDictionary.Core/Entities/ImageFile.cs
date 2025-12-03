@@ -1,6 +1,3 @@
-using System;
-using Newtonsoft.Json;
-
 namespace MindBodyDictionary.Core.Entities
 {
     public class ImageFile
