@@ -1,5 +1,0 @@
-<Solution>
-  <Project Path="MindBodyDictionary.Core/MindBodyDictionary.Core.csproj" />
-  <Project Path="MindBodyDictionary.CosmosDB/MindBodyDictionary.CosmosDB.csproj" />
-  <Project Path="MindBodyDictionary.AdminApi/MindBodyDictionary_AdminApi.csproj" />
-</Solution>
