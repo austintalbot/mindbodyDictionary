@@ -5,10 +5,10 @@
              x:Class="MindBodyDictionaryMobile.Pages.NotificationSettingsPage"
              x:DataType="vm:NotificationSettingsPageModel"
              Title="Notification Settings">
-    
+
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="20">
-            
+
             <!-- Header -->
             <Label Text="Push Notifications"
                    FontSize="24"
@@ -105,5 +105,5 @@
 
         </VerticalStackLayout>
     </ScrollView>
-    
+
 </ContentPage>

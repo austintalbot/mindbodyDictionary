@@ -7,54 +7,54 @@ namespace MindBodyDictionaryMobile.Platforms.iOS;
 
 public class DeviceInstallationService : IDeviceInstallationService
 {
-    private string _token = string.Empty;
-    
-    public string Token 
-    { 
-        get => _token;
-        set 
-        {
-            _token = value;
-            Debug.WriteLine($"iOS Token set: {value}");
-        }
-    }
-    
-    public bool NotificationsSupported => true;
+	private string _token = string.Empty;
 
-    public string GetDeviceId() => UIDevice.CurrentDevice.IdentifierForVendor?.AsString() ?? Guid.NewGuid().ToString();
+	public string Token
+	{
+		get => _token;
+		set
+		{
+			_token = value;
+			Debug.WriteLine($"iOS Token set: {value}");
+		}
+	}
 
-    public DeviceInstallation GetDeviceInstallation(params string[] tags)
-    {
-        if (!NotificationsSupported)
-            throw new Exception("This device does not support push notifications");
+	public bool NotificationsSupported => true;
 
-        // For simulator testing: if token is not set, generate a mock token
-        var token = string.IsNullOrWhiteSpace(Token) 
-            ? GenerateMockToken() 
-            : Token;
+	public string GetDeviceId() => UIDevice.CurrentDevice.IdentifierForVendor?.AsString() ?? Guid.NewGuid().ToString();
 
-        if (string.IsNullOrWhiteSpace(token))
-            throw new Exception("Unable to resolve token for APNS");
+	public DeviceInstallation GetDeviceInstallation(params string[] tags)
+	{
+		if (!NotificationsSupported)
+			throw new Exception("This device does not support push notifications");
 
-        var installation = new DeviceInstallation
-        {
-            InstallationId = GetDeviceId(),
-            Platform = "apns",
-            PushChannel = token
-        };
+		// For simulator testing: if token is not set, generate a mock token
+		var token = string.IsNullOrWhiteSpace(Token)
+			? GenerateMockToken()
+			: Token;
 
-        installation.Tags.AddRange(tags ?? Array.Empty<string>());
+		if (string.IsNullOrWhiteSpace(token))
+			throw new Exception("Unable to resolve token for APNS");
 
-        return installation;
-    }
+		var installation = new DeviceInstallation
+		{
+			InstallationId = GetDeviceId(),
+			Platform = "apns",
+			PushChannel = token
+		};
 
-    private string GenerateMockToken()
-    {
-        // Generate a realistic-looking mock APNS token for simulator testing
-        // Real tokens are 64 hex characters
-        var deviceId = GetDeviceId();
-        var mockToken = $"{deviceId.Replace("-", "")[..32]}{Guid.NewGuid().ToString().Replace("-", "")[..32]}".ToLower();
-        Debug.WriteLine($"iOS Simulator: Using mock APNS token for testing: {mockToken}");
-        return mockToken;
-    }
+		installation.Tags.AddRange(tags ?? Array.Empty<string>());
+
+		return installation;
+	}
+
+	private string GenerateMockToken()
+	{
+		// Generate a realistic-looking mock APNS token for simulator testing
+		// Real tokens are 64 hex characters
+		var deviceId = GetDeviceId();
+		var mockToken = $"{deviceId.Replace("-", "")[..32]}{Guid.NewGuid().ToString().Replace("-", "")[..32]}".ToLower();
+		Debug.WriteLine($"iOS Simulator: Using mock APNS token for testing: {mockToken}");
+		return mockToken;
+	}
 }

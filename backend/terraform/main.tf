@@ -22,7 +22,7 @@ terraform {
 
 provider "azurerm" {
   subscription_id = "49fbd6b5-f722-420c-a6b1-961f1b03813c"
-  
+
   features {
     key_vault {
       purge_soft_delete_on_destroy = true

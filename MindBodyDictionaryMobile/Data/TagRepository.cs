@@ -16,10 +16,10 @@ public class TagRepository(ILogger<TagRepository> logger)
 	private bool _hasBeenInitialized = false;
 	private readonly ILogger _logger = logger;
 
-    /// <summary>
-    /// Initializes the database connection and creates the Tag and ProjectsTags tables if they do not exist.
-    /// </summary>
-    private async Task Init()
+	/// <summary>
+	/// Initializes the database connection and creates the Tag and ProjectsTags tables if they do not exist.
+	/// </summary>
+	private async Task Init()
 	{
 		if (_hasBeenInitialized)
 			return;
@@ -31,19 +31,19 @@ public class TagRepository(ILogger<TagRepository> logger)
 		{
 			var createTableCmd = connection.CreateCommand();
 			createTableCmd.CommandText = @"
-            CREATE TABLE IF NOT EXISTS Tag (
-                ID INTEGER PRIMARY KEY AUTOINCREMENT,
-                Title TEXT NOT NULL,
-                Color TEXT NOT NULL
-            );";
+			CREATE TABLE IF NOT EXISTS Tag (
+				ID INTEGER PRIMARY KEY AUTOINCREMENT,
+				Title TEXT NOT NULL,
+				Color TEXT NOT NULL
+			);";
 			await createTableCmd.ExecuteNonQueryAsync();
 
 			createTableCmd.CommandText = @"
-            CREATE TABLE IF NOT EXISTS ProjectsTags (
-                ProjectID INTEGER NOT NULL,
-                TagID INTEGER NOT NULL,
-                PRIMARY KEY(ProjectID, TagID)
-            );";
+			CREATE TABLE IF NOT EXISTS ProjectsTags (
+				ProjectID INTEGER NOT NULL,
+				TagID INTEGER NOT NULL,
+				PRIMARY KEY(ProjectID, TagID)
+			);";
 			await createTableCmd.ExecuteNonQueryAsync();
 		}
 		catch (Exception e)
@@ -96,10 +96,10 @@ public class TagRepository(ILogger<TagRepository> logger)
 
 		var selectCmd = connection.CreateCommand();
 		selectCmd.CommandText = @"
-        SELECT t.*
-        FROM Tag t
-        JOIN ProjectsTags pt ON t.ID = pt.TagID
-        WHERE pt.ProjectID = @ProjectID";
+		SELECT t.*
+		FROM Tag t
+		JOIN ProjectsTags pt ON t.ID = pt.TagID
+		WHERE pt.ProjectID = @ProjectID";
 		selectCmd.Parameters.AddWithValue("ProjectID", projectID);
 
 		var tags = new List<Tag>();
@@ -162,13 +162,13 @@ public class TagRepository(ILogger<TagRepository> logger)
 		if (item.ID == 0)
 		{
 			saveCmd.CommandText = @"
-            INSERT INTO Tag (Title, Color) VALUES (@Title, @Color);
-            SELECT last_insert_rowid();";
+			INSERT INTO Tag (Title, Color) VALUES (@Title, @Color);
+			SELECT last_insert_rowid();";
 		}
 		else
 		{
 			saveCmd.CommandText = @"
-            UPDATE Tag SET Title = @Title, Color = @Color WHERE ID = @ID";
+			UPDATE Tag SET Title = @Title, Color = @Color WHERE ID = @ID";
 			saveCmd.Parameters.AddWithValue("@ID", item.ID);
 		}
 
@@ -200,7 +200,7 @@ public class TagRepository(ILogger<TagRepository> logger)
 
 		var saveCmd = connection.CreateCommand();
 		saveCmd.CommandText = @"
-        INSERT OR IGNORE INTO ProjectsTags (ProjectID, TagID) VALUES (@projectID, @tagID)";
+		INSERT OR IGNORE INTO ProjectsTags (ProjectID, TagID) VALUES (@projectID, @tagID)";
 		saveCmd.Parameters.AddWithValue("@projectID", projectID);
 		saveCmd.Parameters.AddWithValue("@tagID", item.ID);
 
@@ -284,7 +284,7 @@ public class TagRepository(ILogger<TagRepository> logger)
 			HAVING COUNT(*) > 1";
 
 			var duplicates = new Dictionary<string, List<int>>();
-			
+
 			await using var reader = await cmd.ExecuteReaderAsync();
 			while (await reader.ReadAsync())
 			{
@@ -308,8 +308,8 @@ public class TagRepository(ILogger<TagRepository> logger)
 					// Update ProjectsTags to point to keepId instead of deleteId
 					var updateCmd = connection.CreateCommand();
 					updateCmd.CommandText = @"
-					UPDATE ProjectsTags 
-					SET TagID = @keepId 
+					UPDATE ProjectsTags
+					SET TagID = @keepId
 					WHERE TagID = @deleteId";
 					updateCmd.Parameters.AddWithValue("@keepId", keepId);
 					updateCmd.Parameters.AddWithValue("@deleteId", deleteId);

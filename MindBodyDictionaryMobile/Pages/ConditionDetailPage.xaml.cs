@@ -8,4 +8,3 @@ public partial class ConditionDetailPage : ContentPage
 		InitializeComponent();
 	}
 }
-

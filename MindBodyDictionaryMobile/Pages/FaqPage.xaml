@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:pm="clr-namespace:MindBodyDictionaryMobile.PageModels"
+    x:DataType="pm:FaqPageModel"
+    x:Class="MindBodyDictionaryMobile.Pages.FaqPage"
+    Title="FAQ">
+
+    <CollectionView ItemsSource="{Binding FaqItems}" SelectionMode="Single">
+        <CollectionView.ItemTemplate>
+            <DataTemplate x:DataType="pm:FaqItem">
+                <VerticalStackLayout Padding="15" Spacing="10">
+                    <Frame
+                        CornerRadius="12"
+                        Padding="15"
+                        BorderColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray700}}"
+                        HasShadow="False">
+
+                        <VerticalStackLayout Spacing="10">
+                            <!-- Question Header -->
+                            <Label
+                                Text="{Binding Question}"
+                                FontSize="16"
+                                FontAttributes="Bold"
+                                TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}"
+                                LineBreakMode="WordWrap"/>
+
+                            <!-- Answer (Expandable) -->
+                            <Label
+                                Text="{Binding Answer}"
+                                FontSize="14"
+                                TextColor="{AppThemeBinding Light={StaticResource Gray700}, Dark={StaticResource Gray200}}"
+                                LineHeight="1.5"
+                                LineBreakMode="WordWrap"/>
+                        </VerticalStackLayout>
+                    </Frame>
+                </VerticalStackLayout>
+            </DataTemplate>
+        </CollectionView.ItemTemplate>
+    </CollectionView>
+</ContentPage>

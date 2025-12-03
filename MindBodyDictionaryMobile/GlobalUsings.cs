@@ -1,3 +1,4 @@
+
 global using Fonts;
 global using MindBodyDictionaryMobile.Data;
 global using MindBodyDictionaryMobile.PageModels;

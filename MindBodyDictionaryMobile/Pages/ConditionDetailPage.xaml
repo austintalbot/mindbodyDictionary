@@ -13,10 +13,10 @@
 
     <ContentPage.Resources>
         <DataTemplate x:Key="NormalTagTemplate" x:DataType="models:Tag">
-                <Border StrokeShape="RoundRectangle 22" 
-                        HeightRequest="44" 
+                <Border StrokeShape="RoundRectangle 22"
+                        HeightRequest="44"
                         StrokeThickness="0"
-                        Background="{AppThemeBinding Light={StaticResource LightSecondaryBackground},Dark={StaticResource DarkSecondaryBackground}}" 
+                        Background="{AppThemeBinding Light={StaticResource LightSecondaryBackground},Dark={StaticResource DarkSecondaryBackground}}"
                         Padding="{OnPlatform '18,0,18,8',Android='18,0,18,0'}"
                         SemanticProperties.Description="{Binding Title}">
                         <Border.GestureRecognizers>
@@ -24,31 +24,31 @@
                         </Border.GestureRecognizers>
                         <Label Text="{Binding Title}"
                             TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground},Dark={StaticResource LightOnDarkBackground}}"
-                            FontSize="{OnIdiom 16,Desktop=18}" 
+                            FontSize="{OnIdiom 16,Desktop=18}"
                             VerticalOptions="Center"
                             VerticalTextAlignment="Center"/>
                 </Border>
         </DataTemplate>
 
         <DataTemplate x:Key="SelectedTagTemplate" x:DataType="models:Tag">
-            <Border StrokeShape="RoundRectangle 22" 
-                        HeightRequest="44" 
+            <Border StrokeShape="RoundRectangle 22"
+                        HeightRequest="44"
                         StrokeThickness="0"
-                        Background="{Binding DisplayColor}" 
+                        Background="{Binding DisplayColor}"
                         Padding="{OnPlatform '18,0,18,8',Android='18,0,18,0'}"
                         SemanticProperties.Description="{Binding Title}">
                 <Border.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding ToggleTagCommand, Source={RelativeSource AncestorType={x:Type pageModels:ConditionDetailPageModel}}, x:DataType=pageModels:ConditionDetailPageModel}" CommandParameter="{Binding .}"/>
                 </Border.GestureRecognizers>
                 <Label Text="{Binding Title}"
-                    TextColor="{AppThemeBinding Light={StaticResource LightBackground},Dark={StaticResource DarkBackground}}" 
-                    FontSize="{OnIdiom 16,Desktop=18}" 
+                    TextColor="{AppThemeBinding Light={StaticResource LightBackground},Dark={StaticResource DarkBackground}}"
+                    FontSize="{OnIdiom 16,Desktop=18}"
                     VerticalOptions="Center"
                     VerticalTextAlignment="Center"/>
             </Border>
         </DataTemplate>
 
-        <controls:ChipDataTemplateSelector 
+        <controls:ChipDataTemplateSelector
             x:Key="ChipDataTemplateSelector"
             NormalTagTemplate="{StaticResource NormalTagTemplate}"
             SelectedTagTemplate="{StaticResource SelectedTagTemplate}"/>
@@ -67,13 +67,13 @@
     <Grid>
         <ScrollView>
             <VerticalStackLayout Padding="{StaticResource LayoutPadding}" Spacing="{StaticResource LayoutSpacing}">
-                <sf:SfTextInputLayout 
+                <sf:SfTextInputLayout
                     Hint="Name" >
                     <Entry
                         Text="{Binding Name}" SemanticProperties.Description="Name" />
                 </sf:SfTextInputLayout>
 
-                <sf:SfTextInputLayout 
+                <sf:SfTextInputLayout
                     Hint="Description">
                     <Entry
                         Text="{Binding Description}" SemanticProperties.Description="Description" />
@@ -90,10 +90,10 @@
                             SemanticProperties.Description="Category State Expanded"/>
                 </sf:SfTextInputLayout>
 
-                <Label 
-                    Text="Icon" 
+                <Label
+                    Text="Icon"
                     Style="{StaticResource Title2}"/>
-                <CollectionView 
+                <CollectionView
                     HeightRequest="44" Margin="0,0,0,15"
                     SelectionMode="Single"
                     x:Name="IconsCollectionView"
@@ -121,47 +121,47 @@
                                         </VisualState>
                                     </VisualStateGroup>
                                 </VisualStateManager.VisualStateGroups>
-                                
-                                <Label 
-                                    Text="{Binding Icon}" 
+
+                                <Label
+                                    Text="{Binding Icon}"
                                     x:Name="IconImage"
-                                    FontFamily="{x:Static fonts:FluentUI.FontFamily}" 
-                                    FontSize="24" 
+                                    FontFamily="{x:Static fonts:FluentUI.FontFamily}"
+                                    FontSize="24"
                                     VerticalOptions="Center"
                                     HorizontalOptions="Center"
                                     TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground},Dark={StaticResource LightOnDarkBackground}}"/>
                                 <BoxView x:Name="SelectedIndicator" Color="{StaticResource Primary}" HeightRequest="4" HorizontalOptions="Fill" Grid.Row="1"/>
-                            </Grid>                            
+                            </Grid>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                     <CollectionView.ItemsLayout>
                         <LinearItemsLayout Orientation="Horizontal" ItemSpacing="{StaticResource LayoutSpacing}"/>
                     </CollectionView.ItemsLayout>
                 </CollectionView>
-                
 
-                <Label 
-                    Text="Tags" 
+
+                <Label
+                    Text="Tags"
                     Style="{StaticResource Title2}"/>
                 <ScrollView Orientation="Horizontal">
-                    <HorizontalStackLayout 
-                        Spacing="{StaticResource LayoutSpacing}" 
-                        HeightRequest="44" 
+                    <HorizontalStackLayout
+                        Spacing="{StaticResource LayoutSpacing}"
+                        HeightRequest="44"
                         Margin="0,0,0,15"
-                        BindableLayout.ItemsSource="{Binding AllTags}" 
+                        BindableLayout.ItemsSource="{Binding AllTags}"
                         BindableLayout.ItemTemplateSelector="{StaticResource ChipDataTemplateSelector}"/>
                 </ScrollView>
 
-                <Button Text="Save" 
+                <Button Text="Save"
                     MinimumHeightRequest="{OnIdiom 44, Desktop=60}"
                     Command="{Binding SaveCommand}" />
 
                 <Grid HeightRequest="44">
-                    <Label 
-                        Text="Tasks" 
-                        Style="{StaticResource Title2}" 
+                    <Label
+                        Text="Tasks"
+                        Style="{StaticResource Title2}"
                         VerticalOptions="Center"/>
-                    <ImageButton 
+                    <ImageButton
                         Source="{StaticResource IconClean}"
                         HorizontalOptions="End"
                         VerticalOptions="Center"
@@ -173,7 +173,7 @@
                         SemanticProperties.Description="Clean up"
                         />
                 </Grid>
-                <VerticalStackLayout 
+                <VerticalStackLayout
                     Spacing="{StaticResource LayoutSpacing}"
                     BindableLayout.ItemsSource="{Binding Tasks}">
                     <BindableLayout.ItemTemplate>
@@ -185,8 +185,8 @@
             </VerticalStackLayout>
         </ScrollView>
 
-        <controls:AddButton Command="{Binding AddTaskCommand}" 
+        <controls:AddButton Command="{Binding AddTaskCommand}"
                             SemanticProperties.Description="Add task" />
     </Grid>
-    
+
 </ContentPage>

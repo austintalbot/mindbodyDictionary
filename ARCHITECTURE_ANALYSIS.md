@@ -18,9 +18,7 @@
 │   │   ├── AilmentClient.cs
 │   │   └── Interfaces/IAilmentClient.cs
 │   ├── Entities/                       # Data models
-│   │   ├── Ailment.cs                  # Full ailment model
-│   │   ├── AilmentShort.cs             # Lightweight version
-│   │   ├── AilmentRandom.cs            # Random ailment subset
+│   │   ├── Condition.cs             # Lightweight version
 │   │   ├── Recommendation.cs
 │   │   └── Others (FAQ, Email, etc.)
 │   └── Constants.cs                    # Config (ConnectionStrings, Container names)
@@ -104,7 +102,7 @@
 - **245 distinct conditions** stored (not medical conditions, includes states like "Underweight")
 - **Tags per ailment**: Avg 5-10 tags, max 9 observed
 - **Recommendations per ailment**: Avg 15-30 items per ailment (e.g., 33 for "Abdominal Pain")
-- **Recommendation Types**: 
+- **Recommendation Types**:
   - `3` = Food/Lifestyle
   - `2` = Books/Resources
   - `0` = Products/Supplements
@@ -126,7 +124,7 @@
    - Data shows this is already a mixed-purpose container, just not designed for it
 
 2. **Poor Separation of Concerns**
-   - Multiple entity variations (Ailment, AilmentShort, AilmentRandom) created ad-hoc
+   - Multiple entity variations (Ailment, Condition, AilmentRandom) created ad-hoc
    - No clear view/DTO pattern for different use cases
    - API clients hardcode function URLs with API keys in source code
    - Single container mixing detailed content with simple lookups
@@ -149,7 +147,7 @@
    - **No timestamps**: Cannot track when conditions were created/updated
    - **No versioning**: No audit trail for content changes
    - **No standardization**: Tags are free-form strings, can have duplicates (e.g., "Stomach" vs "stomach")
-   - **Image URL generation duplicated** in Ailment.cs and AilmentShort.cs (inconsistency risk)
+   - **Image URL generation duplicated** in Ailment.cs and Condition.cs (inconsistency risk)
    - **Empty URLs**: Recommendation URLs often empty string `"url": ""`
    - **Physical connections are strings**: Should be structured for better querying/organization
    - **Recommendation types hardcoded**: Magic numbers (0, 2, 3) without semantic meaning
@@ -267,37 +265,37 @@ namespace MindBodyDictionary.Core.Entities
     {
         [JsonProperty(PropertyName = "id")]
         public string Id { get; set; }
-        
+
         [JsonProperty(PropertyName = "name")]
         public string Name { get; set; }
-        
+
         [JsonProperty(PropertyName = "aliases")]
         public List<string> Aliases { get; set; }
-        
+
         [JsonProperty(PropertyName = "type")]
         public ConditionType Type { get; set; }
-        
+
         [JsonProperty(PropertyName = "category")]
         public string Category { get; set; }
-        
+
         [JsonProperty(PropertyName = "mindBodyPerspective")]
         public MindBodyPerspective Perspective { get; set; }
-        
+
         [JsonProperty(PropertyName = "physicalConnections")]
         public List<PhysicalConnection> PhysicalConnections { get; set; }
-        
+
         [JsonProperty(PropertyName = "tags")]
         public List<string> Tags { get; set; }
-        
+
         [JsonProperty(PropertyName = "recommendations")]
         public List<Recommendation> Recommendations { get; set; }
-        
+
         [JsonProperty(PropertyName = "media")]
         public MediaReferences Media { get; set; }
-        
+
         [JsonProperty(PropertyName = "accessControl")]
         public AccessControl AccessControl { get; set; }
-        
+
         [JsonProperty(PropertyName = "metadata")]
         public Metadata Metadata { get; set; }
     }
@@ -324,10 +322,10 @@ namespace MindBodyDictionary.Core.Entities
     {
         [JsonProperty(PropertyName = "negative")]
         public string Negative { get; set; }
-        
+
         [JsonProperty(PropertyName = "positive")]
         public string Positive { get; set; }
-        
+
         [JsonProperty(PropertyName = "affirmations")]
         public List<string> Affirmations { get; set; }
     }
@@ -336,13 +334,13 @@ namespace MindBodyDictionary.Core.Entities
     {
         [JsonProperty(PropertyName = "id")]
         public string Id { get; set; }
-        
+
         [JsonProperty(PropertyName = "name")]
         public string Name { get; set; }
-        
+
         [JsonProperty(PropertyName = "type")]
         public string Type { get; set; }  // ORGAN, BODY_PART, SYSTEM, FUNCTION
-        
+
         [JsonProperty(PropertyName = "description")]
         public string Description { get; set; }
     }
@@ -351,25 +349,25 @@ namespace MindBodyDictionary.Core.Entities
     {
         [JsonProperty(PropertyName = "id")]
         public string Id { get; set; }
-        
+
         [JsonProperty(PropertyName = "name")]
         public string Name { get; set; }
-        
+
         [JsonProperty(PropertyName = "type")]
         public RecommendationType Type { get; set; }
-        
+
         [JsonProperty(PropertyName = "url")]
         public string Url { get; set; }
-        
+
         [JsonProperty(PropertyName = "category")]
         public string Category { get; set; }
-        
+
         [JsonProperty(PropertyName = "description")]
         public string Description { get; set; }
-        
+
         [JsonProperty(PropertyName = "author")]
         public string Author { get; set; }
-        
+
         [JsonProperty(PropertyName = "affiliateLink")]
         public bool AffiliateLink { get; set; }
     }
@@ -378,13 +376,13 @@ namespace MindBodyDictionary.Core.Entities
     {
         [JsonProperty(PropertyName = "imageNameOverride")]
         public string ImageNameOverride { get; set; }
-        
+
         [JsonProperty(PropertyName = "imageUrls")]
         public List<string> ImageUrls { get; set; }
-        
+
         [JsonProperty(PropertyName = "videoUrls")]
         public List<string> VideoUrls { get; set; }
-        
+
         [JsonProperty(PropertyName = "resourceLinks")]
         public List<string> ResourceLinks { get; set; }
     }
@@ -393,7 +391,7 @@ namespace MindBodyDictionary.Core.Entities
     {
         [JsonProperty(PropertyName = "subscriptionOnly")]
         public bool SubscriptionOnly { get; set; }
-        
+
         [JsonProperty(PropertyName = "allowedRoles")]
         public List<string> AllowedRoles { get; set; }
     }
@@ -402,19 +400,19 @@ namespace MindBodyDictionary.Core.Entities
     {
         [JsonProperty(PropertyName = "createdAt")]
         public DateTime CreatedAt { get; set; }
-        
+
         [JsonProperty(PropertyName = "updatedAt")]
         public DateTime UpdatedAt { get; set; }
-        
+
         [JsonProperty(PropertyName = "createdBy")]
         public string CreatedBy { get; set; }
-        
+
         [JsonProperty(PropertyName = "updatedBy")]
         public string UpdatedBy { get; set; }
-        
+
         [JsonProperty(PropertyName = "version")]
         public int Version { get; set; }
-        
+
         [JsonProperty(PropertyName = "dataQuality")]
         public DataQuality Quality { get; set; }
     }
@@ -423,10 +421,10 @@ namespace MindBodyDictionary.Core.Entities
     {
         [JsonProperty(PropertyName = "completeness")]
         public double Completeness { get; set; }  // 0-1 scale
-        
+
         [JsonProperty(PropertyName = "lastReviewDate")]
         public DateTime? LastReviewDate { get; set; }
-        
+
         [JsonProperty(PropertyName = "flags")]
         public List<string> Flags { get; set; }  // e.g., ["missing-urls", "needs-category"]
     }
@@ -654,7 +652,7 @@ namespace MindBodyDictionary.Core
 - Better aligns with holistic mind-body philosophy
 
 ### ✅ **Reduced Complexity**
-- Single Condition model replaces Ailment/AilmentShort/AilmentRandom
+- Single Condition model replaces Ailment/Condition/AilmentRandom
 - Single DTO pattern for all views (ConditionDetailView, ConditionSummaryView, ConditionInsightView)
 - Eliminates code duplication (image URL generation, etc.)
 
@@ -697,7 +695,7 @@ namespace MindBodyDictionary.Core
 
 ### Phase 4: Cleanup
 1. Deprecate old endpoints (keep for backward compatibility for 1-2 releases)
-2. Remove Ailment/AilmentShort/AilmentRandom entities
+2. Remove Ailment/Condition/AilmentRandom entities
 3. Update documentation and clients
 
 ### Phase 5: Expansion
@@ -726,10 +724,10 @@ var conditions = ailments.Select(a => new Condition
         Positive = a.SummaryPositive,
         Affirmations = a.Affirmations
     },
-    PhysicalConnections = a.PhysicalConnections?.Select(pc => new PhysicalConnection 
-    { 
-        Name = pc, 
-        Type = "ORGAN" 
+    PhysicalConnections = a.PhysicalConnections?.Select(pc => new PhysicalConnection
+    {
+        Name = pc,
+        Type = "ORGAN"
     }).ToList(),
     Tags = a.Tags,
     Recommendations = a.Recommendations,
@@ -794,7 +792,7 @@ Average: 15-25 recommendations per ailment
 **Recommendation Types Breakdown:**
 ```
 Type 3 (FOOD):        ~60% of recommendations
-Type 2 (BOOKS):       ~15% of recommendations  
+Type 2 (BOOKS):       ~15% of recommendations
 Type 0 (SUPPLEMENTS): ~25% of recommendations
 ```
 
@@ -905,8 +903,8 @@ var item = await client.GetItemAsync<Core.Entities.Ailment>(
 SELECT * FROM c WHERE c.id = @id
 
 -- List with pagination
-SELECT * FROM c WHERE c.type = 'CONDITION' 
-ORDER BY c.name 
+SELECT * FROM c WHERE c.type = 'CONDITION'
+ORDER BY c.name
 OFFSET @offset LIMIT @limit
 
 -- Search by tag
@@ -919,11 +917,11 @@ SELECT * FROM c WHERE c.type = @type AND c.category = @category
 SELECT * FROM c WHERE c.accessControl.subscriptionOnly = true
 
 -- Aggregate stats
-SELECT c.type, COUNT(1) as count FROM c 
+SELECT c.type, COUNT(1) as count FROM c
 GROUP BY c.type
 
 -- Find data quality issues
-SELECT c.id, c.name, c.metadata.dataQuality.flags 
+SELECT c.id, c.name, c.metadata.dataQuality.flags
 FROM c WHERE ARRAY_LENGTH(c.metadata.dataQuality.flags) > 0
 ```
 
@@ -967,4 +965,3 @@ FROM c WHERE ARRAY_LENGTH(c.metadata.dataQuality.flags) > 0
 - [ ] Advanced filtering (by type, category, subscription)
 - [ ] Expansion content (wellness states, body systems)
 - [ ] Audit trail implementation
-

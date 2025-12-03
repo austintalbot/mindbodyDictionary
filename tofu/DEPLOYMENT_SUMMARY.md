@@ -2,8 +2,8 @@
 
 ## Deployment Status: ✅ DEPLOYED
 
-**Date**: 2025-01-08  
-**Architecture**: Direct client-to-hub (no backend API)  
+**Date**: 2025-01-08
+**Architecture**: Direct client-to-hub (no backend API)
 **Reference**: https://github.com/dotnet/maui-samples/tree/main/10.0/WebServices/PushNotificationsDemo
 
 ## Deployed Resources
@@ -21,14 +21,14 @@
 
 ## Firebase Configuration
 
-**Project**: mindbody-dictionary  
-**Service Account**: firebase-adminsdk-fbsvc@mindbody-dictionary.iam.gserviceaccount.com  
+**Project**: mindbody-dictionary
+**Service Account**: firebase-adminsdk-fbsvc@mindbody-dictionary.iam.gserviceaccount.com
 **API Version**: FCM v1 (modern, non-legacy)
 
 ## Infrastructure as Code
 
 - **Tool**: OpenTofu
-- **Providers**: 
+- **Providers**:
   - `hashicorp/azurerm` v4.52.0
   - `Azure/azapi` v2.7.0 (for FCM v1 support)
 

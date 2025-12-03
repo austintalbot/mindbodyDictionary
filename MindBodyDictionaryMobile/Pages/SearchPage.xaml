@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:pm="clr-namespace:MindBodyDictionaryMobile.PageModels"
+    xmlns:models="clr-namespace:MindBodyDictionaryMobile.Models"
+    x:DataType="pm:SearchPageModel"
+    x:Class="MindBodyDictionaryMobile.Pages.SearchPage"
+    Title="Search">
+
+    <VerticalStackLayout Padding="0" Spacing="0">
+
+        <!-- Search Bar -->
+        <Frame Padding="10" Margin="0" CornerRadius="0" HasShadow="False"
+            BorderColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray700}}">
+            <VerticalStackLayout>
+                <SearchBar
+                    Placeholder="Search conditions..."
+                    Text="{Binding SearchQuery}"
+                    SearchButtonPressed="OnSearchButtonPressed"/>
+            </VerticalStackLayout>
+        </Frame>
+
+        <!-- Results -->
+        <CollectionView
+            ItemsSource="{Binding FilteredConditions}"
+            SelectionMode="Single"
+            SelectionChangedCommand="{Binding SelectConditionCommand}"
+            SelectionChangedCommandParameter="{Binding SelectedItem, Source={RelativeSource Self}}">
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:MbdCondition">
+                    <VerticalStackLayout Padding="15" Spacing="10">
+                        <Frame
+                            CornerRadius="12"
+                            Padding="15"
+                            BorderColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray700}}"
+                            HasShadow="False">
+
+                            <VerticalStackLayout Spacing="5">
+                                <Label
+                                    Text="{Binding Name}"
+                                    FontSize="16"
+                                    FontAttributes="Bold"
+                                    TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}"/>
+
+                                <Label
+                                    Text="{Binding Description}"
+                                    FontSize="12"
+                                    TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}"
+                                    LineBreakMode="TailTruncation"
+                                    MaxLines="2"/>
+                            </VerticalStackLayout>
+                        </Frame>
+                    </VerticalStackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+            <CollectionView.EmptyViewTemplate>
+                <DataTemplate>
+                    <VerticalStackLayout
+                        Padding="20"
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center"
+                        Spacing="10">
+
+                        <Label
+                            Text="No conditions found"
+                            FontSize="16"
+                            TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}"
+                            HorizontalTextAlignment="Center"/>
+
+                        <Label
+                            Text="Try searching with different keywords"
+                            FontSize="12"
+                            TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}"
+                            HorizontalTextAlignment="Center"/>
+                    </VerticalStackLayout>
+                </DataTemplate>
+            </CollectionView.EmptyViewTemplate>
+        </CollectionView>
+    </VerticalStackLayout>
+</ContentPage>

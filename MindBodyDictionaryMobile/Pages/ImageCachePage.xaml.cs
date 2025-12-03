@@ -16,12 +16,12 @@ public partial class ImageCachePage : ContentPage
 	{
 		base.OnAppearing();
 		System.Diagnostics.Debug.WriteLine("ImageCachePage: OnAppearing called");
-		
+
 		if (!_hasLoadedOnce && BindingContext is ImageCachePageModel model)
 		{
 			_hasLoadedOnce = true;
 			System.Diagnostics.Debug.WriteLine("ImageCachePage: First load - invoking LoadCacheStats");
-			
+
 			// Fire and forget - the command will update bindings
 			_ = MainThread.InvokeOnMainThreadAsync(async () =>
 			{
@@ -44,4 +44,3 @@ public partial class ImageCachePage : ContentPage
 		System.Diagnostics.Debug.WriteLine("ImageCachePage: OnDisappearing called");
 	}
 }
-

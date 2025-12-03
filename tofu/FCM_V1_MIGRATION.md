@@ -73,7 +73,7 @@ fcm_private_key  = "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEF...
 fcm_client_email = "firebase-adminsdk-xxxxx@your-project-id.iam.gserviceaccount.com"
 ```
 
-**Important**: 
+**Important**:
 - Keep the `\n` characters in the private key - they are newline markers
 - Keep the BEGIN and END markers
 - Enclose in quotes

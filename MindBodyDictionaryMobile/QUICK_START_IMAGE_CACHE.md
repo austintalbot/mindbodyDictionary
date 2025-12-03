@@ -16,17 +16,17 @@ All 442 health condition images from Azure Blob Storage have been:
 public partial class HealthConditionPage : ContentPage
 {
     private readonly IImageCacheHelper _imageHelper;
-    
+
     public HealthConditionPage(IImageCacheHelper imageHelper)
     {
         InitializeComponent();
         _imageHelper = imageHelper;
     }
-    
+
     private async void OnPageAppearing()
     {
         base.OnAppearing();
-        
+
         // Load a condition image
         var imageSource = await _imageHelper.GetImageSourceAsync("Allergies1.png");
         ConditionImage.Source = imageSource;
@@ -41,19 +41,19 @@ public partial class HealthConditionPage : ContentPage
 public class ConditionViewModel : INotifyPropertyChanged
 {
     private readonly IImageCacheHelper _imageHelper;
-    
+
     public ConditionViewModel(IImageCacheHelper imageHelper)
     {
         _imageHelper = imageHelper;
     }
-    
+
     private ImageSource _conditionImage;
     public ImageSource ConditionImage
     {
         get => _conditionImage;
         set => SetProperty(ref _conditionImage, value);
     }
-    
+
     public async Task LoadConditionAsync(string conditionName)
     {
         var imageName = $"{conditionName}1.png";
@@ -64,8 +64,8 @@ public class ConditionViewModel : INotifyPropertyChanged
 
 **XAML:**
 ```xml
-<Image Source="{Binding ConditionImage}" 
-       Aspect="AspectFill" 
+<Image Source="{Binding ConditionImage}"
+       Aspect="AspectFill"
        HeightRequest="300" />
 ```
 
@@ -75,12 +75,12 @@ public class ConditionViewModel : INotifyPropertyChanged
 public class ImageListService
 {
     private readonly ImageCacheService _cacheService;
-    
+
     public ImageListService(ImageCacheService cacheService)
     {
         _cacheService = cacheService;
     }
-    
+
     public async Task<List<string>> GetAllConditionImagesAsync()
     {
         return await _cacheService.GetAvailableImagesAsync();

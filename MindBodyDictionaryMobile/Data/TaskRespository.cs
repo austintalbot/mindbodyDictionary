@@ -16,10 +16,10 @@ public class TaskRepository(ILogger<TaskRepository> logger)
 	private bool _hasBeenInitialized = false;
 	private readonly ILogger _logger = logger;
 
-    /// <summary>
-    /// Initializes the database connection and creates the Task table if it does not exist.
-    /// </summary>
-    private async Task Init()
+	/// <summary>
+	/// Initializes the database connection and creates the Task table if it does not exist.
+	/// </summary>
+	private async Task Init()
 	{
 		if (_hasBeenInitialized)
 			return;
@@ -31,12 +31,12 @@ public class TaskRepository(ILogger<TaskRepository> logger)
 		{
 			var createTableCmd = connection.CreateCommand();
 			createTableCmd.CommandText = @"
-            CREATE TABLE IF NOT EXISTS Task (
-                ID INTEGER PRIMARY KEY AUTOINCREMENT,
-                Title TEXT NOT NULL,
-                IsCompleted INTEGER NOT NULL,
-                ProjectID INTEGER NOT NULL
-            );";
+			CREATE TABLE IF NOT EXISTS Task (
+				ID INTEGER PRIMARY KEY AUTOINCREMENT,
+				Title TEXT NOT NULL,
+				IsCompleted INTEGER NOT NULL,
+				ProjectID INTEGER NOT NULL
+			);";
 			await createTableCmd.ExecuteNonQueryAsync();
 		}
 		catch (Exception e)
@@ -153,13 +153,13 @@ public class TaskRepository(ILogger<TaskRepository> logger)
 		if (item.ID == 0)
 		{
 			saveCmd.CommandText = @"
-            INSERT INTO Task (Title, IsCompleted, ProjectID) VALUES (@title, @isCompleted, @projectId);
-            SELECT last_insert_rowid();";
+			INSERT INTO Task (Title, IsCompleted, ProjectID) VALUES (@title, @isCompleted, @projectId);
+			SELECT last_insert_rowid();";
 		}
 		else
 		{
 			saveCmd.CommandText = @"
-            UPDATE Task SET Title = @title, IsCompleted = @isCompleted, ProjectID = @projectId WHERE ID = @id";
+			UPDATE Task SET Title = @title, IsCompleted = @isCompleted, ProjectID = @projectId WHERE ID = @id";
 			saveCmd.Parameters.AddWithValue("@id", item.ID);
 		}
 

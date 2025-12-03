@@ -34,9 +34,9 @@ public partial class TaskDetailPageModel(ProjectRepository projectRepository, Ta
 	[ObservableProperty]
 	private bool _isExistingProject;
 
-    public void ApplyQueryAttributes(IDictionary<string, object> query) => LoadTaskAsync(query).FireAndForgetSafeAsync(_errorHandler);
+	public void ApplyQueryAttributes(IDictionary<string, object> query) => LoadTaskAsync(query).FireAndForgetSafeAsync(_errorHandler);
 
-    private async Task LoadTaskAsync(IDictionary<string, object> query)
+	private async Task LoadTaskAsync(IDictionary<string, object> query)
 	{
 		if (query.TryGetValue(ProjectQueryKey, out var project))
 			Project = (Project)project;
@@ -63,13 +63,13 @@ public partial class TaskDetailPageModel(ProjectRepository projectRepository, Ta
 
 		// If the project is new, we don't need to load the project dropdown
 		if (Project?.ID == 0)
-        {
-            IsExistingProject = false;
+		{
+			IsExistingProject = false;
 		}
 		else
-        {
-            Projects = await _projectRepository.ListAsync();
-            IsExistingProject = true;
+		{
+			Projects = await _projectRepository.ListAsync();
+			IsExistingProject = true;
 		}
 
 		if (Project is not null)

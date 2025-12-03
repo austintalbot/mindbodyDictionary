@@ -92,10 +92,10 @@ public DeviceInstallation GetDeviceInstallation(params string[] tags)
 {
     if (!NotificationsSupported)
         return null; // ❌ Problem here
-        
+
     if (string.IsNullOrWhiteSpace(Token))
         return null; // ❌ Problem here - FCM token not retrieved
-        
+
     // Should return valid installation
 }
 ```
@@ -160,10 +160,10 @@ Add to `Platforms/Android/MainApplication.cs`:
 public override void OnCreate()
 {
     base.OnCreate();
-    
+
     // Enable Firebase debug logging
     Firebase.FirebaseApp.InitializeApp(this);
-    
+
     #if DEBUG
     Android.Util.Log.Debug("Firebase", "Firebase initialized");
     #endif
@@ -307,7 +307,7 @@ If still stuck after debugging:
      --resource-group rg-mindbody-notifications \
      --namespace-name nhn-mindbody \
      --name nh-mindbody
-   
+
    # Should show fcmV1Credential (not gcmCredential)
    ```
 

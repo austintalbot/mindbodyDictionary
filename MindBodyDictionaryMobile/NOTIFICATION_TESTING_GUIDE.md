@@ -145,7 +145,7 @@ adb logcat | grep "OnMessageReceived"
 1. **Channel importance** - Open Settings → Apps → MindBody Dictionary → Notifications
    - Should see "MindBody Notifications" channel
    - Should be set to "High" or "Default"
-   
+
 2. **Do Not Disturb** mode - Turn off DND on phone
 
 3. **Battery saver** - Disable battery optimization for the app

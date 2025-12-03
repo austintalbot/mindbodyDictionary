@@ -51,7 +51,7 @@ public static class MauiProgram
 #endif
 
 		builder.Services.AddSingleton<INotificationActionServiceExtended, NotificationActionService>();
-		
+
 		// Direct Azure Notification Hub registration (no backend API)
 		builder.Services.AddSingleton<INotificationRegistrationService, NotificationRegistrationService>();
 
@@ -70,7 +70,7 @@ public static class MauiProgram
 		builder.Services.AddTransientWithShellRoute<TaskDetailPage, TaskDetailPageModel>("task");
 		builder.Services.AddTransientWithShellRoute<ConditionDetailPage, ConditionDetailPageModel>("condition");
 		builder.Services.AddSingleton<ConditionListPageModel>();
-		
+
 		return builder.Build();
 	}
 }

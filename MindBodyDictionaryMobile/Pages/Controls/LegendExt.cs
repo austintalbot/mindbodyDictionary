@@ -4,5 +4,5 @@ namespace MindBodyDictionaryMobile.Pages.Controls;
 
 public class LegendExt : ChartLegend
 {
-    protected override double GetMaximumSizeCoefficient() => 0.5;
+	protected override double GetMaximumSizeCoefficient() => 0.5;
 }

@@ -99,7 +99,7 @@ For different environments, create environment-specific `.tfvars` files:
 # Development
 tofu apply -var-file="terraform.dev.tfvars"
 
-# Production  
+# Production
 tofu apply -var-file="terraform.prod.tfvars"
 ```
 

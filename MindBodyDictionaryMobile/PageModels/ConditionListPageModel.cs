@@ -11,15 +11,15 @@ public partial class ConditionListPageModel(ConditionRepository conditionReposit
 	private readonly ConditionRepository _conditionRepository = conditionRepository;
 
 	[ObservableProperty]
-	private List<Models.Condition> _conditions = [];
+	private List<MbdCondition> conditions = [];
 
-    [RelayCommand]
-    private async Task Appearing() => Conditions = await _conditionRepository.ListAsync();
+	[RelayCommand]
+	private async Task Appearing() => Conditions = await _conditionRepository.ListAsync();
 
-    [RelayCommand]
-    static Task NavigateToCondition(Models.Condition condition)
+	[RelayCommand]
+	private static Task NavigateToCondition(MbdCondition condition)
 		=> Shell.Current.GoToAsync($"condition?id={condition.ID}");
 
-    [RelayCommand]
-    static async Task AddCondition() => await Shell.Current.GoToAsync($"condition");
+	[RelayCommand]
+	private static Task AddCondition() => Shell.Current.GoToAsync($"condition");
 }

@@ -47,7 +47,7 @@ resource "azurerm_notification_hub_namespace" "main" {
 # Using AzAPI provider to configure FCM v1 and optionally APNS credentials
 # The standard azurerm provider doesn't yet support FCM v1 (only legacy GCM)
 # See: https://github.com/hashicorp/terraform-provider-azurerm/issues/25215
-# 
+#
 # Note: APNS validation happens at Azure level with Apple servers.
 # If disabled, configure APNS manually in Azure Portal.
 resource "azapi_resource" "notification_hub" {

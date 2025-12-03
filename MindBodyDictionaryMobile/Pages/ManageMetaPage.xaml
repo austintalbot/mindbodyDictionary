@@ -12,7 +12,7 @@
     <ContentPage.Behaviors>
         <toolkit:EventToCommandBehavior
                 BindingContext="{Binding Path=BindingContext, Source={x:Reference MetaPage}, x:DataType=ContentPage}"
-                EventName="Appearing"                
+                EventName="Appearing"
                 Command="{Binding AppearingCommand}" />
     </ContentPage.Behaviors>
     <ContentPage.Resources>
@@ -60,18 +60,18 @@
                                 SemanticProperties.Description="{Binding Title, StringFormat='{}{0} Color'}"
                                 SemanticProperties.Hint="Category color in HEX format">
                                 <Entry.Behaviors>
-                                    <toolkit:TextValidationBehavior 
+                                    <toolkit:TextValidationBehavior
                                         InvalidStyle="{StaticResource InvalidEntryStyle}"
                                         Flags="ValidateOnUnfocused"
                                         RegexPattern="^#(?:[0-9a-fA-F]{3}){1,2}$" />
                                 </Entry.Behaviors>
                             </Entry>
 
-                            <BoxView HeightRequest="30" WidthRequest="30" VerticalOptions="Center" 
+                            <BoxView HeightRequest="30" WidthRequest="30" VerticalOptions="Center"
                                 Color="{Binding Text, Source={x:Reference ColorEntry}, x:DataType=Entry}" Grid.Column="2"
                                 SemanticProperties.HeadingLevel="None" />
 
-                            <Button 
+                            <Button
                                 ImageSource="{StaticResource IconDelete}"
                                 Background="Transparent"
                                 Command="{Binding DeleteCategoryCommand, Source={RelativeSource AncestorType={x:Type pageModels:ManageMetaPageModel}}, x:DataType=pageModels:ManageMetaPageModel}" CommandParameter="{Binding .}"
@@ -103,18 +103,18 @@
                                 SemanticProperties.Description="{Binding Title, StringFormat='{}{0} Color'}"
                                 SemanticProperties.Hint="Tag color in HEX format">
                                 <Entry.Behaviors>
-                                    <toolkit:TextValidationBehavior 
+                                    <toolkit:TextValidationBehavior
                                         InvalidStyle="{StaticResource InvalidEntryStyle}"
                                         Flags="ValidateOnUnfocused"
                                         RegexPattern="^#(?:[0-9a-fA-F]{3}){1,2}$" />
                                 </Entry.Behaviors>
                             </Entry>
 
-                            <BoxView HeightRequest="30" WidthRequest="30" VerticalOptions="Center" 
+                            <BoxView HeightRequest="30" WidthRequest="30" VerticalOptions="Center"
                                 Color="{Binding Text, Source={x:Reference ColorEntry}, x:DataType=Entry}" Grid.Column="2"
                                 SemanticProperties.HeadingLevel="None" />
-        
-                            <Button 
+
+                            <Button
                                 ImageSource="{StaticResource IconDelete}"
                                 SemanticProperties.Description="{Binding Title, StringFormat='Delete {0} Tag'}"
                                 Background="Transparent"

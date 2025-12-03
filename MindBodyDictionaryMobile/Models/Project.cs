@@ -2,6 +2,9 @@ using System.Text.Json.Serialization;
 
 namespace MindBodyDictionaryMobile.Models;
 
+/// <summary>
+/// Represents a project with associated tasks, tags, and category.
+/// </summary>
 public class Project
 {
 	public int ID { get; set; }
@@ -18,16 +21,19 @@ public class Project
 
 	public List<Tag> Tags { get; set; } = [];
 
-    public string AccessibilityDescription
-    {
-        get { return $"{Name} Project. {Description}"; }
-    }
+	/// <summary>
+	/// Gets accessibility description combining name and description.
+	/// </summary>
+	public string AccessibilityDescription => $"{Name} Project. {Description}";
 
-    public override string ToString() => $"{Name}";
+	public override string ToString() => Name;
 }
 
+/// <summary>
+/// Root object for JSON deserialization of projects and conditions data.
+/// </summary>
 public class ProjectsJson
 {
 	public List<Project> Projects { get; set; } = [];
-	public List<Condition> Conditions { get; set; } = [];
+	public List<MbdCondition> MbdConditions { get; set; } = [];
 }

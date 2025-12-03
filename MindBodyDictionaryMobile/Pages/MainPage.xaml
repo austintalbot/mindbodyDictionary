@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:pageModels="clr-namespace:MindBodyDictionaryMobile.PageModels"             
+             xmlns:pageModels="clr-namespace:MindBodyDictionaryMobile.PageModels"
              xmlns:models="clr-namespace:MindBodyDictionaryMobile.Models"
              xmlns:controls="clr-namespace:MindBodyDictionaryMobile.Pages.Controls"
              xmlns:pullToRefresh="clr-namespace:Syncfusion.Maui.Toolkit.PullToRefresh;assembly=Syncfusion.Maui.Toolkit"
@@ -22,7 +22,7 @@
                 Command="{Binding NavigatedFromCommand}" />
         <toolkit:EventToCommandBehavior
                 BindingContext="{Binding Path=BindingContext, Source={x:Reference OverviewPage}, x:DataType=ContentPage}"
-                EventName="Appearing"                
+                EventName="Appearing"
                 Command="{Binding AppearingCommand}" />
     </ContentPage.Behaviors>
 
@@ -43,7 +43,7 @@
                         <controls:CategoryChart />
                         <Label Text="Projects" Style="{StaticResource Title2}" SemanticProperties.HeadingLevel="Level1"/>
                         <ScrollView Orientation="Horizontal" Margin="-30,0">
-                            <HorizontalStackLayout 
+                            <HorizontalStackLayout
                                 Spacing="15" Padding="30,0"
                                 BindableLayout.ItemsSource="{Binding Projects}">
                                 <BindableLayout.ItemTemplate>
@@ -59,7 +59,7 @@
                         </ScrollView>
                         <Grid MinimumHeightRequest="44">
                             <Label Text="Tasks" Style="{StaticResource Title2}" VerticalOptions="Center" SemanticProperties.HeadingLevel="Level1"/>
-                            <ImageButton 
+                            <ImageButton
                                 Source="{StaticResource IconClean}"
                                 HorizontalOptions="End"
                                 VerticalOptions="Center"
@@ -83,7 +83,7 @@
             </pullToRefresh:SfPullToRefresh.PullableContent>
         </pullToRefresh:SfPullToRefresh>
 
-        <controls:AddButton 
+        <controls:AddButton
             IsEnabled="{Binding IsBusy, Converter={StaticResource InvertedBoolConverter}}"
             Command="{Binding AddTaskCommand}"
             SemanticProperties.Description="Add task" />

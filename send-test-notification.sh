@@ -4,7 +4,7 @@
 # Sends a notification via Azure Notification Hubs REST API using FCM v1
 
 HUB_NAME="nh-mindbody"
-NAMESPACE="nhn-mindbody"
+# NAMESPACE="nhn-mindbody"  # Used externally via Azure
 ENDPOINT="https://nhn-mindbody.servicebus.windows.net"
 KEY_NAME="ApiAccess"
 KEY="C8M+Y55EkAGF7MwdUIxL5pYKsdCOVSGCs4aa2Vz9fUY="
@@ -14,20 +14,26 @@ generate_sas_token() {
     local uri=$1
     local key=$2
     local keyname=$3
-    local expiry=$(($(date +%s) + 3600))
-    
+    local expiry
+    local encoded_uri
+    local string_to_sign
+    local signature
+    local encoded_sig
+
+    expiry=$(($(date +%s) + 3600))
+
     # URL encode the URI
-    local encoded_uri=$(printf %s "$uri" | jq -sRr @uri)
-    
+    encoded_uri=$(printf %s "$uri" | jq -sRr @uri)
+
     # Create string to sign
-    local string_to_sign="${encoded_uri}\n${expiry}"
-    
+    string_to_sign="${encoded_uri}\n${expiry}"
+
     # Generate signature
-    local signature=$(printf "%b" "$string_to_sign" | openssl dgst -sha256 -hmac "$key" -binary | base64)
-    
+    signature=$(printf "%b" "$string_to_sign" | openssl dgst -sha256 -hmac "$key" -binary | base64)
+
     # URL encode signature
-    local encoded_sig=$(printf %s "$signature" | jq -sRr @uri)
-    
+    encoded_sig=$(printf %s "$signature" | jq -sRr @uri)
+
     # Build SAS token
     echo "SharedAccessSignature sr=${encoded_uri}&sig=${encoded_sig}&se=${expiry}&skn=${keyname}"
 }

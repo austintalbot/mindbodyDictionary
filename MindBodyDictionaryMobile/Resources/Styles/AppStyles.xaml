@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="UTF-8" ?>
 <?xaml-comp compile="true" ?>
-<ResourceDictionary 
+<ResourceDictionary
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:f="clr-namespace:Fonts"
     xmlns:pullToRefresh="clr-namespace:Syncfusion.Maui.Toolkit.PullToRefresh;assembly=Syncfusion.Maui.Toolkit"
@@ -31,7 +31,7 @@
              Default="20">
         <OnIdiom.Desktop>32</OnIdiom.Desktop>
     </OnIdiom>
-    
+
     <OnIdiom x:Key="IconSizeSmall"
              x:TypeArguments="x:Double"
              Default="12">
@@ -288,22 +288,22 @@
         <Setter Property="Padding" Value="{OnIdiom 15, Desktop=20}"/>
     </Style>
 
-    <sf:LabelStyle x:Key="lightThemeLabelStyle" TextColor="{StaticResource DarkOnLightBackground}" FontSize="{OnIdiom 18, Desktop=24}"/> 
+    <sf:LabelStyle x:Key="lightThemeLabelStyle" TextColor="{StaticResource DarkOnLightBackground}" FontSize="{OnIdiom 18, Desktop=24}"/>
     <sf:LabelStyle x:Key="darkThemeLabelStyle" TextColor="{StaticResource LightOnDarkBackground}" FontSize="{OnIdiom 18, Desktop=24}"/>
-    <Style TargetType="sf:SfTextInputLayout"> 
-        <Setter Property="ContainerType" Value="Outlined"/> 
-        <Setter Property="ContainerBackground" Value="Transparent"/> 
-        <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"/> 
-        <Setter Property="HintLabelStyle" Value="{AppThemeBinding Light={StaticResource lightThemeLabelStyle}, Dark={StaticResource darkThemeLabelStyle}}"/> 
+    <Style TargetType="sf:SfTextInputLayout">
+        <Setter Property="ContainerType" Value="Outlined"/>
+        <Setter Property="ContainerBackground" Value="Transparent"/>
+        <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"/>
+        <Setter Property="HintLabelStyle" Value="{AppThemeBinding Light={StaticResource lightThemeLabelStyle}, Dark={StaticResource darkThemeLabelStyle}}"/>
     </Style>
-    
+
 
     <Style TargetType="BoxView" x:Key="ShimmerCustomViewStyle">
         <Setter Property="BackgroundColor" Value="Gray" />
         <Setter Property="HorizontalOptions" Value="FillAndExpand" />
         <Setter Property="VerticalOptions" Value="CenterAndExpand" />
     </Style>
-  
+
     <Style TargetType="pullToRefresh:SfPullToRefresh">
         <Setter Property="TransitionMode" Value="SlideOnTop"/>
         <Setter Property="PullingThreshold" Value="100"/>

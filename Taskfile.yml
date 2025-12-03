@@ -73,7 +73,7 @@ tasks:
       echo "Downloading google-services.json..."
       firebase apps:sdkconfig ANDROID \
         --project={{.FIREBASE_PROJECT_ID}} \
-        --out=MindBodyDictionaryMobile/Platforms/Android/google-services.json 
+        --out=MindBodyDictionaryMobile/Platforms/Android/google-services.json
       echo "✅ google-services.json downloaded to MindBodyDictionaryMobile/Platforms/Android/"
 
   firebase-enable-fcm:
@@ -674,7 +674,7 @@ tasks:
           --location "$LOCATION" \
           --subscription 49fbd6b5-f722-420c-a6b1-961f1b03813c \
           --tags Component=Serverless Purpose="Azure Functions and related resources"
-        
+
         if [ $? -eq 0 ]; then
           echo "✅ Resource group created successfully"
         else
@@ -729,7 +729,7 @@ tasks:
           --name "rg-mindbody-functions" \
           --subscription 49fbd6b5-f722-420c-a6b1-961f1b03813c \
           --query "{Name: name, Location: location}" -o table
-        
+
         echo ""
         echo "📋 Resources in Functions RG:"
         az resource list \
