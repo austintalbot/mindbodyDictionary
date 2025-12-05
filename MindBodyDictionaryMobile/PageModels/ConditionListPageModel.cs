@@ -2,18 +2,42 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Maui.ApplicationModel;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using Microsoft.Maui.ApplicationModel;
 using MindBodyDictionaryMobile.Data;
 using MindBodyDictionaryMobile.Models;
+using System.Collections.ObjectModel;
 
 namespace MindBodyDictionaryMobile.PageModels;
 
-public partial class MbdConditionListPageModel(MbdConditionRepository conditionRepository, IMbdBackendService backendService) : ObservableObject
+public partial class MbdConditionListPageModel : ObservableObject
 {
-	private readonly MbdConditionRepository _conditionRepository = conditionRepository;
-	private readonly IMbdBackendService _backendService = backendService;
+	public string ConditionNamesDebug => MbdConditions == null || MbdConditions.Count == 0
+		? "No conditions loaded"
+		: string.Join(", ", MbdConditions.Select(c => c.Name));
+	private readonly MbdConditionRepository _conditionRepository;
+	private readonly IMbdBackendService _backendService;
 
-	[ObservableProperty]
-	private List<MbdCondition> mbdConditions = [];
+	private ObservableCollection<MbdCondition> mbdConditions = new();
+	public ObservableCollection<MbdCondition> MbdConditions
+	{
+		get => mbdConditions;
+		set
+		{
+			if (mbdConditions != null)
+				mbdConditions.CollectionChanged -= MbdConditions_CollectionChanged;
+			SetProperty(ref mbdConditions, value);
+			if (mbdConditions != null)
+				mbdConditions.CollectionChanged += MbdConditions_CollectionChanged;
+			OnPropertyChanged(nameof(ConditionNamesDebug));
+		}
+	}
+
+	private void MbdConditions_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+	{
+		OnPropertyChanged(nameof(ConditionNamesDebug));
+	}
 
 	[ObservableProperty]
 	private string lastSyncTime = "Never";
@@ -27,49 +51,56 @@ public partial class MbdConditionListPageModel(MbdConditionRepository conditionR
 	[ObservableProperty]
 	private string conditionSource = "Local";
 
+	public MbdConditionListPageModel(MbdConditionRepository conditionRepository, IMbdBackendService backendService)
+	{
+		_conditionRepository = conditionRepository;
+		_backendService = backendService;
+	}
+
 	[RelayCommand]
-	private async Task Appearing()
+	public async Task Appearing()
 	{
 		SyncStatus = "Syncing from Azure...";
 		ConditionSource = "Local";
 		var localConditions = await _conditionRepository.ListAsync();
-		MbdConditions = localConditions;
+		MbdConditions = new ObservableCollection<MbdCondition>(localConditions);
 		ConditionCount = localConditions.Count;
-		var syncTask = Task.Run(async () =>
+		try
 		{
-			try
+			var remoteConditions = await _backendService.GetAllMbdConditionsAsync();
+			if (remoteConditions.Count > 0)
 			{
-				var remoteConditions = await _backendService.GetAllMbdConditionsAsync();
-				if (remoteConditions.Count > 0)
-				{
-					foreach (var cond in remoteConditions)
-						await _conditionRepository.SaveItemAsync(cond);
-					LastSyncTime = DateTime.Now.ToString("g");
-					SyncStatus = $"Synced {remoteConditions.Count} from Azure";
-					ConditionSource = "Azure";
-				}
-				else
-				{
-					SyncStatus = "No conditions from Azure";
-				}
+				foreach (var cond in remoteConditions)
+					await _conditionRepository.SaveItemAsync(cond);
+				LastSyncTime = DateTime.Now.ToString("g");
+				SyncStatus = $"Synced {remoteConditions.Count} from Azure";
+				ConditionSource = "Azure";
 			}
-			catch (Exception ex)
+			else
 			{
-				SyncStatus = $"Sync error: {ex.Message}";
+				SyncStatus = "No conditions from Azure";
 			}
-		});
-		await syncTask;
+		}
+		catch (Exception ex)
+		{
+			SyncStatus = $"Sync error: {ex.Message}";
+		}
 		var updatedConditions = await _conditionRepository.ListAsync();
-		MbdConditions = updatedConditions;
+		MbdConditions = new ObservableCollection<MbdCondition>(updatedConditions);
 		ConditionCount = updatedConditions.Count;
-
-
 	}
 
 	[RelayCommand]
-	private static Task NavigateTombdCondition(MbdCondition mbdCondition)
-		=> Shell.Current.GoToAsync($"///mbdConditions?id={mbdCondition.ID}");
+	public async Task CopyDebugInfo()
+	{
+		var info = $"Condition Count: {ConditionCount}\nLast Sync Time: {LastSyncTime}\nSync Status: {SyncStatus}\nSource: {ConditionSource}";
+		await Clipboard.SetTextAsync(info);
+	}
 
 	[RelayCommand]
-	private static Task AddmbdCondition() => Shell.Current.GoToAsync($"/condition");
+	public async Task NavigateTombdCondition(MbdCondition mbdCondition)
+		=> await Shell.Current.GoToAsync($"///mbdConditions?id={mbdCondition.ID}");
+
+	[RelayCommand]
+	public async Task AddmbdCondition() => await Shell.Current.GoToAsync($"/condition");
 }

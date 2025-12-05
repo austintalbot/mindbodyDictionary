@@ -4,13 +4,14 @@ using Microsoft.Extensions.Logging;
 
 namespace MindBodyDictionaryMobile.Data;
 
-public class SeedDataService(ProjectRepository projectRepository,
-							 MbdTaskRepository taskRepository,
-							 TagRepository tagRepository,
-							 MbdCategoryRepository categoryRepository,
-							 MbdConditionRepository conditionRepository,
-							 ImageCacheService imageCacheService,
-							 ILogger<SeedDataService> logger)
+public class SeedDataService(
+	ProjectRepository projectRepository,
+	MbdTaskRepository taskRepository,
+	TagRepository tagRepository,
+	MbdCategoryRepository categoryRepository,
+	MbdConditionRepository conditionRepository,
+	ImageCacheService imageCacheService,
+	ILogger<SeedDataService> logger)
 {
 	private readonly ProjectRepository _projectRepository = projectRepository;
 	private readonly MbdTaskRepository _taskRepository = taskRepository;
