@@ -98,8 +98,8 @@ public partial class MbdConditionListPageModel : ObservableObject
 			SyncStatus = $"Debug API error: {ex.Message}";
 			LastApiResponse = ex.ToString();
 		}
-		var updatedConditions = await _conditionRepository.ListAsync();
-		MbdConditions = new ObservableCollection<MbdCondition>(updatedConditions);
+		var updatedConditions = await Task.Run(async () => await _conditionRepository.ListAsync());
+		UpdateMbdConditionsCollection(updatedConditions);
 		ConditionCount = updatedConditions.Count;
 	}
 
@@ -120,8 +120,8 @@ public partial class MbdConditionListPageModel : ObservableObject
 	{
 		SyncStatus = "Syncing from Azure...";
 		ConditionSource = "Local";
-		var localConditions = await _conditionRepository.ListAsync();
-		MbdConditions = new ObservableCollection<MbdCondition>(localConditions);
+		var localConditions = await Task.Run(async () => await _conditionRepository.ListAsync());
+		UpdateMbdConditionsCollection(localConditions);
 		ConditionCount = localConditions.Count;
 		try
 		{
@@ -143,9 +143,20 @@ public partial class MbdConditionListPageModel : ObservableObject
 		{
 			SyncStatus = $"Sync error: {ex.Message}";
 		}
-		var updatedConditions = await _conditionRepository.ListAsync();
-		MbdConditions = new ObservableCollection<MbdCondition>(updatedConditions);
+		var updatedConditions = await Task.Run(async () => await _conditionRepository.ListAsync());
+		UpdateMbdConditionsCollection(updatedConditions);
 		ConditionCount = updatedConditions.Count;
+	}
+
+	// Helper to update ObservableCollection individually for immediate UI updates
+	private void UpdateMbdConditionsCollection(List<MbdCondition> newList)
+	{
+		if (MbdConditions == null)
+			MbdConditions = new ObservableCollection<MbdCondition>();
+		else
+			MbdConditions.Clear();
+		foreach (var cond in newList)
+			MbdConditions.Add(cond);
 	}
 
 	[RelayCommand]
