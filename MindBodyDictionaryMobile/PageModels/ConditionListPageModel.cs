@@ -1,6 +1,7 @@
 #nullable disable
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Maui.ApplicationModel;
 using MindBodyDictionaryMobile.Data;
 using MindBodyDictionaryMobile.Models;
 
@@ -20,10 +21,20 @@ public partial class MbdConditionListPageModel(MbdConditionRepository conditionR
 	[ObservableProperty]
 	private string syncStatus = "Idle";
 
+	[ObservableProperty]
+	private int conditionCount = 0;
+
+	[ObservableProperty]
+	private string conditionSource = "Local";
+
 	[RelayCommand]
 	private async Task Appearing()
 	{
 		SyncStatus = "Syncing from Azure...";
+		ConditionSource = "Local";
+		var localConditions = await _conditionRepository.ListAsync();
+		MbdConditions = localConditions;
+		ConditionCount = localConditions.Count;
 		var syncTask = Task.Run(async () =>
 		{
 			try
@@ -31,11 +42,11 @@ public partial class MbdConditionListPageModel(MbdConditionRepository conditionR
 				var remoteConditions = await _backendService.GetAllMbdConditionsAsync();
 				if (remoteConditions.Count > 0)
 				{
-					// Optionally update local DB here
 					foreach (var cond in remoteConditions)
 						await _conditionRepository.SaveItemAsync(cond);
 					LastSyncTime = DateTime.Now.ToString("g");
 					SyncStatus = $"Synced {remoteConditions.Count} from Azure";
+					ConditionSource = "Azure";
 				}
 				else
 				{
@@ -47,9 +58,12 @@ public partial class MbdConditionListPageModel(MbdConditionRepository conditionR
 				SyncStatus = $"Sync error: {ex.Message}";
 			}
 		});
-		MbdConditions = await _conditionRepository.ListAsync();
 		await syncTask;
-		MbdConditions = await _conditionRepository.ListAsync();
+		var updatedConditions = await _conditionRepository.ListAsync();
+		MbdConditions = updatedConditions;
+		ConditionCount = updatedConditions.Count;
+
+
 	}
 
 	[RelayCommand]

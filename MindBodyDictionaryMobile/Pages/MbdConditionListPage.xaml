@@ -29,6 +29,7 @@
                 <Label Text="Last Sync Time: {Binding LastSyncTime}" TextColor="{DynamicResource OnSurface}" />
                 <Label Text="Sync Status: {Binding SyncStatus}" TextColor="{DynamicResource OnSurface}" />
                 <Label Text="Source: {Binding ConditionSource}" TextColor="{DynamicResource OnSurface}" />
+                <Button Text="Copy" Command="{Binding CopyDebugInfoCommand}" Margin="0,10,0,0" />
             </StackLayout>
         </Frame>
         <ScrollView>
