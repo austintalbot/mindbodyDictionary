@@ -1,11 +1,6 @@
 #nullable disable
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.Maui.ApplicationModel;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using Microsoft.Maui.ApplicationModel;
-using MindBodyDictionaryMobile.Data;
 using MindBodyDictionaryMobile.Models;
 using System.Collections.ObjectModel;
 
@@ -13,9 +8,13 @@ namespace MindBodyDictionaryMobile.PageModels;
 
 public partial class MbdConditionListPageModel : ObservableObject
 {
+	[ObservableProperty]
+	private string lastApiResponse = "";
+
 	public string ConditionNamesDebug => MbdConditions == null || MbdConditions.Count == 0
 		? "No conditions loaded"
 		: string.Join(", ", MbdConditions.Select(c => c.Name));
+
 	private readonly MbdConditionRepository _conditionRepository;
 	private readonly IMbdBackendService _backendService;
 
@@ -37,7 +36,7 @@ public partial class MbdConditionListPageModel : ObservableObject
 	private void MbdConditions_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
 	{
 		OnPropertyChanged(nameof(ConditionNamesDebug));
-	}
+			}
 
 	[ObservableProperty]
 	private string lastSyncTime = "Never";
@@ -56,6 +55,65 @@ public partial class MbdConditionListPageModel : ObservableObject
 		_conditionRepository = conditionRepository;
 		_backendService = backendService;
 	}
+
+	[RelayCommand]
+	public async Task LoadFromApi()
+	{
+		SyncStatus = "Loading from debug API...";
+		try
+		{
+			using var httpClient = new System.Net.Http.HttpClient();
+			var response = await httpClient.GetAsync("http://192.168.68.130:7071/api/GetMbdConditionsTable");
+			response.EnsureSuccessStatusCode();
+			var json = await response.Content.ReadAsStringAsync();
+			LastApiResponse = json;
+			var conditions = System.Text.Json.JsonSerializer.Deserialize<List<MbdCondition>>(json);
+			if (conditions != null && conditions.Count > 0)
+			{
+				// Get current local conditions
+				var localConditions = await _conditionRepository.ListAsync();
+				var localDict = localConditions.ToDictionary(c => c.ID);
+				int updatedCount = 0;
+				foreach (var cond in conditions)
+				{
+					if (!localDict.TryGetValue(cond.ID, out var localCond) || !AreConditionsEqual(localCond, cond))
+					{
+						await _conditionRepository.SaveItemAsync(cond);
+						updatedCount++;
+					}
+				}
+				LastSyncTime = DateTime.Now.ToString("g");
+				SyncStatus = updatedCount > 0
+					? $"Loaded {updatedCount} new/changed from debug API"
+					: "No new or changed conditions from debug API";
+				ConditionSource = "Debug API";
+			}
+			else
+			{
+				SyncStatus = "No conditions from debug API";
+			}
+		}
+		catch (Exception ex)
+		{
+			SyncStatus = $"Debug API error: {ex.Message}";
+			LastApiResponse = ex.ToString();
+		}
+		var updatedConditions = await _conditionRepository.ListAsync();
+		MbdConditions = new ObservableCollection<MbdCondition>(updatedConditions);
+		ConditionCount = updatedConditions.Count;
+	}
+
+	// Helper to compare two conditions for equality (customize as needed)
+	private bool AreConditionsEqual(MbdCondition a, MbdCondition b)
+	{
+		if (a == null || b == null) return false;
+		return a.ID == b.ID && a.Name == b.Name && a.Description == b.Description;
+		// Add more fields if needed
+	}
+
+	public string LoadFromApiCommandDetails =>
+		"GET http://192.168.68.130:7071/api/GetMbdConditionsTable\n" +
+		"Deserializes List<MbdCondition> from JSON and saves to local DB.";
 
 	[RelayCommand]
 	public async Task Appearing()
@@ -93,8 +151,7 @@ public partial class MbdConditionListPageModel : ObservableObject
 	[RelayCommand]
 	public async Task CopyDebugInfo()
 	{
-		var info = $"Condition Count: {ConditionCount}\nLast Sync Time: {LastSyncTime}\nSync Status: {SyncStatus}\nSource: {ConditionSource}";
-		await Clipboard.SetTextAsync(info);
+		await Clipboard.SetTextAsync(LastApiResponse);
 	}
 
 	[RelayCommand]
@@ -104,3 +161,4 @@ public partial class MbdConditionListPageModel : ObservableObject
 	[RelayCommand]
 	public async Task AddmbdCondition() => await Shell.Current.GoToAsync($"/condition");
 }
+
