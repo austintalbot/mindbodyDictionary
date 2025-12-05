@@ -35,8 +35,8 @@
   <ShellContent
     Title="Conditions"
     Icon="{StaticResource IconMeta}"
-    ContentTemplate="{DataTemplate pages:ConditionListPage}"
-    Route="conditions" />
+    ContentTemplate="{DataTemplate pages:MbdConditionListPage}"
+    Route="mbdConditions" />
 
   <ShellContent
     Title="Manage Meta"

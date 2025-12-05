@@ -5,14 +5,14 @@ using MindBodyDictionaryMobile.Models;
 namespace MindBodyDictionaryMobile.PageModels;
 
 public partial class MainPageModel(SeedDataService seedDataService, ProjectRepository projectRepository,
-	TaskRepository taskRepository, CategoryRepository categoryRepository, ModalErrorHandler errorHandler)
+	MbdTaskRepository taskRepository, MbdCategoryRepository categoryRepository, ModalErrorHandler errorHandler)
 	: ObservableObject, IProjectTaskPageModel
 {
 	private bool _isNavigatedTo;
 	private bool _dataLoaded;
 	private readonly ProjectRepository _projectRepository = projectRepository;
-	private readonly TaskRepository _taskRepository = taskRepository;
-	private readonly CategoryRepository _categoryRepository = categoryRepository;
+	private readonly MbdTaskRepository _taskRepository = taskRepository;
+	private readonly MbdCategoryRepository _categoryRepository = categoryRepository;
 	private readonly ModalErrorHandler _errorHandler = errorHandler;
 	private readonly SeedDataService _seedDataService = seedDataService;
 

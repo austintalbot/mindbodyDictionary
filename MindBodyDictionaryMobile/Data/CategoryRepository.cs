@@ -11,7 +11,7 @@ namespace MindBodyDictionaryMobile.Data;
 /// Initializes a new instance of the <see cref="CategoryRepository"/> class.
 /// </remarks>
 /// <param name="logger">The logger instance.</param>
-public class CategoryRepository(ILogger<CategoryRepository> logger)
+public class MbdCategoryRepository(ILogger<MbdCategoryRepository> logger)
 {
 	private bool _hasBeenInitialized = false;
 	private readonly ILogger _logger = logger;

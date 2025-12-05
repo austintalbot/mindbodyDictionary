@@ -8,11 +8,16 @@ namespace MindBodyDictionaryMobile.Services;
 /// API service for retrieving MbdConditions from the backend.
 /// Handles HTTP requests, caching, and database synchronization.
 /// </summary>
-public class MbdConditionApiService(ConditionRepository conditionRepository)
+public class MbdConditionApiService(MbdConditionRepository conditionRepository)
 {
-private readonly ConditionRepository _conditionRepository = conditionRepository;
+private readonly MbdConditionRepository _conditionRepository = conditionRepository;
 
-private const string BaseUrl = "https://mbd-functions.azurewebsites.net/api";
+private const string BaseUrl =
+#if DEBUG
+	"http://localhost:7071/api";
+#else
+	"https://mbd-functions.azurewebsites.net/api";
+#endif
 private const string MbdConditionsEndpoint = "MbdConditions";
 private const string ApiKey = "YOUR_API_KEY"; // Set via configuration
 

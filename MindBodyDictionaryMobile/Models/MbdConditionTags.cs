@@ -1,6 +1,6 @@
 namespace MindBodyDictionaryMobile.Models;
 
-public class ConditionsTags
+public class MbdConditionsTags
 {
 	public int ID { get; set; }
 	public int ConditionID { get; set; }

@@ -4,12 +4,12 @@ using MindBodyDictionaryMobile.Models;
 
 namespace MindBodyDictionaryMobile.PageModels;
 
-public partial class ConditionDetailPageModel : ObservableObject, IQueryAttributable, IProjectTaskPageModel
+public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttributable, IProjectTaskPageModel
 {
 	private MbdCondition? _condition;
-	private readonly ConditionRepository _conditionRepository;
-	private readonly TaskRepository _taskRepository;
-	private readonly CategoryRepository _categoryRepository;
+	private readonly MbdConditionRepository _conditionRepository;
+	private readonly MbdTaskRepository _taskRepository;
+	private readonly MbdCategoryRepository _categoryRepository;
 	private readonly TagRepository _tagRepository;
 	private readonly ModalErrorHandler _errorHandler;
 
@@ -67,7 +67,7 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 	public bool HasCompletedTasks
 		=> _condition?.Tasks.Any(t => t.IsCompleted) ?? false;
 
-	public ConditionDetailPageModel(ConditionRepository conditionRepository, TaskRepository taskRepository, CategoryRepository categoryRepository, TagRepository tagRepository, ModalErrorHandler errorHandler)
+	public MbdConditionDetailPageModel(MbdConditionRepository conditionRepository, MbdTaskRepository taskRepository, MbdCategoryRepository categoryRepository, TagRepository tagRepository, ModalErrorHandler errorHandler)
 	{
 		_conditionRepository = conditionRepository;
 		_taskRepository = taskRepository;

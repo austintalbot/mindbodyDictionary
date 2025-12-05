@@ -9,9 +9,9 @@ namespace MindBodyDictionaryMobile.PageModels;
 /// <summary>
 /// Page model for searching MbdConditions with debouncing.
 /// </summary>
-public partial class SearchPageModel(ConditionRepository conditionRepository) : ObservableObject
+public partial class SearchPageModel(MbdConditionRepository conditionRepository) : ObservableObject
 {
-private readonly ConditionRepository _conditionRepository = conditionRepository;
+private readonly MbdConditionRepository _conditionRepository = conditionRepository;
 private CancellationTokenSource? _searchCancellationTokenSource;
 private const int SearchDebounceDelayMs = 150;
 private List<MbdCondition> _allConditions = [];

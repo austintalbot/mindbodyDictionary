@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace MindBodyDictionaryMobile.Models;
 
-public class ConditionTask
+public class MbdConditionTask
 {
 	public int ID { get; set; }
 	public string Title { get; set; } = string.Empty;

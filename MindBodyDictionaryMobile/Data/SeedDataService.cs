@@ -4,13 +4,19 @@ using Microsoft.Extensions.Logging;
 
 namespace MindBodyDictionaryMobile.Data;
 
-public class SeedDataService(ProjectRepository projectRepository, TaskRepository taskRepository, TagRepository tagRepository, CategoryRepository categoryRepository, ConditionRepository conditionRepository, ImageCacheService imageCacheService, ILogger<SeedDataService> logger)
+public class SeedDataService(ProjectRepository projectRepository,
+							 MbdTaskRepository taskRepository,
+							 TagRepository tagRepository,
+							 MbdCategoryRepository categoryRepository,
+							 MbdConditionRepository conditionRepository,
+							 ImageCacheService imageCacheService,
+							 ILogger<SeedDataService> logger)
 {
 	private readonly ProjectRepository _projectRepository = projectRepository;
-	private readonly TaskRepository _taskRepository = taskRepository;
+	private readonly MbdTaskRepository _taskRepository = taskRepository;
 	private readonly TagRepository _tagRepository = tagRepository;
-	private readonly CategoryRepository _categoryRepository = categoryRepository;
-	private readonly ConditionRepository _conditionRepository = conditionRepository;
+	private readonly MbdCategoryRepository _categoryRepository = categoryRepository;
+	private readonly MbdConditionRepository _conditionRepository = conditionRepository;
 	private readonly ImageCacheService _imageCacheService = imageCacheService;
 	private readonly string _seedDataFilePath = "SeedData.json";
 	private readonly ILogger<SeedDataService> _logger = logger;

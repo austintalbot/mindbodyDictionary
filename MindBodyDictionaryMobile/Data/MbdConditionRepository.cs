@@ -13,11 +13,11 @@ namespace MindBodyDictionaryMobile.Data;
 /// <param name="taskRepository">The task repository instance.</param>
 /// <param name="tagRepository">The tag repository instance.</param>
 /// <param name="logger">The logger instance.</param>
-public class ConditionRepository(TaskRepository taskRepository, TagRepository tagRepository, ILogger<ConditionRepository> logger)
+public class MbdConditionRepository(MbdTaskRepository taskRepository, TagRepository tagRepository, ILogger<MbdConditionRepository> logger)
 {
 	private bool _hasBeenInitialized = false;
 	private readonly ILogger _logger = logger;
-	private readonly TaskRepository _taskRepository = taskRepository;
+	private readonly MbdTaskRepository _taskRepository = taskRepository;
 	private readonly TagRepository _tagRepository = tagRepository;
 
 	/// <summary>

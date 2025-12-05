@@ -13,11 +13,13 @@ namespace MindBodyDictionaryMobile.Data;
 /// <param name="taskRepository">The task repository instance.</param>
 /// <param name="tagRepository">The tag repository instance.</param>
 /// <param name="logger">The logger instance.</param>
-public class ProjectRepository(TaskRepository taskRepository, TagRepository tagRepository, ILogger<ProjectRepository> logger)
+public class ProjectRepository(MbdTaskRepository taskRepository,
+							   TagRepository tagRepository,
+							   ILogger<ProjectRepository> logger)
 {
 	private bool _hasBeenInitialized = false;
 	private readonly ILogger _logger = logger;
-	private readonly TaskRepository _taskRepository = taskRepository;
+	private readonly MbdTaskRepository _taskRepository = taskRepository;
 	private readonly TagRepository _tagRepository = tagRepository;
 
 	/// <summary>

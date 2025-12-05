@@ -1,7 +1,4 @@
-﻿using CommunityToolkit.Maui;
-using Microsoft.Extensions.Logging;
-using Syncfusion.Maui.Toolkit.Hosting;
-using MindBodyDictionaryMobile.Services.billing;
+﻿using Microsoft.Extensions.DependencyInjection;
 
 namespace MindBodyDictionaryMobile;
 
@@ -28,10 +25,10 @@ public static class MauiProgram
 #endif
 
 		builder.Services.AddSingleton<ProjectRepository>();
-		builder.Services.AddSingleton<TaskRepository>();
-		builder.Services.AddSingleton<CategoryRepository>();
+		builder.Services.AddSingleton<MbdTaskRepository>();
+		builder.Services.AddSingleton<MbdCategoryRepository>();
 		builder.Services.AddSingleton<TagRepository>();
-		builder.Services.AddSingleton<ConditionRepository>();
+		builder.Services.AddSingleton<MbdConditionRepository>();
 		builder.Services.AddSingleton<ImageCacheRepository>();
 		builder.Services.AddSingleton<ImageCacheService>();
 		builder.Services.AddSingleton<IImageCacheHelper, ImageCacheHelper>();
@@ -55,6 +52,12 @@ public static class MauiProgram
 		// Direct Azure Notification Hub registration (no backend API)
 		builder.Services.AddSingleton<INotificationRegistrationService, NotificationRegistrationService>();
 
+
+		// Register HttpClient for DI
+		builder.Services.AddHttpClient();
+		// Backend service for fetching data from serverless APIs
+		builder.Services.AddSingleton<IMbdBackendService, MbdBackendService>();
+
 		builder.Services.AddTransient<NotificationSettingsPageModel>();
 		builder.Services.AddTransient<NotificationSettingsPage>();
 
@@ -68,8 +71,8 @@ public static class MauiProgram
 
 		builder.Services.AddTransientWithShellRoute<ProjectDetailPage, ProjectDetailPageModel>("project");
 		builder.Services.AddTransientWithShellRoute<TaskDetailPage, TaskDetailPageModel>("task");
-		builder.Services.AddTransientWithShellRoute<ConditionDetailPage, ConditionDetailPageModel>("condition");
-		builder.Services.AddSingleton<ConditionListPageModel>();
+		builder.Services.AddTransientWithShellRoute<MbdConditionDetailPage, MbdConditionDetailPageModel>("condition");
+		builder.Services.AddSingleton<MbdConditionListPageModel>();
 
 		return builder.Build();
 	}

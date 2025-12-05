@@ -6,13 +6,13 @@ using MindBodyDictionaryMobile.Services;
 
 namespace MindBodyDictionaryMobile.PageModels;
 
-public partial class TaskDetailPageModel(ProjectRepository projectRepository, TaskRepository taskRepository, ModalErrorHandler errorHandler) : ObservableObject, IQueryAttributable
+public partial class TaskDetailPageModel(ProjectRepository projectRepository, MbdTaskRepository taskRepository, ModalErrorHandler errorHandler) : ObservableObject, IQueryAttributable
 {
 	public const string ProjectQueryKey = "project";
 	private ProjectTask? _task;
 	private bool _canDelete;
 	private readonly ProjectRepository _projectRepository = projectRepository;
-	private readonly TaskRepository _taskRepository = taskRepository;
+	private readonly MbdTaskRepository _taskRepository = taskRepository;
 	private readonly ModalErrorHandler _errorHandler = errorHandler;
 
 	[ObservableProperty]

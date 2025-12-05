@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:pageModels="clr-namespace:MindBodyDictionaryMobile.PageModels"
+             xmlns:models="clr-namespace:MindBodyDictionaryMobile.Models"
+             xmlns:controls="clr-namespace:MindBodyDictionaryMobile.Pages.Controls"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="MindBodyDictionaryMobile.Pages.MbdConditionListPage"
+             x:Name="MbdConditionList"
+             x:DataType="pageModels:MbdConditionListPageModel"
+             Title="mbdConditions">
+
+    <ContentPage.Behaviors>
+        <toolkit:EventToCommandBehavior
+            EventName="Appearing"
+            BindingContext="{Binding Path=BindingContext, Source={x:Reference MbdConditionList}, x:DataType=ContentPage}"
+            Command="{Binding AppearingCommand}"/>
+    </ContentPage.Behaviors>
+    <VerticalStackLayout>
+        <Frame
+            Margin="10"
+            Padding="10"
+            BorderColor="{DynamicResource Primary}"
+            BackgroundColor="{DynamicResource Surface}"
+            CornerRadius="8">
+            <StackLayout>
+                <Label Text="Debug Info" FontAttributes="Bold" FontSize="Medium" TextColor="{DynamicResource Primary}" />
+                <Label Text="Condition Count: {Binding ConditionCount}" TextColor="{DynamicResource OnSurface}" />
+                <Label Text="Last Sync Time: {Binding LastSyncTime}" TextColor="{DynamicResource OnSurface}" />
+                <Label Text="Sync Status: {Binding SyncStatus}" TextColor="{DynamicResource OnSurface}" />
+                <Label Text="Source: {Binding ConditionSource}" TextColor="{DynamicResource OnSurface}" />
+            </StackLayout>
+        </Frame>
+        <ScrollView>
+            <VerticalStackLayout BindableLayout.ItemsSource="{Binding mbdConditions}"
+                                Margin="{StaticResource LayoutPadding}"
+                                Spacing="{StaticResource LayoutSpacing}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="models:mbdCondition">
+                        <Border SemanticProperties.Description="{Binding Name, StringFormat='{0} mbdCondition'}">
+                            <VerticalStackLayout Padding="10">
+                                <Label Text="{Binding Name}" FontSize="24" />
+                                <Label Text="{Binding Description}" />
+                            </VerticalStackLayout>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding NavigateTombdConditionCommand, Source={RelativeSource AncestorType={x:Type pageModels:MbdConditionListPageModel}}, x:DataType=pageModels:MbdConditionListPageModel}" CommandParameter="{Binding .}"/>
+                            </Border.GestureRecognizers>
+                        </Border>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
+        </ScrollView>
+        <controls:AddButton
+            Command="{Binding AddmbdConditionCommand}"
+            SemanticProperties.Description="Add mbdCondition" />
+    </VerticalStackLayout>
+</ContentPage>

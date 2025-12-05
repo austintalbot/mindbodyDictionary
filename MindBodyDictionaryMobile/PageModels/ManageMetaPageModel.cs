@@ -7,9 +7,9 @@ using MindBodyDictionaryMobile.Services;
 
 namespace MindBodyDictionaryMobile.PageModels;
 
-public partial class ManageMetaPageModel(CategoryRepository categoryRepository, TagRepository tagRepository, SeedDataService seedDataService) : ObservableObject
+public partial class ManageMetaPageModel(MbdCategoryRepository categoryRepository, TagRepository tagRepository, SeedDataService seedDataService) : ObservableObject
 {
-	private readonly CategoryRepository _categoryRepository = categoryRepository;
+	private readonly MbdCategoryRepository _categoryRepository = categoryRepository;
 	private readonly TagRepository _tagRepository = tagRepository;
 	private readonly SeedDataService _seedDataService = seedDataService;
 

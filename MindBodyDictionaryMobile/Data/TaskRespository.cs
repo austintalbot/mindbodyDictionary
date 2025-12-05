@@ -11,7 +11,7 @@ namespace MindBodyDictionaryMobile.Data;
 /// Initializes a new instance of the <see cref="TaskRepository"/> class.
 /// </remarks>
 /// <param name="logger">The logger instance.</param>
-public class TaskRepository(ILogger<TaskRepository> logger)
+public class MbdTaskRepository(ILogger<MbdTaskRepository> logger)
 {
 	private bool _hasBeenInitialized = false;
 	private readonly ILogger _logger = logger;

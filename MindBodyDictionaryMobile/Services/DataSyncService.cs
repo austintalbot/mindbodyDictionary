@@ -8,10 +8,10 @@ namespace MindBodyDictionaryMobile.Services;
 /// Service for managing data synchronization between backend and local database.
 /// Handles caching logic and determines when to refresh data.
 /// </summary>
-public class DataSyncService(MbdConditionApiService apiService, ConditionRepository repository)
+public class DataSyncService(MbdConditionApiService apiService, MbdConditionRepository repository)
 {
 private readonly MbdConditionApiService _apiService = apiService;
-private readonly ConditionRepository _repository = repository;
+private readonly MbdConditionRepository _repository = repository;
 
 private const string LastSyncKey = "LastConditionSync";
 private const int CacheExpiryDays = 7;

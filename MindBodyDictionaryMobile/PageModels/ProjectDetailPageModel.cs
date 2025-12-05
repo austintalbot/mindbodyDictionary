@@ -8,8 +8,8 @@ public partial class ProjectDetailPageModel : ObservableObject, IQueryAttributab
 {
 	private Project? _project;
 	private readonly ProjectRepository _projectRepository;
-	private readonly TaskRepository _taskRepository;
-	private readonly CategoryRepository _categoryRepository;
+	private readonly MbdTaskRepository _taskRepository;
+	private readonly MbdCategoryRepository _categoryRepository;
 	private readonly TagRepository _tagRepository;
 	private readonly ModalErrorHandler _errorHandler;
 
@@ -67,7 +67,7 @@ public partial class ProjectDetailPageModel : ObservableObject, IQueryAttributab
 	public bool HasCompletedTasks
 		=> _project?.Tasks.Any(t => t.IsCompleted) ?? false;
 
-	public ProjectDetailPageModel(ProjectRepository projectRepository, TaskRepository taskRepository, CategoryRepository categoryRepository, TagRepository tagRepository, ModalErrorHandler errorHandler)
+	public ProjectDetailPageModel(ProjectRepository projectRepository, MbdTaskRepository taskRepository, MbdCategoryRepository categoryRepository, TagRepository tagRepository, ModalErrorHandler errorHandler)
 	{
 		_projectRepository = projectRepository;
 		_taskRepository = taskRepository;
