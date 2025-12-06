@@ -35,10 +35,7 @@ public class MbdCondition
     [JsonProperty(PropertyName = "imageNegative", NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Ignore)]
     public string? ImageNegative { get; set; }
 
-    // List functionality for mobile
-    public List<ProjectTask> Tasks { get; set; } = new();
-    public List<Tag> TagObjects { get; set; } = new();
-    public Category? Category { get; set; }
+
 
     public override string ToString() => JsonConvert.SerializeObject(this);
 }
