@@ -1,4 +1,3 @@
-
 namespace backend;
 
 public class GetMbdConditionsTable(ILogger<GetMbdConditionsTable> logger, CosmosClient client)
