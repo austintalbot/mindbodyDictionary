@@ -29,6 +29,11 @@ public class MbdCondition
     [JsonProperty(PropertyName = "subscriptionOnly")]
     public bool SubscriptionOnly { get; set; }
 
+	[JsonProperty(PropertyName = "imagePositive", NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Ignore)]
+	public string? ImagePositive { get; set; }
+
+	[JsonProperty(PropertyName = "imageNegative", NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Ignore)]
+	public string? ImageNegative { get; set; }
 
     public override string ToString()
     {
