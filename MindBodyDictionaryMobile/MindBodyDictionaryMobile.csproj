@@ -117,5 +117,8 @@
 	<ItemGroup Condition="'$(TargetFramework)' != 'net10.0-ios'">
 		<Compile Remove="Services\billing\BillingService.Ios.cs" />
 	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\Shared\MindBodyDictionary.Shared\MindBodyDictionary.Shared.csproj" />
+	</ItemGroup>
 
 </Project>

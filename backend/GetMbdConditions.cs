@@ -1,6 +1,5 @@
 
 
-using backend.CosmosDB;
 namespace backend;
 
 public class GetMbdConditions(ILogger<GetMbdConditions> logger, CosmosClient client)
@@ -20,11 +19,11 @@ public class GetMbdConditions(ILogger<GetMbdConditions> logger, CosmosClient cli
 			var id = req.Query["id"];
 			_logger.LogInformation($" Get mbdCondition Id = {id}");
 
-			var item = await _client.GetItemAsync<backend.Entities.MbdCondition>(
-					   databaseName: backend.CosmosDB.CosmosDbConstants.DatabaseName,
-					   containerName: backend.CosmosDB.CosmosDbConstants.Containers.MbdConditions,
-					   query: "SELECT * FROM Ailments",
-					   itemSelector: x => x.Id == id);
+			   var item = await _client.GetItemAsync<SharedMbdCondition>(
+						  databaseName: backend.CosmosDB.CosmosDbConstants.DatabaseName,
+						  containerName: backend.CosmosDB.CosmosDbConstants.Containers.MbdConditions,
+						  query: "SELECT * FROM Ailments",
+						  itemSelector: x => x.Id == id);
 
 			return item != null ? new OkObjectResult(item) : new NotFoundResult();
 		}
