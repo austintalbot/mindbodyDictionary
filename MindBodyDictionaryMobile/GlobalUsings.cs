@@ -9,3 +9,5 @@ global using MindBodyDictionaryMobile.Services;
 global using MindBodyDictionaryMobile.Services.billing;
 global using MindBodyDictionaryMobile.Utilities;
 global using Syncfusion.Maui.Toolkit.Hosting;
+
+global using MindBodyDictionary.Shared.Entities;
