@@ -2,7 +2,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MindBodyDictionaryMobile.Data;
 using MindBodyDictionaryMobile.Models;
-using System.Collections.ObjectModel;
+using MbdCondition = MindBodyDictionaryMobile.Models.MbdCondition;
 
 namespace MindBodyDictionaryMobile.PageModels;
 

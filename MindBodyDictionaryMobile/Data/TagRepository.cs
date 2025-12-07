@@ -1,6 +1,7 @@
 using MindBodyDictionaryMobile.Models;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Logging;
+using Tag = MindBodyDictionaryMobile.Models.Tag;
 
 namespace MindBodyDictionaryMobile.Data;
 
