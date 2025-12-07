@@ -52,7 +52,7 @@ public class MbdTaskRepository(ILogger<MbdTaskRepository> logger)
 	/// Retrieves a list of all tasks from the database.
 	/// </summary>
 	/// <returns>A list of <see cref="ProjectTask"/> objects.</returns>
-	public async Task<List<ProjectTask>> ListAsync()
+	public async Task<List<MbdTask>> ListAsync()
 	{
 		await Init();
 		await using var connection = new SqliteConnection(Constants.DatabasePath);
@@ -60,12 +60,12 @@ public class MbdTaskRepository(ILogger<MbdTaskRepository> logger)
 
 		var selectCmd = connection.CreateCommand();
 		selectCmd.CommandText = "SELECT * FROM Task";
-		var tasks = new List<ProjectTask>();
+		var tasks = new List<MbdTask>();
 
 		await using var reader = await selectCmd.ExecuteReaderAsync();
 		while (await reader.ReadAsync())
 		{
-			tasks.Add(new ProjectTask
+			tasks.Add(new MbdTask
 			{
 				ID = reader.GetInt32(0),
 				Title = reader.GetString(1),
@@ -82,7 +82,7 @@ public class MbdTaskRepository(ILogger<MbdTaskRepository> logger)
 	/// </summary>
 	/// <param name="projectId">The ID of the project.</param>
 	/// <returns>A list of <see cref="ProjectTask"/> objects.</returns>
-	public async Task<List<ProjectTask>> ListAsync(int projectId)
+	public async Task<List<MbdTask>> ListAsync(int projectId)
 	{
 		await Init();
 		await using var connection = new SqliteConnection(Constants.DatabasePath);
@@ -91,12 +91,12 @@ public class MbdTaskRepository(ILogger<MbdTaskRepository> logger)
 		var selectCmd = connection.CreateCommand();
 		selectCmd.CommandText = "SELECT * FROM Task WHERE ProjectID = @projectId";
 		selectCmd.Parameters.AddWithValue("@projectId", projectId);
-		var tasks = new List<ProjectTask>();
+		var tasks = new List<MbdTask>();
 
 		await using var reader = await selectCmd.ExecuteReaderAsync();
 		while (await reader.ReadAsync())
 		{
-			tasks.Add(new ProjectTask
+			tasks.Add(new MbdTask
 			{
 				ID = reader.GetInt32(0),
 				Title = reader.GetString(1),
@@ -113,7 +113,7 @@ public class MbdTaskRepository(ILogger<MbdTaskRepository> logger)
 	/// </summary>
 	/// <param name="id">The ID of the task.</param>
 	/// <returns>A <see cref="ProjectTask"/> object if found; otherwise, null.</returns>
-	public async Task<ProjectTask?> GetAsync(int id)
+	public async Task<MbdTask?> GetAsync(int id)
 	{
 		await Init();
 		await using var connection = new SqliteConnection(Constants.DatabasePath);
@@ -126,7 +126,7 @@ public class MbdTaskRepository(ILogger<MbdTaskRepository> logger)
 		await using var reader = await selectCmd.ExecuteReaderAsync();
 		if (await reader.ReadAsync())
 		{
-			return new ProjectTask
+			return new MbdTask
 			{
 				ID = reader.GetInt32(0),
 				Title = reader.GetString(1),
@@ -143,7 +143,7 @@ public class MbdTaskRepository(ILogger<MbdTaskRepository> logger)
 	/// </summary>
 	/// <param name="item">The task to save.</param>
 	/// <returns>The ID of the saved task.</returns>
-	public async Task<int> SaveItemAsync(ProjectTask item)
+	public async Task<int> SaveItemAsync(MbdTask item)
 	{
 		await Init();
 		await using var connection = new SqliteConnection(Constants.DatabasePath);
@@ -181,7 +181,7 @@ public class MbdTaskRepository(ILogger<MbdTaskRepository> logger)
 	/// </summary>
 	/// <param name="item">The task to delete.</param>
 	/// <returns>The number of rows affected.</returns>
-	public async Task<int> DeleteItemAsync(ProjectTask item)
+	public async Task<int> DeleteItemAsync(MbdTask item)
 	{
 		await Init();
 		await using var connection = new SqliteConnection(Constants.DatabasePath);

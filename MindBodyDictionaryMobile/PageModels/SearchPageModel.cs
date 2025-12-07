@@ -1,8 +1,9 @@
+using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MindBodyDictionaryMobile.Data;
 using MindBodyDictionaryMobile.Models;
-using MbdCondition = MindBodyDictionaryMobile.Models.MbdCondition;
+using MindBodyDictionary.Shared.Entities;
 
 namespace MindBodyDictionaryMobile.PageModels;
 

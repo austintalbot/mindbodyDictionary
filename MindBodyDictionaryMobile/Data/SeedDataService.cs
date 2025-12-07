@@ -1,4 +1,5 @@
 using System.Text.Json;
+using MindBodyDictionary.Shared.Entities;
 using MindBodyDictionaryMobile.Models;
 using Microsoft.Extensions.Logging;
 
@@ -53,19 +54,20 @@ public class SeedDataService(
 					}
 				}
 
-				foreach (var condition in payload.MbdConditions)
-				{
-					if (condition?.Category is not null && !categoryMap.ContainsKey(condition.Category.Title))
-					{
-						categoryMap[condition.Category.Title] = condition.Category;
-					}
-				}
+				// Category mapping is handled separately; categories are loaded from the database
+				// foreach (var condition in payload.MbdConditions)
+				// {
+				// 	if (condition?.Category is not null && !categoryMap.ContainsKey(condition.Category.Title))
+				// 	{
+				// 		categoryMap[condition.Category.Title] = condition.Category;
+				// 	}
+				// }
 
 				// Save all unique categories
-				foreach (var category in categoryMap.Values)
-				{
-					await _categoryRepository.SaveItemAsync(category);
-				}
+				// foreach (var category in categoryMap.Values)
+				// {
+				//	await _categoryRepository.SaveItemAsync(category);
+				// }
 
 				// Collect all unique tags first
 				var tagMap = new Dictionary<string, Tag>();
@@ -146,10 +148,11 @@ public class SeedDataService(
 						continue;
 					}
 
-					if (condition.Category is not null)
-					{
-						condition.CategoryID = categoryMap[condition.Category.Title].ID;
-					}
+					// Category is no longer part of shared MbdCondition model
+					// if (condition.Category is not null)
+					// {
+					// 	condition.CategoryID = categoryMap[condition.Category.Title].ID;
+					// }
 
 					await _conditionRepository.SaveItemAsync(condition);
 

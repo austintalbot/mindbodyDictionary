@@ -5,6 +5,6 @@ namespace MindBodyDictionaryMobile.PageModels;
 
 public interface IProjectTaskPageModel
 {
-	IAsyncRelayCommand<ProjectTask> NavigateToTaskCommand { get; }
+	IAsyncRelayCommand<MbdTask> NavigateToTaskCommand { get; }
 	bool IsBusy { get; }
 }

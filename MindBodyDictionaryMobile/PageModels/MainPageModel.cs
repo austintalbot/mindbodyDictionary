@@ -25,7 +25,7 @@ public partial class MainPageModel(SeedDataService seedDataService, ProjectRepos
 	private List<Brush> todoCategoryColors = [];
 
 	[ObservableProperty]
-	private List<ProjectTask> tasks = [];
+	private List<MbdTask> tasks = [];
 
 	[ObservableProperty]
 	private List<Project> projects = [];
@@ -128,7 +128,7 @@ public partial class MainPageModel(SeedDataService seedDataService, ProjectRepos
 	}
 
 	[RelayCommand]
-	private Task TaskCompleted(ProjectTask task)
+	private Task TaskCompleted(MbdTask task)
 	{
 		OnPropertyChanged(nameof(HasCompletedTasks));
 		return _taskRepository.SaveItemAsync(task);
@@ -141,7 +141,7 @@ public partial class MainPageModel(SeedDataService seedDataService, ProjectRepos
 	private Task NavigateToProject(Project project) => Shell.Current.GoToAsync($"project?id={project.ID}");
 
 	[RelayCommand]
-	private Task NavigateToTask(ProjectTask task) => Shell.Current.GoToAsync($"task?id={task.ID}");
+	private Task NavigateToTask(MbdTask task) => Shell.Current.GoToAsync($"task?id={task.ID}");
 
 	[RelayCommand]
 	private async Task CleanTasks()

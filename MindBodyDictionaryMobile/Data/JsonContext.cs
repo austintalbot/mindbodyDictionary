@@ -1,8 +1,8 @@
 using System.Text.Json.Serialization;
+using MindBodyDictionary.Shared.Entities;
 using MindBodyDictionaryMobile.Models;
 
 [JsonSerializable(typeof(Project))]
-[JsonSerializable(typeof(ProjectTask))]
 [JsonSerializable(typeof(ProjectsJson))]
 [JsonSerializable(typeof(Category))]
 [JsonSerializable(typeof(Tag))]

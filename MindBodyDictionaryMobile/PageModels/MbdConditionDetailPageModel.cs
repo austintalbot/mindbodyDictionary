@@ -1,8 +1,8 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using MindBodyDictionaryMobile.Models;
-using MbdCondition = MindBodyDictionaryMobile.Models.MbdCondition;
-using Tag = MindBodyDictionaryMobile.Models.Tag;
+using MindBodyDictionary.Shared.Entities;
+using MindBodyDictionaryMobile.Models; // This line remains unchanged
+using MindBodyDictionaryMobile.Extensions;
 
 namespace MindBodyDictionaryMobile.PageModels;
 
@@ -22,7 +22,7 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
 	private string _description = string.Empty;
 
 	[ObservableProperty]
-	private List<ProjectTask> _tasks = [];
+	private List<MbdTask> _tasks = [];
 
 	[ObservableProperty]
 	private List<Category> _categories = [];
@@ -165,7 +165,7 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
 	}
 
 	[RelayCommand]
-	private async Task TaskCompleted(ProjectTask task)
+	private async Task TaskCompleted(MbdTask task)
 	{
 		await _taskRepository.SaveItemAsync(task);
 		OnPropertyChanged(nameof(HasCompletedTasks));
@@ -247,7 +247,7 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
 	}
 
 	[RelayCommand]
-	private Task NavigateToTask(ProjectTask task) =>
+	private Task NavigateToTask(MbdTask task) =>
 		Shell.Current.GoToAsync($"task?id={task.ID}");
 
 	[RelayCommand]

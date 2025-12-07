@@ -1,5 +1,5 @@
 using System.Windows.Input;
-using MindBodyDictionaryMobile.Models;
+using MindBodyDictionary.Shared.Entities;
 
 namespace MindBodyDictionaryMobile.Pages.Controls;
 
@@ -26,7 +26,7 @@ public partial class TaskView
 	{
 		var checkbox = (CheckBox)sender;
 
-		if (checkbox.BindingContext is not ProjectTask task)
+		if (checkbox.BindingContext is not MbdTask task)
 			return;
 
 		if (task.IsCompleted == e.Value)

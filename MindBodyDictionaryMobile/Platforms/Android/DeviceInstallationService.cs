@@ -1,4 +1,4 @@
-using MindBodyDictionaryMobile.Models;
+using MindBodyDictionary.Shared.Entities;
 using MindBodyDictionaryMobile.Services;
 
 namespace MindBodyDictionaryMobile.Platforms.Android;
@@ -27,7 +27,8 @@ public class DeviceInstallationService : IDeviceInstallationService
 			PushChannel = Token
 		};
 
-		installation.Tags.AddRange(tags);
+		if (tags != null)
+			installation.Tags.AddRange(tags);
 
 		return installation;
 	}

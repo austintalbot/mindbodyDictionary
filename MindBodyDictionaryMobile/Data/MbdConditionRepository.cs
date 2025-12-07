@@ -1,7 +1,6 @@
-using MindBodyDictionaryMobile.Models;
+using MindBodyDictionary.Shared.Entities;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Logging;
-using MbdCondition = MindBodyDictionaryMobile.Models.MbdCondition;
 
 namespace MindBodyDictionaryMobile.Data;
 

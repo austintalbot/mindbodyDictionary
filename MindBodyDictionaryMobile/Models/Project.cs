@@ -17,7 +17,7 @@ public class Project
 
 	public Category? Category { get; set; }
 
-	public List<ProjectTask> Tasks { get; set; } = [];
+	public List<MbdTask> Tasks { get; set; } = [];
 
 	public List<Tag> Tags { get; set; } = [];
 

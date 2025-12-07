@@ -1,4 +1,5 @@
 using MindBodyDictionaryMobile.Models;
+using DeviceInstallation = MindBodyDictionary.Shared.Entities.DeviceInstallation;
 
 namespace MindBodyDictionaryMobile.Services;
 

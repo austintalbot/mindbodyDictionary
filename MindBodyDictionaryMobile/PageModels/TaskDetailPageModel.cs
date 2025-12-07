@@ -9,7 +9,7 @@ namespace MindBodyDictionaryMobile.PageModels;
 public partial class TaskDetailPageModel(ProjectRepository projectRepository, MbdTaskRepository taskRepository, ModalErrorHandler errorHandler) : ObservableObject, IQueryAttributable
 {
 	public const string ProjectQueryKey = "project";
-	private ProjectTask? _task;
+	private MbdTask? _task;
 	private bool _canDelete;
 	private readonly ProjectRepository _projectRepository = projectRepository;
 	private readonly MbdTaskRepository _taskRepository = taskRepository;
@@ -58,7 +58,7 @@ public partial class TaskDetailPageModel(ProjectRepository projectRepository, Mb
 		}
 		else
 		{
-			_task = new ProjectTask();
+			_task = new MbdTask();
 		}
 
 		// If the project is new, we don't need to load the project dropdown
@@ -91,7 +91,7 @@ public partial class TaskDetailPageModel(ProjectRepository projectRepository, Mb
 		}
 		else
 		{
-			_task = new ProjectTask()
+			_task = new MbdTask()
 			{
 				ProjectID = Project?.ID ?? 0
 			};

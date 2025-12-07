@@ -1,5 +1,6 @@
 using MindBodyDictionaryMobile.Models;
 using MindBodyDictionaryMobile.Services;
+using DeviceInstallation = MindBodyDictionary.Shared.Entities.DeviceInstallation;
 using UIKit;
 using System.Diagnostics;
 
