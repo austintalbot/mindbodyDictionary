@@ -1,4 +1,4 @@
-namespace MindBodyDictionary.Shared;
+namespace MindBodyDictionary.Shared.Entities;
 
 public class MbdConditionsJson
 {
