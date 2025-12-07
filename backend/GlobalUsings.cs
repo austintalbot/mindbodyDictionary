@@ -13,6 +13,6 @@ global using Microsoft.Extensions.Hosting;
 global using Microsoft.Extensions.Logging;
 global using Newtonsoft.Json;
 
-global using SharedMbdCondition = MindBodyDictionary.Shared.MbdCondition;
+global using SharedMbdCondition = MindBodyDictionary.Shared.Entities.MbdCondition;
 global using MindBodyDictionary.Shared.Enumerations;
 global using backend.CosmosDB;
