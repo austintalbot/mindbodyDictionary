@@ -35,7 +35,7 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
 	private int _categoryIndex = -1;
 
 	[ObservableProperty]
-	private List<Tag> _allTags = [];
+	private List<Models.Tag> _allTags = [];
 
 	[ObservableProperty]
 	private IconData _icon;
@@ -252,7 +252,7 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
 	private Task NavigateToTask(MbdTask task) => Shell.Current.GoToAsync($"task?id={task.ID}");
 
 	[RelayCommand]
-	private async Task ToggleTag(Tag tag)
+	private async Task ToggleTag(Models.Tag tag)
 	{
 		tag.IsSelected = !tag.IsSelected;
 

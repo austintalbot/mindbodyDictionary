@@ -5,5 +5,5 @@ using MindBodyDictionaryMobile.Models;
 [JsonSerializable(typeof(ProjectTask))]
 [JsonSerializable(typeof(ProjectsJson))]
 [JsonSerializable(typeof(Category))]
-[JsonSerializable(typeof(Tag))]
+[JsonSerializable(typeof(MindBodyDictionaryMobile.Models.Tag))]
 public partial class JsonContext : JsonSerializerContext { }

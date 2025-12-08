@@ -4,6 +4,9 @@ namespace MindBodyDictionaryMobile.Models;
 
 public class MbdCondition : MindBodyDictionary.Shared.Entities.MbdCondition
 {
+	[JsonPropertyName("stringId")]
+	public string StringId { get; set; } = string.Empty;
+
 	[JsonPropertyName("tags")]
 	public List<Tag> Tags { get; set; } = [];
 }
