@@ -2,7 +2,8 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MindBodyDictionary.Shared.Entities;
 using MindBodyDictionaryMobile.Extensions;
-using MindBodyDictionaryMobile.Models; // This line remains unchanged
+using MindBodyDictionaryMobile.Models;
+using MbdCondition = MindBodyDictionaryMobile.Models.MbdCondition;
 
 namespace MindBodyDictionaryMobile.PageModels;
 
@@ -66,7 +67,8 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
 		}
 	}
 
-	public bool HasCompletedTasks => _condition?.Tasks.Any(t => t.IsCompleted) ?? false;
+	public bool HasCompletedTasks
+		=> _condition?.Tasks.Any(t => t.IsCompleted) ?? false;
 
 	public MbdConditionDetailPageModel(
 		MbdConditionRepository conditionRepository,

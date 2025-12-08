@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using MindBodyDictionaryMobile.Data;
 using MindBodyDictionaryMobile.Models;
+using MbdCondition = MindBodyDictionaryMobile.Models.MbdCondition;
 
 namespace MindBodyDictionaryMobile.Services;
 
