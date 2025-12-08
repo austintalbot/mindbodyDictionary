@@ -8,9 +8,12 @@ public class DeviceInstallationService : IDeviceInstallationService
 	public required string Token { get; set; }
 	public bool NotificationsSupported => true;
 
-	public string GetDeviceId() => global::Android.Provider.Settings.Secure.GetString(
+	public string GetDeviceId() =>
+		global::Android.Provider.Settings.Secure.GetString(
 			Platform.AppContext.ContentResolver,
-			global::Android.Provider.Settings.Secure.AndroidId) ?? throw new InvalidOperationException("Unable to get device ID");
+			global::Android.Provider.Settings.Secure.AndroidId
+		)
+		?? throw new InvalidOperationException("Unable to get device ID");
 
 	public DeviceInstallation GetDeviceInstallation(params string[] tags)
 	{
@@ -24,7 +27,7 @@ public class DeviceInstallationService : IDeviceInstallationService
 		{
 			InstallationId = GetDeviceId(),
 			Platform = "fcm",
-			PushChannel = Token
+			PushChannel = Token,
 		};
 
 		if (tags != null)

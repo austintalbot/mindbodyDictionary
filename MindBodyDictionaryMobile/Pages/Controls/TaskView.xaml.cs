@@ -14,7 +14,8 @@ public partial class TaskView
 		nameof(TaskCompletedCommand),
 		typeof(ICommand),
 		typeof(TaskView),
-		null);
+		null
+	);
 
 	public ICommand TaskCompletedCommand
 	{

@@ -7,9 +7,9 @@ public class GetMbdConditions(ILogger<GetMbdConditions> logger, CosmosClient cli
 
 	[Function("GetMbdConditions")]
 	public async Task<IActionResult> Run(
-		[HttpTrigger(AuthorizationLevel.Function, "get", Route = null)] HttpRequest req)
+		[HttpTrigger(AuthorizationLevel.Function, "get", Route = null)] HttpRequest req
+	)
 	{
-
 		try
 		{
 			_logger.LogInformation("C# HTTP trigger function processed a request.");
@@ -17,11 +17,12 @@ public class GetMbdConditions(ILogger<GetMbdConditions> logger, CosmosClient cli
 			var id = req.Query["id"];
 			_logger.LogInformation($" Get mbdCondition Id = {id}");
 
-			   var item = await _client.GetItemAsync<SharedMbdCondition>(
-						  databaseName: backend.CosmosDB.CosmosDbConstants.DatabaseName,
-						  containerName: backend.CosmosDB.CosmosDbConstants.Containers.MbdConditions,
-						  query: "SELECT * FROM Ailments",
-						  itemSelector: x => x.Id == id);
+			var item = await _client.GetItemAsync<SharedMbdCondition>(
+				databaseName: backend.CosmosDB.CosmosDbConstants.DatabaseName,
+				containerName: backend.CosmosDB.CosmosDbConstants.Containers.MbdConditions,
+				query: "SELECT * FROM Ailments",
+				itemSelector: x => x.Id == id
+			);
 
 			return item != null ? new OkObjectResult(item) : new NotFoundResult();
 		}

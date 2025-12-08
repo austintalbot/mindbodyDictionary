@@ -1,8 +1,8 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using MindBodyDictionaryMobile.Services;
-using MindBodyDictionaryMobile.Models;
 using Microsoft.Extensions.Logging;
+using MindBodyDictionaryMobile.Models;
+using MindBodyDictionaryMobile.Services;
 
 namespace MindBodyDictionaryMobile.PageModels;
 
@@ -35,7 +35,8 @@ public partial class NotificationSettingsPageModel : ObservableObject
 		INotificationRegistrationService notificationRegistrationService,
 		INotificationActionServiceExtended notificationActionService,
 		IDeviceInstallationService deviceInstallationService,
-		ILogger<NotificationSettingsPageModel> logger)
+		ILogger<NotificationSettingsPageModel> logger
+	)
 	{
 		_notificationRegistrationService = notificationRegistrationService;
 		_notificationActionService = notificationActionService;
@@ -93,14 +94,24 @@ public partial class NotificationSettingsPageModel : ObservableObject
 				return;
 			}
 
-			var isRegisteredInAzure = await _notificationRegistrationService.CheckRegistrationAsync(deviceInstallation.InstallationId);
+			var isRegisteredInAzure = await _notificationRegistrationService.CheckRegistrationAsync(
+				deviceInstallation.InstallationId
+			);
 
-			_logger.LogInformation("Azure registration check: Local={Local}, Azure={Azure}", IsRegistered, isRegisteredInAzure);
+			_logger.LogInformation(
+				"Azure registration check: Local={Local}, Azure={Azure}",
+				IsRegistered,
+				isRegisteredInAzure
+			);
 
 			// If local state doesn't match Azure, update it
 			if (IsRegistered != isRegisteredInAzure)
 			{
-				_logger.LogWarning("Registration state mismatch! Local={Local}, Azure={Azure}. Updating local state.", IsRegistered, isRegisteredInAzure);
+				_logger.LogWarning(
+					"Registration state mismatch! Local={Local}, Azure={Azure}. Updating local state.",
+					IsRegistered,
+					isRegisteredInAzure
+				);
 				IsRegistered = isRegisteredInAzure;
 				SaveRegistrationStatus(isRegisteredInAzure);
 				UpdateStatusMessage();
@@ -125,7 +136,8 @@ public partial class NotificationSettingsPageModel : ObservableObject
 		}
 	}
 
-	void UpdateStatusMessage() => StatusMessage = IsRegistered
+	void UpdateStatusMessage() =>
+		StatusMessage = IsRegistered
 			? "Device is registered for notifications"
 			: (NotificationsSupported ? "Ready to register" : "Notifications not supported on this device");
 
@@ -220,12 +232,13 @@ public partial class NotificationSettingsPageModel : ObservableObject
 			SaveRegistrationStatus(false);
 
 			// Add detailed error info to debug output
-			DebugInfo = $"=== REGISTRATION ERROR ===\n" +
-                       $"Message: {ex.Message}\n" +
-                       $"Type: {ex.GetType().Name}\n" +
-                       (ex.InnerException != null ? $"Inner: {ex.InnerException.Message}\n" : "") +
-                       $"Stack: {ex.StackTrace}\n\n" +
-                       DebugInfo;
+			DebugInfo =
+				$"=== REGISTRATION ERROR ===\n"
+				+ $"Message: {ex.Message}\n"
+				+ $"Type: {ex.GetType().Name}\n"
+				+ (ex.InnerException != null ? $"Inner: {ex.InnerException.Message}\n" : "")
+				+ $"Stack: {ex.StackTrace}\n\n"
+				+ DebugInfo;
 		}
 		finally
 		{
@@ -262,12 +275,13 @@ public partial class NotificationSettingsPageModel : ObservableObject
 			StatusMessage = $"❌ Deregistration failed: {ex.Message}";
 
 			// Add detailed error info to debug output
-			DebugInfo = $"=== DEREGISTRATION ERROR ===\n" +
-                       $"Message: {ex.Message}\n" +
-                       $"Type: {ex.GetType().Name}\n" +
-                       (ex.InnerException != null ? $"Inner: {ex.InnerException.Message}\n" : "") +
-                       $"Stack: {ex.StackTrace}\n\n" +
-                       DebugInfo;
+			DebugInfo =
+				$"=== DEREGISTRATION ERROR ===\n"
+				+ $"Message: {ex.Message}\n"
+				+ $"Type: {ex.GetType().Name}\n"
+				+ (ex.InnerException != null ? $"Inner: {ex.InnerException.Message}\n" : "")
+				+ $"Stack: {ex.StackTrace}\n\n"
+				+ DebugInfo;
 		}
 		finally
 		{

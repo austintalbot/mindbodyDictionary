@@ -1,6 +1,6 @@
 ﻿using Foundation;
-using UserNotifications;
 using Microsoft.Maui.ApplicationModel;
+using UserNotifications;
 
 namespace MindBodyDictionaryMobile;
 
@@ -15,22 +15,27 @@ public class AppDelegate : MauiUIApplicationDelegate, IUNUserNotificationCenterD
 		UNUserNotificationCenter.Current.Delegate = this;
 
 		// Request notification permissions
-		UNUserNotificationCenter.Current.RequestAuthorization(UNAuthorizationOptions.Alert | UNAuthorizationOptions.Badge | UNAuthorizationOptions.Sound, (approved, err) =>
-		{
-			if (approved)
+		UNUserNotificationCenter.Current.RequestAuthorization(
+			UNAuthorizationOptions.Alert | UNAuthorizationOptions.Badge | UNAuthorizationOptions.Sound,
+			(approved, err) =>
 			{
-				// Must be on main UI thread
-				Microsoft.Maui.ApplicationModel.MainThread.BeginInvokeOnMainThread(() =>
+				if (approved)
 				{
-					UIKit.UIApplication.SharedApplication.RegisterForRemoteNotifications();
-				});
+					// Must be on main UI thread
+					Microsoft.Maui.ApplicationModel.MainThread.BeginInvokeOnMainThread(() =>
+					{
+						UIKit.UIApplication.SharedApplication.RegisterForRemoteNotifications();
+					});
+				}
 			}
-		});
+		);
 
 		// Handle notification launched from background
 		if (launchOptions?.ContainsKey(UIKit.UIApplication.LaunchOptionsRemoteNotificationKey) == true)
 		{
-			if (launchOptions[UIKit.UIApplication.LaunchOptionsRemoteNotificationKey] is NSDictionary remoteNotification)
+			if (
+				launchOptions[UIKit.UIApplication.LaunchOptionsRemoteNotificationKey] is NSDictionary remoteNotification
+			)
 			{
 				System.Diagnostics.Debug.WriteLine("=== App launched from remote notification ===");
 				ProcessNotification(remoteNotification);
@@ -40,7 +45,10 @@ public class AppDelegate : MauiUIApplicationDelegate, IUNUserNotificationCenterD
 		// Handle local notification launched from background
 		if (launchOptions?.ContainsKey(UIKit.UIApplication.LaunchOptionsLocalNotificationKey) == true)
 		{
-			if (launchOptions[UIKit.UIApplication.LaunchOptionsLocalNotificationKey] is UIKit.UILocalNotification localNotification)
+			if (
+				launchOptions[UIKit.UIApplication.LaunchOptionsLocalNotificationKey]
+				is UIKit.UILocalNotification localNotification
+			)
 			{
 				System.Diagnostics.Debug.WriteLine("=== App launched from local notification ===");
 				ProcessNotification(localNotification.UserInfo);
@@ -74,12 +82,16 @@ public class AppDelegate : MauiUIApplicationDelegate, IUNUserNotificationCenterD
 					}
 					else
 					{
-						System.Diagnostics.Debug.WriteLine($"Warning: Service is not iOS DeviceInstallationService, it's {service.GetType().Name}");
+						System.Diagnostics.Debug.WriteLine(
+							$"Warning: Service is not iOS DeviceInstallationService, it's {service.GetType().Name}"
+						);
 					}
 				}
 				else
 				{
-					System.Diagnostics.Debug.WriteLine("Warning: DeviceInstallationService not found. Device token will not be registered, and push notifications may not work.");
+					System.Diagnostics.Debug.WriteLine(
+						"Warning: DeviceInstallationService not found. Device token will not be registered, and push notifications may not work."
+					);
 				}
 			}
 			catch (Exception ex)
@@ -89,7 +101,9 @@ public class AppDelegate : MauiUIApplicationDelegate, IUNUserNotificationCenterD
 		}
 		else
 		{
-			System.Diagnostics.Debug.WriteLine("Warning: IPlatformApplication.Current is null. Device token will not be registered, and push notifications may not work.");
+			System.Diagnostics.Debug.WriteLine(
+				"Warning: IPlatformApplication.Current is null. Device token will not be registered, and push notifications may not work."
+			);
 		}
 	}
 
@@ -101,7 +115,11 @@ public class AppDelegate : MauiUIApplicationDelegate, IUNUserNotificationCenterD
 	// MARK: UNUserNotificationCenterDelegate Methods
 
 	[Export("userNotificationCenter:willPresentNotification:withCompletionHandler:")]
-	public void WillPresentNotification(UNUserNotificationCenter center, UNNotification notification, Action<UNNotificationPresentationOptions> completionHandler)
+	public void WillPresentNotification(
+		UNUserNotificationCenter center,
+		UNNotification notification,
+		Action<UNNotificationPresentationOptions> completionHandler
+	)
 	{
 		System.Diagnostics.Debug.WriteLine("=== WillPresentNotification called ===");
 
@@ -126,11 +144,20 @@ public class AppDelegate : MauiUIApplicationDelegate, IUNUserNotificationCenterD
 		}
 
 		// Show notification in foreground with all options
-		completionHandler(UNNotificationPresentationOptions.List | UNNotificationPresentationOptions.Banner | UNNotificationPresentationOptions.Sound | UNNotificationPresentationOptions.Badge);
+		completionHandler(
+			UNNotificationPresentationOptions.List
+				| UNNotificationPresentationOptions.Banner
+				| UNNotificationPresentationOptions.Sound
+				| UNNotificationPresentationOptions.Badge
+		);
 	}
 
 	[Export("userNotificationCenter:didReceiveNotificationResponse:withCompletionHandler:")]
-	public void DidReceiveNotificationResponse(UNUserNotificationCenter center, UNNotificationResponse response, Action completionHandler)
+	public void DidReceiveNotificationResponse(
+		UNUserNotificationCenter center,
+		UNNotificationResponse response,
+		Action completionHandler
+	)
 	{
 		System.Diagnostics.Debug.WriteLine("=== DidReceiveNotificationResponse called ===");
 

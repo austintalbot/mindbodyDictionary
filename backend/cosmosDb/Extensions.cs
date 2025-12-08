@@ -2,32 +2,40 @@ namespace backend.CosmosDB;
 
 public static class Extensions
 {
-    public static async Task<List<T>> QueryAsync<T>(this CosmosClient client, string databaseName, string containerName, string query)
-    {
-        var container = client.GetContainer(databaseName, containerName);
-        var queryDefinition = new QueryDefinition(query);
-        var feed = container.GetItemQueryIterator<T>(queryDefinition);
+	public static async Task<List<T>> QueryAsync<T>(
+		this CosmosClient client,
+		string databaseName,
+		string containerName,
+		string query
+	)
+	{
+		var container = client.GetContainer(databaseName, containerName);
+		var queryDefinition = new QueryDefinition(query);
+		var feed = container.GetItemQueryIterator<T>(queryDefinition);
 
-        var toReturn = new List<T>();
-        if (feed != null)
-        {
-            while (feed.HasMoreResults)
-            {
-                var response = await feed.ReadNextAsync();
-                toReturn.AddRange(response);
-            }
-        }
+		var toReturn = new List<T>();
+		if (feed != null)
+		{
+			while (feed.HasMoreResults)
+			{
+				var response = await feed.ReadNextAsync();
+				toReturn.AddRange(response);
+			}
+		}
 
-        return toReturn;
-    }
+		return toReturn;
+	}
 
-    public static async Task<T?> GetItemAsync<T>(this CosmosClient client, string databaseName, string containerName, string query, Func<T,bool> itemSelector)
-    {
-        var list = await client.QueryAsync<T>(
-            databaseName: databaseName,
-            containerName: containerName,
-            query: query);
+	public static async Task<T?> GetItemAsync<T>(
+		this CosmosClient client,
+		string databaseName,
+		string containerName,
+		string query,
+		Func<T, bool> itemSelector
+	)
+	{
+		var list = await client.QueryAsync<T>(databaseName: databaseName, containerName: containerName, query: query);
 
-        return list == null? default : list.FirstOrDefault(itemSelector);
-    }
+		return list == null ? default : list.FirstOrDefault(itemSelector);
+	}
 }

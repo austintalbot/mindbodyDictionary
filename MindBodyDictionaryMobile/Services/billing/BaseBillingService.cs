@@ -16,8 +16,24 @@ public abstract class BaseBillingService(ILogger<BaseBillingService> logger) : I
 	// Sample product definitions - shared across all platforms
 	protected readonly List<Product> _products =
 	[
-		new Product { Id = "mbdpremiumyr", Name = "Premium Annual", Description = "Unlock premium features for one year", Price = "$9.99", PriceAmount = 9.99m, ImageUrl = "premium.png" },
-		new Product { Id = "MBDPremiumYr", Name = "Premium Annual", Description = "Unlock premium features for one year", Price = "$9.99", PriceAmount = 9.99m, ImageUrl = "premium.png" }
+		new Product
+		{
+			Id = "mbdpremiumyr",
+			Name = "Premium Annual",
+			Description = "Unlock premium features for one year",
+			Price = "$9.99",
+			PriceAmount = 9.99m,
+			ImageUrl = "premium.png",
+		},
+		new Product
+		{
+			Id = "MBDPremiumYr",
+			Name = "Premium Annual",
+			Description = "Unlock premium features for one year",
+			Price = "$9.99",
+			PriceAmount = 9.99m,
+			ImageUrl = "premium.png",
+		},
 	];
 
 	public bool IsInitialized => _isInitialized;
@@ -91,7 +107,11 @@ public abstract class BaseBillingService(ILogger<BaseBillingService> logger) : I
 			}
 			else
 			{
-				_logger.LogWarning("Purchase failed for product: {ProductId}, Error: {Error}", productId, result.ErrorMessage);
+				_logger.LogWarning(
+					"Purchase failed for product: {ProductId}, Error: {Error}",
+					productId,
+					result.ErrorMessage
+				);
 			}
 
 			return result;
@@ -103,7 +123,7 @@ public abstract class BaseBillingService(ILogger<BaseBillingService> logger) : I
 			{
 				IsSuccess = false,
 				ErrorMessage = ex.Message,
-				ProductId = productId
+				ProductId = productId,
 			};
 		}
 	}
@@ -128,6 +148,7 @@ public abstract class BaseBillingService(ILogger<BaseBillingService> logger) : I
 			return _ownedProducts.ToList();
 		}
 	}
+
 	public async Task<bool> RestorePurchasesAsync()
 	{
 		try

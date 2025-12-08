@@ -5,7 +5,17 @@ using Firebase.Messaging;
 
 namespace MindBodyDictionaryMobile;
 
-[Activity(Theme = "@style/Maui.SplashTheme", MainLauncher = true, LaunchMode = LaunchMode.SingleTop, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize | ConfigChanges.Density)]
+[Activity(
+	Theme = "@style/Maui.SplashTheme",
+	MainLauncher = true,
+	LaunchMode = LaunchMode.SingleTop,
+	ConfigurationChanges = ConfigChanges.ScreenSize
+		| ConfigChanges.Orientation
+		| ConfigChanges.UiMode
+		| ConfigChanges.ScreenLayout
+		| ConfigChanges.SmallestScreenSize
+		| ConfigChanges.Density
+)]
 public class MainActivity : MauiAppCompatActivity
 {
 	public const string CHANNEL_ID = "mindbody_notifications";
@@ -27,12 +37,9 @@ public class MainActivity : MauiAppCompatActivity
 		if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
 		{
 			var importance = NotificationImportance.High;
-			var channel = new NotificationChannel(
-				CHANNEL_ID,
-				"MindBody Notifications",
-				importance)
+			var channel = new NotificationChannel(CHANNEL_ID, "MindBody Notifications", importance)
 			{
-				Description = "Push notifications for MindBody Dictionary"
+				Description = "Push notifications for MindBody Dictionary",
 			};
 
 			channel.EnableVibration(true);
@@ -121,7 +128,8 @@ public class MainActivity : MauiAppCompatActivity
 			Android.Util.Log.Info("FCM", $"✅ Token received: {token[..Math.Min(20, token.Length)]}...");
 
 			// Store token in DeviceInstallationService
-			var deviceInstallationService = IPlatformApplication.Current?.Services?.GetService<IDeviceInstallationService>();
+			var deviceInstallationService =
+				IPlatformApplication.Current?.Services?.GetService<IDeviceInstallationService>();
 			if (deviceInstallationService is Platforms.Android.DeviceInstallationService androidService)
 			{
 				androidService.Token = token;

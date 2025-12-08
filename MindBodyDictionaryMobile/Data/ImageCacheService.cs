@@ -1,5 +1,5 @@
-using MindBodyDictionaryMobile.Models;
 using Microsoft.Extensions.Logging;
+using MindBodyDictionaryMobile.Models;
 
 namespace MindBodyDictionaryMobile.Data;
 
@@ -66,7 +66,7 @@ public class ImageCacheService(ImageCacheRepository imageCacheRepository, ILogge
 					FileName = fileName,
 					ImageData = imageData,
 					CachedAt = DateTime.UtcNow,
-					ContentType = GetContentType(fileName)
+					ContentType = GetContentType(fileName),
 				};
 
 				await _imageCacheRepository.SaveItemAsync(imageCache);
@@ -117,7 +117,7 @@ public class ImageCacheService(ImageCacheRepository imageCacheRepository, ILogge
 			{
 				TotalImagesInResources = availableImages.Count,
 				CachedImages = cachedCount,
-				PercentageCached = availableImages.Count > 0 ? (cachedCount * 100 / availableImages.Count) : 0
+				PercentageCached = availableImages.Count > 0 ? (cachedCount * 100 / availableImages.Count) : 0,
 			};
 		}
 		catch (Exception e)
@@ -162,7 +162,8 @@ public class ImageCacheService(ImageCacheRepository imageCacheRepository, ILogge
 			var assembly = typeof(ImageCacheService).Assembly;
 			_logger.LogInformation("CacheImageAsync: Searching for resource matching {FileName}", fileName);
 
-			var resourceName = assembly.GetManifestResourceNames()
+			var resourceName = assembly
+				.GetManifestResourceNames()
 				.FirstOrDefault(name => name.EndsWith($".{fileName}", StringComparison.OrdinalIgnoreCase));
 
 			if (resourceName == null)
@@ -192,12 +193,16 @@ public class ImageCacheService(ImageCacheRepository imageCacheRepository, ILogge
 				FileName = fileName,
 				ImageData = imageData,
 				CachedAt = DateTime.UtcNow,
-				ContentType = GetContentType(fileName)
+				ContentType = GetContentType(fileName),
 			};
 
 			await _imageCacheRepository.SaveItemAsync(imageCache);
-			_logger.LogInformation("CacheImageAsync: Successfully cached {FileName} ({Size} bytes) from {ResourceName}",
-				fileName, imageData.Length, resourceName);
+			_logger.LogInformation(
+				"CacheImageAsync: Successfully cached {FileName} ({Size} bytes) from {ResourceName}",
+				fileName,
+				imageData.Length,
+				resourceName
+			);
 		}
 		catch (Exception e)
 		{
@@ -215,14 +220,25 @@ public class ImageCacheService(ImageCacheRepository imageCacheRepository, ILogge
 			var assembly = typeof(ImageCacheService).Assembly;
 			var resourceNames = assembly.GetManifestResourceNames();
 
-			_logger.LogInformation("GetImageFilesFromResourcesAsync: Found {Count} total manifest resources", resourceNames.Length);
+			_logger.LogInformation(
+				"GetImageFilesFromResourcesAsync: Found {Count} total manifest resources",
+				resourceNames.Length
+			);
 
 			foreach (var resourceName in resourceNames)
 			{
 				// Check if resource is in the images folder - match pattern like "MindBodyDictionaryMobile.Resources.Raw.images.imageName.png"
-				if (resourceName.Contains(".images.") && (resourceName.EndsWith(".png") || resourceName.EndsWith(".jpg") ||
-					resourceName.EndsWith(".jpeg") || resourceName.EndsWith(".gif") || resourceName.EndsWith(".svg") ||
-					resourceName.EndsWith(".webp")))
+				if (
+					resourceName.Contains(".images.")
+					&& (
+						resourceName.EndsWith(".png")
+						|| resourceName.EndsWith(".jpg")
+						|| resourceName.EndsWith(".jpeg")
+						|| resourceName.EndsWith(".gif")
+						|| resourceName.EndsWith(".svg")
+						|| resourceName.EndsWith(".webp")
+					)
+				)
 				{
 					// Extract the file name from the resource name
 					// Pattern: MindBodyDictionaryMobile.Resources.Raw.images.FileName.png
@@ -234,17 +250,28 @@ public class ImageCacheService(ImageCacheRepository imageCacheRepository, ILogge
 						if (IsImageFile(fileName))
 						{
 							imageFiles.Add(fileName);
-							_logger.LogDebug("GetImageFilesFromResourcesAsync: Found image {ResourceName} -> {FileName}", resourceName, fileName);
+							_logger.LogDebug(
+								"GetImageFilesFromResourcesAsync: Found image {ResourceName} -> {FileName}",
+								resourceName,
+								fileName
+							);
 						}
 					}
 				}
 			}
 
-			_logger.LogInformation("GetImageFilesFromResourcesAsync: Found {Count} image files in resources", imageFiles.Count);
+			_logger.LogInformation(
+				"GetImageFilesFromResourcesAsync: Found {Count} image files in resources",
+				imageFiles.Count
+			);
 		}
 		catch (Exception e)
 		{
-			_logger.LogError(e, "GetImageFilesFromResourcesAsync: Error reading images from resources - {Message}", e.Message);
+			_logger.LogError(
+				e,
+				"GetImageFilesFromResourcesAsync: Error reading images from resources - {Message}",
+				e.Message
+			);
 		}
 
 		return imageFiles;
@@ -256,16 +283,17 @@ public class ImageCacheService(ImageCacheRepository imageCacheRepository, ILogge
 		return extension is ".png" or ".jpg" or ".jpeg" or ".gif" or ".svg" or ".webp";
 	}
 
-	private string GetContentType(string fileName) => Path.GetExtension(fileName).ToLowerInvariant() switch
-	{
-		".png" => "image/png",
-		".jpg" => "image/jpeg",
-		".jpeg" => "image/jpeg",
-		".gif" => "image/gif",
-		".svg" => "image/svg+xml",
-		".webp" => "image/webp",
-		_ => "application/octet-stream"
-	};
+	private string GetContentType(string fileName) =>
+		Path.GetExtension(fileName).ToLowerInvariant() switch
+		{
+			".png" => "image/png",
+			".jpg" => "image/jpeg",
+			".jpeg" => "image/jpeg",
+			".gif" => "image/gif",
+			".svg" => "image/svg+xml",
+			".webp" => "image/webp",
+			_ => "application/octet-stream",
+		};
 }
 
 /// <summary>

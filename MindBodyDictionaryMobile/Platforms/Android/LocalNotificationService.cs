@@ -5,7 +5,10 @@ namespace MindBodyDictionaryMobile.Platforms.Android;
 
 public static class LocalNotificationService
 {
-	public static async Task SendTestNotification(string title = "Test Notification", string body = "This is a local test notification")
+	public static async Task SendTestNotification(
+		string title = "Test Notification",
+		string body = "This is a local test notification"
+	)
 	{
 		await Task.Run(() =>
 		{
@@ -22,11 +25,7 @@ public static class LocalNotificationService
 				if (global::Android.OS.Build.VERSION.SdkInt >= global::Android.OS.BuildVersionCodes.M)
 					pendingFlags |= PendingIntentFlags.Immutable;
 
-				var pendingIntent = PendingIntent.GetActivity(
-					context,
-					new Random().Next(),
-					intent,
-					pendingFlags);
+				var pendingIntent = PendingIntent.GetActivity(context, new Random().Next(), intent, pendingFlags);
 
 				Notification.Builder notificationBuilder;
 				if (global::Android.OS.Build.VERSION.SdkInt >= global::Android.OS.BuildVersionCodes.O)
@@ -52,9 +51,7 @@ public static class LocalNotificationService
 				if (global::Android.OS.Build.VERSION.SdkInt < global::Android.OS.BuildVersionCodes.O)
 				{
 					var priority = Convert.ToInt32(NotificationPriority.High);
-					notificationBuilder
-						.SetPriority(priority)
-						.SetDefaults(NotificationDefaults.All);
+					notificationBuilder.SetPriority(priority).SetDefaults(NotificationDefaults.All);
 				}
 
 				var notification = notificationBuilder.Build();

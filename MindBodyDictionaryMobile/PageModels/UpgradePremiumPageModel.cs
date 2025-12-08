@@ -88,7 +88,10 @@ public partial class UpgradePremiumPageModel : ObservableObject
 
 #if DEBUG
 			var platform = GetPlatform();
-			UpdateDebugInfo("NAVIGATED_COMMAND_EXECUTED", $"Platform: {platform}\nProduct ID being set to: {_premiumProductId}");
+			UpdateDebugInfo(
+				"NAVIGATED_COMMAND_EXECUTED",
+				$"Platform: {platform}\nProduct ID being set to: {_premiumProductId}"
+			);
 #endif
 
 			// Verify product ID was set
@@ -121,7 +124,10 @@ public partial class UpgradePremiumPageModel : ObservableObject
 			}
 
 #if DEBUG
-			UpdateDebugInfo("SUBSCRIPTION_CHECK_COMPLETE", $"IsSubscribed: {IsSubscribed}\nFinal Product ID: {_premiumProductId}\nAbout to set IsBusy to false");
+			UpdateDebugInfo(
+				"SUBSCRIPTION_CHECK_COMPLETE",
+				$"IsSubscribed: {IsSubscribed}\nFinal Product ID: {_premiumProductId}\nAbout to set IsBusy to false"
+			);
 #endif
 		}
 		catch (Exception ex)
@@ -148,7 +154,10 @@ public partial class UpgradePremiumPageModel : ObservableObject
 		{
 			IsBusy = true;
 #if DEBUG
-			UpdateDebugInfo("PURCHASE_INITIATED", $"Product: {_premiumProductId}\nPlatform: {GetPlatform()}\nTime: {DateTime.Now:u}");
+			UpdateDebugInfo(
+				"PURCHASE_INITIATED",
+				$"Product: {_premiumProductId}\nPlatform: {GetPlatform()}\nTime: {DateTime.Now:u}"
+			);
 #endif
 
 			if (string.IsNullOrEmpty(_premiumProductId))
@@ -181,7 +190,10 @@ public partial class UpgradePremiumPageModel : ObservableObject
 			else
 			{
 #if DEBUG
-				UpdateDebugInfo("PURCHASE_FAILED", $"PurchaseAsync returned false for {_premiumProductId}\nError: {purchaseResult.ErrorMessage}\nThis usually means: product not found in store, user canceled, or connection error.");
+				UpdateDebugInfo(
+					"PURCHASE_FAILED",
+					$"PurchaseAsync returned false for {_premiumProductId}\nError: {purchaseResult.ErrorMessage}\nThis usually means: product not found in store, user canceled, or connection error."
+				);
 #endif
 			}
 		}
@@ -189,7 +201,10 @@ public partial class UpgradePremiumPageModel : ObservableObject
 		{
 			Debug.WriteLine($"Error purchasing premium: {ex.Message}");
 #if DEBUG
-			UpdateDebugInfo("PURCHASE_ERROR", $"Exception: {ex.GetType().Name}\nMessage: {ex.Message}\nStackTrace: {ex.StackTrace}");
+			UpdateDebugInfo(
+				"PURCHASE_ERROR",
+				$"Exception: {ex.GetType().Name}\nMessage: {ex.Message}\nStackTrace: {ex.StackTrace}"
+			);
 #endif
 			await Shell.Current.DisplayAlertAsync("Error", ex.Message, "OK");
 		}
@@ -238,7 +253,10 @@ public partial class UpgradePremiumPageModel : ObservableObject
 			else
 			{
 #if DEBUG
-				UpdateDebugInfo("RESTORE_FAILED", "RestorePurchasesAsync returned false - may indicate no purchases or connection error");
+				UpdateDebugInfo(
+					"RESTORE_FAILED",
+					"RestorePurchasesAsync returned false - may indicate no purchases or connection error"
+				);
 #endif
 				await Shell.Current.DisplayAlertAsync("Info", "Restore failed", "OK");
 			}
@@ -262,7 +280,10 @@ public partial class UpgradePremiumPageModel : ObservableObject
 	{
 		try
 		{
-			await Browser.Default.OpenAsync("https://www.mindbodydictionary.com/privacy", BrowserLaunchMode.SystemPreferred);
+			await Browser.Default.OpenAsync(
+				"https://www.mindbodydictionary.com/privacy",
+				BrowserLaunchMode.SystemPreferred
+			);
 		}
 		catch (Exception ex)
 		{

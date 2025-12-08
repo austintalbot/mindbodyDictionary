@@ -19,9 +19,6 @@ public class MbdCondition
 	[JsonPropertyName("categoryId")]
 	public int CategoryID { get; set; }
 
-	[JsonPropertyName("tags")]
-	public List<Tag> Tags { get; set; } = new();
-
 	[JsonPropertyName("tasks")]
 	public List<MbdTask> Tasks { get; set; } = new();
 

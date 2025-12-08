@@ -1,14 +1,17 @@
-
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using MindBodyDictionaryMobile.Models;
 using MindBodyDictionaryMobile.Data;
+using MindBodyDictionaryMobile.Models;
 
 namespace MindBodyDictionaryMobile.PageModels;
 
-public partial class MainPageModel(SeedDataService seedDataService, ProjectRepository projectRepository,
-	MbdTaskRepository taskRepository, MbdCategoryRepository categoryRepository, ModalErrorHandler errorHandler)
-	: ObservableObject, IProjectTaskPageModel
+public partial class MainPageModel(
+	SeedDataService seedDataService,
+	ProjectRepository projectRepository,
+	MbdTaskRepository taskRepository,
+	MbdCategoryRepository categoryRepository,
+	ModalErrorHandler errorHandler
+) : ObservableObject, IProjectTaskPageModel
 {
 	private bool _isNavigatedTo;
 	private bool _dataLoaded;

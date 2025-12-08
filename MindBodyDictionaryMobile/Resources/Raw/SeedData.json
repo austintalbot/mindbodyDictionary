@@ -1,183 +1,178 @@
 {
-    "Projects": [
+  "Conditions": [
+    {
+      "ID": "0b116146-b598-45e1-99bb-8f980912a2a8",
+      "Name": "Overweight / Weight Issues",
+      "SummaryNegative": "You are craving love and attention, and you're angry, perhaps even hateful, for not having it. You are filling a void in your soul with comfort foods. Your precious foods cover your sadness, regret, and any other feeling that bothers you. Your eating style compensates for what you wish you could receive from other people.",
+      "SummaryPositive": "Failure comes too easy when you do the yo-yo dieting. The only way to conquer yourself is to not conquer but work with all the parts of yourself in a consistent daily manner. Consistent daily exercise, positive mind resets, doing simple challenges, and taking one step at a time is all part of creating success.",
+      "Affirmations": [
+        "I love my body and my body loves me.",
+        "I am peaceful and clear inside when I eat quality food.",
+        "I am strong, with a trim and slim body.",
+        "I release the need to hold onto past pain and suffering.",
+        "I love myself."
+      ],
+      "PhysicalConnections": [
+        "Weight",
+        "Liver",
+        "Metabolism",
+        "Cravings",
+        "Addictions"
+      ],
+      "Tags": [
+        "Self-esteem",
+        "Liver",
+        "Fat",
+        "Love",
+        "Attention"
+      ],
+      "Recommendations": [
         {
-            "Name": "Balance",
-            "Description": "Improve work-life balance.",
-            "Icon": "\uea28",
-            "Category": { "Title": "work", "Color": "#3068df" },
-            "Tags": [
-                { "Title": "work", "Color": "#3068df" }
-            ],
-            "Tasks": [
-                { "Title": "Survey Employees", "IsCompleted": false },
-                { "Title": "Analyze Survey Results", "IsCompleted": false },
-                { "Title": "Develop Action Plan", "IsCompleted": false }
-            ]
+          "Name": "Eat fresh fruits and lots of raw vegetables.",
+          "Url": "",
+          "RecommendationType": 3
         },
         {
-            "Name": "Personal",
-            "Description": "Learn to speak another language.",
-            "Icon": "\uf8fe",
-            "Category": { "Title": "education", "Color": "#8800FF" },
-            "Tags": [
-                { "Title": "personal", "Color": "#FF4500" }
-            ],
-            "Tasks": [
-                { "Title": "Read a Book", "IsCompleted": false },
-                { "Title": "Attend a Workshop", "IsCompleted": false },
-                { "Title": "Practice a Hobby", "IsCompleted": false }
-            ]
+          "Name": "Broccoli",
+          "Url": "",
+          "RecommendationType": 3
         },
         {
-            "Name": "Fitness",
-            "Description": "Promote health and fitness activities",
-            "Icon": "\uf837",
-            "Category": { "Title": "self", "Color": "#FF3300" },
-            "Tags": [
-                { "Title": "health", "Color": "#32CD32" }
-            ],
-            "Tasks": [
-                { "Title": "Morning Yoga", "IsCompleted": false },
-                { "Title": "Evening Run", "IsCompleted": false },
-                { "Title": "Healthy Cooking Class", "IsCompleted": false }
-            ]
+          "Name": "Spinach",
+          "Url": "",
+          "RecommendationType": 3
         },
         {
-            "Name": "Family and Friends",
-            "Description": "Strengthen relationships with family and friends.",
-            "Icon": "\uf5a9",
-            "Category": { "Title": "relationships", "Color": "#FF9900" },
-            "Tags": [
-                { "Title": "family", "Color": "#1E90FF" },
-                { "Title": "friends", "Color": "#FF69B4" }
-            ],
-            "Tasks": [
-                { "Title": "Plan a Family Reunion", "IsCompleted": false },
-                { "Title": "Organize a Friends' Get-together", "IsCompleted": false },
-                { "Title": "Weekly Phone Calls", "IsCompleted": false }
-            ]
+          "Name": "Whole grains",
+          "Url": "",
+          "RecommendationType": 3
+        },
+        {
+          "Name": "Skinless turkey or chicken breast",
+          "Url": "",
+          "RecommendationType": 3
         }
-    ],
-    "Conditions": [
+      ],
+      "ImageShareOverrideAilmentName": "Overweight",
+      "SubscriptionOnly": false,
+      "ImagePositive": "Overweight / Weight Issues1",
+      "ImageNegative": "Overweight / Weight Issues2"
+    },
+    {
+      "ID": "0da4e951-3c98-4654-851a-77f88a90ec5b",
+      "Name": "Cold",
+      "SummaryNegative": "You are trying to do too much. You became confused or scattered, and you forgot to take care of your true needs. Your responsibilities feel overwhelming. You have been fearing that it all won't work out, so you overdo yourself.",
+      "SummaryPositive": "Take time to recenter and return to your divine path with deeper roots. Of course, there is no way to be everything to everyone. Set aside your hyper concerns. Be what you truly are. Relax and embrace the idea of everything working out for the highest and best. Ground yourself, rest up, and move forward.",
+      "Affirmations": [
+        "I am positive that I was doing just fine.",
+        "I am sure that this is just a momentary setback.",
+        "I am using this moment to reflect, release, and recharge my body and my mind.",
+        "My body needed a reset and detox, so I am using it for my good.",
+        "I love giving myself warm and caring time."
+      ],
+      "PhysicalConnections": [
+        "Cough",
+        "Sinuses",
+        "Flu",
+        "Seasonal illness",
+        "Sickness"
+      ],
+      "Tags": [
+        "Sick",
+        "Sore Throat",
+        "Sneezing",
+        "Coughing",
+        "Chills"
+      ],
+      "Recommendations": [
         {
-            "Name": "Anxiety Disorder",
-            "Description": "Characterized by persistent worry, fear, and physical symptoms. Mind-body practices like meditation and breathing exercises can help manage symptoms.",
-            "Icon": "\uf5a8",
-            "Category": { "Title": "mental health", "Color": "#7B68EE" },
-            "Tags": [
-                { "Title": "mental health", "Color": "#7B68EE" },
-                { "Title": "stress", "Color": "#FF6347" }
-            ],
-            "Tasks": [
-                { "Title": "Practice deep breathing techniques", "IsCompleted": false },
-                { "Title": "Daily meditation session", "IsCompleted": false },
-                { "Title": "Progressive muscle relaxation", "IsCompleted": false }
-            ]
+          "Name": "Water/Get hydrated",
+          "Url": "",
+          "RecommendationType": 3
         },
         {
-            "Name": "Chronic Pain",
-            "Description": "Long-lasting pain that can benefit from mind-body therapies, yoga, and mindfulness practices to reduce perceived pain and improve mobility.",
-            "Icon": "\uf565",
-            "Category": { "Title": "physical health", "Color": "#FF6B6B" },
-            "Tags": [
-                { "Title": "pain management", "Color": "#FF6B6B" },
-                { "Title": "wellness", "Color": "#32CD32" }
-            ],
-            "Tasks": [
-                { "Title": "Gentle yoga practice", "IsCompleted": false },
-                { "Title": "Body scan meditation", "IsCompleted": false },
-                { "Title": "Hot/cold therapy sessions", "IsCompleted": false }
-            ]
+          "Name": "Micro-greens",
+          "Url": "",
+          "RecommendationType": 3
         },
         {
-            "Name": "Insomnia",
-            "Description": "Sleep disorder that can be improved through relaxation techniques, mindfulness, and body awareness practices.",
-            "Icon": "\uf186",
-            "Category": { "Title": "sleep health", "Color": "#1E3A8A" },
-            "Tags": [
-                { "Title": "sleep", "Color": "#1E3A8A" },
-                { "Title": "relaxation", "Color": "#87CEEB" }
-            ],
-            "Tasks": [
-                { "Title": "Evening meditation routine", "IsCompleted": false },
-                { "Title": "Progressive relaxation before bed", "IsCompleted": false },
-                { "Title": "Breathing exercises", "IsCompleted": false }
-            ]
+          "Name": "Cayenne pepper",
+          "Url": "",
+          "RecommendationType": 3
         },
         {
-            "Name": "Depression",
-            "Description": "Mood disorder that can benefit from physical activity, yoga, mindfulness, and supportive mind-body interventions.",
-            "Icon": "\uf4ad",
-            "Category": { "Title": "mental health", "Color": "#7B68EE" },
-            "Tags": [
-                { "Title": "mental health", "Color": "#7B68EE" },
-                { "Title": "mood", "Color": "#FFD700" }
-            ],
-            "Tasks": [
-                { "Title": "Daily movement/exercise", "IsCompleted": false },
-                { "Title": "Gratitude meditation", "IsCompleted": false },
-                { "Title": "Outdoor walking session", "IsCompleted": false }
-            ]
+          "Name": "Fermented foods",
+          "Url": "",
+          "RecommendationType": 3
         },
         {
-            "Name": "High Blood Pressure",
-            "Description": "Hypertension can be managed with stress reduction techniques, yoga, meditation, and breathing exercises.",
-            "Icon": "\uf21e",
-            "Category": { "Title": "physical health", "Color": "#FF6B6B" },
-            "Tags": [
-                { "Title": "cardiovascular", "Color": "#DC143C" },
-                { "Title": "stress relief", "Color": "#FF6347" }
-            ],
-            "Tasks": [
-                { "Title": "Daily meditation practice", "IsCompleted": false },
-                { "Title": "Yoga session focused on relaxation", "IsCompleted": false },
-                { "Title": "Cardiovascular exercise", "IsCompleted": false }
-            ]
-        },
-        {
-            "Name": "Fibromyalgia",
-            "Description": "Widespread pain condition benefiting from gentle exercise, mindfulness, and stress management techniques.",
-            "Icon": "\uf550",
-            "Category": { "Title": "physical health", "Color": "#FF6B6B" },
-            "Tags": [
-                { "Title": "chronic condition", "Color": "#8B4513" },
-                { "Title": "pain", "Color": "#FF6B6B" }
-            ],
-            "Tasks": [
-                { "Title": "Gentle stretching routine", "IsCompleted": false },
-                { "Title": "Mindfulness meditation", "IsCompleted": false },
-                { "Title": "Low-impact exercise", "IsCompleted": false }
-            ]
-        },
-        {
-            "Name": "ADHD",
-            "Description": "Attention deficit condition that can benefit from mindfulness, body awareness, and focused breathing practices.",
-            "Icon": "\uf192",
-            "Category": { "Title": "mental health", "Color": "#7B68EE" },
-            "Tags": [
-                { "Title": "focus", "Color": "#4169E1" },
-                { "Title": "mindfulness", "Color": "#9370DB" }
-            ],
-            "Tasks": [
-                { "Title": "Focused breathing exercises", "IsCompleted": false },
-                { "Title": "Mindfulness meditation session", "IsCompleted": false },
-                { "Title": "Body awareness practice", "IsCompleted": false }
-            ]
-        },
-        {
-            "Name": "Headaches/Migraines",
-            "Description": "Recurring headaches can be reduced through relaxation, tension release, and stress management mind-body techniques.",
-            "Icon": "\uf48f",
-            "Category": { "Title": "physical health", "Color": "#FF6B6B" },
-            "Tags": [
-                { "Title": "pain relief", "Color": "#FF6347" },
-                { "Title": "tension", "Color": "#DAA520" }
-            ],
-            "Tasks": [
-                { "Title": "Progressive muscle relaxation", "IsCompleted": false },
-                { "Title": "Neck and shoulder stretches", "IsCompleted": false },
-                { "Title": "Breathing and meditation", "IsCompleted": false }
-            ]
+          "Name": "Celery juice",
+          "Url": "",
+          "RecommendationType": 3
         }
-    ]
+      ],
+      "ImageShareOverrideAilmentName": "Cold",
+      "SubscriptionOnly": false,
+      "ImagePositive": "Cold1",
+      "ImageNegative": "Cold2"
+    },
+    {
+      "ID": "1587522c-e3e2-4ed8-a7b4-fb64a81685ca",
+      "Name": "Anxiety",
+      "SummaryNegative": "You are worried and anxious about life and what might happen. You are afraid that you might fail or lose control. Your mind is racing with thoughts of worst-case scenarios. You feel tension in your body and cannot relax.",
+      "SummaryPositive": "You are safe and protected. Everything is working out for your highest good. You choose to focus on positive outcomes. You trust in yourself and the universe. Your body is relaxed and at peace.",
+      "Affirmations": [
+        "I am safe and secure.",
+        "I trust in the process of life.",
+        "I am calm and peaceful.",
+        "I release all worry and fear.",
+        "I am worthy of peace and happiness."
+      ],
+      "PhysicalConnections": [
+        "Heart",
+        "Nervous system",
+        "Breathing",
+        "Sleep",
+        "Digestion"
+      ],
+      "Tags": [
+        "Worry",
+        "Fear",
+        "Panic",
+        "Stress",
+        "Tension"
+      ],
+      "Recommendations": [
+        {
+          "Name": "Deep breathing exercises",
+          "Url": "",
+          "RecommendationType": 3
+        },
+        {
+          "Name": "Meditation practice",
+          "Url": "",
+          "RecommendationType": 3
+        },
+        {
+          "Name": "Yoga",
+          "Url": "",
+          "RecommendationType": 3
+        },
+        {
+          "Name": "Chamomile tea",
+          "Url": "",
+          "RecommendationType": 3
+        },
+        {
+          "Name": "Progressive muscle relaxation",
+          "Url": "",
+          "RecommendationType": 3
+        }
+      ],
+      "ImageShareOverrideAilmentName": "Anxiety",
+      "SubscriptionOnly": false,
+      "ImagePositive": "Anxiety1",
+      "ImageNegative": "Anxiety2"
+    }
+  ]
 }

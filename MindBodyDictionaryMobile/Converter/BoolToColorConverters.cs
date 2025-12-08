@@ -29,7 +29,7 @@ public class BoolToColorConverter : IValueConverter
 					{
 						"Primary" => Color.FromArgb("#512BD4"),
 						"Secondary" => Color.FromArgb("#DFD8F7"),
-						_ => Colors.Gray
+						_ => Colors.Gray,
 					};
 				}
 

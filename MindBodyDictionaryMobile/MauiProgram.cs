@@ -52,7 +52,6 @@ public static class MauiProgram
 		// Direct Azure Notification Hub registration (no backend API)
 		builder.Services.AddSingleton<INotificationRegistrationService, NotificationRegistrationService>();
 
-
 		// Register HttpClient for DI
 		builder.Services.AddHttpClient();
 		// Backend service for fetching data from serverless APIs

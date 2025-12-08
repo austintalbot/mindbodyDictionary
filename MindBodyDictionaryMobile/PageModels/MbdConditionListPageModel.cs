@@ -1,9 +1,9 @@
 #nullable disable
+using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using MindBodyDictionaryMobile.Models;
-using System.Collections.ObjectModel;
 using MindBodyDictionary.Shared.Entities;
+using MindBodyDictionaryMobile.Models;
 
 namespace MindBodyDictionaryMobile.PageModels;
 
@@ -12,9 +12,10 @@ public partial class MbdConditionListPageModel : ObservableObject
 	[ObservableProperty]
 	private string lastApiResponse = "";
 
-	public string ConditionNamesDebug => MbdConditions == null || MbdConditions.Count == 0
-		? "No conditions loaded"
-		: string.Join(", ", MbdConditions.Select(c => c.Name));
+	public string ConditionNamesDebug =>
+		MbdConditions == null || MbdConditions.Count == 0
+			? "No conditions loaded"
+			: string.Join(", ", MbdConditions.Select(c => c.Name));
 
 	private readonly MbdConditionRepository _conditionRepository;
 	private readonly IMbdBackendService _backendService;
@@ -34,10 +35,13 @@ public partial class MbdConditionListPageModel : ObservableObject
 		}
 	}
 
-	private void MbdConditions_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+	private void MbdConditions_CollectionChanged(
+		object sender,
+		System.Collections.Specialized.NotifyCollectionChangedEventArgs e
+	)
 	{
 		OnPropertyChanged(nameof(ConditionNamesDebug));
-			}
+	}
 
 	[ObservableProperty]
 	private string lastSyncTime = "Never";
@@ -84,9 +88,10 @@ public partial class MbdConditionListPageModel : ObservableObject
 					}
 				}
 				LastSyncTime = DateTime.Now.ToString("g");
-				SyncStatus = updatedCount > 0
-					? $"Loaded {updatedCount} new/changed from debug API"
-					: "No new or changed conditions from debug API";
+				SyncStatus =
+					updatedCount > 0
+						? $"Loaded {updatedCount} new/changed from debug API"
+						: "No new or changed conditions from debug API";
 				ConditionSource = "Debug API";
 			}
 			else
@@ -107,14 +112,15 @@ public partial class MbdConditionListPageModel : ObservableObject
 	// Helper to compare two conditions for equality (customize as needed)
 	private bool AreConditionsEqual(MbdCondition a, MbdCondition b)
 	{
-		if (a == null || b == null) return false;
+		if (a == null || b == null)
+			return false;
 		return a.ID == b.ID && a.Name == b.Name && a.Description == b.Description;
 		// Add more fields if needed
 	}
 
 	public string LoadFromApiCommandDetails =>
-		"GET http://192.168.68.130:7071/api/GetMbdConditionsTable\n" +
-		"Deserializes List<MbdCondition> from JSON and saves to local DB.";
+		"GET http://192.168.68.130:7071/api/GetMbdConditionsTable\n"
+		+ "Deserializes List<MbdCondition> from JSON and saves to local DB.";
 
 	[RelayCommand]
 	public async Task Appearing()
@@ -167,10 +173,9 @@ public partial class MbdConditionListPageModel : ObservableObject
 	}
 
 	[RelayCommand]
-	public async Task NavigateTombdCondition(MbdCondition mbdCondition)
-		=> await Shell.Current.GoToAsync($"///mbdConditions?id={mbdCondition.ID}");
+	public async Task NavigateTombdCondition(MbdCondition mbdCondition) =>
+		await Shell.Current.GoToAsync($"///mbdConditions?id={mbdCondition.ID}");
 
 	[RelayCommand]
 	public async Task AddmbdCondition() => await Shell.Current.GoToAsync($"/condition");
 }
-

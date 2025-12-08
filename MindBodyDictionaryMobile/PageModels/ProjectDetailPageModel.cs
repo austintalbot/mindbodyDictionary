@@ -1,7 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using MindBodyDictionaryMobile.Models;
 using MindBodyDictionary.Shared.Entities;
+using MindBodyDictionaryMobile.Models;
 
 namespace MindBodyDictionaryMobile.PageModels;
 
@@ -50,7 +50,7 @@ public partial class ProjectDetailPageModel : ObservableObject, IQueryAttributab
 		new IconData { Icon = FluentUI.badge_24_regular, Description = "Badge Icon" },
 		new IconData { Icon = FluentUI.book_24_regular, Description = "Book Icon" },
 		new IconData { Icon = FluentUI.people_24_regular, Description = "People Icon" },
-		new IconData { Icon = FluentUI.bot_24_regular, Description = "Bot Icon" }
+		new IconData { Icon = FluentUI.bot_24_regular, Description = "Bot Icon" },
 	];
 
 	private bool _canDelete;
@@ -65,10 +65,15 @@ public partial class ProjectDetailPageModel : ObservableObject, IQueryAttributab
 		}
 	}
 
-	public bool HasCompletedTasks
-		=> _project?.Tasks.Any(t => t.IsCompleted) ?? false;
+	public bool HasCompletedTasks => _project?.Tasks.Any(t => t.IsCompleted) ?? false;
 
-	public ProjectDetailPageModel(ProjectRepository projectRepository, MbdTaskRepository taskRepository, MbdCategoryRepository categoryRepository, TagRepository tagRepository, ModalErrorHandler errorHandler)
+	public ProjectDetailPageModel(
+		ProjectRepository projectRepository,
+		MbdTaskRepository taskRepository,
+		MbdCategoryRepository categoryRepository,
+		TagRepository tagRepository,
+		ModalErrorHandler errorHandler
+	)
 	{
 		_projectRepository = projectRepository;
 		_taskRepository = taskRepository;
@@ -100,11 +105,9 @@ public partial class ProjectDetailPageModel : ObservableObject, IQueryAttributab
 		}
 	}
 
-	private async Task LoadCategories() =>
-		Categories = await _categoryRepository.ListAsync();
+	private async Task LoadCategories() => Categories = await _categoryRepository.ListAsync();
 
-	private async Task LoadTags() =>
-		AllTags = await _tagRepository.ListAsync();
+	private async Task LoadTags() => AllTags = await _tagRepository.ListAsync();
 
 	private async Task RefreshData()
 	{
@@ -170,14 +173,12 @@ public partial class ProjectDetailPageModel : ObservableObject, IQueryAttributab
 		OnPropertyChanged(nameof(HasCompletedTasks));
 	}
 
-
 	[RelayCommand]
 	private async Task Save()
 	{
 		if (_project is null)
 		{
-			_errorHandler.HandleError(
-				new Exception("Project is null. Cannot Save."));
+			_errorHandler.HandleError(new Exception("Project is null. Cannot Save."));
 
 			return;
 		}
@@ -217,18 +218,17 @@ public partial class ProjectDetailPageModel : ObservableObject, IQueryAttributab
 	{
 		if (_project is null)
 		{
-			_errorHandler.HandleError(
-				new Exception("Project is null. Cannot navigate to task."));
+			_errorHandler.HandleError(new Exception("Project is null. Cannot navigate to task."));
 
 			return;
 		}
 
 		// Pass the project so if this is a new project we can just add
 		// the tasks to the project and then save them all from here.
-		await Shell.Current.GoToAsync($"task",
-			new ShellNavigationQueryParameters(){
-				{TaskDetailPageModel.ProjectQueryKey, _project}
-			});
+		await Shell.Current.GoToAsync(
+			$"task",
+			new ShellNavigationQueryParameters() { { TaskDetailPageModel.ProjectQueryKey, _project } }
+		);
 	}
 
 	[RelayCommand(CanExecute = nameof(CanDelete))]
@@ -246,8 +246,7 @@ public partial class ProjectDetailPageModel : ObservableObject, IQueryAttributab
 	}
 
 	[RelayCommand]
-	private Task NavigateToTask(MbdTask task) =>
-		Shell.Current.GoToAsync($"task?id={task.ID}");
+	private Task NavigateToTask(MbdTask task) => Shell.Current.GoToAsync($"task?id={task.ID}");
 
 	[RelayCommand]
 	private async Task ToggleTag(Tag tag)

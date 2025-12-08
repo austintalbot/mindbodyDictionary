@@ -1,7 +1,7 @@
-using MindBodyDictionaryMobile.Models;
+using System.Text.RegularExpressions;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Logging;
-using System.Text.RegularExpressions;
+using MindBodyDictionaryMobile.Models;
 
 namespace MindBodyDictionaryMobile.Data;
 
@@ -49,7 +49,8 @@ public class ImageCacheRepository(ILogger<ImageCacheRepository> logger)
 			_logger.LogInformation("Init: Connection opened successfully");
 
 			var createTableCmd = connection.CreateCommand();
-			createTableCmd.CommandText = @"
+			createTableCmd.CommandText =
+				@"
 			CREATE TABLE IF NOT EXISTS ImageCache (
 				ID INTEGER PRIMARY KEY AUTOINCREMENT,
 				FileName TEXT NOT NULL UNIQUE,
@@ -86,7 +87,8 @@ public class ImageCacheRepository(ILogger<ImageCacheRepository> logger)
 		await connection.OpenAsync();
 
 		var selectCmd = connection.CreateCommand();
-		selectCmd.CommandText = "SELECT ID, FileName, ImageData, CachedAt, ContentType FROM ImageCache WHERE FileName = @FileName";
+		selectCmd.CommandText =
+			"SELECT ID, FileName, ImageData, CachedAt, ContentType FROM ImageCache WHERE FileName = @FileName";
 		selectCmd.Parameters.AddWithValue("@FileName", fileName);
 
 		await using var reader = await selectCmd.ExecuteReaderAsync();
@@ -97,7 +99,7 @@ public class ImageCacheRepository(ILogger<ImageCacheRepository> logger)
 				FileName = reader.GetString(1),
 				ImageData = (byte[])reader.GetValue(2),
 				CachedAt = reader.GetDateTime(3),
-				ContentType = reader.GetString(4)
+				ContentType = reader.GetString(4),
 			}
 			: null;
 	}
@@ -112,20 +114,23 @@ public class ImageCacheRepository(ILogger<ImageCacheRepository> logger)
 		await connection.OpenAsync();
 
 		var selectCmd = connection.CreateCommand();
-		selectCmd.CommandText = "SELECT ID, FileName, ImageData, CachedAt, ContentType FROM ImageCache ORDER BY FileName";
+		selectCmd.CommandText =
+			"SELECT ID, FileName, ImageData, CachedAt, ContentType FROM ImageCache ORDER BY FileName";
 		var images = new List<ImageCache>();
 
 		await using var reader = await selectCmd.ExecuteReaderAsync();
 		while (await reader.ReadAsync())
 		{
-			images.Add(new ImageCache
-			{
-				ID = reader.GetInt32(0),
-				FileName = reader.GetString(1),
-				ImageData = (byte[])reader.GetValue(2),
-				CachedAt = reader.GetDateTime(3),
-				ContentType = reader.GetString(4)
-			});
+			images.Add(
+				new ImageCache
+				{
+					ID = reader.GetInt32(0),
+					FileName = reader.GetString(1),
+					ImageData = (byte[])reader.GetValue(2),
+					CachedAt = reader.GetDateTime(3),
+					ContentType = reader.GetString(4),
+				}
+			);
 		}
 
 		_logger.LogInformation("ListAsync: Retrieved {Count} images from cache", images.Count);
@@ -148,7 +153,8 @@ public class ImageCacheRepository(ILogger<ImageCacheRepository> logger)
 			_logger.LogInformation("SaveItemAsync: Connection opened");
 
 			var insertCmd = connection.CreateCommand();
-			insertCmd.CommandText = @"
+			insertCmd.CommandText =
+				@"
 			INSERT OR REPLACE INTO ImageCache (FileName, ImageData, CachedAt, ContentType)
 			VALUES (@FileName, @ImageData, @CachedAt, @ContentType)";
 
@@ -159,12 +165,21 @@ public class ImageCacheRepository(ILogger<ImageCacheRepository> logger)
 
 			_logger.LogInformation("SaveItemAsync: Executing insert for {FileName}", image.FileName);
 			var result = await insertCmd.ExecuteNonQueryAsync();
-			_logger.LogInformation("SaveItemAsync: Insert complete - {FileName} ({Size} bytes), rows affected: {RowsAffected}",
-				image.FileName, image.ImageData.Length, result);
+			_logger.LogInformation(
+				"SaveItemAsync: Insert complete - {FileName} ({Size} bytes), rows affected: {RowsAffected}",
+				image.FileName,
+				image.ImageData.Length,
+				result
+			);
 		}
 		catch (Exception e)
 		{
-			_logger.LogError(e, "SaveItemAsync: ERROR saving image to cache: {FileName} - {Message}", image.FileName, e.Message);
+			_logger.LogError(
+				e,
+				"SaveItemAsync: ERROR saving image to cache: {FileName} - {Message}",
+				image.FileName,
+				e.Message
+			);
 			throw;
 		}
 	}

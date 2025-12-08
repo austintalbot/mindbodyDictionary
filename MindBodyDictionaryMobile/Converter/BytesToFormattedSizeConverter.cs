@@ -16,6 +16,6 @@ public class BytesToFormattedSizeConverter : IValueConverter
 		return $"{bytes / (1024.0 * 1024):F2} MB";
 	}
 
-	public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
-		=> throw new NotImplementedException();
+	public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) =>
+		throw new NotImplementedException();
 }

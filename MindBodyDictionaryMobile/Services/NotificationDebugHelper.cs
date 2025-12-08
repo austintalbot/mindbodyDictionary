@@ -10,7 +10,9 @@ public static class NotificationDebugHelper
 		sb.AppendLine("=== NOTIFICATION HUB CONFIGURATION ===");
 		sb.AppendLine($"Hub Name: {NotificationConfig.NotificationHubName}");
 		sb.AppendLine($"Namespace: {NotificationConfig.NotificationHubNamespace}");
-		sb.AppendLine($"Connection String: {(string.IsNullOrEmpty(NotificationConfig.ListenConnectionString) ? "MISSING" : "Configured")}");
+		sb.AppendLine(
+			$"Connection String: {(string.IsNullOrEmpty(NotificationConfig.ListenConnectionString) ? "MISSING" : "Configured")}"
+		);
 		sb.AppendLine();
 
 		sb.AppendLine("=== CONNECTION STRING DETAILS ===");
@@ -57,7 +59,9 @@ public static class NotificationDebugHelper
 			sb.AppendLine("=== DEVICE INSTALLATION SERVICE ===");
 			sb.AppendLine($"Notifications Supported: {deviceService.NotificationsSupported}");
 			sb.AppendLine($"Device ID: {deviceService.GetDeviceId() ?? "NULL"}");
-			sb.AppendLine($"Token: {(string.IsNullOrEmpty(deviceService.Token) ? "NOT SET" : $"{deviceService.Token[..Math.Min(20, deviceService.Token.Length)]}...")}");
+			sb.AppendLine(
+				$"Token: {(string.IsNullOrEmpty(deviceService.Token) ? "NOT SET" : $"{deviceService.Token[..Math.Min(20, deviceService.Token.Length)]}...")}"
+			);
 
 			try
 			{
@@ -66,7 +70,9 @@ public static class NotificationDebugHelper
 				{
 					sb.AppendLine($"Installation ID: {installation.InstallationId}");
 					sb.AppendLine($"Platform: {installation.Platform}");
-					sb.AppendLine($"Push Channel: {(string.IsNullOrEmpty(installation.PushChannel) ? "EMPTY" : $"{installation.PushChannel[..Math.Min(20, installation.PushChannel.Length)]}...")}");
+					sb.AppendLine(
+						$"Push Channel: {(string.IsNullOrEmpty(installation.PushChannel) ? "EMPTY" : $"{installation.PushChannel[..Math.Min(20, installation.PushChannel.Length)]}...")}"
+					);
 					sb.AppendLine($"Tags: {string.Join(", ", installation.Tags ?? ["None"])}");
 				}
 				else
@@ -85,7 +91,9 @@ public static class NotificationDebugHelper
 		try
 		{
 			var cachedToken = SecureStorage.GetAsync("cached_device_token").GetAwaiter().GetResult();
-			sb.AppendLine($"Cached Device Token: {(string.IsNullOrEmpty(cachedToken) ? "NOT SET" : $"{cachedToken[..Math.Min(20, cachedToken.Length)]}...")}");
+			sb.AppendLine(
+				$"Cached Device Token: {(string.IsNullOrEmpty(cachedToken) ? "NOT SET" : $"{cachedToken[..Math.Min(20, cachedToken.Length)]}...")}"
+			);
 
 			var cachedTags = SecureStorage.GetAsync("cached_tags").GetAwaiter().GetResult();
 			sb.AppendLine($"Cached Tags: {cachedTags ?? "NOT SET"}");
@@ -120,7 +128,8 @@ public static class NotificationDebugHelper
 		{
 			var hubClient = Microsoft.Azure.NotificationHubs.NotificationHubClient.CreateClientFromConnectionString(
 				NotificationConfig.ListenConnectionString,
-				NotificationConfig.NotificationHubName);
+				NotificationConfig.NotificationHubName
+			);
 
 			sb.AppendLine("✅ Successfully created NotificationHubClient");
 

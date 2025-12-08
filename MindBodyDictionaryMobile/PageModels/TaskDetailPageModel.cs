@@ -6,7 +6,11 @@ using MindBodyDictionaryMobile.Services;
 
 namespace MindBodyDictionaryMobile.PageModels;
 
-public partial class TaskDetailPageModel(ProjectRepository projectRepository, MbdTaskRepository taskRepository, ModalErrorHandler errorHandler) : ObservableObject, IQueryAttributable
+public partial class TaskDetailPageModel(
+	ProjectRepository projectRepository,
+	MbdTaskRepository taskRepository,
+	ModalErrorHandler errorHandler
+) : ObservableObject, IQueryAttributable
 {
 	public const string ProjectQueryKey = "project";
 	private MbdTask? _task;
@@ -30,11 +34,11 @@ public partial class TaskDetailPageModel(ProjectRepository projectRepository, Mb
 	[ObservableProperty]
 	private int _selectedProjectIndex = -1;
 
-
 	[ObservableProperty]
 	private bool _isExistingProject;
 
-	public void ApplyQueryAttributes(IDictionary<string, object> query) => LoadTaskAsync(query).FireAndForgetSafeAsync(_errorHandler);
+	public void ApplyQueryAttributes(IDictionary<string, object> query) =>
+		LoadTaskAsync(query).FireAndForgetSafeAsync(_errorHandler);
 
 	private async Task LoadTaskAsync(IDictionary<string, object> query)
 	{
@@ -91,10 +95,7 @@ public partial class TaskDetailPageModel(ProjectRepository projectRepository, Mb
 		}
 		else
 		{
-			_task = new MbdTask()
-			{
-				ProjectID = Project?.ID ?? 0
-			};
+			_task = new MbdTask() { ProjectID = Project?.ID ?? 0 };
 		}
 	}
 
@@ -113,8 +114,7 @@ public partial class TaskDetailPageModel(ProjectRepository projectRepository, Mb
 	{
 		if (_task is null)
 		{
-			_errorHandler.HandleError(
-				new Exception("Task or project is null. The task could not be saved."));
+			_errorHandler.HandleError(new Exception("Task or project is null. The task could not be saved."));
 
 			return;
 		}
@@ -145,8 +145,7 @@ public partial class TaskDetailPageModel(ProjectRepository projectRepository, Mb
 	{
 		if (_task is null || Project is null)
 		{
-			_errorHandler.HandleError(
-				new Exception("Task is null. The task could not be deleted."));
+			_errorHandler.HandleError(new Exception("Task is null. The task could not be deleted."));
 
 			return;
 		}

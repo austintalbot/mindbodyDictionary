@@ -1,7 +1,6 @@
-
+using Android.BillingClient.Api;
 using Microsoft.Extensions.Logging;
 using MindBodyDictionaryMobile.Models;
-using Android.BillingClient.Api;
 using AndroidBillingResult = Android.BillingClient.Api.BillingResult;
 
 namespace MindBodyDictionaryMobile.Services.billing;
@@ -13,7 +12,8 @@ public class BillingService : BaseBillingService
 	private BillingClientStateListener? _stateListener;
 	private PurchasesUpdatedListener? _purchaseListener;
 
-	public BillingService(ILogger<BaseBillingService> logger) : base(logger)
+	public BillingService(ILogger<BaseBillingService> logger)
+		: base(logger)
 	{
 		InitializeListeners();
 	}
@@ -27,44 +27,43 @@ public class BillingService : BaseBillingService
 	protected override async Task<bool> InitializePlatformAsync()
 	{
 		return await Task.Run(() =>
-       {
-           try
-           {
-               var context = Platform.CurrentActivity ?? Microsoft.Maui.ApplicationModel.Platform.CurrentActivity;
-               if (context == null)
-               {
-                   _logger.LogError("No current activity available for billing initialization");
-                   return false;
-               }
+		{
+			try
+			{
+				var context = Platform.CurrentActivity ?? Microsoft.Maui.ApplicationModel.Platform.CurrentActivity;
+				if (context == null)
+				{
+					_logger.LogError("No current activity available for billing initialization");
+					return false;
+				}
 
-               if (_purchaseListener == null)
-               {
-                   _logger.LogError("Purchase listener not initialized");
-                   return false;
-               }
+				if (_purchaseListener == null)
+				{
+					_logger.LogError("Purchase listener not initialized");
+					return false;
+				}
 
-               var pendingPurchasesParams = PendingPurchasesParams.NewBuilder()
-                   .EnableOneTimeProducts()
-                   .Build();
+				var pendingPurchasesParams = PendingPurchasesParams.NewBuilder().EnableOneTimeProducts().Build();
 
-               _billingClient = BillingClient.NewBuilder(context)
-                   .SetListener(_purchaseListener)
-                   .EnablePendingPurchases(pendingPurchasesParams)
-                   .Build();
+				_billingClient = BillingClient
+					.NewBuilder(context)
+					.SetListener(_purchaseListener)
+					.EnablePendingPurchases(pendingPurchasesParams)
+					.Build();
 
-               _logger.LogInformation("Starting billing client connection...");
-               if (_stateListener != null)
-               {
-                   _billingClient.StartConnection(_stateListener);
-               }
-               return true;
-           }
-           catch (Exception ex)
-           {
-               _logger.LogError(ex, "Failed to initialize billing client");
-               return false;
-           }
-       });
+				_logger.LogInformation("Starting billing client connection...");
+				if (_stateListener != null)
+				{
+					_billingClient.StartConnection(_stateListener);
+				}
+				return true;
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex, "Failed to initialize billing client");
+				return false;
+			}
+		});
 	}
 
 	protected override async Task<List<Product>> GetPlatformProductsAsync(List<Product> baseProducts)
@@ -76,7 +75,8 @@ public class BillingService : BaseBillingService
 			if (_billingClient == null)
 			{
 				_logger.LogError("Billing client is null");
-				foreach (var p in baseProducts) p.IsOwned = _ownedProducts.Contains(p.Id);
+				foreach (var p in baseProducts)
+					p.IsOwned = _ownedProducts.Contains(p.Id);
 				return baseProducts;
 			}
 
@@ -84,7 +84,8 @@ public class BillingService : BaseBillingService
 			var productList = new List<QueryProductDetailsParams.Product>();
 			foreach (var product in baseProducts)
 			{
-				var queryProduct = QueryProductDetailsParams.Product.NewBuilder()
+				var queryProduct = QueryProductDetailsParams
+					.Product.NewBuilder()
 					.SetProductId(product.Id)
 					.SetProductType(BillingClient.ProductType.Inapp)
 					.Build();
@@ -93,13 +94,12 @@ public class BillingService : BaseBillingService
 
 			if (productList.Count == 0)
 			{
-				foreach (var p in baseProducts) p.IsOwned = _ownedProducts.Contains(p.Id);
+				foreach (var p in baseProducts)
+					p.IsOwned = _ownedProducts.Contains(p.Id);
 				return baseProducts;
 			}
 
-			var queryParams = QueryProductDetailsParams.NewBuilder()
-				.SetProductList(productList)
-				.Build();
+			var queryParams = QueryProductDetailsParams.NewBuilder().SetProductList(productList).Build();
 
 			// v8 API call - QueryProductDetailsAsync returns a coroutine
 			var productResult = await _billingClient.QueryProductDetailsAsync(queryParams);
@@ -110,10 +110,10 @@ public class BillingService : BaseBillingService
 			if (productResult != null)
 			{
 				// Access products from the result - v8 may use different property names
-				var products = productResult.ProductDetailsList ??
-                             productResult.GetType()
-                                 .GetProperty("Products")?.GetValue(productResult) as IList<ProductDetails> ??
-                             [];
+				var products =
+					productResult.ProductDetailsList
+					?? productResult.GetType().GetProperty("Products")?.GetValue(productResult) as IList<ProductDetails>
+					?? [];
 
 				var productDict = new Dictionary<string, ProductDetails>();
 				foreach (var pd in products)
@@ -131,7 +131,7 @@ public class BillingService : BaseBillingService
 						Price = baseProduct.Price,
 						PriceAmount = baseProduct.PriceAmount,
 						ImageUrl = baseProduct.ImageUrl,
-						IsOwned = _ownedProducts.Contains(baseProduct.Id)
+						IsOwned = _ownedProducts.Contains(baseProduct.Id),
 					};
 
 					if (productDict.TryGetValue(baseProduct.Id, out var details))
@@ -154,14 +154,16 @@ public class BillingService : BaseBillingService
 			else
 			{
 				_logger.LogWarning("QueryProductDetailsAsync returned null");
-				foreach (var p in baseProducts) p.IsOwned = _ownedProducts.Contains(p.Id);
+				foreach (var p in baseProducts)
+					p.IsOwned = _ownedProducts.Contains(p.Id);
 				return baseProducts;
 			}
 		}
 		catch (Exception ex)
 		{
 			_logger.LogError(ex, "Error querying platform products");
-			foreach (var p in baseProducts) p.IsOwned = _ownedProducts.Contains(p.Id);
+			foreach (var p in baseProducts)
+				p.IsOwned = _ownedProducts.Contains(p.Id);
 			return baseProducts;
 		}
 	}
@@ -173,24 +175,27 @@ public class BillingService : BaseBillingService
 			var purchasedProducts = new List<string>();
 			var tcs = new TaskCompletionSource<List<string>>();
 
-			var queryPurchasesParams = QueryPurchasesParams.NewBuilder()
+			var queryPurchasesParams = QueryPurchasesParams
+				.NewBuilder()
 				.SetProductType(BillingClient.ProductType.Inapp)
 				.Build();
 
-			var purchaseResponseListener = new PurchasesResponseListener((billingResult, purchases) =>
-			{
-				if (billingResult.ResponseCode == BillingResponseCode.Ok && purchases != null)
+			var purchaseResponseListener = new PurchasesResponseListener(
+				(billingResult, purchases) =>
 				{
-					foreach (var purchase in purchases)
+					if (billingResult.ResponseCode == BillingResponseCode.Ok && purchases != null)
 					{
-						if (purchase.PurchaseState == PurchaseState.Purchased)
+						foreach (var purchase in purchases)
 						{
-							purchasedProducts.AddRange(purchase.Products);
+							if (purchase.PurchaseState == PurchaseState.Purchased)
+							{
+								purchasedProducts.AddRange(purchase.Products);
+							}
 						}
 					}
+					tcs.SetResult(purchasedProducts);
 				}
-				tcs.SetResult(purchasedProducts);
-			});
+			);
 
 			if (_billingClient != null)
 			{
@@ -220,14 +225,24 @@ public class BillingService : BaseBillingService
 			if (string.IsNullOrEmpty(productId))
 			{
 				_logger.LogError("ProductId is null or empty");
-				return new PurchaseResult { IsSuccess = false, ProductId = productId, ErrorMessage = "Product ID is empty" };
+				return new PurchaseResult
+				{
+					IsSuccess = false,
+					ProductId = productId,
+					ErrorMessage = "Product ID is empty",
+				};
 			}
 
 			var activity = Platform.CurrentActivity ?? Microsoft.Maui.ApplicationModel.Platform.CurrentActivity;
 			if (activity == null)
 			{
 				_logger.LogError("No current activity available");
-				return new PurchaseResult { IsSuccess = false, ProductId = productId, ErrorMessage = "No activity" };
+				return new PurchaseResult
+				{
+					IsSuccess = false,
+					ProductId = productId,
+					ErrorMessage = "No activity",
+				};
 			}
 
 			if (_billingClient == null)
@@ -239,7 +254,12 @@ public class BillingService : BaseBillingService
 				if (_billingClient == null)
 				{
 					_logger.LogError("Billing client still null after re-initialization attempt");
-					return new PurchaseResult { IsSuccess = false, ProductId = productId, ErrorMessage = "Billing client not initialized" };
+					return new PurchaseResult
+					{
+						IsSuccess = false,
+						ProductId = productId,
+						ErrorMessage = "Billing client not initialized",
+					};
 				}
 			}
 
@@ -247,56 +267,72 @@ public class BillingService : BaseBillingService
 			if (!_billingClient.IsReady)
 			{
 				_logger.LogWarning("Billing client not ready, attempting connection...");
-				return new PurchaseResult { IsSuccess = false, ProductId = productId, ErrorMessage = "Billing service not ready" };
+				return new PurchaseResult
+				{
+					IsSuccess = false,
+					ProductId = productId,
+					ErrorMessage = "Billing service not ready",
+				};
 			}
 
 			_logger.LogInformation("Querying product details for {ProductId}", productId);
 
 			// Query product details first (v8 API requirement)
 			var productList = new List<QueryProductDetailsParams.Product>();
-			var queryProduct = QueryProductDetailsParams.Product.NewBuilder()
+			var queryProduct = QueryProductDetailsParams
+				.Product.NewBuilder()
 				.SetProductId(productId)
 				.SetProductType(BillingClient.ProductType.Inapp)
 				.Build();
 			productList.Add(queryProduct);
 
-			var queryParams = QueryProductDetailsParams.NewBuilder()
-				.SetProductList(productList)
-				.Build();
+			var queryParams = QueryProductDetailsParams.NewBuilder().SetProductList(productList).Build();
 
 			_logger.LogInformation("Calling QueryProductDetailsAsync");
 			var productResult = await _billingClient.QueryProductDetailsAsync(queryParams);
 
 			_logger.LogInformation("QueryProductDetailsAsync completed");
 
-			var products = productResult?.ProductDetailsList ??
-                         productResult?.GetType()
-                             .GetProperty("Products")?.GetValue(productResult) as IList<ProductDetails> ??
-                         [];
+			var products =
+				productResult?.ProductDetailsList
+				?? productResult?.GetType().GetProperty("Products")?.GetValue(productResult) as IList<ProductDetails>
+				?? [];
 
 			_logger.LogInformation("Product list contains {Count} products", products.Count);
 
 			if (products.Count == 0)
 			{
 				_logger.LogWarning("Product {ProductId} not found in Play Store", productId);
-				return new PurchaseResult { IsSuccess = false, ProductId = productId, ErrorMessage = "Product not found in Play Store" };
+				return new PurchaseResult
+				{
+					IsSuccess = false,
+					ProductId = productId,
+					ErrorMessage = "Product not found in Play Store",
+				};
 			}
 
 			var productDetails = products.FirstOrDefault();
 			if (productDetails == null)
 			{
 				_logger.LogWarning("Product details are null even though list has items");
-				return new PurchaseResult { IsSuccess = false, ProductId = productId, ErrorMessage = "Product unavailable" };
+				return new PurchaseResult
+				{
+					IsSuccess = false,
+					ProductId = productId,
+					ErrorMessage = "Product unavailable",
+				};
 			}
 
 			_logger.LogInformation("Building billing flow params for {ProductId}", productId);
 
 			// Build billing flow params
-			var detailsParams = BillingFlowParams.ProductDetailsParams.NewBuilder()
+			var detailsParams = BillingFlowParams
+				.ProductDetailsParams.NewBuilder()
 				.SetProductDetails(productDetails)
 				.Build();
 
-			var flowParams = BillingFlowParams.NewBuilder()
+			var flowParams = BillingFlowParams
+				.NewBuilder()
 				.SetProductDetailsParamsList(new[] { detailsParams })
 				.Build();
 
@@ -315,14 +351,28 @@ public class BillingService : BaseBillingService
 			else
 			{
 				var error = result?.DebugMessage ?? "Unknown error";
-				_logger.LogError("Launch failed with response code {ResponseCode}: {Error}", result?.ResponseCode, error);
-				return new PurchaseResult { IsSuccess = false, ProductId = productId, ErrorMessage = error };
+				_logger.LogError(
+					"Launch failed with response code {ResponseCode}: {Error}",
+					result?.ResponseCode,
+					error
+				);
+				return new PurchaseResult
+				{
+					IsSuccess = false,
+					ProductId = productId,
+					ErrorMessage = error,
+				};
 			}
 		}
 		catch (Exception ex)
 		{
 			_logger.LogError(ex, "Exception in PurchasePlatformProductAsync for {ProductId}", productId);
-			return new PurchaseResult { IsSuccess = false, ProductId = productId, ErrorMessage = ex.Message };
+			return new PurchaseResult
+			{
+				IsSuccess = false,
+				ProductId = productId,
+				ErrorMessage = ex.Message,
+			};
 		}
 	}
 
@@ -353,7 +403,6 @@ public class BillingService : BaseBillingService
 	internal void OnBillingServiceDisconnected()
 	{
 		_logger.LogInformation("Billing service disconnected");
-
 	}
 
 	internal void OnBillingSetupFinished(AndroidBillingResult billingResult)
@@ -361,7 +410,11 @@ public class BillingService : BaseBillingService
 		var responseCode = billingResult.ResponseCode;
 		var debugMessage = billingResult.DebugMessage;
 
-		_logger.LogInformation("Billing setup finished - ResponseCode: {ResponseCode}, Message: {DebugMessage}", responseCode, debugMessage);
+		_logger.LogInformation(
+			"Billing setup finished - ResponseCode: {ResponseCode}, Message: {DebugMessage}",
+			responseCode,
+			debugMessage
+		);
 
 		if (responseCode == BillingResponseCode.Ok)
 		{
@@ -369,7 +422,11 @@ public class BillingService : BaseBillingService
 		}
 		else
 		{
-			_logger.LogError("Billing setup failed with code {ResponseCode}: {DebugMessage}", responseCode, debugMessage);
+			_logger.LogError(
+				"Billing setup failed with code {ResponseCode}: {DebugMessage}",
+				responseCode,
+				debugMessage
+			);
 		}
 	}
 
@@ -383,8 +440,12 @@ public class BillingService : BaseBillingService
 
 			foreach (var purchase in purchases)
 			{
-				_logger.LogInformation("Processing purchase - ProductId: {ProductId}, State: {State}, Token: {Token}",
-					string.Join(",", purchase.Products), purchase.PurchaseState, purchase.PurchaseToken);
+				_logger.LogInformation(
+					"Processing purchase - ProductId: {ProductId}, State: {State}, Token: {Token}",
+					string.Join(",", purchase.Products),
+					purchase.PurchaseState,
+					purchase.PurchaseToken
+				);
 				ProcessPurchase(purchase);
 			}
 		}
@@ -394,8 +455,11 @@ public class BillingService : BaseBillingService
 		}
 		else
 		{
-			_logger.LogError("Purchase failed - ResponseCode: {ResponseCode}, Debug: {DebugMessage}",
-				billingResult.ResponseCode, billingResult.DebugMessage);
+			_logger.LogError(
+				"Purchase failed - ResponseCode: {ResponseCode}, Debug: {DebugMessage}",
+				billingResult.ResponseCode,
+				billingResult.DebugMessage
+			);
 		}
 	}
 
@@ -406,9 +470,7 @@ public class BillingService : BaseBillingService
 	{
 		try
 		{
-			var queryParams = QueryPurchasesParams.NewBuilder()
-				.SetProductType(BillingClient.ProductType.Inapp)
-				.Build();
+			var queryParams = QueryPurchasesParams.NewBuilder().SetProductType(BillingClient.ProductType.Inapp).Build();
 
 			if (_billingClient == null)
 			{
@@ -431,8 +493,12 @@ public class BillingService : BaseBillingService
 	{
 		try
 		{
-			_logger.LogInformation("ProcessPurchase called - ProductIds: {ProductIds}, State: {PurchaseState}, Token: {PurchaseToken}",
-				string.Join(",", purchase.Products), purchase.PurchaseState, purchase.PurchaseToken);
+			_logger.LogInformation(
+				"ProcessPurchase called - ProductIds: {ProductIds}, State: {PurchaseState}, Token: {PurchaseToken}",
+				string.Join(",", purchase.Products),
+				purchase.PurchaseState,
+				purchase.PurchaseToken
+			);
 
 			if (purchase.PurchaseState == PurchaseState.Purchased)
 			{
@@ -453,8 +519,11 @@ public class BillingService : BaseBillingService
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError(ex, "Error processing purchase for products {ProductIds}",
-				string.Join(",", purchase.Products));
+			_logger.LogError(
+				ex,
+				"Error processing purchase for products {ProductIds}",
+				string.Join(",", purchase.Products)
+			);
 		}
 	}
 

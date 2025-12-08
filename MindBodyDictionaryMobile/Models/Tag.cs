@@ -3,7 +3,36 @@ using CommunityToolkit.Maui.Core.Extensions;
 
 namespace MindBodyDictionaryMobile.Models;
 
-/// <summary>
-/// Represents a tag for categorizing and organizing conditions.
-/// </summary>
-	// The Tag model has been removed to resolve ambiguity and ensure shared model is used.
+public class Tag
+{
+	public int ID { get; set; }
+	public string Title { get; set; } = string.Empty;
+	public string Color { get; set; } = "#FF0000";
+
+	[JsonIgnore]
+	public Brush ColorBrush
+	{
+		get { return new SolidColorBrush(Microsoft.Maui.Graphics.Color.FromArgb(Color)); }
+	}
+
+	[JsonIgnore]
+	public Color DisplayColor
+	{
+		get { return Microsoft.Maui.Graphics.Color.FromArgb(Color); }
+	}
+
+	[JsonIgnore]
+	public Color DisplayDarkColor
+	{
+		get { return DisplayColor.WithBlackKey(0.8); }
+	}
+
+	[JsonIgnore]
+	public Color DisplayLightColor
+	{
+		get { return DisplayColor.WithBlackKey(0.2); }
+	}
+
+	[JsonIgnore]
+	public bool IsSelected { get; set; }
+}

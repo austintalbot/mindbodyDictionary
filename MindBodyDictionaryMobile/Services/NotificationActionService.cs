@@ -8,7 +8,7 @@ public class NotificationActionService : INotificationActionServiceExtended
 	{
 		{ "project_update", NotificationAction.ProjectUpdate },
 		{ "task_reminder", NotificationAction.TaskReminder },
-		{ "custom", NotificationAction.Custom }
+		{ "custom", NotificationAction.Custom },
 	};
 
 	public event EventHandler<NotificationAction>? ActionTriggered;

@@ -1,9 +1,9 @@
+using System.Text;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.Logging;
 using MindBodyDictionaryMobile.Data;
 using MindBodyDictionaryMobile.Models;
-using Microsoft.Extensions.Logging;
-using System.Text;
 
 namespace MindBodyDictionaryMobile.PageModels;
 
@@ -52,7 +52,8 @@ public partial class ImageCachePageModel : ObservableObject
 	public ImageCachePageModel(
 		ImageCacheRepository imageCacheRepository,
 		ImageCacheService imageCacheService,
-		ILogger<ImageCachePageModel> logger)
+		ILogger<ImageCachePageModel> logger
+	)
 	{
 		_imageCacheRepository = imageCacheRepository;
 		_imageCacheService = imageCacheService;
@@ -70,30 +71,41 @@ public partial class ImageCachePageModel : ObservableObject
 			_logger.LogInformation("LoadCacheStats: Starting");
 
 			var stats = await _imageCacheService.GetCacheStatsAsync();
-			_logger.LogInformation("LoadCacheStats: Got stats - Total: {Total}, Cached: {Cached}, Resources: {Resources}",
-				stats.CachedImages, stats.CachedImages, stats.TotalImagesInResources);
+			_logger.LogInformation(
+				"LoadCacheStats: Got stats - Total: {Total}, Cached: {Cached}, Resources: {Resources}",
+				stats.CachedImages,
+				stats.CachedImages,
+				stats.TotalImagesInResources
+			);
 
 			TotalImagesInResources = stats.TotalImagesInResources;
 			CachedImages = stats.CachedImages;
 			PercentageCached = stats.PercentageCached;
-			_logger.LogInformation("LoadCacheStats: Properties updated - TotalImagesInResources={Total}, CachedImages={Cached}, PercentageCached={Percent}",
-				TotalImagesInResources, CachedImages, PercentageCached);
+			_logger.LogInformation(
+				"LoadCacheStats: Properties updated - TotalImagesInResources={Total}, CachedImages={Cached}, PercentageCached={Percent}",
+				TotalImagesInResources,
+				CachedImages,
+				PercentageCached
+			);
 
 			var cachedItems = await _imageCacheRepository.ListAsync();
 			_logger.LogInformation("LoadCacheStats: Got {Count} cached items from repository", cachedItems.Count);
 			long totalSize = 0;
 
-			var items = cachedItems.Select(img =>
-			{
-				totalSize += img.ImageData.Length;
-				return new ImageCacheItem
+			var items = cachedItems
+				.Select(img =>
 				{
-					FileName = img.FileName,
-					SizeKb = img.ImageData.Length / 1024.0,
-					ContentType = img.ContentType,
-					CachedAt = img.CachedAt
-				};
-			}).OrderBy(x => x.FileName).ToList();
+					totalSize += img.ImageData.Length;
+					return new ImageCacheItem
+					{
+						FileName = img.FileName,
+						SizeKb = img.ImageData.Length / 1024.0,
+						ContentType = img.ContentType,
+						CachedAt = img.CachedAt,
+					};
+				})
+				.OrderBy(x => x.FileName)
+				.ToList();
 
 			_logger.LogInformation("LoadCacheStats: Created {Count} ImageCacheItems", items.Count);
 			CachedImagesList = items;
@@ -185,9 +197,17 @@ public partial class ImageCachePageModel : ObservableObject
 
 			// Count image resources
 			var imageResources = resourceNames
-				.Where(r => r.Contains("images") &&
-					(r.EndsWith(".png") || r.EndsWith(".jpg") || r.EndsWith(".jpeg") ||
-                     r.EndsWith(".gif") || r.EndsWith(".svg") || r.EndsWith(".webp")))
+				.Where(r =>
+					r.Contains("images")
+					&& (
+						r.EndsWith(".png")
+						|| r.EndsWith(".jpg")
+						|| r.EndsWith(".jpeg")
+						|| r.EndsWith(".gif")
+						|| r.EndsWith(".svg")
+						|| r.EndsWith(".webp")
+					)
+				)
 				.ToList();
 			DebugImagesInResources = imageResources.Count;
 			logBuilder.AppendLine($"Image resources found: {imageResources.Count}");

@@ -4,17 +4,24 @@ namespace MindBodyDictionaryMobile.Platforms.iOS;
 
 public static class LocalNotificationService
 {
-	public static async Task SendTestNotification(string title = "Test Notification", string body = "This is a local test notification")
+	public static async Task SendTestNotification(
+		string title = "Test Notification",
+		string body = "This is a local test notification"
+	)
 	{
 		var content = new UNMutableNotificationContent()
 		{
 			Title = title,
 			Body = body,
 			Badge = 1,
-			Sound = UNNotificationSound.Default
+			Sound = UNNotificationSound.Default,
 		};
 
-		var request = UNNotificationRequest.FromIdentifier("test-notification", content, UNTimeIntervalNotificationTrigger.CreateTrigger(5, false));
+		var request = UNNotificationRequest.FromIdentifier(
+			"test-notification",
+			content,
+			UNTimeIntervalNotificationTrigger.CreateTrigger(5, false)
+		);
 
 		try
 		{

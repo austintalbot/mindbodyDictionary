@@ -2,7 +2,7 @@
 
 public enum RecommendationType
 {
-    Product,
-    Book,
-    Food
+	Product,
+	Book,
+	Food,
 }

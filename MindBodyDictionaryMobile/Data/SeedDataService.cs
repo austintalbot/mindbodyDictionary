@@ -1,7 +1,7 @@
 using System.Text.Json;
+using Microsoft.Extensions.Logging;
 using MindBodyDictionary.Shared.Entities;
 using MindBodyDictionaryMobile.Models;
-using Microsoft.Extensions.Logging;
 
 namespace MindBodyDictionaryMobile.Data;
 
@@ -12,7 +12,8 @@ public class SeedDataService(
 	MbdCategoryRepository categoryRepository,
 	MbdConditionRepository conditionRepository,
 	ImageCacheService imageCacheService,
-	ILogger<SeedDataService> logger)
+	ILogger<SeedDataService> logger
+)
 {
 	private readonly ProjectRepository _projectRepository = projectRepository;
 	private readonly MbdTaskRepository _taskRepository = taskRepository;
@@ -199,7 +200,8 @@ public class SeedDataService(
 				_taskRepository.DropTableAsync(),
 				_tagRepository.DropTableAsync(),
 				_categoryRepository.DropTableAsync(),
-				_conditionRepository.DropTableAsync());
+				_conditionRepository.DropTableAsync()
+			);
 		}
 		catch (Exception e)
 		{

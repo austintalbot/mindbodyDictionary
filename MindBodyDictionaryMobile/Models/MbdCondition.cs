@@ -2,6 +2,11 @@ using System.Text.Json.Serialization;
 
 namespace MindBodyDictionaryMobile.Models;
 
+public class MbdCondition : MindBodyDictionary.Shared.Entities.MbdCondition
+{
+	public new List<Tag> Tags { get; set; } = [];
+}
+
 /// <summary>
 /// Represents a mind-body condition with associated tasks and tags.
 /// </summary>

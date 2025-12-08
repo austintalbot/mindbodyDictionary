@@ -7,7 +7,11 @@ using MindBodyDictionaryMobile.Services;
 
 namespace MindBodyDictionaryMobile.PageModels;
 
-public partial class ManageMetaPageModel(MbdCategoryRepository categoryRepository, TagRepository tagRepository, SeedDataService seedDataService) : ObservableObject
+public partial class ManageMetaPageModel(
+	MbdCategoryRepository categoryRepository,
+	TagRepository tagRepository,
+	SeedDataService seedDataService
+) : ObservableObject
 {
 	private readonly MbdCategoryRepository _categoryRepository = categoryRepository;
 	private readonly TagRepository _tagRepository = tagRepository;
@@ -28,8 +32,7 @@ public partial class ManageMetaPageModel(MbdCategoryRepository categoryRepositor
 	}
 
 	[RelayCommand]
-	private Task Appearing()
-		=> LoadData();
+	private Task Appearing() => LoadData();
 
 	[RelayCommand]
 	private async Task SaveCategories()

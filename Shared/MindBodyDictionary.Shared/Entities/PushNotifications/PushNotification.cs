@@ -2,7 +2,7 @@
 
 public class PushNotification
 {
-    public string? Title { get; set; }
-    public string? Body { get; set; }
-    public int? MbdConditionId { get; set; }
+	public string? Title { get; set; }
+	public string? Body { get; set; }
+	public int? MbdConditionId { get; set; }
 }

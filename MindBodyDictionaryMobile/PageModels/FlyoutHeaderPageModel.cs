@@ -7,7 +7,5 @@ namespace MindBodyDictionaryMobile.PageModels;
 /// </summary>
 public partial class FlyoutHeaderPageModel : ObservableObject
 {
-	public FlyoutHeaderPageModel()
-	{
-	}
+	public FlyoutHeaderPageModel() { }
 }

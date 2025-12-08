@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using Font = Microsoft.Maui.Font;
+
 namespace MindBodyDictionaryMobile;
 
 public partial class AppShell : Shell
@@ -19,6 +20,7 @@ public partial class AppShell : Shell
 		}
 #endif
 	}
+
 	public static async Task DisplaySnackbarAsync(string message)
 	{
 		CancellationTokenSource cancellationTokenSource = new();
@@ -30,7 +32,7 @@ public partial class AppShell : Shell
 			ActionButtonTextColor = Colors.Yellow,
 			CornerRadius = new CornerRadius(0),
 			Font = Font.SystemFontOfSize(18),
-			ActionButtonFont = Font.SystemFontOfSize(14)
+			ActionButtonFont = Font.SystemFontOfSize(14),
 		};
 
 		var snackbar = Snackbar.Make(message, visualOptions: snackbarOptions);
@@ -47,7 +49,7 @@ public partial class AppShell : Shell
 			BackgroundColor = Color.FromArgb("#4CAF50"),
 			TextColor = Colors.White,
 			CornerRadius = new CornerRadius(8),
-			Font = Font.SystemFontOfSize(16)
+			Font = Font.SystemFontOfSize(16),
 		};
 
 		var snackbar = Snackbar.Make(message, visualOptions: snackbarOptions);
@@ -55,5 +57,8 @@ public partial class AppShell : Shell
 		await snackbar.Show(cts.Token);
 	}
 
-	private void SfSegmentedControl_SelectionChanged(object sender, Syncfusion.Maui.Toolkit.SegmentedControl.SelectionChangedEventArgs e) => Application.Current!.UserAppTheme = e.NewIndex == 0 ? AppTheme.Light : AppTheme.Dark;
+	private void SfSegmentedControl_SelectionChanged(
+		object sender,
+		Syncfusion.Maui.Toolkit.SegmentedControl.SelectionChangedEventArgs e
+	) => Application.Current!.UserAppTheme = e.NewIndex == 0 ? AppTheme.Light : AppTheme.Dark;
 }

@@ -16,7 +16,8 @@ public class PushNotificationFirebaseMessagingService : FirebaseMessagingService
 		try
 		{
 			// Update the token in DeviceInstallationService
-			var deviceInstallationService = IPlatformApplication.Current?.Services?.GetService<IDeviceInstallationService>();
+			var deviceInstallationService =
+				IPlatformApplication.Current?.Services?.GetService<IDeviceInstallationService>();
 			if (deviceInstallationService is DeviceInstallationService androidService)
 			{
 				androidService.Token = token;
@@ -67,8 +68,10 @@ public class PushNotificationFirebaseMessagingService : FirebaseMessagingService
 				}
 
 				title = message.Data.ContainsKey("title") ? message.Data["title"] : title;
-				body = message.Data.ContainsKey("body") ? message.Data["body"] :
-                       message.Data.ContainsKey("message") ? message.Data["message"] : "";
+				body =
+					message.Data.ContainsKey("body") ? message.Data["body"]
+					: message.Data.ContainsKey("message") ? message.Data["message"]
+					: "";
 			}
 			else
 			{
@@ -106,17 +109,18 @@ public class PushNotificationFirebaseMessagingService : FirebaseMessagingService
 				this,
 				new Random().Next(),
 				intent,
-				pendingFlags);
+				pendingFlags
+			);
 
-						Notification.Builder notificationBuilder;
-						if (global::Android.OS.Build.VERSION.SdkInt >= global::Android.OS.BuildVersionCodes.O)
-						{
-							notificationBuilder = new Notification.Builder(this, MainActivity.CHANNEL_ID);
-						}
-						else
-						{
-							notificationBuilder = new Notification.Builder(this);
-						}
+			Notification.Builder notificationBuilder;
+			if (global::Android.OS.Build.VERSION.SdkInt >= global::Android.OS.BuildVersionCodes.O)
+			{
+				notificationBuilder = new Notification.Builder(this, MainActivity.CHANNEL_ID);
+			}
+			else
+			{
+				notificationBuilder = new Notification.Builder(this);
+			}
 
 			if (ApplicationInfo == null)
 			{
@@ -130,16 +134,12 @@ public class PushNotificationFirebaseMessagingService : FirebaseMessagingService
 				.SetAutoCancel(true)
 				.SetContentIntent(pendingIntent);
 
-
-
 			// Only set priority/defaults on pre-O devices (methods obsolete / ignored on O+)
-			if (global::Android.OS.Build.VERSION.SdkInt < global::Android.OS.BuildVersionCodes.O )
+			if (global::Android.OS.Build.VERSION.SdkInt < global::Android.OS.BuildVersionCodes.O)
 			{
 				var priority = Convert.ToInt32(NotificationPriority.High);
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
-				_ = notificationBuilder
-					.SetPriority(priority)
-					.SetDefaults(NotificationDefaults.All);
+				_ = notificationBuilder.SetPriority(priority).SetDefaults(NotificationDefaults.All);
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
 			}
 

@@ -1,7 +1,7 @@
-using MindBodyDictionaryMobile.Models;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Logging;
 using MindBodyDictionary.Shared.Entities;
+using MindBodyDictionaryMobile.Models;
 
 namespace MindBodyDictionaryMobile.Data;
 
@@ -31,7 +31,8 @@ public class TagRepository(ILogger<TagRepository> logger)
 		try
 		{
 			var createTableCmd = connection.CreateCommand();
-			createTableCmd.CommandText = @"
+			createTableCmd.CommandText =
+				@"
 			CREATE TABLE IF NOT EXISTS Tag (
 				ID INTEGER PRIMARY KEY AUTOINCREMENT,
 				Title TEXT NOT NULL,
@@ -39,7 +40,8 @@ public class TagRepository(ILogger<TagRepository> logger)
 			);";
 			await createTableCmd.ExecuteNonQueryAsync();
 
-			createTableCmd.CommandText = @"
+			createTableCmd.CommandText =
+				@"
 			CREATE TABLE IF NOT EXISTS ProjectsTags (
 				ProjectID INTEGER NOT NULL,
 				TagID INTEGER NOT NULL,
@@ -73,12 +75,14 @@ public class TagRepository(ILogger<TagRepository> logger)
 		await using var reader = await selectCmd.ExecuteReaderAsync();
 		while (await reader.ReadAsync())
 		{
-			tags.Add(new Tag
-			{
-				ID = reader.GetInt32(0),
-				Title = reader.GetString(1),
-				Color = reader.GetString(2)
-			});
+			tags.Add(
+				new Tag
+				{
+					ID = reader.GetInt32(0),
+					Title = reader.GetString(1),
+					Color = reader.GetString(2),
+				}
+			);
 		}
 
 		return tags;
@@ -96,7 +100,8 @@ public class TagRepository(ILogger<TagRepository> logger)
 		await connection.OpenAsync();
 
 		var selectCmd = connection.CreateCommand();
-		selectCmd.CommandText = @"
+		selectCmd.CommandText =
+			@"
 		SELECT t.*
 		FROM Tag t
 		JOIN ProjectsTags pt ON t.ID = pt.TagID
@@ -108,12 +113,14 @@ public class TagRepository(ILogger<TagRepository> logger)
 		await using var reader = await selectCmd.ExecuteReaderAsync();
 		while (await reader.ReadAsync())
 		{
-			tags.Add(new Tag
-			{
-				ID = reader.GetInt32(0),
-				Title = reader.GetString(1),
-				Color = reader.GetString(2)
-			});
+			tags.Add(
+				new Tag
+				{
+					ID = reader.GetInt32(0),
+					Title = reader.GetString(1),
+					Color = reader.GetString(2),
+				}
+			);
 		}
 
 		return tags;
@@ -141,7 +148,7 @@ public class TagRepository(ILogger<TagRepository> logger)
 			{
 				ID = reader.GetInt32(0),
 				Title = reader.GetString(1),
-				Color = reader.GetString(2)
+				Color = reader.GetString(2),
 			};
 		}
 
@@ -162,13 +169,15 @@ public class TagRepository(ILogger<TagRepository> logger)
 		var saveCmd = connection.CreateCommand();
 		if (item.ID == 0)
 		{
-			saveCmd.CommandText = @"
+			saveCmd.CommandText =
+				@"
 			INSERT INTO Tag (Title, Color) VALUES (@Title, @Color);
 			SELECT last_insert_rowid();";
 		}
 		else
 		{
-			saveCmd.CommandText = @"
+			saveCmd.CommandText =
+				@"
 			UPDATE Tag SET Title = @Title, Color = @Color WHERE ID = @ID";
 			saveCmd.Parameters.AddWithValue("@ID", item.ID);
 		}
@@ -200,7 +209,8 @@ public class TagRepository(ILogger<TagRepository> logger)
 		await connection.OpenAsync();
 
 		var saveCmd = connection.CreateCommand();
-		saveCmd.CommandText = @"
+		saveCmd.CommandText =
+			@"
 		INSERT OR IGNORE INTO ProjectsTags (ProjectID, TagID) VALUES (@projectID, @tagID)";
 		saveCmd.Parameters.AddWithValue("@projectID", projectID);
 		saveCmd.Parameters.AddWithValue("@tagID", item.ID);
@@ -278,7 +288,8 @@ public class TagRepository(ILogger<TagRepository> logger)
 		{
 			var cmd = connection.CreateCommand();
 			// Find duplicate tags (same title)
-			cmd.CommandText = @"
+			cmd.CommandText =
+				@"
 			SELECT Title, GROUP_CONCAT(ID) as IDs
 			FROM Tag
 			GROUP BY Title
@@ -308,7 +319,8 @@ public class TagRepository(ILogger<TagRepository> logger)
 				{
 					// Update ProjectsTags to point to keepId instead of deleteId
 					var updateCmd = connection.CreateCommand();
-					updateCmd.CommandText = @"
+					updateCmd.CommandText =
+						@"
 					UPDATE ProjectsTags
 					SET TagID = @keepId
 					WHERE TagID = @deleteId";

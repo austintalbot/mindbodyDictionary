@@ -10,7 +10,8 @@ public static class NotificationConfig
 	public const string NotificationHubNamespace = "nhn-mindbody";
 
 	// Connection string with Listen permission for client-side device registration
-	public const string ListenConnectionString = "Endpoint=sb://nhn-mindbody.servicebus.windows.net/;SharedAccessKeyName=ApiAccess;SharedAccessKey=C8M+Y55EkAGF7MwdUIxL5pYKsdCOVSGCs4aa2Vz9fUY=";
+	public const string ListenConnectionString =
+		"Endpoint=sb://nhn-mindbody.servicebus.windows.net/;SharedAccessKeyName=ApiAccess;SharedAccessKey=C8M+Y55EkAGF7MwdUIxL5pYKsdCOVSGCs4aa2Vz9fUY=";
 
 	// NOTE: The above connection string has FULL access (Listen, Send, Manage).
 	// For production, create a separate access policy with ONLY "Listen" permission

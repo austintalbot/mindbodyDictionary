@@ -1,8 +1,5 @@
-
 using Microsoft.Data.Sqlite;
 using MindBodyDictionaryMobile.Models;
-
-
 
 namespace MindBodyDictionaryMobile.Data;
 
@@ -32,7 +29,8 @@ public class MbdCategoryRepository(ILogger<MbdCategoryRepository> logger)
 		try
 		{
 			var createTableCmd = connection.CreateCommand();
-			createTableCmd.CommandText = @"
+			createTableCmd.CommandText =
+				@"
 			CREATE TABLE IF NOT EXISTS Category (
 				ID INTEGER PRIMARY KEY AUTOINCREMENT,
 				Title TEXT NOT NULL,
@@ -66,12 +64,14 @@ public class MbdCategoryRepository(ILogger<MbdCategoryRepository> logger)
 		await using var reader = await selectCmd.ExecuteReaderAsync();
 		while (await reader.ReadAsync())
 		{
-			categories.Add(new Category
-			{
-				ID = reader.GetInt32(0),
-				Title = reader.GetString(1),
-				Color = reader.GetString(2)
-			});
+			categories.Add(
+				new Category
+				{
+					ID = reader.GetInt32(0),
+					Title = reader.GetString(1),
+					Color = reader.GetString(2),
+				}
+			);
 		}
 
 		return categories;
@@ -99,7 +99,7 @@ public class MbdCategoryRepository(ILogger<MbdCategoryRepository> logger)
 			{
 				ID = reader.GetInt32(0),
 				Title = reader.GetString(1),
-				Color = reader.GetString(2)
+				Color = reader.GetString(2),
 			};
 		}
 
@@ -120,14 +120,16 @@ public class MbdCategoryRepository(ILogger<MbdCategoryRepository> logger)
 		var saveCmd = connection.CreateCommand();
 		if (item.ID == 0)
 		{
-			saveCmd.CommandText = @"
+			saveCmd.CommandText =
+				@"
 				INSERT INTO Category (Title, Color)
 				VALUES (@Title, @Color);
 				SELECT last_insert_rowid();";
 		}
 		else
 		{
-			saveCmd.CommandText = @"
+			saveCmd.CommandText =
+				@"
 				UPDATE Category SET Title = @Title, Color = @Color
 				WHERE ID = @ID";
 			saveCmd.Parameters.AddWithValue("@ID", item.ID);
@@ -192,7 +194,8 @@ public class MbdCategoryRepository(ILogger<MbdCategoryRepository> logger)
 		{
 			var cmd = connection.CreateCommand();
 			// Find duplicate categories (same title)
-			cmd.CommandText = @"
+			cmd.CommandText =
+				@"
 			SELECT Title, GROUP_CONCAT(ID) as IDs
 			FROM Category
 			GROUP BY Title
@@ -222,7 +225,8 @@ public class MbdCategoryRepository(ILogger<MbdCategoryRepository> logger)
 				{
 					// Update Project references to point to keepId instead of deleteId
 					var updateCmd = connection.CreateCommand();
-					updateCmd.CommandText = @"
+					updateCmd.CommandText =
+						@"
 					UPDATE Project
 					SET CategoryID = @keepId
 					WHERE CategoryID = @deleteId";
@@ -232,7 +236,8 @@ public class MbdCategoryRepository(ILogger<MbdCategoryRepository> logger)
 
 					// Update Condition references to point to keepId instead of deleteId
 					updateCmd = connection.CreateCommand();
-					updateCmd.CommandText = @"
+					updateCmd.CommandText =
+						@"
 					UPDATE Condition
 					SET CategoryID = @keepId
 					WHERE CategoryID = @deleteId";

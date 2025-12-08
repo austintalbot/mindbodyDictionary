@@ -1,6 +1,6 @@
-using MindBodyDictionaryMobile.Models;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Logging;
+using MindBodyDictionaryMobile.Models;
 
 namespace MindBodyDictionaryMobile.Data;
 
@@ -13,9 +13,11 @@ namespace MindBodyDictionaryMobile.Data;
 /// <param name="taskRepository">The task repository instance.</param>
 /// <param name="tagRepository">The tag repository instance.</param>
 /// <param name="logger">The logger instance.</param>
-public class ProjectRepository(MbdTaskRepository taskRepository,
-							   TagRepository tagRepository,
-							   ILogger<ProjectRepository> logger)
+public class ProjectRepository(
+	MbdTaskRepository taskRepository,
+	TagRepository tagRepository,
+	ILogger<ProjectRepository> logger
+)
 {
 	private bool _hasBeenInitialized = false;
 	private readonly ILogger _logger = logger;
@@ -36,7 +38,8 @@ public class ProjectRepository(MbdTaskRepository taskRepository,
 		try
 		{
 			var createTableCmd = connection.CreateCommand();
-			createTableCmd.CommandText = @"
+			createTableCmd.CommandText =
+				@"
 			CREATE TABLE IF NOT EXISTS Project (
 				ID INTEGER PRIMARY KEY AUTOINCREMENT,
 				Name TEXT NOT NULL,
@@ -72,14 +75,16 @@ public class ProjectRepository(MbdTaskRepository taskRepository,
 		await using var reader = await selectCmd.ExecuteReaderAsync();
 		while (await reader.ReadAsync())
 		{
-			projects.Add(new Project
-			{
-				ID = reader.GetInt32(0),
-				Name = reader.GetString(1),
-				Description = reader.GetString(2),
-				Icon = reader.GetString(3),
-				CategoryID = reader.GetInt32(4)
-			});
+			projects.Add(
+				new Project
+				{
+					ID = reader.GetInt32(0),
+					Name = reader.GetString(1),
+					Description = reader.GetString(2),
+					Icon = reader.GetString(3),
+					CategoryID = reader.GetInt32(4),
+				}
+			);
 		}
 
 		foreach (var project in projects)
@@ -115,7 +120,7 @@ public class ProjectRepository(MbdTaskRepository taskRepository,
 				Name = reader.GetString(1),
 				Description = reader.GetString(2),
 				Icon = reader.GetString(3),
-				CategoryID = reader.GetInt32(4)
+				CategoryID = reader.GetInt32(4),
 			};
 
 			project.Tags = await _tagRepository.ListAsync(project.ID);
@@ -141,14 +146,16 @@ public class ProjectRepository(MbdTaskRepository taskRepository,
 		var saveCmd = connection.CreateCommand();
 		if (item.ID == 0)
 		{
-			saveCmd.CommandText = @"
+			saveCmd.CommandText =
+				@"
 				INSERT INTO Project (Name, Description, Icon, CategoryID)
 				VALUES (@Name, @Description, @Icon, @CategoryID);
 				SELECT last_insert_rowid();";
 		}
 		else
 		{
-			saveCmd.CommandText = @"
+			saveCmd.CommandText =
+				@"
 				UPDATE Project
 				SET Name = @Name, Description = @Description, Icon = @Icon, CategoryID = @CategoryID
 				WHERE ID = @ID";

@@ -1,6 +1,6 @@
-using MindBodyDictionary.Shared.Entities;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Logging;
+using MindBodyDictionary.Shared.Entities;
 
 namespace MindBodyDictionaryMobile.Data;
 
@@ -13,7 +13,11 @@ namespace MindBodyDictionaryMobile.Data;
 /// <param name="taskRepository">The task repository instance.</param>
 /// <param name="tagRepository">The tag repository instance.</param>
 /// <param name="logger">The logger instance.</param>
-public class MbdConditionRepository(MbdTaskRepository taskRepository, TagRepository tagRepository, ILogger<MbdConditionRepository> logger)
+public class MbdConditionRepository(
+	MbdTaskRepository taskRepository,
+	TagRepository tagRepository,
+	ILogger<MbdConditionRepository> logger
+)
 {
 	private bool _hasBeenInitialized = false;
 	private readonly ILogger _logger = logger;
@@ -34,7 +38,8 @@ public class MbdConditionRepository(MbdTaskRepository taskRepository, TagReposit
 		try
 		{
 			var createTableCmd = connection.CreateCommand();
-			createTableCmd.CommandText = @"
+			createTableCmd.CommandText =
+				@"
 			CREATE TABLE IF NOT EXISTS Condition (
 				ID INTEGER PRIMARY KEY AUTOINCREMENT,
 				Name TEXT NOT NULL,
@@ -70,14 +75,16 @@ public class MbdConditionRepository(MbdTaskRepository taskRepository, TagReposit
 		await using var reader = await selectCmd.ExecuteReaderAsync();
 		while (await reader.ReadAsync())
 		{
-			conditions.Add(new MbdCondition
-			{
-				ID = reader.GetInt32(0),
-				Name = reader.GetString(1),
-				Description = reader.GetString(2),
-				Icon = reader.GetString(3),
-				CategoryID = reader.GetInt32(4)
-			});
+			conditions.Add(
+				new MbdCondition
+				{
+					ID = reader.GetInt32(0),
+					Name = reader.GetString(1),
+					Description = reader.GetString(2),
+					Icon = reader.GetString(3),
+					CategoryID = reader.GetInt32(4),
+				}
+			);
 		}
 
 		foreach (var condition in conditions)
@@ -113,7 +120,7 @@ public class MbdConditionRepository(MbdTaskRepository taskRepository, TagReposit
 				Name = reader.GetString(1),
 				Description = reader.GetString(2),
 				Icon = reader.GetString(3),
-				CategoryID = reader.GetInt32(4)
+				CategoryID = reader.GetInt32(4),
 			};
 
 			condition.Tags = await _tagRepository.ListAsync(condition.ID);
@@ -139,14 +146,16 @@ public class MbdConditionRepository(MbdTaskRepository taskRepository, TagReposit
 		var saveCmd = connection.CreateCommand();
 		if (item.ID == 0)
 		{
-			saveCmd.CommandText = @"
+			saveCmd.CommandText =
+				@"
 				INSERT INTO Condition (Name, Description, Icon, CategoryID)
 				VALUES (@Name, @Description, @Icon, @CategoryID);
 				SELECT last_insert_rowid();";
 		}
 		else
 		{
-			saveCmd.CommandText = @"
+			saveCmd.CommandText =
+				@"
 				UPDATE Condition
 				SET Name = @Name, Description = @Description, Icon = @Icon, CategoryID = @CategoryID
 				WHERE ID = @ID";

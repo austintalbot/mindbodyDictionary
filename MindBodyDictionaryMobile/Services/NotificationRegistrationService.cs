@@ -1,7 +1,7 @@
 using System.Text.Json;
-using MindBodyDictionaryMobile.Models;
 using Microsoft.Azure.NotificationHubs;
 using Microsoft.Extensions.Logging;
+using MindBodyDictionaryMobile.Models;
 
 namespace MindBodyDictionaryMobile.Services;
 
@@ -15,8 +15,12 @@ public class NotificationRegistrationService : INotificationRegistrationService
 	IDeviceInstallationService? _deviceInstallationService;
 
 	IDeviceInstallationService DeviceInstallationService =>
-		_deviceInstallationService ??= (Application.Current?.Windows?.FirstOrDefault()?.Page?.Handler?.MauiContext?.Services?.GetService<IDeviceInstallationService>()
-			?? throw new InvalidOperationException("DeviceInstallationService not available"));
+		_deviceInstallationService ??= (
+			Application
+				.Current?.Windows?.FirstOrDefault()
+				?.Page?.Handler?.MauiContext?.Services?.GetService<IDeviceInstallationService>()
+			?? throw new InvalidOperationException("DeviceInstallationService not available")
+		);
 
 	public NotificationRegistrationService(ILogger<NotificationRegistrationService> logger)
 	{
@@ -31,7 +35,8 @@ public class NotificationRegistrationService : INotificationRegistrationService
 			// Create NotificationHubClient for direct registration
 			_hubClient = NotificationHubClient.CreateClientFromConnectionString(
 				NotificationConfig.ListenConnectionString,
-				NotificationConfig.NotificationHubName);
+				NotificationConfig.NotificationHubName
+			);
 
 			_logger.LogInformation("NotificationHubClient created successfully");
 		}
@@ -46,8 +51,7 @@ public class NotificationRegistrationService : INotificationRegistrationService
 	{
 		_logger.LogInformation("DeregisterDeviceAsync called");
 
-		var cachedToken = await SecureStorage.GetAsync(CachedDeviceTokenKey)
-			.ConfigureAwait(false);
+		var cachedToken = await SecureStorage.GetAsync(CachedDeviceTokenKey).ConfigureAwait(false);
 
 		if (cachedToken == null)
 		{
@@ -86,7 +90,10 @@ public class NotificationRegistrationService : INotificationRegistrationService
 
 	public async Task RegisterDeviceAsync(params string[] tags)
 	{
-		_logger.LogInformation("RegisterDeviceAsync called with tags: {Tags}", string.Join(", ", tags ?? Array.Empty<string>()));
+		_logger.LogInformation(
+			"RegisterDeviceAsync called with tags: {Tags}",
+			string.Join(", ", tags ?? Array.Empty<string>())
+		);
 
 		try
 		{
@@ -101,8 +108,12 @@ public class NotificationRegistrationService : INotificationRegistrationService
 			_logger.LogInformation("Device Installation Details:");
 			_logger.LogInformation("  InstallationId: {InstallationId}", deviceInstallation.InstallationId);
 			_logger.LogInformation("  Platform: {Platform}", deviceInstallation.Platform);
-			_logger.LogInformation("  PushChannel: {PushChannel}",
-				string.IsNullOrEmpty(deviceInstallation.PushChannel) ? "EMPTY/NULL" : $"{deviceInstallation.PushChannel[..Math.Min(20, deviceInstallation.PushChannel.Length)]}...");
+			_logger.LogInformation(
+				"  PushChannel: {PushChannel}",
+				string.IsNullOrEmpty(deviceInstallation.PushChannel)
+					? "EMPTY/NULL"
+					: $"{deviceInstallation.PushChannel[..Math.Min(20, deviceInstallation.PushChannel.Length)]}..."
+			);
 			_logger.LogInformation("  Tags: {Tags}", string.Join(", ", deviceInstallation.Tags ?? []));
 
 			// Create Installation object for Azure Notification Hub
@@ -110,7 +121,7 @@ public class NotificationRegistrationService : INotificationRegistrationService
 			{
 				InstallationId = deviceInstallation.InstallationId,
 				PushChannel = deviceInstallation.PushChannel,
-				Tags = tags?.ToList()
+				Tags = tags?.ToList(),
 			};
 
 			// Set platform-specific details
@@ -129,8 +140,7 @@ public class NotificationRegistrationService : INotificationRegistrationService
 
 			_logger.LogInformation("Successfully registered with Azure Notification Hub");
 
-			await SecureStorage.SetAsync(CachedDeviceTokenKey, deviceInstallation.PushChannel)
-				.ConfigureAwait(false);
+			await SecureStorage.SetAsync(CachedDeviceTokenKey, deviceInstallation.PushChannel).ConfigureAwait(false);
 
 			await SecureStorage.SetAsync(CachedTagsKey, JsonSerializer.Serialize(tags));
 
@@ -151,27 +161,33 @@ public class NotificationRegistrationService : INotificationRegistrationService
 	{
 		_logger.LogInformation("RefreshRegistrationAsync called");
 
-		var cachedToken = await SecureStorage.GetAsync(CachedDeviceTokenKey)
-			.ConfigureAwait(false);
+		var cachedToken = await SecureStorage.GetAsync(CachedDeviceTokenKey).ConfigureAwait(false);
 
-		var serializedTags = await SecureStorage.GetAsync(CachedTagsKey)
-			.ConfigureAwait(false);
+		var serializedTags = await SecureStorage.GetAsync(CachedTagsKey).ConfigureAwait(false);
 
 		_logger.LogInformation("Cached token exists: {HasToken}", !string.IsNullOrWhiteSpace(cachedToken));
 		_logger.LogInformation("Cached tags exist: {HasTags}", !string.IsNullOrWhiteSpace(serializedTags));
-		_logger.LogInformation("Current device token exists: {HasCurrentToken}", !string.IsNullOrWhiteSpace(DeviceInstallationService?.Token));
+		_logger.LogInformation(
+			"Current device token exists: {HasCurrentToken}",
+			!string.IsNullOrWhiteSpace(DeviceInstallationService?.Token)
+		);
 
-		if (string.IsNullOrWhiteSpace(cachedToken) ||
-			string.IsNullOrWhiteSpace(serializedTags) ||
-			string.IsNullOrWhiteSpace(DeviceInstallationService?.Token) ||
-			cachedToken == DeviceInstallationService.Token)
+		if (
+			string.IsNullOrWhiteSpace(cachedToken)
+			|| string.IsNullOrWhiteSpace(serializedTags)
+			|| string.IsNullOrWhiteSpace(DeviceInstallationService?.Token)
+			|| cachedToken == DeviceInstallationService.Token
+		)
 		{
 			_logger.LogInformation("No refresh needed - tokens match or missing required data");
 			return;
 		}
 
 		var tags = JsonSerializer.Deserialize<string[]>(serializedTags);
-		_logger.LogInformation("Refreshing registration with tags: {Tags}", string.Join(", ", tags ?? Array.Empty<string>()));
+		_logger.LogInformation(
+			"Refreshing registration with tags: {Tags}",
+			string.Join(", ", tags ?? Array.Empty<string>())
+		);
 
 		await RegisterDeviceAsync(tags ?? Array.Empty<string>());
 	}
@@ -193,9 +209,11 @@ public class NotificationRegistrationService : INotificationRegistrationService
 
 			if (installation != null)
 			{
-				_logger.LogInformation("✅ Installation found in Azure - Platform: {Platform}, PushChannel exists: {HasChannel}",
+				_logger.LogInformation(
+					"✅ Installation found in Azure - Platform: {Platform}, PushChannel exists: {HasChannel}",
 					installation.Platform,
-					!string.IsNullOrEmpty(installation.PushChannel));
+					!string.IsNullOrEmpty(installation.PushChannel)
+				);
 				return true;
 			}
 			else

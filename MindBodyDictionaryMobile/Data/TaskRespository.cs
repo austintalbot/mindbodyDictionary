@@ -1,6 +1,6 @@
-using MindBodyDictionaryMobile.Models;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Logging;
+using MindBodyDictionaryMobile.Models;
 
 namespace MindBodyDictionaryMobile.Data;
 
@@ -30,7 +30,8 @@ public class MbdTaskRepository(ILogger<MbdTaskRepository> logger)
 		try
 		{
 			var createTableCmd = connection.CreateCommand();
-			createTableCmd.CommandText = @"
+			createTableCmd.CommandText =
+				@"
 			CREATE TABLE IF NOT EXISTS Task (
 				ID INTEGER PRIMARY KEY AUTOINCREMENT,
 				Title TEXT NOT NULL,
@@ -65,13 +66,15 @@ public class MbdTaskRepository(ILogger<MbdTaskRepository> logger)
 		await using var reader = await selectCmd.ExecuteReaderAsync();
 		while (await reader.ReadAsync())
 		{
-			tasks.Add(new MbdTask
-			{
-				ID = reader.GetInt32(0),
-				Title = reader.GetString(1),
-				IsCompleted = reader.GetBoolean(2),
-				ProjectID = reader.GetInt32(3)
-			});
+			tasks.Add(
+				new MbdTask
+				{
+					ID = reader.GetInt32(0),
+					Title = reader.GetString(1),
+					IsCompleted = reader.GetBoolean(2),
+					ProjectID = reader.GetInt32(3),
+				}
+			);
 		}
 
 		return tasks;
@@ -96,13 +99,15 @@ public class MbdTaskRepository(ILogger<MbdTaskRepository> logger)
 		await using var reader = await selectCmd.ExecuteReaderAsync();
 		while (await reader.ReadAsync())
 		{
-			tasks.Add(new MbdTask
-			{
-				ID = reader.GetInt32(0),
-				Title = reader.GetString(1),
-				IsCompleted = reader.GetBoolean(2),
-				ProjectID = reader.GetInt32(3)
-			});
+			tasks.Add(
+				new MbdTask
+				{
+					ID = reader.GetInt32(0),
+					Title = reader.GetString(1),
+					IsCompleted = reader.GetBoolean(2),
+					ProjectID = reader.GetInt32(3),
+				}
+			);
 		}
 
 		return tasks;
@@ -131,7 +136,7 @@ public class MbdTaskRepository(ILogger<MbdTaskRepository> logger)
 				ID = reader.GetInt32(0),
 				Title = reader.GetString(1),
 				IsCompleted = reader.GetBoolean(2),
-				ProjectID = reader.GetInt32(3)
+				ProjectID = reader.GetInt32(3),
 			};
 		}
 
@@ -152,13 +157,15 @@ public class MbdTaskRepository(ILogger<MbdTaskRepository> logger)
 		var saveCmd = connection.CreateCommand();
 		if (item.ID == 0)
 		{
-			saveCmd.CommandText = @"
+			saveCmd.CommandText =
+				@"
 			INSERT INTO Task (Title, IsCompleted, ProjectID) VALUES (@title, @isCompleted, @projectId);
 			SELECT last_insert_rowid();";
 		}
 		else
 		{
-			saveCmd.CommandText = @"
+			saveCmd.CommandText =
+				@"
 			UPDATE Task SET Title = @title, IsCompleted = @isCompleted, ProjectID = @projectId WHERE ID = @id";
 			saveCmd.Parameters.AddWithValue("@id", item.ID);
 		}

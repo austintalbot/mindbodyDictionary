@@ -1,8 +1,8 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MindBodyDictionary.Shared.Entities;
-using MindBodyDictionaryMobile.Models; // This line remains unchanged
 using MindBodyDictionaryMobile.Extensions;
+using MindBodyDictionaryMobile.Models; // This line remains unchanged
 
 namespace MindBodyDictionaryMobile.PageModels;
 
@@ -51,7 +51,7 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
 		new IconData { Icon = FluentUI.badge_24_regular, Description = "Badge Icon" },
 		new IconData { Icon = FluentUI.book_24_regular, Description = "Book Icon" },
 		new IconData { Icon = FluentUI.people_24_regular, Description = "People Icon" },
-		new IconData { Icon = FluentUI.bot_24_regular, Description = "Bot Icon" }
+		new IconData { Icon = FluentUI.bot_24_regular, Description = "Bot Icon" },
 	];
 
 	private bool _canDelete;
@@ -66,10 +66,15 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
 		}
 	}
 
-	public bool HasCompletedTasks
-		=> _condition?.Tasks.Any(t => t.IsCompleted) ?? false;
+	public bool HasCompletedTasks => _condition?.Tasks.Any(t => t.IsCompleted) ?? false;
 
-	public MbdConditionDetailPageModel(MbdConditionRepository conditionRepository, MbdTaskRepository taskRepository, MbdCategoryRepository categoryRepository, TagRepository tagRepository, ModalErrorHandler errorHandler)
+	public MbdConditionDetailPageModel(
+		MbdConditionRepository conditionRepository,
+		MbdTaskRepository taskRepository,
+		MbdCategoryRepository categoryRepository,
+		TagRepository tagRepository,
+		ModalErrorHandler errorHandler
+	)
 	{
 		_conditionRepository = conditionRepository;
 		_taskRepository = taskRepository;
@@ -101,11 +106,9 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
 		}
 	}
 
-	private async Task LoadCategories() =>
-		Categories = await _categoryRepository.ListAsync();
+	private async Task LoadCategories() => Categories = await _categoryRepository.ListAsync();
 
-	private async Task LoadTags() =>
-		AllTags = await _tagRepository.ListAsync();
+	private async Task LoadTags() => AllTags = await _tagRepository.ListAsync();
 
 	private async Task RefreshData()
 	{
@@ -171,14 +174,12 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
 		OnPropertyChanged(nameof(HasCompletedTasks));
 	}
 
-
 	[RelayCommand]
 	private async Task Save()
 	{
 		if (_condition is null)
 		{
-			_errorHandler.HandleError(
-				new Exception("Condition is null. Cannot Save."));
+			_errorHandler.HandleError(new Exception("Condition is null. Cannot Save."));
 
 			return;
 		}
@@ -218,18 +219,17 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
 	{
 		if (_condition is null)
 		{
-			_errorHandler.HandleError(
-				new Exception("Condition is null. Cannot navigate to task."));
+			_errorHandler.HandleError(new Exception("Condition is null. Cannot navigate to task."));
 
 			return;
 		}
 
 		// Pass the condition so if this is a new condition we can just add
 		// the tasks to the condition and then save them all from here.
-		await Shell.Current.GoToAsync($"task",
-			new ShellNavigationQueryParameters(){
-				{TaskDetailPageModel.ProjectQueryKey, _condition}
-			});
+		await Shell.Current.GoToAsync(
+			$"task",
+			new ShellNavigationQueryParameters() { { TaskDetailPageModel.ProjectQueryKey, _condition } }
+		);
 	}
 
 	[RelayCommand(CanExecute = nameof(CanDelete))]
@@ -247,8 +247,7 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
 	}
 
 	[RelayCommand]
-	private Task NavigateToTask(MbdTask task) =>
-		Shell.Current.GoToAsync($"task?id={task.ID}");
+	private Task NavigateToTask(MbdTask task) => Shell.Current.GoToAsync($"task?id={task.ID}");
 
 	[RelayCommand]
 	private async Task ToggleTag(Tag tag)

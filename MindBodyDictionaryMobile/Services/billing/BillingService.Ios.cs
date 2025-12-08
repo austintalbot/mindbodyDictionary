@@ -1,9 +1,7 @@
-
-
-using Microsoft.Extensions.Logging;
 using Foundation;
-using StoreKit;
+using Microsoft.Extensions.Logging;
 using MindBodyDictionaryMobile.Models;
+using StoreKit;
 
 namespace MindBodyDictionaryMobile.Services.billing;
 
@@ -55,16 +53,18 @@ public class BillingService(ILogger<BaseBillingService> logger) : BaseBillingSer
 		{
 			// For iOS, we return base products with ownership status updated
 			// In a real app, you would query App Store product details here
-			var products = baseProducts.Select(p => new Product
-			{
-				Id = p.Id,
-				Name = p.Name,
-				Description = p.Description,
-				Price = p.Price,
-				PriceAmount = p.PriceAmount,
-				ImageUrl = p.ImageUrl,
-				IsOwned = _ownedProducts.Contains(p.Id)
-			}).ToList();
+			var products = baseProducts
+				.Select(p => new Product
+				{
+					Id = p.Id,
+					Name = p.Name,
+					Description = p.Description,
+					Price = p.Price,
+					PriceAmount = p.PriceAmount,
+					ImageUrl = p.ImageUrl,
+					IsOwned = _ownedProducts.Contains(p.Id),
+				})
+				.ToList();
 
 			_logger.LogInformation("Retrieved {Count} products from iOS", products.Count);
 			return Task.FromResult(products);
@@ -93,12 +93,14 @@ public class BillingService(ILogger<BaseBillingService> logger) : BaseBillingSer
 			// Check if payments are available
 			if (!SKPaymentQueue.CanMakePayments)
 			{
-				return await Task.FromResult(new PurchaseResult
-				{
-					IsSuccess = false,
-					ProductId = productId,
-					ErrorMessage = "In-app purchases are disabled on this device"
-				});
+				return await Task.FromResult(
+					new PurchaseResult
+					{
+						IsSuccess = false,
+						ProductId = productId,
+						ErrorMessage = "In-app purchases are disabled on this device",
+					}
+				);
 			}
 
 			// Query product details from App Store
@@ -113,23 +115,27 @@ public class BillingService(ILogger<BaseBillingService> logger) : BaseBillingSer
 			// Validate product exists
 			if (products == null || !products.Any())
 			{
-				return await Task.FromResult(new PurchaseResult
-				{
-					IsSuccess = false,
-					ProductId = productId,
-					ErrorMessage = $"{productName} not found in App Store"
-				});
+				return await Task.FromResult(
+					new PurchaseResult
+					{
+						IsSuccess = false,
+						ProductId = productId,
+						ErrorMessage = $"{productName} not found in App Store",
+					}
+				);
 			}
 
 			var product = products.First();
 			if (product == null)
 			{
-				return await Task.FromResult(new PurchaseResult
-				{
-					IsSuccess = false,
-					ProductId = productId,
-					ErrorMessage = $"Product details unavailable for {productName}"
-				});
+				return await Task.FromResult(
+					new PurchaseResult
+					{
+						IsSuccess = false,
+						ProductId = productId,
+						ErrorMessage = $"Product details unavailable for {productName}",
+					}
+				);
 			}
 
 			// Create payment and launch purchase flow
@@ -139,22 +145,26 @@ public class BillingService(ILogger<BaseBillingService> logger) : BaseBillingSer
 
 			// Note: The actual purchase result comes from OnTransactionUpdated callback
 			// This just initiates the flow, similar to Android's LaunchBillingFlow
-			return await Task.FromResult(new PurchaseResult
-			{
-				IsSuccess = true,
-				ProductId = productId,
-				ErrorMessage = ""
-			});
+			return await Task.FromResult(
+				new PurchaseResult
+				{
+					IsSuccess = true,
+					ProductId = productId,
+					ErrorMessage = "",
+				}
+			);
 		}
 		catch (Exception ex)
 		{
 			_logger.LogError(ex, "Error during purchase flow for product {ProductId}", productId);
-			return await Task.FromResult(new PurchaseResult
-			{
-				IsSuccess = false,
-				ProductId = productId,
-				ErrorMessage = $"Purchase failed: {ex.Message}"
-			});
+			return await Task.FromResult(
+				new PurchaseResult
+				{
+					IsSuccess = false,
+					ProductId = productId,
+					ErrorMessage = $"Purchase failed: {ex.Message}",
+				}
+			);
 		}
 	}
 
@@ -187,8 +197,10 @@ public class BillingService(ILogger<BaseBillingService> logger) : BaseBillingSer
 						var productId = transaction.Payment?.ProductIdentifier;
 						if (!string.IsNullOrEmpty(productId) && validProductIds.Contains(productId))
 						{
-							if (transaction.TransactionState == SKPaymentTransactionState.Purchased ||
-								transaction.TransactionState == SKPaymentTransactionState.Restored)
+							if (
+								transaction.TransactionState == SKPaymentTransactionState.Purchased
+								|| transaction.TransactionState == SKPaymentTransactionState.Restored
+							)
 							{
 								_ownedProducts.Add(productId);
 							}
@@ -274,8 +286,6 @@ public class BillingService(ILogger<BaseBillingService> logger) : BaseBillingSer
 				break;
 		}
 	}
-
-
 
 	~BillingService()
 	{

@@ -7,16 +7,18 @@ public class GetMbdConditionsTable(ILogger<GetMbdConditionsTable> logger, Cosmos
 
 	[Function("GetMbdConditionsTable")]
 	public async Task<IActionResult> Run(
-		[HttpTrigger(AuthorizationLevel.Function, "get", Route = null)] HttpRequest req)
+		[HttpTrigger(AuthorizationLevel.Function, "get", Route = null)] HttpRequest req
+	)
 	{
 		try
 		{
 			_logger.LogInformation("Get mbdConditions Table");
 
-			   var items = await _client.QueryAsync<SharedMbdCondition>(
-						  databaseName: backend.CosmosDB.CosmosDbConstants.DatabaseName,
-						  containerName: backend.CosmosDB.CosmosDbConstants.Containers.MbdConditions,
-						  query: "SELECT * FROM c");
+			var items = await _client.QueryAsync<SharedMbdCondition>(
+				databaseName: backend.CosmosDB.CosmosDbConstants.DatabaseName,
+				containerName: backend.CosmosDB.CosmosDbConstants.Containers.MbdConditions,
+				query: "SELECT * FROM c"
+			);
 			_logger.LogInformation("Found {Count} mbdConditions", items.Count);
 
 			return items != null && items.Count > 0 ? new OkObjectResult(items) : new NotFoundResult();
