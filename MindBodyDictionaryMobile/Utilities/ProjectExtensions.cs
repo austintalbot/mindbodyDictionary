@@ -20,5 +20,5 @@ public static class ProjectExtensions
 	/// </summary>
 	/// <param name="condition"></param>
 	/// <returns></returns>
-	public static bool IsNullOrNew([NotNullWhen(false)] this MbdCondition? condition) => condition is null || condition.ID == 0;
+	public static bool IsNullOrNew([NotNullWhen(false)] this MbdCondition? condition) => condition is null || string.IsNullOrEmpty(condition.Id);
 }

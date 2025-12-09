@@ -14,16 +14,19 @@ public class GetMbdConditionsTable(ILogger<GetMbdConditionsTable> logger, Cosmos
 		{
 			_logger.LogInformation("Get mbdConditions Table");
 
+			// Query CosmosDB directly - properties in MbdCondition must match the schema exactly
 			var items = await _client.QueryAsync<backend.Entities.MbdCondition>(
 					   databaseName: backend.CosmosDB.CosmosDbConstants.DatabaseName,
 					   containerName: backend.CosmosDB.CosmosDbConstants.Containers.MbdConditions,
 					   query: "SELECT * FROM c");
+
 			_logger.LogInformation("Found {Count} mbdConditions", items.Count);
 
 			return items != null && items.Count > 0 ? new OkObjectResult(items) : new NotFoundResult();
 		}
 		catch (Exception ex)
 		{
+			_logger.LogError(ex, "Error querying MbdConditions");
 			return new BadRequestObjectResult(ex.ToString());
 		}
 	}

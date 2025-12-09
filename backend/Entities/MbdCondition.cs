@@ -20,6 +20,9 @@ public class MbdCondition
     [JsonProperty(PropertyName = "physicalConnections", NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Ignore)]
     public List<string>? PhysicalConnections { get; set; }
 
+    [JsonProperty(PropertyName = "searchTags", NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Ignore)]
+    public List<string>? SearchTags { get; set; }
+
     [JsonProperty(PropertyName = "tags", NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Ignore)]
     public List<string>? Tags { get; set; }
 

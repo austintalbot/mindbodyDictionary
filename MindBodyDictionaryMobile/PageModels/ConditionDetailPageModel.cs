@@ -1,5 +1,11 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Maui.Accessibility;
+using Microsoft.Maui.Controls;
 using MindBodyDictionaryMobile.Models;
 
 namespace MindBodyDictionaryMobile.PageModels;
@@ -67,6 +73,7 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 	public bool HasCompletedTasks
 		=> _condition?.Tasks.Any(t => t.IsCompleted) ?? false;
 
+
 	public ConditionDetailPageModel(ConditionRepository conditionRepository, TaskRepository taskRepository, CategoryRepository categoryRepository, TagRepository tagRepository, ModalErrorHandler errorHandler)
 	{
 		_conditionRepository = conditionRepository;
@@ -82,8 +89,11 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 	{
 		if (query.ContainsKey("id"))
 		{
-			int id = Convert.ToInt32(query["id"]);
-			LoadData(id).FireAndForgetSafeAsync(_errorHandler);
+			string? id = query["id"]?.ToString();
+			if (!string.IsNullOrEmpty(id))
+			{
+				LoadData(id).FireAndForgetSafeAsync(_errorHandler);
+			}
 		}
 		else if (query.ContainsKey("refresh"))
 		{
@@ -110,16 +120,19 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 		if (_condition.IsNullOrNew())
 		{
 			if (_condition is not null)
-				Tasks = new(_condition.Tasks);
+				Tasks = [.. _condition.Tasks];
 
 			return;
 		}
 
-		Tasks = await _taskRepository.ListAsync(_condition.ID);
-		_condition.Tasks = Tasks;
+		if (!string.IsNullOrEmpty(_condition.Id))
+		{
+			Tasks = await _taskRepository.ListAsync(_condition.Id);
+			_condition.Tasks = Tasks;
+		}
 	}
 
-	private async Task LoadData(int id)
+	private async Task LoadData(string id)
 	{
 		try
 		{
@@ -133,7 +146,7 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 				return;
 			}
 
-			Name = _condition.Name;
+			Name = _condition.Name ?? string.Empty;
 			Description = _condition.Description;
 			Tasks = _condition.Tasks;
 
@@ -146,7 +159,8 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 			var allTags = await _tagRepository.ListAsync();
 			foreach (var tag in allTags)
 			{
-				tag.IsSelected = _condition.Tags.Any(t => t.ID == tag.ID);
+				// Use MobileTags (List<Tag>) instead of Tags (List<string> from API)
+				tag.IsSelected = _condition.MobileTags.Any(t => t.ID == tag.ID);
 			}
 			AllTags = new(allTags);
 		}
@@ -185,15 +199,18 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 		_condition.Description = Description;
 		_condition.CategoryID = Category?.ID ?? 0;
 		_condition.Icon = Icon.Icon ?? FluentUI.ribbon_24_regular;
-		await _conditionRepository.SaveItemAsync(_condition);
+
+		// Save the condition and get the ID back (important for new conditions)
+		var savedConditionId = await _conditionRepository.SaveItemAsync(_condition);
+		_condition.Id = savedConditionId;
 
 		if (_condition.IsNullOrNew())
 		{
 			foreach (var tag in AllTags)
 			{
-				if (tag.IsSelected)
+				if (tag.IsSelected && !string.IsNullOrEmpty(_condition.Id))
 				{
-					await _tagRepository.SaveItemAsync(tag, _condition.ID);
+					await _tagRepository.SaveItemAsync(tag, _condition.Id);
 				}
 			}
 		}
@@ -202,7 +219,10 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 		{
 			if (task.ID == 0)
 			{
-				task.ProjectID = _condition.ID;
+				if (!string.IsNullOrEmpty(_condition.Id))
+				{
+					task.ProjectID = _condition.Id;
+				}
 				await _taskRepository.SaveItemAsync(task);
 			}
 		}
@@ -253,17 +273,17 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 	{
 		tag.IsSelected = !tag.IsSelected;
 
-		if (!_condition.IsNullOrNew())
+		if (!_condition.IsNullOrNew() && !string.IsNullOrEmpty(_condition.Id))
 		{
 			if (tag.IsSelected)
 			{
-				await _tagRepository.SaveItemAsync(tag, _condition.ID);
+				await _tagRepository.SaveItemAsync(tag, _condition.Id);
 				AllTags = new(AllTags);
 				SemanticScreenReader.Announce($"{tag.Title} selected");
 			}
 			else
 			{
-				await _tagRepository.DeleteItemAsync(tag, _condition.ID);
+				await _tagRepository.DeleteItemAsync(tag, _condition.Id);
 				AllTags = new(AllTags);
 				SemanticScreenReader.Announce($"{tag.Title} unselected");
 			}
@@ -295,4 +315,5 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 		OnPropertyChanged(nameof(HasCompletedTasks));
 		await AppShell.DisplayToastAsync("All cleaned up!");
 	}
+
 }
