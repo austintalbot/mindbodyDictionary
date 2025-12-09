@@ -1,6 +1,8 @@
 using MindBodyDictionaryMobile.Models;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
+using System;
 
 namespace MindBodyDictionaryMobile.Data;
 
@@ -36,7 +38,7 @@ public class ConditionRepository(TaskRepository taskRepository, TagRepository ta
 			var createTableCmd = connection.CreateCommand();
 			createTableCmd.CommandText = @"
 			CREATE TABLE IF NOT EXISTS Condition (
-				ID INTEGER PRIMARY KEY AUTOINCREMENT,
+				Id TEXT PRIMARY KEY NOT NULL,
 				Name TEXT NOT NULL,
 				Description TEXT NOT NULL,
 				Icon TEXT NOT NULL,
@@ -72,7 +74,7 @@ public class ConditionRepository(TaskRepository taskRepository, TagRepository ta
 		{
 			conditions.Add(new MbdCondition
 			{
-				ID = reader.GetInt32(0),
+				ID = reader.GetString(0),
 				Name = reader.GetString(1),
 				Description = reader.GetString(2),
 				Icon = reader.GetString(3),
@@ -82,8 +84,8 @@ public class ConditionRepository(TaskRepository taskRepository, TagRepository ta
 
 		foreach (var condition in conditions)
 		{
-			condition.Tags = await _tagRepository.ListAsync(condition.ID);
-			condition.Tasks = await _taskRepository.ListAsync(condition.ID);
+			condition.Tags = await _tagRepository.ListAsync(condition.Id);
+			condition.Tasks = await _taskRepository.ListAsync(condition.Id);
 		}
 
 		return conditions;
@@ -109,15 +111,15 @@ public class ConditionRepository(TaskRepository taskRepository, TagRepository ta
 		{
 			var condition = new MbdCondition
 			{
-				ID = reader.GetInt32(0),
+				Id = reader.GetString(0),
 				Name = reader.GetString(1),
 				Description = reader.GetString(2),
 				Icon = reader.GetString(3),
 				CategoryID = reader.GetInt32(4)
 			};
 
-			condition.Tags = await _tagRepository.ListAsync(condition.ID);
-			condition.Tasks = await _taskRepository.ListAsync(condition.ID);
+			condition.Tags = await _tagRepository.ListAsync(condition.Id);
+			condition.Tasks = await _taskRepository.ListAsync(condition.Id);
 
 			return condition;
 		}
@@ -159,12 +161,10 @@ public class ConditionRepository(TaskRepository taskRepository, TagRepository ta
 		saveCmd.Parameters.AddWithValue("@CategoryID", item.CategoryID);
 
 		var result = await saveCmd.ExecuteScalarAsync();
-		if (item.ID == 0)
-		{
-			item.ID = Convert.ToInt32(result);
-		}
+		item.Id = Convert.ToString(result);
 
-		return item.ID;
+
+		return item.Id;
 	}
 
 	/// <summary>

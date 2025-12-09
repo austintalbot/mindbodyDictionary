@@ -1,8 +1,13 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Maui.Controls;
 using MindBodyDictionaryMobile.Data;
 using MindBodyDictionaryMobile.Models;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace MindBodyDictionaryMobile.PageModels;
 
@@ -84,7 +89,7 @@ IsSearching = false;
 [RelayCommand]
 private async Task SelectCondition(MbdCondition condition)
 {
-await Shell.Current.GoToAsync($"condition?id={condition.ID}");
+await Shell.Current.GoToAsync($"condition?id={condition.Id}");
 }
 
 [RelayCommand]

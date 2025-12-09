@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace MindBodyDictionaryMobile.Models;
 
@@ -7,16 +9,21 @@ namespace MindBodyDictionaryMobile.Models;
 /// </summary>
 public class MbdCondition
 {
-	public int ID { get; set; }
+	[JsonProperty("id")]
+	public string? Id { get; set; }
 
+	[JsonProperty("name")]
 	public string Name { get; set; } = string.Empty;
 
+	[JsonProperty("description")]
 	public string Description { get; set; } = string.Empty;
 
+	[JsonProperty("icon")]
 	public string Icon { get; set; } = string.Empty;
 
-	[JsonIgnore]
+
 	public int CategoryID { get; set; }
+
 
 	public Category? Category { get; set; }
 

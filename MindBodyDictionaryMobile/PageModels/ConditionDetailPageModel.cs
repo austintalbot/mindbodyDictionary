@@ -1,5 +1,11 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Maui.Accessibility;
+using Microsoft.Maui.Controls;
 using MindBodyDictionaryMobile.Models;
 
 namespace MindBodyDictionaryMobile.PageModels;
@@ -67,6 +73,7 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 	public bool HasCompletedTasks
 		=> _condition?.Tasks.Any(t => t.IsCompleted) ?? false;
 
+
 	public ConditionDetailPageModel(ConditionRepository conditionRepository, TaskRepository taskRepository, CategoryRepository categoryRepository, TagRepository tagRepository, ModalErrorHandler errorHandler)
 	{
 		_conditionRepository = conditionRepository;
@@ -110,12 +117,12 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 		if (_condition.IsNullOrNew())
 		{
 			if (_condition is not null)
-				Tasks = new(_condition.Tasks);
+				Tasks = [.. _condition.Tasks];
 
 			return;
 		}
 
-		Tasks = await _taskRepository.ListAsync(_condition.ID);
+		Tasks = await _taskRepository.ListAsync(_condition.Id);
 		_condition.Tasks = Tasks;
 	}
 
@@ -257,13 +264,13 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 		{
 			if (tag.IsSelected)
 			{
-				await _tagRepository.SaveItemAsync(tag, _condition.ID);
+				await _tagRepository.SaveItemAsync(tag, _condition.Id);
 				AllTags = new(AllTags);
 				SemanticScreenReader.Announce($"{tag.Title} selected");
 			}
 			else
 			{
-				await _tagRepository.DeleteItemAsync(tag, _condition.ID);
+				await _tagRepository.DeleteItemAsync(tag, _condition.Id);
 				AllTags = new(AllTags);
 				SemanticScreenReader.Announce($"{tag.Title} unselected");
 			}
@@ -295,4 +302,5 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 		OnPropertyChanged(nameof(HasCompletedTasks));
 		await AppShell.DisplayToastAsync("All cleaned up!");
 	}
+
 }
