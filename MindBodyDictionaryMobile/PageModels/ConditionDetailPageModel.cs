@@ -146,7 +146,7 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 				return;
 			}
 
-			Name = _condition.Name;
+			Name = _condition.Name ?? string.Empty;
 			Description = _condition.Description;
 			Tasks = _condition.Tasks;
 
@@ -159,7 +159,8 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 			var allTags = await _tagRepository.ListAsync();
 			foreach (var tag in allTags)
 			{
-				tag.IsSelected = _condition.Tags.Any(t => t.ID == tag.ID);
+				// Use MobileTags (List<Tag>) instead of Tags (List<string> from API)
+				tag.IsSelected = _condition.MobileTags.Any(t => t.ID == tag.ID);
 			}
 			AllTags = new(allTags);
 		}

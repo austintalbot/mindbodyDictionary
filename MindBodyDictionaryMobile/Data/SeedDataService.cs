@@ -46,14 +46,6 @@ public class SeedDataService(ProjectRepository projectRepository, TaskRepository
 					}
 				}
 
-				foreach (var condition in payload.MbdConditions)
-				{
-					if (condition?.Category is not null && !categoryMap.ContainsKey(condition.Category.Title))
-					{
-						categoryMap[condition.Category.Title] = condition.Category;
-					}
-				}
-
 				// Save all unique categories
 				foreach (var category in categoryMap.Values)
 				{
@@ -68,20 +60,6 @@ public class SeedDataService(ProjectRepository projectRepository, TaskRepository
 					if (project?.Tags is not null)
 					{
 						foreach (var tag in project.Tags)
-						{
-							if (!tagMap.ContainsKey(tag.Title))
-							{
-								tagMap[tag.Title] = tag;
-							}
-						}
-					}
-				}
-
-				foreach (var condition in payload.MbdConditions)
-				{
-					if (condition?.Tags is not null)
-					{
-						foreach (var tag in condition.Tags)
 						{
 							if (!tagMap.ContainsKey(tag.Title))
 							{
@@ -130,45 +108,6 @@ public class SeedDataService(ProjectRepository projectRepository, TaskRepository
 						}
 					}
 				}
-
-				// Load conditions
-				foreach (var condition in payload.MbdConditions)
-				{
-					if (condition is null)
-					{
-						continue;
-					}
-
-					if (condition.Category is not null)
-					{
-						condition.CategoryID = categoryMap[condition.Category.Title].ID;
-					}
-
-					// Save condition and update ID if it was generated
-					var savedConditionId = await _conditionRepository.SaveItemAsync(condition);
-					condition.Id = savedConditionId;
-
-					if (condition?.Tasks is not null)
-					{
-						foreach (var task in condition.Tasks)
-						{
-							task.ProjectID = condition.Id ?? string.Empty;
-							await _taskRepository.SaveItemAsync(task);
-						}
-					}
-
-					if (condition?.Tags is not null)
-					{
-						foreach (var tag in condition.Tags)
-						{
-							var tagToSave = tagMap[tag.Title];
-							if (!string.IsNullOrEmpty(condition.Id))
-							{
-								await _tagRepository.SaveItemAsync(tagToSave, condition.Id);
-							}
-						}
-					}
-				}
 			}
 		}
 		catch (Exception e)
@@ -180,6 +119,9 @@ public class SeedDataService(ProjectRepository projectRepository, TaskRepository
 		// Deduplicate any existing duplicates
 		await _categoryRepository.DeduplicateAsync();
 		await _tagRepository.DeduplicateAsync();
+
+		// Seed conditions from API or local file
+		await SeedConditionsAsync();
 
 		// Load images into cache after seed data
 		await _imageCacheService.LoadImagesFromResourcesAsync();
@@ -248,17 +190,20 @@ public class SeedDataService(ProjectRepository projectRepository, TaskRepository
 				return false;
 			}
 
-			await using var stream = await response.Content.ReadAsStreamAsync();
-			var conditions = JsonSerializer.Deserialize<List<MbdCondition>>(stream, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+		await using var stream = await response.Content.ReadAsStreamAsync();
+
+			// Deserialize API response directly to mobile MbdCondition (backend and mobile use same schema now)
+			var conditions = JsonSerializer.Deserialize<List<MbdCondition>>(stream,
+				new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
 			if (conditions == null || conditions.Count == 0)
 			{
 				_logger.LogWarning("No conditions returned from API");
-				return false;
-			}
+			return false;
+		}
 
-			await SaveConditionsToDatabase(conditions);
-			_logger.LogInformation($"Successfully loaded {conditions.Count} conditions from API");
+		await SaveConditionsToDatabase(conditions);
+		_logger.LogInformation($"Successfully loaded {conditions.Count} conditions from API");
 			return true;
 		}
 		catch (HttpRequestException e)
@@ -308,67 +253,88 @@ public class SeedDataService(ProjectRepository projectRepository, TaskRepository
 	{
 		try
 		{
+			_logger.LogInformation($"Processing {conditions.Count} conditions for database save");
+
 			// Get categories for mapping
 			var categories = await _categoryRepository.ListAsync();
 			var categoryMap = categories.ToDictionary(c => c.Title);
+			_logger.LogInformation($"Found {categoryMap.Count} existing categories");
 
 			// Get tags for mapping
 			var allTags = await _tagRepository.ListAsync();
 			var tagMap = allTags.ToDictionary(t => t.Title);
+			_logger.LogInformation($"Found {tagMap.Count} existing tags");
 
+			int savedConditionsCount = 0;
 			foreach (var condition in conditions)
 			{
 				if (condition is null || string.IsNullOrEmpty(condition.Name))
 				{
+					_logger.LogWarning("Skipping null or empty condition");
 					continue;
 				}
 
-				// Map category if it exists
-				if (condition.Category is not null)
+				try
 				{
-					if (categoryMap.ContainsKey(condition.Category.Title))
-					{
-						condition.CategoryID = categoryMap[condition.Category.Title].ID;
-					}
-					else
-					{
-						// Save new category if it doesn't exist
-						var savedCategoryId = await _categoryRepository.SaveItemAsync(condition.Category);
-						condition.CategoryID = savedCategoryId;
-						categoryMap[condition.Category.Title] = condition.Category;
-					}
-				}
+					_logger.LogInformation($"Processing condition: {condition.Name}");
 
-				// Save the condition and update its ID
-				var conditionId = await _conditionRepository.SaveItemAsync(condition);
-				condition.Id = conditionId;
+					// Map category if it exists, otherwise create it
+					if (condition.Category is not null)
+					{
+						if (categoryMap.ContainsKey(condition.Category.Title))
+						{
+							condition.CategoryID = categoryMap[condition.Category.Title].ID;
+							_logger.LogInformation($"Mapped existing category: {condition.Category.Title}");
+						}
+						else
+						{
+							// Save new category if it doesn't exist
+							var savedCategoryId = await _categoryRepository.SaveItemAsync(condition.Category);
+							condition.CategoryID = savedCategoryId;
+							categoryMap[condition.Category.Title] = condition.Category;
+							_logger.LogInformation($"Created new category: {condition.Category.Title}");
+						}
+					}
+
+					// Save the condition and update its ID
+					var conditionId = await _conditionRepository.SaveItemAsync(condition);
+					condition.Id = conditionId;
+					_logger.LogInformation($"Saved condition with ID: {conditionId}");
 
 				// Save associated tasks
-				if (condition.Tasks is not null)
+				if (condition.Tasks is not null && condition.Tasks.Count > 0)
 				{
 					foreach (var task in condition.Tasks)
 					{
 						task.ProjectID = condition.Id ?? string.Empty;
 						await _taskRepository.SaveItemAsync(task);
 					}
+					_logger.LogInformation($"Saved {condition.Tasks.Count} tasks for condition");
 				}
 
-				// Save associated tags
-				if (condition.Tags is not null && !string.IsNullOrEmpty(conditionId))
+				// Save associated tags (condition.Tags is now List<string> from API)
+				if (condition.Tags is not null && condition.Tags.Count > 0 && !string.IsNullOrEmpty(conditionId))
 				{
-					foreach (var tag in condition.Tags)
+					foreach (var tagTitle in condition.Tags)
 					{
+						if (string.IsNullOrWhiteSpace(tagTitle))
+							continue;
+
 						Tag? tagToSave = null;
-						if (tagMap.ContainsKey(tag.Title))
+						if (tagMap.ContainsKey(tagTitle))
 						{
-							tagToSave = tagMap[tag.Title];
+							tagToSave = tagMap[tagTitle];
+							_logger.LogInformation($"Using existing tag: {tagTitle}");
 						}
 						else
 						{
-							var savedTagId = await _tagRepository.SaveItemAsync(tag);
-							tag.ID = savedTagId;
-							tagToSave = tag;
-							tagMap[tag.Title] = tag;
+							// Create new tag from string
+							var newTag = new Tag { Title = tagTitle };
+							var savedTagId = await _tagRepository.SaveItemAsync(newTag);
+							newTag.ID = savedTagId;
+							tagToSave = newTag;
+							tagMap[tagTitle] = newTag;
+							_logger.LogInformation($"Created new tag: {tagTitle}");
 						}
 
 						if (tagToSave != null)
@@ -376,10 +342,17 @@ public class SeedDataService(ProjectRepository projectRepository, TaskRepository
 							await _tagRepository.SaveItemAsync(tagToSave, conditionId);
 						}
 					}
+					_logger.LogInformation($"Associated {condition.Tags.Count} tags with condition");
+				}					_logger.LogInformation($"Successfully seeded condition: {condition.Name}");
+					savedConditionsCount++;
 				}
-
-				_logger.LogInformation($"Seeded condition: {condition.Name}");
+				catch (Exception e)
+				{
+					_logger.LogError(e, $"Error saving condition: {condition?.Name}");
+				}
 			}
+
+			_logger.LogInformation($"Successfully saved {savedConditionsCount}/{conditions.Count} conditions");
 		}
 		catch (Exception e)
 		{

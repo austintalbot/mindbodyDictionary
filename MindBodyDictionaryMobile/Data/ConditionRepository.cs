@@ -86,7 +86,11 @@ public class ConditionRepository(TaskRepository taskRepository, TagRepository ta
 		{
 			if (!string.IsNullOrEmpty(condition.Id))
 			{
-				condition.Tags = await _tagRepository.ListAsync(condition.Id);
+				// Load tag objects for local UI use (Tags property is API schema, MobileTags is for UI)
+				var tagObjects = await _tagRepository.ListAsync(condition.Id);
+				condition.MobileTags = tagObjects;
+				// Also populate Tags as string list from tag titles
+				condition.Tags = tagObjects.Select(t => t.Title).ToList();
 				condition.Tasks = await _taskRepository.ListAsync(condition.Id);
 			}
 		}
@@ -123,7 +127,11 @@ public class ConditionRepository(TaskRepository taskRepository, TagRepository ta
 
 			if (!string.IsNullOrEmpty(condition.Id))
 			{
-				condition.Tags = await _tagRepository.ListAsync(condition.Id);
+				// Load tag objects for local UI use (Tags property is API schema, MobileTags is for UI)
+				var tagObjects = await _tagRepository.ListAsync(condition.Id);
+				condition.MobileTags = tagObjects;
+				// Also populate Tags as string list from tag titles
+				condition.Tags = tagObjects.Select(t => t.Title).ToList();
 				condition.Tasks = await _taskRepository.ListAsync(condition.Id);
 			}
 
