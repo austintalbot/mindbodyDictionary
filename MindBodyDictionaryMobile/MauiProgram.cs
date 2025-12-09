@@ -66,6 +66,9 @@ public static class MauiProgram
 		builder.Services.AddSingleton<UpgradePremiumPageModel>();
 		builder.Services.AddSingleton<UpgradePremiumPage>();
 
+		builder.Services.AddSingleton<AboutPageModel>();
+		builder.Services.AddSingleton<AboutPage>();
+
 		builder.Services.AddTransientWithShellRoute<ProjectDetailPage, ProjectDetailPageModel>("project");
 		builder.Services.AddTransientWithShellRoute<TaskDetailPage, TaskDetailPageModel>("task");
 		builder.Services.AddTransientWithShellRoute<ConditionDetailPage, ConditionDetailPageModel>("condition");
