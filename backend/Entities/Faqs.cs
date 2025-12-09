@@ -9,4 +9,3 @@ public class Faqs
 	[JsonProperty(PropertyName = "answer")]
 	public string? Answer { get; set; }
 }
-
