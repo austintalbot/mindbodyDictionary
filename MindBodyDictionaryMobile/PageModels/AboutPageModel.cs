@@ -48,7 +48,7 @@ private static async Task SendEmail()
 		var mainPage = Application.Current?.Windows[0]?.Page;
 		if (mainPage != null)
 		{
-			await mainPage.DisplayAlertAsync("Error", $"Could not send email please email feedback to support@mindbodydictionary.com: {ex.Message}", "OK");
+			await mainPage.DisplayAlertAsync("Error", $"Could not send email. Please email feedback to support@mindbodydictionary.com: {ex.Message}", "OK");
 		}
 	}
 }
