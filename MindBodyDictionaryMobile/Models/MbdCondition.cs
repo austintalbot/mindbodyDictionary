@@ -28,6 +28,9 @@ public class MbdCondition
 	[JsonProperty("physicalConnections")]
 	public List<string>? PhysicalConnections { get; set; }
 
+	[JsonProperty("searchTags")]
+	public List<string>? SearchTags { get; set; }
+
 	[JsonProperty("tags")]
 	public List<string>? Tags { get; set; }
 
