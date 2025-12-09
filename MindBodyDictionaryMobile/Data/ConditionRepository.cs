@@ -74,7 +74,7 @@ public class ConditionRepository(TaskRepository taskRepository, TagRepository ta
 		{
 			conditions.Add(new MbdCondition
 			{
-				ID = reader.GetString(0),
+				Id = reader.GetString(0),
 				Name = reader.GetString(1),
 				Description = reader.GetString(2),
 				Icon = reader.GetString(3),
@@ -84,8 +84,11 @@ public class ConditionRepository(TaskRepository taskRepository, TagRepository ta
 
 		foreach (var condition in conditions)
 		{
-			condition.Tags = await _tagRepository.ListAsync(condition.Id);
-			condition.Tasks = await _taskRepository.ListAsync(condition.Id);
+			if (!string.IsNullOrEmpty(condition.Id))
+			{
+				condition.Tags = await _tagRepository.ListAsync(condition.Id);
+				condition.Tasks = await _taskRepository.ListAsync(condition.Id);
+			}
 		}
 
 		return conditions;
@@ -96,14 +99,14 @@ public class ConditionRepository(TaskRepository taskRepository, TagRepository ta
 	/// </summary>
 	/// <param name="id">The ID of the condition.</param>
 	/// <returns>A <see cref="MbdCondition"/> object if found; otherwise, null.</returns>
-	public async Task<MbdCondition?> GetAsync(int id)
+	public async Task<MbdCondition?> GetAsync(string id)
 	{
 		await Init();
 		await using var connection = new SqliteConnection(Constants.DatabasePath);
 		await connection.OpenAsync();
 
 		var selectCmd = connection.CreateCommand();
-		selectCmd.CommandText = "SELECT * FROM Condition WHERE ID = @id";
+		selectCmd.CommandText = "SELECT * FROM Condition WHERE Id = @id";
 		selectCmd.Parameters.AddWithValue("@id", id);
 
 		await using var reader = await selectCmd.ExecuteReaderAsync();
@@ -118,8 +121,11 @@ public class ConditionRepository(TaskRepository taskRepository, TagRepository ta
 				CategoryID = reader.GetInt32(4)
 			};
 
-			condition.Tags = await _tagRepository.ListAsync(condition.Id);
-			condition.Tasks = await _taskRepository.ListAsync(condition.Id);
+			if (!string.IsNullOrEmpty(condition.Id))
+			{
+				condition.Tags = await _tagRepository.ListAsync(condition.Id);
+				condition.Tasks = await _taskRepository.ListAsync(condition.Id);
+			}
 
 			return condition;
 		}
@@ -128,18 +134,18 @@ public class ConditionRepository(TaskRepository taskRepository, TagRepository ta
 	}
 
 	/// <summary>
-	/// Saves a condition to the database. If the condition ID is 0, a new condition is created; otherwise, the existing condition is updated.
+	/// Saves a condition to the database. If the condition ID is null, a new condition is created; otherwise, the existing condition is updated.
 	/// </summary>
 	/// <param name="item">The condition to save.</param>
 	/// <returns>The ID of the saved condition.</returns>
-	public async Task<int> SaveItemAsync(MbdCondition item)
+	public async Task<string> SaveItemAsync(MbdCondition item)
 	{
 		await Init();
 		await using var connection = new SqliteConnection(Constants.DatabasePath);
 		await connection.OpenAsync();
 
 		var saveCmd = connection.CreateCommand();
-		if (item.ID == 0)
+		if (string.IsNullOrEmpty(item.Id))
 		{
 			saveCmd.CommandText = @"
 				INSERT INTO Condition (Name, Description, Icon, CategoryID)
@@ -151,8 +157,8 @@ public class ConditionRepository(TaskRepository taskRepository, TagRepository ta
 			saveCmd.CommandText = @"
 				UPDATE Condition
 				SET Name = @Name, Description = @Description, Icon = @Icon, CategoryID = @CategoryID
-				WHERE ID = @ID";
-			saveCmd.Parameters.AddWithValue("@ID", item.ID);
+				WHERE Id = @Id";
+			saveCmd.Parameters.AddWithValue("@Id", item.Id);
 		}
 
 		saveCmd.Parameters.AddWithValue("@Name", item.Name);
@@ -161,8 +167,7 @@ public class ConditionRepository(TaskRepository taskRepository, TagRepository ta
 		saveCmd.Parameters.AddWithValue("@CategoryID", item.CategoryID);
 
 		var result = await saveCmd.ExecuteScalarAsync();
-		item.Id = Convert.ToString(result);
-
+		item.Id = Convert.ToString(result) ?? string.Empty;
 
 		return item.Id;
 	}
@@ -179,8 +184,8 @@ public class ConditionRepository(TaskRepository taskRepository, TagRepository ta
 		await connection.OpenAsync();
 
 		var deleteCmd = connection.CreateCommand();
-		deleteCmd.CommandText = "DELETE FROM Condition WHERE ID = @ID";
-		deleteCmd.Parameters.AddWithValue("@ID", item.ID);
+		deleteCmd.CommandText = "DELETE FROM Condition WHERE Id = @Id";
+		deleteCmd.Parameters.AddWithValue("@Id", item.Id);
 
 		return await deleteCmd.ExecuteNonQueryAsync();
 	}

@@ -116,7 +116,7 @@ public class SeedDataService(ProjectRepository projectRepository, TaskRepository
 					{
 						foreach (var task in project.Tasks)
 						{
-							task.ProjectID = project.ID;
+							task.ProjectID = project.ID.ToString();
 							await _taskRepository.SaveItemAsync(task);
 						}
 					}
@@ -146,21 +146,22 @@ public class SeedDataService(ProjectRepository projectRepository, TaskRepository
 
 					await _conditionRepository.SaveItemAsync(condition);
 
-					if (condition?.Tasks is not null)
+				if (condition?.Tasks is not null)
+				{
+					foreach (var task in condition.Tasks)
 					{
-						foreach (var task in condition.Tasks)
-						{
-							task.ProjectID = condition.ID;
-							await _taskRepository.SaveItemAsync(task);
-						}
+						task.ProjectID = condition.Id ?? string.Empty;
+						await _taskRepository.SaveItemAsync(task);
 					}
-
-					if (condition?.Tags is not null)
+				}					if (condition?.Tags is not null)
 					{
 						foreach (var tag in condition.Tags)
 						{
 							var tagToSave = tagMap[tag.Title];
-							await _tagRepository.SaveItemAsync(tagToSave, condition.ID);
+							if (!string.IsNullOrEmpty(condition.Id))
+							{
+								await _tagRepository.SaveItemAsync(tagToSave, condition.Id);
+							}
 						}
 					}
 				}

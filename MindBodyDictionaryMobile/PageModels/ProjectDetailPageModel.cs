@@ -202,7 +202,7 @@ public partial class ProjectDetailPageModel : ObservableObject, IQueryAttributab
 		{
 			if (task.ID == 0)
 			{
-				task.ProjectID = _project.ID;
+				task.ProjectID = _project.ID.ToString();
 				await _taskRepository.SaveItemAsync(task);
 			}
 		}

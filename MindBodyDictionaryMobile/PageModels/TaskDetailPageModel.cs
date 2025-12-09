@@ -54,7 +54,10 @@ public partial class TaskDetailPageModel(ProjectRepository projectRepository, Ta
 				return;
 			}
 
-			Project = await _projectRepository.GetAsync(_task.ProjectID);
+			if (!string.IsNullOrEmpty(_task.ProjectID) && int.TryParse(_task.ProjectID, out int projectId))
+			{
+				Project = await _projectRepository.GetAsync(projectId);
+			}
 		}
 		else
 		{
@@ -74,8 +77,8 @@ public partial class TaskDetailPageModel(ProjectRepository projectRepository, Ta
 
 		if (Project is not null)
 			SelectedProjectIndex = Projects.FindIndex(p => p.ID == Project.ID);
-		else if (_task?.ProjectID > 0)
-			SelectedProjectIndex = Projects.FindIndex(p => p.ID == _task.ProjectID);
+		else if (_task?.ProjectID != null && int.TryParse(_task.ProjectID, out int taskProjectId))
+			SelectedProjectIndex = Projects.FindIndex(p => p.ID == taskProjectId);
 
 		if (taskId > 0)
 		{
@@ -93,7 +96,7 @@ public partial class TaskDetailPageModel(ProjectRepository projectRepository, Ta
 		{
 			_task = new ProjectTask()
 			{
-				ProjectID = Project?.ID ?? 0
+				ProjectID = Project?.ID.ToString() ?? "0"
 			};
 		}
 	}
@@ -121,17 +124,17 @@ public partial class TaskDetailPageModel(ProjectRepository projectRepository, Ta
 
 		_task.Title = Title;
 
-		int projectId = Project?.ID ?? 0;
+		string projectId = (Project?.ID ?? 0).ToString();
 
 		if (Projects.Count > SelectedProjectIndex && SelectedProjectIndex >= 0)
-			_task.ProjectID = projectId = Projects[SelectedProjectIndex].ID;
+			_task.ProjectID = projectId = Projects[SelectedProjectIndex].ID.ToString();
 
 		_task.IsCompleted = IsCompleted;
 
-		if (Project?.ID == projectId && !Project.Tasks.Contains(_task))
+		if (Project?.ID == int.Parse(projectId) && !Project.Tasks.Contains(_task))
 			Project.Tasks.Add(_task);
 
-		if (_task.ProjectID > 0)
+		if (!string.IsNullOrEmpty(_task.ProjectID) && _task.ProjectID != "0")
 			_taskRepository.SaveItemAsync(_task).FireAndForgetSafeAsync(_errorHandler);
 
 		await Shell.Current.GoToAsync("..?refresh=true");

@@ -49,6 +49,14 @@ public class TagRepository(ILogger<TagRepository> logger)
 				PRIMARY KEY(ProjectID, TagID)
 			);";
 			await createTableCmd.ExecuteNonQueryAsync();
+
+			createTableCmd.CommandText = @"
+			CREATE TABLE IF NOT EXISTS ConditionsTags (
+				ConditionID TEXT NOT NULL,
+				TagID INTEGER NOT NULL,
+				PRIMARY KEY(ConditionID, TagID)
+			);";
+			await createTableCmd.ExecuteNonQueryAsync();
 		}
 		catch (Exception e)
 		{
@@ -105,6 +113,41 @@ public class TagRepository(ILogger<TagRepository> logger)
 		JOIN ProjectsTags pt ON t.ID = pt.TagID
 		WHERE pt.ProjectID = @ProjectID";
 		selectCmd.Parameters.AddWithValue("ProjectID", projectID);
+
+		var tags = new List<Tag>();
+
+		await using var reader = await selectCmd.ExecuteReaderAsync();
+		while (await reader.ReadAsync())
+		{
+			tags.Add(new Tag
+			{
+				ID = reader.GetInt32(0),
+				Title = reader.GetString(1),
+				Color = reader.GetString(2)
+			});
+		}
+
+		return tags;
+	}
+
+	/// <summary>
+	/// Retrieves a list of tags associated with a specific condition.
+	/// </summary>
+	/// <param name="conditionId">The ID of the condition.</param>
+	/// <returns>A list of <see cref="Tag"/> objects.</returns>
+	public async Task<List<Tag>> ListAsync(string conditionId)
+	{
+		await Init();
+		await using var connection = new SqliteConnection(Constants.DatabasePath);
+		await connection.OpenAsync();
+
+		var selectCmd = connection.CreateCommand();
+		selectCmd.CommandText = @"
+		SELECT t.*
+		FROM Tag t
+		JOIN ConditionsTags ct ON t.ID = ct.TagID
+		WHERE ct.ConditionID = @ConditionID";
+		selectCmd.Parameters.AddWithValue("@ConditionID", conditionId);
 
 		var tags = new List<Tag>();
 
@@ -212,6 +255,29 @@ public class TagRepository(ILogger<TagRepository> logger)
 	}
 
 	/// <summary>
+	/// Saves a tag to the database and associates it with a specific condition.
+	/// </summary>
+	/// <param name="item">The tag to save.</param>
+	/// <param name="conditionID">The ID of the condition.</param>
+	/// <returns>The number of rows affected.</returns>
+	public async Task<int> SaveItemAsync(Tag item, string conditionID)
+	{
+		await Init();
+		await SaveItemAsync(item);
+
+		await using var connection = new SqliteConnection(Constants.DatabasePath);
+		await connection.OpenAsync();
+
+		var saveCmd = connection.CreateCommand();
+		saveCmd.CommandText = @"
+		INSERT OR IGNORE INTO ConditionsTags (ConditionID, TagID) VALUES (@conditionID, @tagID)";
+		saveCmd.Parameters.AddWithValue("@conditionID", conditionID);
+		saveCmd.Parameters.AddWithValue("@tagID", item.ID);
+
+		return await saveCmd.ExecuteNonQueryAsync();
+	}
+
+	/// <summary>
 	/// Deletes a tag from the database.
 	/// </summary>
 	/// <param name="item">The tag to delete.</param>
@@ -244,6 +310,26 @@ public class TagRepository(ILogger<TagRepository> logger)
 		var deleteCmd = connection.CreateCommand();
 		deleteCmd.CommandText = "DELETE FROM ProjectsTags WHERE ProjectID = @projectID AND TagID = @tagID";
 		deleteCmd.Parameters.AddWithValue("@projectID", projectID);
+		deleteCmd.Parameters.AddWithValue("@tagID", item.ID);
+
+		return await deleteCmd.ExecuteNonQueryAsync();
+	}
+
+	/// <summary>
+	/// Deletes a tag from a specific condition in the database.
+	/// </summary>
+	/// <param name="item">The tag to delete.</param>
+	/// <param name="conditionID">The ID of the condition.</param>
+	/// <returns>The number of rows affected.</returns>
+	public async Task<int> DeleteItemAsync(Tag item, string conditionID)
+	{
+		await Init();
+		await using var connection = new SqliteConnection(Constants.DatabasePath);
+		await connection.OpenAsync();
+
+		var deleteCmd = connection.CreateCommand();
+		deleteCmd.CommandText = "DELETE FROM ConditionsTags WHERE ConditionID = @conditionID AND TagID = @tagID";
+		deleteCmd.Parameters.AddWithValue("@conditionID", conditionID);
 		deleteCmd.Parameters.AddWithValue("@tagID", item.ID);
 
 		return await deleteCmd.ExecuteNonQueryAsync();

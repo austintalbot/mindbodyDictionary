@@ -12,5 +12,5 @@ public class ProjectTask
 	public bool IsCompleted { get; set; }
 
 	[JsonIgnore]
-	public int ProjectID { get; set; }
+	public string ProjectID { get; set; } = string.Empty;
 }

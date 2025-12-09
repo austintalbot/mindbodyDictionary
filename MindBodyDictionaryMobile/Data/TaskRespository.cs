@@ -35,7 +35,7 @@ public class TaskRepository(ILogger<TaskRepository> logger)
 				ID INTEGER PRIMARY KEY AUTOINCREMENT,
 				Title TEXT NOT NULL,
 				IsCompleted INTEGER NOT NULL,
-				ProjectID INTEGER NOT NULL
+				ProjectID TEXT NOT NULL
 			);";
 			await createTableCmd.ExecuteNonQueryAsync();
 		}
@@ -49,7 +49,7 @@ public class TaskRepository(ILogger<TaskRepository> logger)
 	}
 
 	/// <summary>
-	/// Retrieves a list of all tasks from the database.
+	/// Retrieves a list of tasks from the database.
 	/// </summary>
 	/// <returns>A list of <see cref="ProjectTask"/> objects.</returns>
 	public async Task<List<ProjectTask>> ListAsync()
@@ -70,7 +70,7 @@ public class TaskRepository(ILogger<TaskRepository> logger)
 				ID = reader.GetInt32(0),
 				Title = reader.GetString(1),
 				IsCompleted = reader.GetBoolean(2),
-				ProjectID = reader.GetInt32(3)
+				ProjectID = reader.GetString(3)
 			});
 		}
 
@@ -90,7 +90,7 @@ public class TaskRepository(ILogger<TaskRepository> logger)
 
 		var selectCmd = connection.CreateCommand();
 		selectCmd.CommandText = "SELECT * FROM Task WHERE ProjectID = @projectId";
-		selectCmd.Parameters.AddWithValue("@projectId", projectId);
+		selectCmd.Parameters.AddWithValue("@projectId", projectId.ToString());
 		var tasks = new List<ProjectTask>();
 
 		await using var reader = await selectCmd.ExecuteReaderAsync();
@@ -101,7 +101,38 @@ public class TaskRepository(ILogger<TaskRepository> logger)
 				ID = reader.GetInt32(0),
 				Title = reader.GetString(1),
 				IsCompleted = reader.GetBoolean(2),
-				ProjectID = reader.GetInt32(3)
+				ProjectID = reader.GetString(3)
+			});
+		}
+
+		return tasks;
+	}
+
+	/// <summary>
+	/// Retrieves a list of tasks associated with a specific condition.
+	/// </summary>
+	/// <param name="conditionId">The ID of the condition.</param>
+	/// <returns>A list of <see cref="ProjectTask"/> objects.</returns>
+	public async Task<List<ProjectTask>> ListAsync(string conditionId)
+	{
+		await Init();
+		await using var connection = new SqliteConnection(Constants.DatabasePath);
+		await connection.OpenAsync();
+
+		var selectCmd = connection.CreateCommand();
+		selectCmd.CommandText = "SELECT * FROM Task WHERE ProjectID = @projectId";
+		selectCmd.Parameters.AddWithValue("@projectId", conditionId);
+		var tasks = new List<ProjectTask>();
+
+		await using var reader = await selectCmd.ExecuteReaderAsync();
+		while (await reader.ReadAsync())
+		{
+			tasks.Add(new ProjectTask
+			{
+				ID = reader.GetInt32(0),
+				Title = reader.GetString(1),
+				IsCompleted = reader.GetBoolean(2),
+				ProjectID = reader.GetString(3)
 			});
 		}
 
@@ -131,7 +162,7 @@ public class TaskRepository(ILogger<TaskRepository> logger)
 				ID = reader.GetInt32(0),
 				Title = reader.GetString(1),
 				IsCompleted = reader.GetBoolean(2),
-				ProjectID = reader.GetInt32(3)
+				ProjectID = reader.GetString(3)
 			};
 		}
 

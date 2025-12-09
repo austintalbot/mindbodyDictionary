@@ -89,8 +89,11 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 	{
 		if (query.ContainsKey("id"))
 		{
-			int id = Convert.ToInt32(query["id"]);
-			LoadData(id).FireAndForgetSafeAsync(_errorHandler);
+			string? id = query["id"]?.ToString();
+			if (!string.IsNullOrEmpty(id))
+			{
+				LoadData(id).FireAndForgetSafeAsync(_errorHandler);
+			}
 		}
 		else if (query.ContainsKey("refresh"))
 		{
@@ -122,11 +125,14 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 			return;
 		}
 
-		Tasks = await _taskRepository.ListAsync(_condition.Id);
-		_condition.Tasks = Tasks;
+		if (!string.IsNullOrEmpty(_condition.Id))
+		{
+			Tasks = await _taskRepository.ListAsync(_condition.Id);
+			_condition.Tasks = Tasks;
+		}
 	}
 
-	private async Task LoadData(int id)
+	private async Task LoadData(string id)
 	{
 		try
 		{
@@ -198,9 +204,9 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 		{
 			foreach (var tag in AllTags)
 			{
-				if (tag.IsSelected)
+				if (tag.IsSelected && !string.IsNullOrEmpty(_condition.Id))
 				{
-					await _tagRepository.SaveItemAsync(tag, _condition.ID);
+					await _tagRepository.SaveItemAsync(tag, _condition.Id);
 				}
 			}
 		}
@@ -209,7 +215,10 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 		{
 			if (task.ID == 0)
 			{
-				task.ProjectID = _condition.ID;
+				if (!string.IsNullOrEmpty(_condition.Id))
+				{
+					task.ProjectID = _condition.Id;
+				}
 				await _taskRepository.SaveItemAsync(task);
 			}
 		}
@@ -260,7 +269,7 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 	{
 		tag.IsSelected = !tag.IsSelected;
 
-		if (!_condition.IsNullOrNew())
+		if (!_condition.IsNullOrNew() && !string.IsNullOrEmpty(_condition.Id))
 		{
 			if (tag.IsSelected)
 			{
