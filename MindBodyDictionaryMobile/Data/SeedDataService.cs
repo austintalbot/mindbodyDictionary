@@ -144,16 +144,20 @@ public class SeedDataService(ProjectRepository projectRepository, TaskRepository
 						condition.CategoryID = categoryMap[condition.Category.Title].ID;
 					}
 
-					await _conditionRepository.SaveItemAsync(condition);
+					// Save condition and update ID if it was generated
+					var savedConditionId = await _conditionRepository.SaveItemAsync(condition);
+					condition.Id = savedConditionId;
 
-				if (condition?.Tasks is not null)
-				{
-					foreach (var task in condition.Tasks)
+					if (condition?.Tasks is not null)
 					{
-						task.ProjectID = condition.Id ?? string.Empty;
-						await _taskRepository.SaveItemAsync(task);
+						foreach (var task in condition.Tasks)
+						{
+							task.ProjectID = condition.Id ?? string.Empty;
+							await _taskRepository.SaveItemAsync(task);
+						}
 					}
-				}					if (condition?.Tags is not null)
+
+					if (condition?.Tags is not null)
 					{
 						foreach (var tag in condition.Tags)
 						{
@@ -195,6 +199,192 @@ public class SeedDataService(ProjectRepository projectRepository, TaskRepository
 		catch (Exception e)
 		{
 			Console.WriteLine(e);
+		}
+	}
+
+	/// <summary>
+	/// Seeds conditions from the Azure function API into the SQLite database.
+	/// Falls back to local seed file if the API is unavailable.
+	/// </summary>
+	public async Task SeedConditionsAsync()
+	{
+		try
+		{
+			_logger.LogInformation("Starting to seed conditions from Azure function API");
+
+			// First, try to load from Azure function
+			var conditionsLoaded = await LoadConditionsFromApiAsync();
+
+			if (!conditionsLoaded)
+			{
+				// Fall back to local seed file
+				_logger.LogInformation("Falling back to local conditions seed file");
+				await LoadConditionsFromLocalFileAsync();
+			}
+		}
+		catch (Exception e)
+		{
+			_logger.LogError(e, "Error seeding conditions");
+			throw;
+		}
+	}
+
+	/// <summary>
+	/// Loads conditions from the Azure function API at http://localhost:7071/api/GetMbdConditionsTable
+	/// </summary>
+	private async Task<bool> LoadConditionsFromApiAsync()
+	{
+		try
+		{
+			using var httpClient = new HttpClient();
+
+			// TODO: Update to real API URL in production
+			const string apiUrl = "http://localhost:7071/api/GetMbdConditionsTable";
+
+			var response = await httpClient.GetAsync(apiUrl);
+			if (!response.IsSuccessStatusCode)
+			{
+				_logger.LogWarning($"API returned status code {response.StatusCode}");
+				return false;
+			}
+
+			await using var stream = await response.Content.ReadAsStreamAsync();
+			var conditions = JsonSerializer.Deserialize<List<MbdCondition>>(stream, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+			if (conditions == null || conditions.Count == 0)
+			{
+				_logger.LogWarning("No conditions returned from API");
+				return false;
+			}
+
+			await SaveConditionsToDatabase(conditions);
+			_logger.LogInformation($"Successfully loaded {conditions.Count} conditions from API");
+			return true;
+		}
+		catch (HttpRequestException e)
+		{
+			_logger.LogWarning(e, "Failed to connect to API - will use local fallback");
+			return false;
+		}
+		catch (Exception e)
+		{
+			_logger.LogError(e, "Error loading conditions from API");
+			return false;
+		}
+	}
+
+	/// <summary>
+	/// Loads conditions from the local ConditionsSeedData.json file as a fallback.
+	/// </summary>
+	private async Task LoadConditionsFromLocalFileAsync()
+	{
+		try
+		{
+			const string localFilePath = "ConditionsSeedData.json";
+			await using var stream = await FileSystem.OpenAppPackageFileAsync(localFilePath);
+
+			var conditions = JsonSerializer.Deserialize<List<MbdCondition>>(stream, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+			if (conditions == null || conditions.Count == 0)
+			{
+				_logger.LogWarning("No conditions found in local seed file");
+				return;
+			}
+
+			await SaveConditionsToDatabase(conditions);
+			_logger.LogInformation($"Successfully loaded {conditions.Count} conditions from local file");
+		}
+		catch (Exception e)
+		{
+			_logger.LogError(e, "Error loading conditions from local file");
+			throw;
+		}
+	}
+
+	/// <summary>
+	/// Saves a list of conditions to the database, including their associated categories, tasks, and tags.
+	/// </summary>
+	private async Task SaveConditionsToDatabase(List<MbdCondition> conditions)
+	{
+		try
+		{
+			// Get categories for mapping
+			var categories = await _categoryRepository.ListAsync();
+			var categoryMap = categories.ToDictionary(c => c.Title);
+
+			// Get tags for mapping
+			var allTags = await _tagRepository.ListAsync();
+			var tagMap = allTags.ToDictionary(t => t.Title);
+
+			foreach (var condition in conditions)
+			{
+				if (condition is null || string.IsNullOrEmpty(condition.Name))
+				{
+					continue;
+				}
+
+				// Map category if it exists
+				if (condition.Category is not null)
+				{
+					if (categoryMap.ContainsKey(condition.Category.Title))
+					{
+						condition.CategoryID = categoryMap[condition.Category.Title].ID;
+					}
+					else
+					{
+						// Save new category if it doesn't exist
+						var savedCategoryId = await _categoryRepository.SaveItemAsync(condition.Category);
+						condition.CategoryID = savedCategoryId;
+						categoryMap[condition.Category.Title] = condition.Category;
+					}
+				}
+
+				// Save the condition and update its ID
+				var conditionId = await _conditionRepository.SaveItemAsync(condition);
+				condition.Id = conditionId;
+
+				// Save associated tasks
+				if (condition.Tasks is not null)
+				{
+					foreach (var task in condition.Tasks)
+					{
+						task.ProjectID = condition.Id ?? string.Empty;
+						await _taskRepository.SaveItemAsync(task);
+					}
+				}
+
+				// Save associated tags
+				if (condition.Tags is not null && !string.IsNullOrEmpty(conditionId))
+				{
+					foreach (var tag in condition.Tags)
+					{
+						Tag? tagToSave = null;
+						if (tagMap.ContainsKey(tag.Title))
+						{
+							tagToSave = tagMap[tag.Title];
+						}
+						else
+						{
+							var savedTagId = await _tagRepository.SaveItemAsync(tag);
+							tag.ID = savedTagId;
+							tagToSave = tag;
+							tagMap[tag.Title] = tag;
+						}
+
+						if (tagToSave != null)
+						{
+							await _tagRepository.SaveItemAsync(tagToSave, conditionId);
+						}
+					}
+				}
+
+				_logger.LogInformation($"Seeded condition: {condition.Name}");
+			}
+		}
+		catch (Exception e)
+		{
+			_logger.LogError(e, "Error saving conditions to database");
+			throw;
 		}
 	}
 }

@@ -147,10 +147,12 @@ public class ConditionRepository(TaskRepository taskRepository, TagRepository ta
 		var saveCmd = connection.CreateCommand();
 		if (string.IsNullOrEmpty(item.Id))
 		{
+			// Generate a new ID for new conditions
+			item.Id = Guid.NewGuid().ToString();
 			saveCmd.CommandText = @"
-				INSERT INTO Condition (Name, Description, Icon, CategoryID)
-				VALUES (@Name, @Description, @Icon, @CategoryID);
-				SELECT last_insert_rowid();";
+				INSERT INTO Condition (Id, Name, Description, Icon, CategoryID)
+				VALUES (@Id, @Name, @Description, @Icon, @CategoryID)";
+			saveCmd.Parameters.AddWithValue("@Id", item.Id);
 		}
 		else
 		{
@@ -166,8 +168,7 @@ public class ConditionRepository(TaskRepository taskRepository, TagRepository ta
 		saveCmd.Parameters.AddWithValue("@Icon", item.Icon);
 		saveCmd.Parameters.AddWithValue("@CategoryID", item.CategoryID);
 
-		var result = await saveCmd.ExecuteScalarAsync();
-		item.Id = Convert.ToString(result) ?? string.Empty;
+		await saveCmd.ExecuteNonQueryAsync();
 
 		return item.Id;
 	}

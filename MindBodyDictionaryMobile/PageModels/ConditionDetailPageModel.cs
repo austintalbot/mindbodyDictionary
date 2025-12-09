@@ -198,7 +198,10 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 		_condition.Description = Description;
 		_condition.CategoryID = Category?.ID ?? 0;
 		_condition.Icon = Icon.Icon ?? FluentUI.ribbon_24_regular;
-		await _conditionRepository.SaveItemAsync(_condition);
+
+		// Save the condition and get the ID back (important for new conditions)
+		var savedConditionId = await _conditionRepository.SaveItemAsync(_condition);
+		_condition.Id = savedConditionId;
 
 		if (_condition.IsNullOrNew())
 		{

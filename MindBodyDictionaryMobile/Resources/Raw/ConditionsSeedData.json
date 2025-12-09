@@ -1,0 +1,50 @@
+[
+    {
+        "id": "back-pain-001",
+        "name": "Back Pain",
+        "description": "Chronic or acute back pain relief and management",
+        "icon": "\uf48f",
+        "category": { "title": "physical health", "color": "#FF6B6B" },
+        "tags": [
+            { "title": "pain relief", "color": "#FF6347" },
+            { "title": "exercise", "color": "#32CD32" }
+        ],
+        "tasks": [
+            { "title": "Core strengthening exercises", "isCompleted": false },
+            { "title": "Stretching routine", "isCompleted": false },
+            { "title": "Physical therapy session", "isCompleted": false }
+        ]
+    },
+    {
+        "id": "headache-001",
+        "name": "Headache",
+        "description": "Tension headaches and migraine management",
+        "icon": "\uf5a0",
+        "category": { "title": "physical health", "color": "#FF6B6B" },
+        "tags": [
+            { "title": "pain relief", "color": "#FF6347" },
+            { "title": "stress", "color": "#FF9900" }
+        ],
+        "tasks": [
+            { "title": "Meditation practice", "isCompleted": false },
+            { "title": "Stay hydrated", "isCompleted": false },
+            { "title": "Rest in dark room", "isCompleted": false }
+        ]
+    },
+    {
+        "id": "stress-mgmt-001",
+        "name": "Stress Management",
+        "description": "Techniques and activities to manage daily stress",
+        "icon": "\uf5a1",
+        "category": { "title": "mental health", "color": "#8B00FF" },
+        "tags": [
+            { "title": "stress", "color": "#FF9900" },
+            { "title": "mindfulness", "color": "#20B2AA" }
+        ],
+        "tasks": [
+            { "title": "Daily meditation", "isCompleted": false },
+            { "title": "Journal your thoughts", "isCompleted": false },
+            { "title": "Take a relaxing walk", "isCompleted": false }
+        ]
+    }
+]
