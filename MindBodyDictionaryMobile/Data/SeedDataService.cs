@@ -8,6 +8,7 @@ namespace MindBodyDictionaryMobile.Data;
 
 public class SeedDataService(ProjectRepository projectRepository, TaskRepository taskRepository, TagRepository tagRepository, CategoryRepository categoryRepository, ConditionRepository conditionRepository, ImageCacheService imageCacheService, ILogger<SeedDataService> logger)
 {
+	public string? RawApiConditionsJson { get; private set; }
 	private readonly ProjectRepository _projectRepository = projectRepository;
 	private readonly TaskRepository _taskRepository = taskRepository;
 	private readonly TagRepository _tagRepository = tagRepository;
@@ -159,6 +160,14 @@ public class SeedDataService(ProjectRepository projectRepository, TaskRepository
 		{
 			_logger.LogInformation("Starting to seed conditions");
 
+			// Only seed if DB is empty
+			var existingConditions = await _conditionRepository.ListAsync();
+			if (existingConditions != null && existingConditions.Count > 0)
+			{
+				_logger.LogInformation($"Database already has {existingConditions.Count} conditions. Skipping seeding.");
+				return;
+			}
+
 			// Try API first
 			bool conditionsLoaded = false;
 			try
@@ -238,6 +247,9 @@ public class SeedDataService(ProjectRepository projectRepository, TaskRepository
 						var content = await response.Content.ReadAsStringAsync();
 						_logger.LogInformation($"API response length: {content.Length} bytes");
 						System.Diagnostics.Debug.WriteLine($"=== API response received: {content.Length} bytes ===");
+
+						// Store raw API data for future use
+						RawApiConditionsJson = content;
 
 						// Deserialize API response directly to mobile MbdCondition (backend and mobile use same schema now)
 						try
@@ -325,7 +337,7 @@ public class SeedDataService(ProjectRepository projectRepository, TaskRepository
 	{
 		try
 		{
-			const string localFilePath = "Resources/Raw/ConditionsSeedData.json";
+			const string localFilePath = "Resources/Raw/conditionData.json";
 			_logger.LogInformation($"Attempting to load conditions from local file: {localFilePath}");
 
 			// Try to open as MAUI app package file

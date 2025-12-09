@@ -28,16 +28,23 @@ public partial class ConditionListPageModel(ConditionRepository conditionReposit
 	// Load conditions when page appears
 	internal async Task InitializeAsync()
 	{
-		// Seed data on first load
-		StatusMessage = "Loading conditions from API...";
+		// Only seed if DB is empty
+		StatusMessage = "Checking local database...";
 		try
 		{
-			// Set up callback to update status during seeding
-			_seedDataService.OnProgressUpdate = (status) => StatusMessage = status;
-
-			System.Diagnostics.Debug.WriteLine("=== InitializeAsync: Starting seed data ===");
-			await _seedDataService.SeedConditionsAsync();
-			System.Diagnostics.Debug.WriteLine("=== InitializeAsync: Seed complete, loading conditions ===");
+			var existingConditions = await _conditionRepository.ListAsync();
+			if (existingConditions == null || existingConditions.Count == 0)
+			{
+				StatusMessage = "Seeding conditions from local file...";
+				_seedDataService.OnProgressUpdate = (status) => StatusMessage = status;
+				System.Diagnostics.Debug.WriteLine("=== InitializeAsync: Starting seed data ===");
+				await _seedDataService.SeedConditionsAsync();
+				System.Diagnostics.Debug.WriteLine("=== InitializeAsync: Seed complete, loading conditions ===");
+			}
+			else
+			{
+				StatusMessage = $"Loaded {existingConditions.Count} conditions from local database.";
+			}
 		}
 		catch (Exception ex)
 		{

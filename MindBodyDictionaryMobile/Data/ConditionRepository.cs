@@ -1,3 +1,4 @@
+
 using MindBodyDictionaryMobile.Models;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Logging;
@@ -5,6 +6,9 @@ using System.Threading.Tasks;
 using System;
 
 namespace MindBodyDictionaryMobile.Data;
+
+
+
 
 /// <summary>
 /// Repository class for managing conditions in the database.
@@ -17,6 +21,53 @@ namespace MindBodyDictionaryMobile.Data;
 /// <param name="logger">The logger instance.</param>
 public class ConditionRepository(TaskRepository taskRepository, TagRepository tagRepository, ILogger<ConditionRepository> logger)
 {
+
+	/// <summary>
+	/// Retrieves a page of conditions for lazy loading (infinite scroll), ordered by Name.
+	/// </summary>
+	/// <param name="skip">Number of conditions to skip.</param>
+	/// <param name="take">Number of conditions to take.</param>
+	/// <returns>A list of <see cref="MbdCondition"/> objects.</returns>
+	public async Task<List<MbdCondition>> ListPageAsync(int skip, int take)
+	{
+		await Init();
+		await using var connection = new SqliteConnection(Constants.DatabasePath);
+		await connection.OpenAsync();
+
+		var selectCmd = connection.CreateCommand();
+		selectCmd.CommandText = "SELECT * FROM Condition ORDER BY Name LIMIT @take OFFSET @skip";
+		selectCmd.Parameters.AddWithValue("@take", take);
+		selectCmd.Parameters.AddWithValue("@skip", skip);
+		var conditions = new List<MbdCondition>();
+
+		await using var reader = await selectCmd.ExecuteReaderAsync();
+		while (await reader.ReadAsync())
+		{
+			conditions.Add(new MbdCondition
+			{
+				Id = reader.GetString(0),
+				Name = reader.GetString(1),
+				Description = reader.GetString(2),
+				Icon = reader.GetString(3),
+				CategoryID = reader.GetInt32(4)
+			});
+		}
+
+		// Optionally load tags for each condition (can be deferred for perf)
+		foreach (var condition in conditions)
+		{
+			if (!string.IsNullOrEmpty(condition.Id))
+			{
+				var tagObjects = await _tagRepository.ListAsync(condition.Id);
+				condition.MobileTags = tagObjects;
+				condition.Tags = tagObjects.Select(t => t.Title).ToList();
+				condition.Tasks = [];
+			}
+		}
+
+		return conditions;
+	}
+
 	private bool _hasBeenInitialized = false;
 	private readonly ILogger _logger = logger;
 	private readonly TaskRepository _taskRepository = taskRepository;
