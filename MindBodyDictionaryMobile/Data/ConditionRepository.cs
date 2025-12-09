@@ -22,14 +22,22 @@ public class ConditionRepository(TaskRepository taskRepository, TagRepository ta
 	private readonly TaskRepository _taskRepository = taskRepository;
 	private readonly TagRepository _tagRepository = tagRepository;
 
+	// Fallback in-memory cache if database fails
+	private static List<MbdCondition> _inMemoryConditions = [];
+	private static bool _usingInMemoryCache = false;
+
 	/// <summary>
 	/// Initializes the database connection and creates the MbdCondition table if it does not exist.
 	/// </summary>
 	private async Task Init()
 	{
 		if (_hasBeenInitialized)
+		{
+			System.Diagnostics.Debug.WriteLine("=== ConditionRepository.Init: Already initialized, skipping ===");
 			return;
+		}
 
+		System.Diagnostics.Debug.WriteLine("=== ConditionRepository.Init: Initializing database ===");
 		await using var connection = new SqliteConnection(Constants.DatabasePath);
 		await connection.OpenAsync();
 
@@ -45,9 +53,11 @@ public class ConditionRepository(TaskRepository taskRepository, TagRepository ta
 				CategoryID INTEGER NOT NULL
 			);";
 			await createTableCmd.ExecuteNonQueryAsync();
+			System.Diagnostics.Debug.WriteLine("=== ConditionRepository.Init: Condition table created/verified ===");
 		}
 		catch (Exception e)
 		{
+			System.Diagnostics.Debug.WriteLine($"=== ConditionRepository.Init ERROR: {e.Message} ===");
 			_logger.LogError(e, "Error creating MbdCondition table");
 			throw;
 		}
@@ -56,11 +66,18 @@ public class ConditionRepository(TaskRepository taskRepository, TagRepository ta
 	}
 
 	/// <summary>
-	/// Retrieves a list of all conditions from the database.
+	/// Retrieves a list of all conditions from the database or cache.
 	/// </summary>
 	/// <returns>A list of <see cref="MbdCondition"/> objects.</returns>
 	public async Task<List<MbdCondition>> ListAsync()
 	{
+		// First check if we have in-memory cache
+		if (_usingInMemoryCache && _inMemoryConditions.Count > 0)
+		{
+			System.Diagnostics.Debug.WriteLine($"=== ListAsync: Returning {_inMemoryConditions.Count} conditions from in-memory cache ===");
+			return _inMemoryConditions.ToList();
+		}
+
 		await Init();
 		await using var connection = new SqliteConnection(Constants.DatabasePath);
 		await connection.OpenAsync();
@@ -82,6 +99,12 @@ public class ConditionRepository(TaskRepository taskRepository, TagRepository ta
 			});
 		}
 
+		if (conditions.Count == 0 && _inMemoryConditions.Count > 0)
+		{
+			System.Diagnostics.Debug.WriteLine($"=== ListAsync: Database empty, returning {_inMemoryConditions.Count} from in-memory cache ===");
+			return _inMemoryConditions.ToList();
+		}
+
 		foreach (var condition in conditions)
 		{
 			if (!string.IsNullOrEmpty(condition.Id))
@@ -91,7 +114,8 @@ public class ConditionRepository(TaskRepository taskRepository, TagRepository ta
 				condition.MobileTags = tagObjects;
 				// Also populate Tags as string list from tag titles
 				condition.Tags = tagObjects.Select(t => t.Title).ToList();
-				condition.Tasks = await _taskRepository.ListAsync(condition.Id);
+				// Note: Conditions don't have tasks like projects do
+				condition.Tasks = [];
 			}
 		}
 
@@ -132,7 +156,8 @@ public class ConditionRepository(TaskRepository taskRepository, TagRepository ta
 				condition.MobileTags = tagObjects;
 				// Also populate Tags as string list from tag titles
 				condition.Tags = tagObjects.Select(t => t.Title).ToList();
-				condition.Tasks = await _taskRepository.ListAsync(condition.Id);
+				// Note: Conditions don't have tasks like projects do
+				condition.Tasks = [];
 			}
 
 			return condition;
@@ -148,35 +173,62 @@ public class ConditionRepository(TaskRepository taskRepository, TagRepository ta
 	/// <returns>The ID of the saved condition.</returns>
 	public async Task<string> SaveItemAsync(MbdCondition item)
 	{
-		await Init();
-		await using var connection = new SqliteConnection(Constants.DatabasePath);
-		await connection.OpenAsync();
+		System.Diagnostics.Debug.WriteLine($"=== ConditionRepository.SaveItemAsync: Saving condition {item.Id}: {item.Name} ===");
 
-		var saveCmd = connection.CreateCommand();
-		if (string.IsNullOrEmpty(item.Id))
+		try
 		{
-			// Generate a new ID for new conditions
-			item.Id = Guid.NewGuid().ToString();
-			saveCmd.CommandText = @"
-				INSERT INTO Condition (Id, Name, Description, Icon, CategoryID)
-				VALUES (@Id, @Name, @Description, @Icon, @CategoryID)";
-			saveCmd.Parameters.AddWithValue("@Id", item.Id);
+			await Init();
+			await using var connection = new SqliteConnection(Constants.DatabasePath);
+			await connection.OpenAsync();
+
+			var saveCmd = connection.CreateCommand();
+			if (string.IsNullOrEmpty(item.Id))
+			{
+				// Generate a new ID for new conditions
+				item.Id = Guid.NewGuid().ToString();
+				saveCmd.CommandText = @"
+					INSERT INTO Condition (Id, Name, Description, Icon, CategoryID)
+					VALUES (@Id, @Name, @Description, @Icon, @CategoryID)";
+				saveCmd.Parameters.AddWithValue("@Id", item.Id);
+				System.Diagnostics.Debug.WriteLine($"=== ConditionRepository.SaveItemAsync: INSERT command ===");
+			}
+			else
+			{
+				saveCmd.CommandText = @"
+					UPDATE Condition
+					SET Name = @Name, Description = @Description, Icon = @Icon, CategoryID = @CategoryID
+					WHERE Id = @Id";
+				saveCmd.Parameters.AddWithValue("@Id", item.Id);
+				System.Diagnostics.Debug.WriteLine($"=== ConditionRepository.SaveItemAsync: UPDATE command ===");
+			}
+
+			saveCmd.Parameters.AddWithValue("@Name", item.Name ?? string.Empty);
+			saveCmd.Parameters.AddWithValue("@Description", item.Description ?? string.Empty);
+			saveCmd.Parameters.AddWithValue("@Icon", item.Icon ?? string.Empty);
+			saveCmd.Parameters.AddWithValue("@CategoryID", item.CategoryID);
+
+			System.Diagnostics.Debug.WriteLine($"=== ConditionRepository.SaveItemAsync: Executing with Name='{item.Name}', Desc='{item.Description?.Substring(0, Math.Min(30, item.Description?.Length ?? 0))}...', Icon='{item.Icon}', CategoryID={item.CategoryID} ===");
+
+			var rowsAffected = await saveCmd.ExecuteNonQueryAsync();
+			System.Diagnostics.Debug.WriteLine($"=== ConditionRepository.SaveItemAsync: Saved {rowsAffected} rows ===");
+			_logger.LogInformation($"Saved condition {item.Id}: {item.Name}");
 		}
-		else
+		catch (Exception ex)
 		{
-			saveCmd.CommandText = @"
-				UPDATE Condition
-				SET Name = @Name, Description = @Description, Icon = @Icon, CategoryID = @CategoryID
-				WHERE Id = @Id";
-			saveCmd.Parameters.AddWithValue("@Id", item.Id);
+			System.Diagnostics.Debug.WriteLine($"=== ConditionRepository.SaveItemAsync DATABASE ERROR: {ex.Message} ===");
+			System.Diagnostics.Debug.WriteLine($"=== Using in-memory cache fallback ===");
+			_logger.LogError(ex, $"Error saving condition to database {item.Id}: {item.Name}, using in-memory fallback");
+			_usingInMemoryCache = true;
 		}
 
-		saveCmd.Parameters.AddWithValue("@Name", item.Name);
-		saveCmd.Parameters.AddWithValue("@Description", item.Description);
-		saveCmd.Parameters.AddWithValue("@Icon", item.Icon);
-		saveCmd.Parameters.AddWithValue("@CategoryID", item.CategoryID);
-
-		await saveCmd.ExecuteNonQueryAsync();
+		// Also save to in-memory cache as backup
+		var existing = _inMemoryConditions.FirstOrDefault(c => c.Id == item.Id);
+		if (existing != null)
+		{
+			_inMemoryConditions.Remove(existing);
+		}
+		_inMemoryConditions.Add(item);
+		System.Diagnostics.Debug.WriteLine($"=== Cached in-memory: {item.Name} (total: {_inMemoryConditions.Count}) ===");
 
 		return item.Id;
 	}

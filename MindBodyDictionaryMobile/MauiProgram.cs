@@ -73,6 +73,7 @@ public static class MauiProgram
 		builder.Services.AddTransientWithShellRoute<TaskDetailPage, TaskDetailPageModel>("task");
 		builder.Services.AddTransientWithShellRoute<ConditionDetailPage, ConditionDetailPageModel>("condition");
 		builder.Services.AddSingleton<ConditionListPageModel>();
+		builder.Services.AddSingleton<ConditionListPage>();
 
 		return builder.Build();
 	}

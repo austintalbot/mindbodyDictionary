@@ -9,15 +9,78 @@ using MindBodyDictionaryMobile.Models;
 
 namespace MindBodyDictionaryMobile.PageModels;
 
-public partial class ConditionListPageModel(ConditionRepository conditionRepository) : ObservableObject
+public partial class ConditionListPageModel(ConditionRepository conditionRepository, SeedDataService seedDataService) : ObservableObject
 {
 	private readonly ConditionRepository _conditionRepository = conditionRepository;
+	private readonly SeedDataService _seedDataService = seedDataService;
 
 	[ObservableProperty]
 	private List<MbdCondition> conditions = [];
 
-	[RelayCommand]
-	private async Task Appearing() => Conditions = await _conditionRepository.ListAsync();
+	[ObservableProperty]
+	private string statusMessage = "Initializing...";
+
+	public ConditionListPageModel() : this(null, null)
+	{
+		// Default constructor for design-time support
+	}
+
+	// Load conditions when page appears
+	internal async Task InitializeAsync()
+	{
+		// Seed data on first load
+		StatusMessage = "Loading conditions from API...";
+		try
+		{
+			// Set up callback to update status during seeding
+			_seedDataService.OnProgressUpdate = (status) => StatusMessage = status;
+
+			System.Diagnostics.Debug.WriteLine("=== InitializeAsync: Starting seed data ===");
+			await _seedDataService.SeedConditionsAsync();
+			System.Diagnostics.Debug.WriteLine("=== InitializeAsync: Seed complete, loading conditions ===");
+		}
+		catch (Exception ex)
+		{
+			System.Diagnostics.Debug.WriteLine($"=== InitializeAsync: Seeding error: {ex.Message} ===");
+			System.Diagnostics.Debug.WriteLine($"=== InitializeAsync: Stack trace: {ex.StackTrace} ===");
+			StatusMessage = $"Seed error: {ex.Message}";
+		}
+
+		await Appearing();
+	}	[RelayCommand]
+	private async Task Appearing()
+	{
+		try
+		{
+			StatusMessage = "Fetching from database...";
+			System.Diagnostics.Debug.WriteLine("=== ConditionListPageModel.Appearing called ===");
+
+			var sw = System.Diagnostics.Stopwatch.StartNew();
+			Conditions = await _conditionRepository.ListAsync();
+			sw.Stop();
+
+			System.Diagnostics.Debug.WriteLine($"=== Loaded {Conditions.Count} conditions in {sw.ElapsedMilliseconds}ms ===");
+
+			if (Conditions.Count > 0)
+			{
+				StatusMessage = $"Loaded {Conditions.Count} conditions";
+				foreach (var c in Conditions)
+				{
+					System.Diagnostics.Debug.WriteLine($"  - Condition: {c.Id}: {c.Name}");
+				}
+			}
+			else
+			{
+				StatusMessage = "No conditions in database";
+			}
+		}
+		catch (Exception ex)
+		{
+			StatusMessage = $"Error: {ex.Message}";
+			System.Diagnostics.Debug.WriteLine($"=== Error loading conditions: {ex.Message} ===");
+			System.Diagnostics.Debug.WriteLine($"=== Stack trace: {ex.StackTrace} ===");
+		}
+	}
 
 	[RelayCommand]
 	private static Task NavigateToCondition(MbdCondition condition)
