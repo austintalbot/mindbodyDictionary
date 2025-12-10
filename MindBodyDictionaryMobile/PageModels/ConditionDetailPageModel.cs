@@ -7,6 +7,9 @@ using CommunityToolkit.Mvvm.Input;
 using Microsoft.Maui.Accessibility;
 using Microsoft.Maui.Controls;
 using MindBodyDictionaryMobile.Models;
+using System.IO;
+using System.Text.Json;
+using System.Reflection;
 
 namespace MindBodyDictionaryMobile.PageModels;
 

@@ -219,6 +219,13 @@ public class ConditionRepository(TaskRepository taskRepository, TagRepository ta
 			return condition;
 		}
 
+		// Fallback: try in-memory cache if not found in DB
+		if (_inMemoryConditions.Count > 0)
+		{
+			var cached = _inMemoryConditions.FirstOrDefault(c => c.Id == id);
+			if (cached != null)
+				return cached;
+		}
 		return null;
 	}
 
