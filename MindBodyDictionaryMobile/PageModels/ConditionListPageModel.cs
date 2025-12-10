@@ -6,8 +6,6 @@ using CommunityToolkit.Mvvm.Input;
 using Microsoft.Maui.Controls;
 using MindBodyDictionaryMobile.Data;
 using MindBodyDictionaryMobile.Models;
-using System.Reflection;
-using System.Text.Json;
 
 namespace MindBodyDictionaryMobile.PageModels;
 
@@ -15,6 +13,8 @@ public partial class ConditionListPageModel(ConditionRepository conditionReposit
 {
 	private readonly ConditionRepository _conditionRepository = conditionRepository;
 	private readonly SeedDataService _seedDataService = seedDataService;
+
+	public static List<MbdCondition> CachedConditions { get; set; } = new();
 
 	[ObservableProperty]
 	private List<MbdCondition> conditions = [];
@@ -30,57 +30,26 @@ public partial class ConditionListPageModel(ConditionRepository conditionReposit
 	// Load conditions when page appears
 	internal async Task InitializeAsync()
 	{
-		// Only seed if DB is empty
-		StatusMessage = "Checking local database...";
-		try
-		{
-			var existingConditions = await _conditionRepository.ListAsync();
-			if (existingConditions == null || existingConditions.Count == 0)
-			{
-				StatusMessage = "Seeding conditions from local file...";
-				_seedDataService.OnProgressUpdate = (status) => StatusMessage = status;
-				System.Diagnostics.Debug.WriteLine("=== InitializeAsync: Starting seed data ===");
-				await _seedDataService.SeedConditionsAsync();
-				System.Diagnostics.Debug.WriteLine("=== InitializeAsync: Seed complete, loading conditions ===");
-			}
-			else
-			{
-				StatusMessage = $"Loaded {existingConditions.Count} conditions from local database.";
-			}
-		}
-		catch (Exception ex)
-		{
-			System.Diagnostics.Debug.WriteLine($"=== InitializeAsync: Seeding error: {ex.Message} ===");
-			System.Diagnostics.Debug.WriteLine($"=== InitializeAsync: Stack trace: {ex.StackTrace} ===");
-			StatusMessage = $"Seed error: {ex.Message}";
-		}
-
 		await Appearing();
-	}	[RelayCommand]
+	}
+
+	[RelayCommand]
 	private async Task Appearing()
 	{
 		try
 		{
-			StatusMessage = "Loading conditions from JSON...";
+			StatusMessage = "Loading conditions from database...";
 			System.Diagnostics.Debug.WriteLine("=== ConditionListPageModel.Appearing called ===");
 
 			var sw = System.Diagnostics.Stopwatch.StartNew();
-			var assembly = Assembly.GetExecutingAssembly();
-			using var stream = assembly.GetManifestResourceStream("MindBodyDictionaryMobile.Resources.Raw.conditionData.json");
-			if (stream == null)
-			{
-				StatusMessage = "Error: JSON file not found";
-				return;
-			}
-			var conditions = await JsonSerializer.DeserializeAsync<List<MbdCondition>>(stream);
-			Conditions = conditions ?? [];
+			Conditions = await _conditionRepository.ListPageAsync(0, 1); // Load first 1 for performance
 			sw.Stop();
 
 			System.Diagnostics.Debug.WriteLine($"=== Loaded {Conditions.Count} conditions in {sw.ElapsedMilliseconds}ms ===");
 
 			if (Conditions.Count > 0)
 			{
-				StatusMessage = $"Loaded {Conditions.Count} conditions from JSON";
+				StatusMessage = $"Loaded {Conditions.Count} conditions from database";
 				foreach (var c in Conditions)
 				{
 					System.Diagnostics.Debug.WriteLine($"  - Condition: {c.Id}: {c.Name}");
@@ -88,7 +57,7 @@ public partial class ConditionListPageModel(ConditionRepository conditionReposit
 			}
 			else
 			{
-				StatusMessage = "No conditions in JSON";
+				StatusMessage = "No conditions in database";
 			}
 		}
 		catch (Exception ex)

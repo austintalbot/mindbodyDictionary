@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MindBodyDictionaryMobile.Models;
 using Microsoft.Extensions.Logging;
+using System.Reflection;
 
 namespace MindBodyDictionaryMobile.Data;
 
@@ -337,63 +338,36 @@ public class SeedDataService(ProjectRepository projectRepository, TaskRepository
 	{
 		try
 		{
-			const string localFilePath = "Resources/Raw/conditionData.json";
-			_logger.LogInformation($"Attempting to load conditions from local file: {localFilePath}");
+			_logger.LogInformation("Attempting to load conditions from embedded resource");
 
-			// Try to open as MAUI app package file
-			try
+			var assembly = Assembly.GetExecutingAssembly();
+			await using var stream = assembly.GetManifestResourceStream("MindBodyDictionaryMobile.Resources.Raw.conditionData.json");
+			if (stream == null)
 			{
-				await using var stream = await FileSystem.OpenAppPackageFileAsync(localFilePath);
-				_logger.LogInformation("Successfully opened local seed file");
-
-				using var streamReader = new System.IO.StreamReader(stream);
-				var content = await streamReader.ReadToEndAsync();
-				_logger.LogInformation($"Read {content.Length} bytes from seed file");
-
-				var conditions = JsonSerializer.Deserialize<List<MbdCondition>>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-
-				if (conditions == null || conditions.Count == 0)
-				{
-					_logger.LogWarning("No conditions found in local seed file");
-					return;
-				}
-
-				_logger.LogInformation($"Successfully deserialized {conditions.Count} conditions from local file");
-				foreach (var c in conditions)
-				{
-					_logger.LogInformation($"  - Condition from file: id={c.Id}, name={c.Name}");
-				}
-
-				await SaveConditionsToDatabase(conditions);
-				_logger.LogInformation($"Successfully loaded {conditions.Count} conditions from local file");
+				throw new FileNotFoundException("Embedded resource not found");
 			}
-			catch (Exception ex)
+			_logger.LogInformation("Successfully opened embedded resource");
+
+			var conditions = await JsonSerializer.DeserializeAsync<List<MbdCondition>>(stream, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+			if (conditions == null || conditions.Count == 0)
 			{
-				_logger.LogError(ex, "Failed to open local seed file as app package file. Trying direct file read.");
-				// Fallback to direct file read
-				if (System.IO.File.Exists(localFilePath))
-				{
-					var content = await System.IO.File.ReadAllTextAsync(localFilePath);
-					var conditions = JsonSerializer.Deserialize<List<MbdCondition>>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-					if (conditions != null && conditions.Count > 0)
-					{
-						await SaveConditionsToDatabase(conditions);
-						_logger.LogInformation($"Successfully loaded {conditions.Count} conditions from direct file read");
-					}
-					else
-					{
-						_logger.LogWarning("No conditions found in direct file read");
-					}
-				}
-				else
-				{
-					_logger.LogError($"Local seed file not found at {localFilePath}");
-				}
+				_logger.LogWarning("No conditions found in embedded resource");
+				return;
 			}
+
+			_logger.LogInformation($"Successfully deserialized {conditions.Count} conditions from embedded resource");
+			foreach (var c in conditions)
+			{
+				_logger.LogInformation($"  - Condition from resource: id={c.Id}, name={c.Name}");
+			}
+
+			await SaveConditionsToDatabase(conditions);
+			_logger.LogInformation($"Successfully loaded {conditions.Count} conditions from embedded resource");
 		}
 		catch (Exception e)
 		{
-			_logger.LogError(e, "Error loading conditions from local file");
+			_logger.LogError(e, "Error loading conditions from embedded resource");
 			throw;
 		}
 	}

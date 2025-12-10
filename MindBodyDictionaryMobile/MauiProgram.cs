@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Maui;
+using CommunityToolkit.Maui;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Syncfusion.Maui.Toolkit.Hosting;
 using MindBodyDictionaryMobile.Services.billing;
@@ -76,6 +77,7 @@ public static class MauiProgram
 		builder.Services.AddTransientWithShellRoute<ConditionDetailPage, ConditionDetailPageModel>("condition");
 		builder.Services.AddSingleton<ConditionListPageModel>();
 		builder.Services.AddSingleton<ConditionListPage>();
+		builder.Services.AddHostedService<ConditionCacheService>();
 
 		var app = builder.Build();
 		Services = app.Services;

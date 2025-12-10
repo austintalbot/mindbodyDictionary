@@ -1,4 +1,3 @@
-
 using MindBodyDictionaryMobile.Models;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Logging;
@@ -105,6 +104,12 @@ public class ConditionRepository(TaskRepository taskRepository, TagRepository ta
 			);";
 			await createTableCmd.ExecuteNonQueryAsync();
 			System.Diagnostics.Debug.WriteLine("=== ConditionRepository.Init: Condition table created/verified ===");
+
+			// Add index on Name for alphabetical sorting
+			var createIndexCmd = connection.CreateCommand();
+			createIndexCmd.CommandText = "CREATE INDEX IF NOT EXISTS idx_condition_name ON Condition(Name);";
+			await createIndexCmd.ExecuteNonQueryAsync();
+			System.Diagnostics.Debug.WriteLine("=== ConditionRepository.Init: Index on Name created ===");
 		}
 		catch (Exception e)
 		{
@@ -126,7 +131,7 @@ public class ConditionRepository(TaskRepository taskRepository, TagRepository ta
 		if (_usingInMemoryCache && _inMemoryConditions.Count > 0)
 		{
 			System.Diagnostics.Debug.WriteLine($"=== ListAsync: Returning {_inMemoryConditions.Count} conditions from in-memory cache ===");
-			return _inMemoryConditions.ToList();
+			return _inMemoryConditions.OrderBy(c => c.Name).ToList();
 		}
 
 		await Init();
@@ -134,7 +139,7 @@ public class ConditionRepository(TaskRepository taskRepository, TagRepository ta
 		await connection.OpenAsync();
 
 		var selectCmd = connection.CreateCommand();
-		selectCmd.CommandText = "SELECT * FROM Condition";
+		selectCmd.CommandText = "SELECT * FROM Condition ORDER BY Name";
 		var conditions = new List<MbdCondition>();
 
 		await using var reader = await selectCmd.ExecuteReaderAsync();
@@ -153,7 +158,7 @@ public class ConditionRepository(TaskRepository taskRepository, TagRepository ta
 		if (conditions.Count == 0 && _inMemoryConditions.Count > 0)
 		{
 			System.Diagnostics.Debug.WriteLine($"=== ListAsync: Database empty, returning {_inMemoryConditions.Count} from in-memory cache ===");
-			return _inMemoryConditions.ToList();
+			return _inMemoryConditions.OrderBy(c => c.Name).ToList();
 		}
 
 		foreach (var condition in conditions)
@@ -318,5 +323,48 @@ public class ConditionRepository(TaskRepository taskRepository, TagRepository ta
 		await _taskRepository.DropTableAsync();
 		await _tagRepository.DropTableAsync();
 		_hasBeenInitialized = false;
+	}
+
+	/// <summary>
+	/// Bulk inserts a list of conditions into the database using a transaction.
+	/// </summary>
+	/// <param name="conditions">The list of conditions to insert.</param>
+	/// <returns>The number of rows inserted.</returns>
+	public async Task<int> BulkInsertAsync(List<MbdCondition> conditions)
+	{
+		await Init();
+		await using var connection = new SqliteConnection(Constants.DatabasePath);
+		await connection.OpenAsync();
+
+		await using var transaction = await connection.BeginTransactionAsync();
+
+		try
+		{
+			var insertCmd = connection.CreateCommand();
+			insertCmd.CommandText = @"
+				INSERT OR REPLACE INTO Condition (Id, Name, Description, Icon, CategoryID)
+				VALUES (@Id, @Name, @Description, @Icon, @CategoryID)";
+
+			foreach (var condition in conditions)
+			{
+				insertCmd.Parameters.Clear();
+				insertCmd.Parameters.AddWithValue("@Id", condition.Id ?? Guid.NewGuid().ToString());
+				insertCmd.Parameters.AddWithValue("@Name", condition.Name ?? string.Empty);
+				insertCmd.Parameters.AddWithValue("@Description", condition.Description ?? string.Empty);
+				insertCmd.Parameters.AddWithValue("@Icon", condition.Icon ?? string.Empty);
+				insertCmd.Parameters.AddWithValue("@CategoryID", condition.CategoryID);
+
+				await insertCmd.ExecuteNonQueryAsync();
+			}
+
+			await transaction.CommitAsync();
+			return conditions.Count;
+		}
+		catch (Exception ex)
+		{
+			await transaction.RollbackAsync();
+			_logger.LogError(ex, "Error bulk inserting conditions");
+			throw;
+		}
 	}
 }

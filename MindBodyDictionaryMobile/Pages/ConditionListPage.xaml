@@ -42,19 +42,6 @@
                                 FontSize="20"
                                 FontAttributes="Bold"
                                 TextColor="{AppThemeBinding Light=#000000, Dark=#FFFFFF}" />
-
-                            <HorizontalStackLayout Spacing="8" Margin="0,8,0,0">
-                                <Label
-                                    Text="Tags:"
-                                    FontSize="12"
-                                    FontAttributes="Bold"
-                                    TextColor="{AppThemeBinding Light=#666666, Dark=#999999}" />
-                                <Label
-                                    Text="{Binding Tags, StringFormat='{0}'}"
-                                    FontSize="12"
-                                    TextColor="{AppThemeBinding Light=#666666, Dark=#999999}"
-                                    LineBreakMode="TailTruncation" />
-                            </HorizontalStackLayout>
                         </VerticalStackLayout>
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer
