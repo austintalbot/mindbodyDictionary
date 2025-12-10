@@ -42,7 +42,7 @@ public partial class ConditionListPageModel(ConditionRepository conditionReposit
 			System.Diagnostics.Debug.WriteLine("=== ConditionListPageModel.Appearing called ===");
 
 			var sw = System.Diagnostics.Stopwatch.StartNew();
-			Conditions = await _conditionRepository.ListPageAsync(0, 1); // Load first 1 for performance
+			Conditions = await _conditionRepository.ListAsync(); // Load all conditions
 			sw.Stop();
 
 			System.Diagnostics.Debug.WriteLine($"=== Loaded {Conditions.Count} conditions in {sw.ElapsedMilliseconds}ms ===");
