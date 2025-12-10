@@ -6,6 +6,8 @@ using CommunityToolkit.Mvvm.Input;
 using Microsoft.Maui.Controls;
 using MindBodyDictionaryMobile.Data;
 using MindBodyDictionaryMobile.Models;
+using System.Reflection;
+using System.Text.Json;
 
 namespace MindBodyDictionaryMobile.PageModels;
 
@@ -59,18 +61,26 @@ public partial class ConditionListPageModel(ConditionRepository conditionReposit
 	{
 		try
 		{
-			StatusMessage = "Fetching from database...";
+			StatusMessage = "Loading conditions from JSON...";
 			System.Diagnostics.Debug.WriteLine("=== ConditionListPageModel.Appearing called ===");
 
 			var sw = System.Diagnostics.Stopwatch.StartNew();
-			Conditions = await _conditionRepository.ListAsync();
+			var assembly = Assembly.GetExecutingAssembly();
+			using var stream = assembly.GetManifestResourceStream("MindBodyDictionaryMobile.Resources.Raw.conditionData.json");
+			if (stream == null)
+			{
+				StatusMessage = "Error: JSON file not found";
+				return;
+			}
+			var conditions = await JsonSerializer.DeserializeAsync<List<MbdCondition>>(stream);
+			Conditions = conditions ?? [];
 			sw.Stop();
 
 			System.Diagnostics.Debug.WriteLine($"=== Loaded {Conditions.Count} conditions in {sw.ElapsedMilliseconds}ms ===");
 
 			if (Conditions.Count > 0)
 			{
-				StatusMessage = $"Loaded {Conditions.Count} conditions";
+				StatusMessage = $"Loaded {Conditions.Count} conditions from JSON";
 				foreach (var c in Conditions)
 				{
 					System.Diagnostics.Debug.WriteLine($"  - Condition: {c.Id}: {c.Name}");
@@ -78,7 +88,7 @@ public partial class ConditionListPageModel(ConditionRepository conditionReposit
 			}
 			else
 			{
-				StatusMessage = "No conditions in database";
+				StatusMessage = "No conditions in JSON";
 			}
 		}
 		catch (Exception ex)
