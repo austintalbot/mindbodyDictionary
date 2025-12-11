@@ -44,7 +44,7 @@ public partial class ConditionSearchPage : ContentPage
 
 			if (string.IsNullOrEmpty(id))
 				return;
-			await Shell.Current.GoToAsync($"{nameof(ConditionDetailsPage)}?Id={id}");
+			await Shell.Current.GoToAsync($"condition?id={id}");
 		}
 		catch (Exception err)
 		{

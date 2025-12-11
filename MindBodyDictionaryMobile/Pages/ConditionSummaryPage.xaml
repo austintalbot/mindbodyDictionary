@@ -8,7 +8,7 @@
              xmlns:mi="http://www.aathifmahir.com/dotnet/2022/maui/icons"
              xmlns:local="clr-namespace:MindBodyDictionaryMobile"
              Title="{Binding Title}">
-    <Grid Style="{StaticResource AilmentSummaryGrid}">
+    <Grid Style="{StaticResource AilmentSummaryGrid}" RowDefinitions="Auto,Auto,Auto,*,Auto,Auto" ColumnDefinitions="*,*,Auto">
         <Border Grid.Column="0"
                 Grid.ColumnSpan="3"
                 Grid.Row="0"

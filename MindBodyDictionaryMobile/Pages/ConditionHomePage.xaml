@@ -8,7 +8,7 @@
              x:Class="MindBodyDictionaryMobile.Pages.ConditionHomePage"
              Title="{Binding Title}">
 
-    <Grid Style="{StaticResource MainPageGrid}">
+    <Grid Style="{StaticResource MainPageGrid}" RowDefinitions="*,Auto">
         <RefreshView Grid.Row="0"
                      Command="{Binding GetConditionListCommand}"
                      IsRefreshing="{Binding IsRefreshing}"

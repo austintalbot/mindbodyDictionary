@@ -15,15 +15,15 @@
 
   <!-- Main Navigation Items -->
   <ShellContent
-    Title="Dashboard"
+    Title="Home"
     Icon="{StaticResource IconDashboard}"
-    ContentTemplate="{DataTemplate pages:MainPage}"
-    Route="main" />
+    ContentTemplate="{DataTemplate pages:ConditionHomePage}"
+    Route="home" />
 
   <ShellContent
     Title="Search"
     Icon="{StaticResource IconMeta}"
-    ContentTemplate="{DataTemplate pages:SearchPage}"
+    ContentTemplate="{DataTemplate pages:ConditionSearchPage}"
     Route="search" />
 
   <ShellContent

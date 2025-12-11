@@ -9,7 +9,7 @@
              x:Class="MindBodyDictionaryMobile.Pages.ConditionSearchPage"
              Title="{Binding Title}">
     
-    <Grid Style="{StaticResource MainPageGrid}">
+    <Grid Style="{StaticResource MainPageGrid}" RowDefinitions="Auto,*,Auto">
         <!-- Search Bar -->
         <SearchBar x:Name="ConditionSearchBar"
                   Grid.Row="0"

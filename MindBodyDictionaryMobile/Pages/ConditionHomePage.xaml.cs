@@ -75,7 +75,7 @@ public partial class ConditionHomePage : ContentPage
 			//clear search box
 			ConditionSearchBar.Text = "";
 			//navigate to page with search params
-			await Shell.Current.GoToAsync($"{nameof(ConditionSearchPage)}?SearchParam={searchParams}");
+			await Shell.Current.GoToAsync($"///search?SearchParam={searchParams}");
 		}
 		catch (Exception err)
 		{
@@ -91,7 +91,7 @@ public partial class ConditionHomePage : ContentPage
 			var id = e.Parameter.ToString();
 			if (string.IsNullOrEmpty(id))
 				return;
-			await Shell.Current.GoToAsync($"{nameof(ConditionDetailsPage)}?Id={id}");
+			await Shell.Current.GoToAsync($"condition?id={id}");
 		}
 		catch (Exception err)
 		{
