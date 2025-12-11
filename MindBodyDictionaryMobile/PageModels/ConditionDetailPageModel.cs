@@ -13,7 +13,9 @@ namespace MindBodyDictionaryMobile.PageModels;
 
 public partial class ConditionDetailPageModel : ObservableObject, IQueryAttributable, IProjectTaskPageModel
 {
+	[ObservableProperty]
 	private MbdCondition? _condition;
+
 	private readonly ConditionRepository _conditionRepository;
 	private readonly TaskRepository _taskRepository;
 	private readonly CategoryRepository _categoryRepository;
@@ -208,8 +210,9 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 
 			// Construct image paths. Assumes image names match condition names.
 			// e.g., "Anxiety" -> "Anxiety1.png", "Anxiety2.png"
-			NegativeImagePath = $"{_condition.Name}1.png";
-			PositiveImagePath = $"{_condition.Name}2.png";
+            var safeName = _condition.Name?.Replace(":", "-") ?? "";
+			NegativeImagePath = $"{safeName}1.png";
+			PositiveImagePath = $"{safeName}2.png";
 
 			// Load Images
 			_condition.CachedImageOneSource = await _imageCacheService.GetImageAsync(NegativeImagePath);
