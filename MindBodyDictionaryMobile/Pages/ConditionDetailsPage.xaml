@@ -47,10 +47,10 @@
 
         <!-- Tab Content -->
         <ContentView Grid.Row="1" Content="{Binding CurrentView}" />
-        
-        <admob:BannerAd AdUnitId="{Binding BannerAdUnitId}" 
-                       x:Name="AdBanner" 
-                       Grid.Row="2" 
+
+        <admob:BannerAd AdUnitId="{Binding BannerAdUnitId}"
+                       x:Name="AdBanner"
+                       Grid.Row="2"
                        BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}"
                        IsVisible="{Binding ShowAds}" />
     </Grid>

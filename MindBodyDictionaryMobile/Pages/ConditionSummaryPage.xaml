@@ -29,7 +29,7 @@
                Grid.Column="0"
                Style="{StaticResource AilmentNameLabel}"
                Text="{Binding InternalCondition.Name}" />
-               
+
         <ScrollView x:Name="SummaryLabelScroll"
                     Grid.Row="3"
                     Grid.ColumnSpan="3"
@@ -40,13 +40,13 @@
                        Text="{Binding Summary}" />
             </VerticalStackLayout>
         </ScrollView>
-        
+
         <Label Grid.Column="0"
                Grid.ColumnSpan="3"
                Grid.Row="4"
                Style="{StaticResource CopyrightLabel}"
                Text="{x:Static local:App.CopyrightText}" />
-               
+
         <Image x:Name="ShareButton"
                Grid.Column="2"
                Grid.Row="4"
@@ -58,8 +58,8 @@
                     NumberOfTapsRequired="1" />
             </Image.GestureRecognizers>
         </Image>
-        
-        <admob:BannerAd AdUnitId="{Binding BannerAdUnitId}" 
+
+        <admob:BannerAd AdUnitId="{Binding BannerAdUnitId}"
                         x:Name="AdBanner"
                         Grid.ColumnSpan="3"
                         Grid.Column="0"

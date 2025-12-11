@@ -46,7 +46,7 @@ public partial class ConditionListPageModel : ObservableObject, IRecipient<Condi
 		{
 			StatusMessage = "Loading conditions from local database...";
 			var localConditions = await _conditionRepository.ListAsync();
-			
+
 			MainThread.BeginInvokeOnMainThread(() =>
 			{
 				_allConditions = new List<MbdCondition>(localConditions);

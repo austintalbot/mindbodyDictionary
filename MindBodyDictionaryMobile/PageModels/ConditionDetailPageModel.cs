@@ -21,6 +21,7 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 	private readonly ModalErrorHandler _errorHandler;
 	private readonly IServiceProvider _serviceProvider; // Add this for DI
 	private readonly ILogger<ConditionDetailPageModel> _logger; // Add this for logging
+	private readonly ImageCacheService _imageCacheService; // Add this
 
 	[ObservableProperty]
 	private string _name = string.Empty;
@@ -33,7 +34,7 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 
 	[ObservableProperty]
 	private string _summaryPositive;
-	
+
 	[ObservableProperty]
 	private string _negativeImagePath;
 
@@ -95,7 +96,7 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
     [ObservableProperty]
     private ContentView _currentView; // Holds the currently displayed ContentView
 
-	public ConditionDetailPageModel(ConditionRepository conditionRepository, TaskRepository taskRepository, CategoryRepository categoryRepository, TagRepository tagRepository, ModalErrorHandler errorHandler, IServiceProvider serviceProvider, ILogger<ConditionDetailPageModel> logger)
+	public ConditionDetailPageModel(ConditionRepository conditionRepository, TaskRepository taskRepository, CategoryRepository categoryRepository, TagRepository tagRepository, ModalErrorHandler errorHandler, IServiceProvider serviceProvider, ILogger<ConditionDetailPageModel> logger, ImageCacheService imageCacheService)
 	{
 		_conditionRepository = conditionRepository;
 		_taskRepository = taskRepository;
@@ -104,9 +105,10 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 		_errorHandler = errorHandler;
 		_serviceProvider = serviceProvider; // Assign injected serviceProvider
 		_logger = logger; // Assign injected logger
+		_imageCacheService = imageCacheService; // Assign injected service
 		_icon = _icons.First();
 		Tasks = [];
-        
+
         // Initialize current view
         CurrentView = _serviceProvider.GetRequiredService<ConditionDetailsProblemView>();
         CurrentView.BindingContext = this; // Set its BindingContext
@@ -208,6 +210,10 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 			// e.g., "Anxiety" -> "Anxiety1.png", "Anxiety2.png"
 			NegativeImagePath = $"{_condition.Name}1.png";
 			PositiveImagePath = $"{_condition.Name}2.png";
+
+			// Load Images
+			_condition.CachedImageOneSource = await _imageCacheService.GetImageAsync(NegativeImagePath);
+			_condition.CachedImageTwoSource = await _imageCacheService.GetImageAsync(PositiveImagePath);
 
 			Icon = Icons.FirstOrDefault(i => i.Icon == _condition.Icon) ?? Icons.First();
 

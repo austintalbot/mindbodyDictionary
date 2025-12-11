@@ -69,8 +69,8 @@
             <VerticalStackLayout Padding="{StaticResource LayoutPadding}" Spacing="20">
 
                 <!-- Condition Name as Title -->
-                <Label 
-                    Text="{Binding Name}" 
+                <Label
+                    Text="{Binding Name}"
                     Style="{StaticResource Headline}"
                     HorizontalOptions="Center"
                     SemanticProperties.HeadingLevel="Level1" />
@@ -81,12 +81,12 @@
                     <Border Stroke="{AppThemeBinding Light=#E0E0E0, Dark=#333333}" StrokeThickness="1" Padding="15" StrokeShape="RoundRectangle 12">
                         <VerticalStackLayout Spacing="10">
                             <Label Text="Mind (The Perceived Problem)" Style="{StaticResource SubHeadline}" FontAttributes="Bold" />
-                            <Image 
+                            <Image
                                 Source="{Binding NegativeImagePath}"
                                 HeightRequest="200"
                                 Aspect="AspectFit"
                                 SemanticProperties.Description="{Binding Name, StringFormat='Image representing the negative summary for {0}'}"/>
-                            <Label 
+                            <Label
                                 Text="{Binding SummaryNegative}"
                                  />
                         </VerticalStackLayout>
@@ -96,18 +96,18 @@
                     <Border Stroke="{AppThemeBinding Light=#E0E0E0, Dark=#333333}" StrokeThickness="1" Padding="15" StrokeShape="RoundRectangle 12">
                         <VerticalStackLayout Spacing="10">
                             <Label Text="Body (The Empowered Solution)" Style="{StaticResource SubHeadline}" FontAttributes="Bold" />
-                            <Image 
+                            <Image
                                 Source="{Binding PositiveImagePath}"
                                 HeightRequest="200"
                                 Aspect="AspectFit"
                                 SemanticProperties.Description="{Binding Name, StringFormat='Image representing the positive summary for {0}'}"/>
-                            <Label 
+                            <Label
                                 Text="{Binding SummaryPositive}"
                                  />
                         </VerticalStackLayout>
                     </Border>
                 </VerticalStackLayout>
-                
+
                 <!-- Existing Tasks Section -->
                 <Grid HeightRequest="44">
                     <Label

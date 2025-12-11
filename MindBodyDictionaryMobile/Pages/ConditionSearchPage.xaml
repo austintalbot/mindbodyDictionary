@@ -8,7 +8,7 @@
              x:DataType="vm:ConditionSearchPageModel"
              x:Class="MindBodyDictionaryMobile.Pages.ConditionSearchPage"
              Title="{Binding Title}">
-    
+
     <Grid Style="{StaticResource MainPageGrid}" RowDefinitions="Auto,*,Auto">
         <!-- Search Bar -->
         <SearchBar x:Name="ConditionSearchBar"
@@ -18,12 +18,12 @@
                   TextChanged="ConditionSearchBar_TextChanged"
                   IsTextPredictionEnabled="False"
                   Style="{StaticResource AilmentSearchBar}"
-                  SearchCommand="{Binding OnSearchButtonPressedCommand}" 
+                  SearchCommand="{Binding OnSearchButtonPressedCommand}"
                   SearchCommandParameter="{Binding Text, Source={x:Reference ConditionSearchBar}}" />
-        
+
         <!-- Collection View with optimized layout -->
         <Grid Grid.Row="1">
-        
+
             <CollectionView x:Name="ConditionCollectionView"
                           ItemsSource="{Binding FilteredConditionCollection}"
                           Style="{StaticResource SearchGridCollectionView}"
@@ -34,7 +34,7 @@
                         <Label Style="{StaticResource EmptyViewSubtitleLabel}" />
                     </VerticalStackLayout>
                 </CollectionView.EmptyView>
-                
+
                 <CollectionView.ItemsLayout>
                     <GridItemsLayout x:Name="CollectionViewGridItemLayout"
                                    Orientation="Vertical"
@@ -42,7 +42,7 @@
                                    VerticalItemSpacing="8"
                                    HorizontalItemSpacing="8" />
                 </CollectionView.ItemsLayout>
-                
+
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="model:MbdCondition">
                         <Border Style="{StaticResource SearchConditionCard}">
@@ -50,7 +50,7 @@
                                 <TapGestureRecognizer Tapped="TapGestureRecognizer_SearchConditionTapped"
                                                     CommandParameter="{Binding Id}" />
                             </Border.GestureRecognizers>
-                            
+
                             <Grid RowDefinitions="*,Auto">
                                 <!-- Lock overlay -->
                                 <Image Grid.Row="0"
@@ -59,12 +59,12 @@
                                       Source="locked_icon.png"
                                       ZIndex="1"
                                       IsVisible="{Binding DisplayLock}" />
-                                
+
                                 <!-- Condition image -->
                                 <Image Grid.Row="0"
                                       Style="{StaticResource SearchConditionImage}"
                                       Source="{Binding CachedImageOneSource}" />
-                                
+
                                 <!-- Condition name -->
                                 <Label Grid.Row="1"
                                       Style="{StaticResource SearchConditionLabel}"
@@ -76,9 +76,9 @@
             </CollectionView>
         </Grid>
 
-        <admob:BannerAd AdUnitId="{Binding BannerAdUnitId}" 
-                       x:Name="AdBanner" 
-                       Grid.Row="2" 
+        <admob:BannerAd AdUnitId="{Binding BannerAdUnitId}"
+                       x:Name="AdBanner"
+                       Grid.Row="2"
                        IsVisible="{Binding ShowAds}" />
     </Grid>
 </ContentPage>

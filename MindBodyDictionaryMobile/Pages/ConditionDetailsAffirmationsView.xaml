@@ -113,10 +113,10 @@
 
 
 
-      
-                   
 
-              
+
+
+
             <HorizontalStackLayout>
             <HorizontalStackLayout.GestureRecognizers>
                 <TapGestureRecognizer
@@ -141,7 +141,7 @@
                     WidthRequest="32" >
             </Image>
         </HorizontalStackLayout>
-                        
+
 
     </HorizontalStackLayout>
     </Grid>

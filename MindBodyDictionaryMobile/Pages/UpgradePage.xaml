@@ -26,14 +26,14 @@
                 <Image
                      Source="mbd_logo.png"
                      HeightRequest="150"
-                     HorizontalOptions="Center" 
+                     HorizontalOptions="Center"
                      VerticalOptions="Center"
                      Aspect="AspectFit"
                      x:Name="MindBodyDictionaryLogo"
                      SemanticProperties.Description="Mind Body Dictionary Logo" />
-                
-                
-                
+
+
+
                 <Button Margin="5"
                         Text="Privacy Policy"
                         Style="{StaticResource SubmitButton}"
@@ -56,7 +56,7 @@
                     HorizontalOptions="CenterAndExpand"
                     HorizontalTextAlignment="Center"
                     FontSize="20"
-                    />    
+                    />
                 <Label
                     Text="No trial period, and the subscription will be renewed automatically on the subscription date, unless canceled before the renewal date."
                     IsVisible="{Binding NotSubscribed}"
@@ -64,7 +64,7 @@
                     HorizontalTextAlignment="Center"
 
                     FontSize="16"
-                    />    
+                    />
             <Button
                 x:Name="SubscribeButton"
                 Margin="5"

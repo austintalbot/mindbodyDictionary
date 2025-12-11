@@ -40,5 +40,5 @@
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
-    </Grid>     
+    </Grid>
 </ContentView>

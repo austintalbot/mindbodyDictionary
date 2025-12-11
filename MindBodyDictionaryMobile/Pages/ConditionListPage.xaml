@@ -16,7 +16,7 @@
         <Label Text="{Binding Conditions.Count, StringFormat='Conditions Count: {0}'}" FontSize="12" />
         <Label Text="{Binding StatusMessage}" FontSize="11" TextColor="{AppThemeBinding Light=#333333, Dark=#CCCCCC}" />
       </VerticalStackLayout>
-      
+
       <Frame Grid.Row="1" Padding="10" Margin="0" CornerRadius="0" HasShadow="False" BorderColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray700}}">
           <SearchBar
               Placeholder="Search conditions..."

@@ -31,7 +31,7 @@ public class AppDataPreloaderService(
             return;
         }
         _isPreloadStarted = true;
-        
+
         _ = Task.Run(async () =>
         {
             try

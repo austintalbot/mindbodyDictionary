@@ -48,7 +48,7 @@
         BackgroundColor="{StaticResource ConditionCardBackground}"
         VerticalOptions="Fill">
     <Border.GestureRecognizers>
-        <TapGestureRecognizer Tapped="TapGestureRecognizer_NegativeConditionTap"  
+        <TapGestureRecognizer Tapped="TapGestureRecognizer_NegativeConditionTap"
                               CommandParameter="{Binding Id}"></TapGestureRecognizer>
     </Border.GestureRecognizers>
     <Grid HorizontalOptions="Fill"
@@ -73,7 +73,7 @@
                 FontSize="12"
                 Text="Troubled Mindset"
                 TextColor="{StaticResource ConditionTextColor }" />
-        
+
         <Label x:Name="NegativeLabel"
                Grid.Column="1"
                Grid.ColumnSpan="2"
@@ -100,7 +100,7 @@
         Stroke="{StaticResource ConditionCardBorder}"
         BackgroundColor="{StaticResource ConditionCardBackground}">
     <Border.GestureRecognizers>
-        <TapGestureRecognizer Tapped="TapGestureRecognizer_HealingConditionTap"  
+        <TapGestureRecognizer Tapped="TapGestureRecognizer_HealingConditionTap"
                               CommandParameter="{Binding Id}"></TapGestureRecognizer>
     </Border.GestureRecognizers>
     <Grid HorizontalOptions="Fill"
