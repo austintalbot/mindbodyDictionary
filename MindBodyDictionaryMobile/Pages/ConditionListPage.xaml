@@ -10,15 +10,21 @@
              x:DataType="pageModels:ConditionListPageModel"
              Title="Conditions">
 
-    <Grid RowDefinitions="Auto,*,Auto">
+    <Grid RowDefinitions="Auto,Auto,*,Auto">
       <VerticalStackLayout Grid.Row="0" Padding="12" Spacing="4" BackgroundColor="{AppThemeBinding Light=#FFF3CD, Dark=#5C4820}">
         <Label Text="🔍 DEBUG INFO" FontSize="14" FontAttributes="Bold" />
         <Label Text="{Binding Conditions.Count, StringFormat='Conditions Count: {0}'}" FontSize="12" />
         <Label Text="{Binding StatusMessage}" FontSize="11" TextColor="{AppThemeBinding Light=#333333, Dark=#CCCCCC}" />
       </VerticalStackLayout>
+      
+      <Frame Grid.Row="1" Padding="10" Margin="0" CornerRadius="0" HasShadow="False" BorderColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray700}}">
+          <SearchBar
+              Placeholder="Search conditions..."
+              Text="{Binding SearchQuery}" />
+      </Frame>
 
       <CollectionView
-          Grid.Row="1"
+          Grid.Row="2"
           ItemsSource="{Binding Conditions}"
           Margin="{StaticResource LayoutPadding}"
           SelectionMode="Single"
@@ -47,7 +53,7 @@
       </CollectionView>
 
       <controls:AddButton
-          Grid.Row="2"
+          Grid.Row="3"
           Command="{Binding AddConditionCommand}"
           SemanticProperties.Description="Add condition" />
     </Grid>

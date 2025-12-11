@@ -13,12 +13,16 @@ namespace MindBodyDictionaryMobile.PageModels;
 public partial class ConditionListPageModel : ObservableObject, IRecipient<ConditionsUpdatedMessage>
 {
 	private readonly ConditionRepository _conditionRepository;
+	private List<MbdCondition> _allConditions = [];
 
 	[ObservableProperty]
 	private ObservableCollection<MbdCondition> _conditions = [];
 
 	[ObservableProperty]
 	private string _statusMessage = "Loading...";
+
+	[ObservableProperty]
+	private string _searchQuery;
 
 	public ConditionListPageModel(ConditionRepository conditionRepository)
 	{
@@ -45,7 +49,8 @@ public partial class ConditionListPageModel : ObservableObject, IRecipient<Condi
 			
 			MainThread.BeginInvokeOnMainThread(() =>
 			{
-				Conditions = new ObservableCollection<MbdCondition>(localConditions);
+				_allConditions = new List<MbdCondition>(localConditions);
+				FilterConditions();
 				StatusMessage = $"Displaying {Conditions.Count} conditions.";
 			});
 		}
@@ -53,6 +58,26 @@ public partial class ConditionListPageModel : ObservableObject, IRecipient<Condi
 		{
 			StatusMessage = $"Error loading conditions: {ex.Message}";
 			System.Diagnostics.Debug.WriteLine($"=== Error loading conditions: {ex.Message} ===");
+		}
+	}
+
+	partial void OnSearchQueryChanged(string value)
+	{
+		FilterConditions();
+	}
+
+	private void FilterConditions()
+	{
+		if (string.IsNullOrWhiteSpace(SearchQuery))
+		{
+			Conditions = new ObservableCollection<MbdCondition>(_allConditions);
+		}
+		else
+		{
+			var filtered = _allConditions
+				.Where(c => c.Name.Contains(SearchQuery, StringComparison.OrdinalIgnoreCase))
+				.ToList();
+			Conditions = new ObservableCollection<MbdCondition>(filtered);
 		}
 	}
 
