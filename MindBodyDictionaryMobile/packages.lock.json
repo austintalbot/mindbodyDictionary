@@ -99,7 +99,7 @@
       },
       "Plugin.AdMob": {
         "type": "Direct",
-        "requested": "[0.1.0-beta.6, )",
+        "requested": "[1.0.1-beta.20231108180012, )",
         "resolved": "1.0.1-beta.20231108180012",
         "contentHash": "jKI1gWDIO0TuGPv2/Chc3W5LwXQ8hm/JAa42OhDQEG6NhGTdJVPH8sqeltMM/bJN1NVz2sl+9nWwfEhQorQYEQ==",
         "dependencies": {
@@ -2314,7 +2314,7 @@
       },
       "Plugin.AdMob": {
         "type": "Direct",
-        "requested": "[0.1.0-beta.6, )",
+        "requested": "[1.0.1-beta.20231108180012, )",
         "resolved": "1.0.1-beta.20231108180012",
         "contentHash": "jKI1gWDIO0TuGPv2/Chc3W5LwXQ8hm/JAa42OhDQEG6NhGTdJVPH8sqeltMM/bJN1NVz2sl+9nWwfEhQorQYEQ==",
         "dependencies": {

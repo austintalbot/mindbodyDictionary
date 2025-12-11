@@ -92,7 +92,7 @@
 		<PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="10.0.0" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.0" />
-		<PackageReference Include="Plugin.AdMob" Version="0.1.0-beta.6" />
+		<PackageReference Include="Plugin.AdMob" Version="1.0.1-beta.20231108180012" />
 	</ItemGroup>
 
 	<ItemGroup>

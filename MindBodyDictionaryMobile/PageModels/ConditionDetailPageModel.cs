@@ -211,7 +211,7 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 			// Load Images from properties
             if (!string.IsNullOrEmpty(_condition.ImageNegative))
 			    _condition.CachedImageOneSource = await _imageCacheService.GetImageAsync(_condition.ImageNegative);
-            
+
             if (!string.IsNullOrEmpty(_condition.ImagePositive))
 			    _condition.CachedImageTwoSource = await _imageCacheService.GetImageAsync(_condition.ImagePositive);
 
@@ -245,7 +245,7 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
                 recommendationsPageModel.Condition = _condition;
                 recommendationsPageModel.InitializeTabs();
             }
-            
+
             // Notify that Condition (and its properties like CachedImageOneSource) might have changed
             OnPropertyChanged(nameof(Condition));
 		}
@@ -358,17 +358,17 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 	{
 		tag.IsSelected = !tag.IsSelected;
 
-		if (!_condition.IsNullOrNew() && !string.IsNullOrEmpty(_condition.Id))
+		if (!Condition.IsNullOrNew() && !string.IsNullOrEmpty(Condition.Id))
 		{
 			if (tag.IsSelected)
 			{
-				await _tagRepository.SaveItemAsync(tag, _condition.Id);
+				await _tagRepository.SaveItemAsync(tag, Condition.Id);
 				AllTags = new(AllTags);
 				SemanticScreenReader.Announce($"{tag.Title} selected");
 			}
 			else
 			{
-				await _tagRepository.DeleteItemAsync(tag, _condition.Id);
+				await _tagRepository.DeleteItemAsync(tag, Condition.Id);
 				AllTags = new(AllTags);
 				SemanticScreenReader.Announce($"{tag.Title} unselected");
 			}
@@ -377,7 +377,7 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 		{
 			AllTags = new(AllTags);
 		}
-	}
+	} // Closing curly brace for ToggleTag method
 
 	[RelayCommand]
 	private void IconSelected(IconData icon)
