@@ -7,13 +7,23 @@ public partial class ConditionListPage : ContentPage
 		BindingContext = model;
 		InitializeComponent();
 
-		// Load data immediately when page is created
-		_ = model.InitializeAsync();
-
+		// Load data when the page appears
 #if DEBUG
 		// Add debug info after the page loads
 		Loaded += (s, e) => AddDebugInfo(model);
 #endif
+	}
+
+	protected override void OnAppearing()
+	{
+		base.OnAppearing();
+		(BindingContext as ConditionListPageModel)?.OnAppearing();
+	}
+
+	protected override void OnDisappearing()
+	{
+		base.OnDisappearing();
+		(BindingContext as ConditionListPageModel)?.OnDisappearing();
 	}
 
 #if DEBUG

@@ -39,6 +39,8 @@ public static class MauiProgram
 		builder.Services.AddSingleton<ImageCacheService>();
 		builder.Services.AddSingleton<IImageCacheHelper, ImageCacheHelper>();
 		builder.Services.AddSingleton<SeedDataService>();
+		builder.Services.AddSingleton<MbdConditionApiService>();
+		builder.Services.AddSingleton<AppDataPreloaderService>();
 		builder.Services.AddSingleton<ModalErrorHandler>();
 		builder.Services.AddSingleton<MainPageModel>();
 		builder.Services.AddSingleton<ProjectListPageModel>();
@@ -77,7 +79,6 @@ public static class MauiProgram
 		builder.Services.AddTransientWithShellRoute<ConditionDetailPage, ConditionDetailPageModel>("condition");
 		builder.Services.AddSingleton<ConditionListPageModel>();
 		builder.Services.AddSingleton<ConditionListPage>();
-		builder.Services.AddHostedService<ConditionCacheService>();
 
 		var app = builder.Build();
 		Services = app.Services;

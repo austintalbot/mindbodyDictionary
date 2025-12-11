@@ -10,12 +10,6 @@
              x:DataType="pageModels:ConditionListPageModel"
              Title="Conditions">
 
-
-    <ContentPage.Behaviors>
-        <toolkit:EventToCommandBehavior
-            EventName="Appearing"
-            Command="{Binding AppearingCommand}"/>
-    </ContentPage.Behaviors>
     <Grid RowDefinitions="Auto,*,Auto">
       <VerticalStackLayout Grid.Row="0" Padding="12" Spacing="4" BackgroundColor="{AppThemeBinding Light=#FFF3CD, Dark=#5C4820}">
         <Label Text="🔍 DEBUG INFO" FontSize="14" FontAttributes="Bold" />
@@ -23,36 +17,34 @@
         <Label Text="{Binding StatusMessage}" FontSize="11" TextColor="{AppThemeBinding Light=#333333, Dark=#CCCCCC}" />
       </VerticalStackLayout>
 
-      <ScrollView Grid.Row="1">
-        <VerticalStackLayout
-            BindableLayout.ItemsSource="{Binding Conditions}"
-            Margin="{StaticResource LayoutPadding}"
-            Spacing="{StaticResource LayoutSpacing}">
-            <BindableLayout.ItemTemplate>
-                <DataTemplate x:DataType="models:MbdCondition">
-                    <Border
-                        Padding="16"
-                        Stroke="{AppThemeBinding Light=#E0E0E0, Dark=#333333}"
-                        StrokeThickness="1"
-                        StrokeShape="RoundRectangle 8,8,8,8"
-                        SemanticProperties.Description="{Binding Name, StringFormat='{0} Condition'}">
-                        <VerticalStackLayout Spacing="8">
-                            <Label
-                                Text="{Binding Name}"
-                                FontSize="20"
-                                FontAttributes="Bold"
-                                TextColor="{AppThemeBinding Light=#000000, Dark=#FFFFFF}" />
-                        </VerticalStackLayout>
-                        <Border.GestureRecognizers>
-                            <TapGestureRecognizer
-                                Command="{Binding NavigateToConditionCommand, Source={RelativeSource AncestorType={x:Type pageModels:ConditionListPageModel}}, x:DataType=pageModels:ConditionListPageModel}"
-                                CommandParameter="{Binding .}"/>
-                        </Border.GestureRecognizers>
-                    </Border>
-                </DataTemplate>
-            </BindableLayout.ItemTemplate>
-        </VerticalStackLayout>
-      </ScrollView>
+      <CollectionView
+          Grid.Row="1"
+          ItemsSource="{Binding Conditions}"
+          Margin="{StaticResource LayoutPadding}"
+          SelectionMode="Single"
+          SelectedItem="{Binding SelectedCondition, Mode=TwoWay}">
+          <CollectionView.ItemsLayout>
+              <LinearItemsLayout Orientation="Vertical" ItemSpacing="{StaticResource LayoutSpacing}" />
+          </CollectionView.ItemsLayout>
+          <CollectionView.ItemTemplate>
+              <DataTemplate x:DataType="models:MbdCondition">
+                  <Border
+                      Padding="16"
+                      Stroke="{AppThemeBinding Light=#E0E0E0, Dark=#333333}"
+                      StrokeThickness="1"
+                      StrokeShape="RoundRectangle 8,8,8,8"
+                      SemanticProperties.Description="{Binding Name, StringFormat='{0} Condition'}">
+                      <VerticalStackLayout Spacing="8">
+                          <Label
+                              Text="{Binding Name}"
+                              FontSize="20"
+                              FontAttributes="Bold"
+                              TextColor="{AppThemeBinding Light=#000000, Dark=#FFFFFF}" />
+                      </VerticalStackLayout>
+                  </Border>
+              </DataTemplate>
+          </CollectionView.ItemTemplate>
+      </CollectionView>
 
       <controls:AddButton
           Grid.Row="2"

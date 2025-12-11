@@ -52,20 +52,27 @@ public class ConditionRepository(TaskRepository taskRepository, TagRepository ta
 			});
 		}
 
-		// Optionally load tags for each condition (can be deferred for perf)
-		foreach (var condition in conditions)
-		{
-			if (!string.IsNullOrEmpty(condition.Id))
-			{
-				var tagObjects = await _tagRepository.ListAsync(condition.Id);
-				condition.MobileTags = tagObjects;
-				condition.Tags = tagObjects.Select(t => t.Title).ToList();
-				condition.Tasks = [];
-			}
-		}
-
+		// Tags should be loaded on the detail page, not here.
 		return conditions;
 	}
+
+	/// <summary>
+	/// Counts the total number of conditions in the database.
+	/// </summary>
+	/// <returns>The total number of conditions.</returns>
+	public async Task<int> CountAsync()
+	{
+		await Init();
+		await using var connection = new SqliteConnection(Constants.DatabasePath);
+		await connection.OpenAsync();
+
+		var countCmd = connection.CreateCommand();
+		countCmd.CommandText = "SELECT COUNT(*) FROM Condition";
+
+		var result = await countCmd.ExecuteScalarAsync();
+		return Convert.ToInt32(result);
+	}
+
 
 	private bool _hasBeenInitialized = false;
 	private readonly ILogger _logger = logger;
@@ -159,20 +166,6 @@ public class ConditionRepository(TaskRepository taskRepository, TagRepository ta
 		{
 			System.Diagnostics.Debug.WriteLine($"=== ListAsync: Database empty, returning {_inMemoryConditions.Count} from in-memory cache ===");
 			return _inMemoryConditions.OrderBy(c => c.Name).ToList();
-		}
-
-		foreach (var condition in conditions)
-		{
-			if (!string.IsNullOrEmpty(condition.Id))
-			{
-				// Load tag objects for local UI use (Tags property is API schema, MobileTags is for UI)
-				var tagObjects = await _tagRepository.ListAsync(condition.Id);
-				condition.MobileTags = tagObjects;
-				// Also populate Tags as string list from tag titles
-				condition.Tags = tagObjects.Select(t => t.Title).ToList();
-				// Note: Conditions don't have tasks like projects do
-				condition.Tasks = [];
-			}
 		}
 
 		return conditions;

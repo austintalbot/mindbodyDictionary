@@ -1,0 +1,67 @@
+using MindBodyDictionaryMobile.Data;
+using MindBodyDictionaryMobile.Services;
+using System.Threading.Tasks;
+using System;
+using CommunityToolkit.Mvvm.Messaging;
+using MindBodyDictionaryMobile.Models.Messaging;
+
+namespace MindBodyDictionaryMobile.Services;
+
+/// <summary>
+/// Service responsible for pre-loading application data in the background on startup.
+/// </summary>
+public class AppDataPreloaderService(
+    ConditionRepository conditionRepository,
+    SeedDataService seedDataService,
+    MbdConditionApiService mbdConditionApiService)
+{
+    private readonly ConditionRepository _conditionRepository = conditionRepository;
+    private readonly SeedDataService _seedDataService = seedDataService;
+    private readonly MbdConditionApiService _mbdConditionApiService = mbdConditionApiService;
+    private static bool _isPreloadStarted = false;
+
+    /// <summary>
+    /// Kicks off the data preloading and synchronization process.
+    /// This method is designed to be called once at application startup.
+    /// </summary>
+    public void PreloadData()
+    {
+        if (_isPreloadStarted)
+        {
+            return;
+        }
+        _isPreloadStarted = true;
+        
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                // 1. Check for local data and seed if necessary
+                var localCount = await _conditionRepository.CountAsync();
+                if (localCount == 0)
+                {
+                    System.Diagnostics.Debug.WriteLine("[AppDataPreloader] No local data found. Seeding...");
+                    await _seedDataService.SeedConditionsAsync();
+                }
+
+                // 2. Sync with remote server
+                System.Diagnostics.Debug.WriteLine("[AppDataPreloader] Starting remote sync...");
+                var remoteConditions = await _mbdConditionApiService.GetMbdConditionsAsync();
+                if (remoteConditions.Count > 0)
+                {
+                    System.Diagnostics.Debug.WriteLine($"[AppDataPreloader] Sync complete. Fetched {remoteConditions.Count} conditions.");
+                    // Notify any active listeners that the data has been updated.
+                    WeakReferenceMessenger.Default.Send(new ConditionsUpdatedMessage());
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine("[AppDataPreloader] Remote sync returned no new data.");
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[AppDataPreloader] Error during data preload: {ex.Message}");
+            }
+        });
+    }
+}
