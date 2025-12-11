@@ -4,11 +4,10 @@
              xmlns:model="clr-namespace:MindBodyDictionaryMobile.Models"
              xmlns:vm="clr-namespace:MindBodyDictionaryMobile.PageModels"
              x:DataType="vm:ConditionHomePageModel"
-             xmlns:admob="clr-namespace:Plugin.AdMob;assembly=Plugin.AdMob"
              x:Class="MindBodyDictionaryMobile.Pages.ConditionHomePage"
              Title="{Binding Title}">
 
-    <Grid Style="{StaticResource MainPageGrid}" RowDefinitions="*,Auto">
+    <Grid Style="{StaticResource MainPageGrid}" RowDefinitions="*">
         <RefreshView Grid.Row="0"
                      Command="{Binding GetConditionListCommand}"
                      IsRefreshing="{Binding IsRefreshing}"
@@ -100,10 +99,5 @@
                 </VerticalStackLayout>
             </ScrollView>
         </RefreshView>
-
-        <admob:BannerAd AdUnitId="{Binding BannerAdUnitId}"
-                        x:Name="AdBanner"
-                        Grid.Row="1"
-                        IsVisible="{Binding ShowAds}"/>
     </Grid>
 </ContentPage>

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:admob="clr-namespace:Plugin.AdMob;assembly=Plugin.AdMob"
              xmlns:model="clr-namespace:MindBodyDictionaryMobile.Models"
              xmlns:vm="clr-namespace:MindBodyDictionaryMobile.PageModels"
              xmlns:android="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific;assembly=Microsoft.Maui.Controls"
@@ -9,7 +8,7 @@
              x:Class="MindBodyDictionaryMobile.Pages.ConditionSearchPage"
              Title="{Binding Title}">
 
-    <Grid Style="{StaticResource MainPageGrid}" RowDefinitions="Auto,*,Auto">
+    <Grid Style="{StaticResource MainPageGrid}" RowDefinitions="Auto,*">
         <!-- Search Bar -->
         <SearchBar x:Name="ConditionSearchBar"
                   Grid.Row="0"
@@ -75,10 +74,5 @@
                 </CollectionView.ItemTemplate>
             </CollectionView>
         </Grid>
-
-        <admob:BannerAd AdUnitId="{Binding BannerAdUnitId}"
-                       x:Name="AdBanner"
-                       Grid.Row="2"
-                       IsVisible="{Binding ShowAds}" />
     </Grid>
 </ContentPage>

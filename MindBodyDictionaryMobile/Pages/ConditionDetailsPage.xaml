@@ -7,7 +7,6 @@
              xmlns:converter="clr-namespace:MindBodyDictionaryMobile.Converter"
              x:DataType="vm:ConditionDetailPageModel"
              xmlns:mi="http://www.aathifmahir.com/dotnet/2022/maui/icons"
-             xmlns:admob="clr-namespace:Plugin.AdMob;assembly=Plugin.AdMob"
              x:Class="MindBodyDictionaryMobile.Pages.ConditionDetailsPage"
              Title="{Binding Title}">
 
@@ -19,39 +18,30 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <Grid RowDefinitions="Auto,*,Auto" Style="{StaticResource MainPageGrid}">
+    <Grid RowDefinitions="Auto,*" Style="{StaticResource MainPageGrid}">
         <!-- Tab Headers -->
         <HorizontalStackLayout Grid.Row="0" HorizontalOptions="FillAndExpand" BackgroundColor="{StaticResource BarColor}">
             <Button Text="Problem"
                     Command="{Binding SelectTabCommand}"
                     CommandParameter="Problem"
                     Style="{StaticResource TabButton}"
-                    VisualStateManager.VisualStateGroups="AllStates"
                     TextColor="{Binding SelectedTab, ConverterParameter=Problem, Converter={StaticResource SelectedTabColorConverter}}"
                     BackgroundColor="{Binding SelectedTab, ConverterParameter=Problem, Converter={StaticResource SelectedTabBackgroundColorConverter}}"/>
             <Button Text="Affirmations"
                     Command="{Binding SelectTabCommand}"
                     CommandParameter="Affirmations"
                     Style="{StaticResource TabButton}"
-                    VisualStateManager.VisualStateGroups="AllStates"
                     TextColor="{Binding SelectedTab, ConverterParameter=Affirmations, Converter={StaticResource SelectedTabColorConverter}}"
                     BackgroundColor="{Binding SelectedTab, ConverterParameter=Affirmations, Converter={StaticResource SelectedTabBackgroundColorConverter}}"/>
             <Button Text="Recommendations"
                     Command="{Binding SelectTabCommand}"
                     CommandParameter="Recommendations"
                     Style="{StaticResource TabButton}"
-                    VisualStateManager.VisualStateGroups="AllStates"
                     TextColor="{Binding SelectedTab, ConverterParameter=Recommendations, Converter={StaticResource SelectedTabColorConverter}}"
                     BackgroundColor="{Binding SelectedTab, ConverterParameter=Recommendations, Converter={StaticResource SelectedTabBackgroundColorConverter}}"/>
         </HorizontalStackLayout>
 
         <!-- Tab Content -->
         <ContentView Grid.Row="1" Content="{Binding CurrentView}" />
-
-        <admob:BannerAd AdUnitId="{Binding BannerAdUnitId}"
-                       x:Name="AdBanner"
-                       Grid.Row="2"
-                       BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}"
-                       IsVisible="{Binding ShowAds}" />
     </Grid>
 </ContentPage>

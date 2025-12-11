@@ -2,7 +2,6 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:mi="http://www.aathifmahir.com/dotnet/2022/maui/icons"
-             xmlns:admob="clr-namespace:Plugin.AdMob;assembly=Plugin.AdMob"
              xmlns:vm="clr-namespace:MindBodyDictionaryMobile.PageModels"
              x:Class="MindBodyDictionaryMobile.Pages.UpgradePage"
              x:DataType="vm:UpgradePremiumPageModel"
@@ -82,6 +81,5 @@
             </VerticalStackLayout>
 
         </StackLayout>
-       <admob:BannerAd  AdUnitId="{Binding BannerAdUnitId}" x:Name="AdBanner" Grid.Row="1" IsVisible="{Binding ShowAds}" />
     </Grid>
 </ContentPage>

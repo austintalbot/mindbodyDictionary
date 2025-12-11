@@ -3,7 +3,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Syncfusion.Maui.Toolkit.Hosting;
 using MindBodyDictionaryMobile.Services.billing;
-using Plugin.AdMob; // Add this
 
 namespace MindBodyDictionaryMobile;
 
@@ -20,9 +19,7 @@ public static class MauiProgram
 			.ConfigureSyncfusionToolkit()
             .ConfigureMauiHandlers(handlers =>
             {
-#if ANDROID
-                handlers.AddHandler(typeof(BannerAd), typeof(Plugin.AdMob.Handlers.BannerAdHandler));
-#endif
+                // Removed AdMob handler registration
             })
 			.ConfigureFonts(fonts =>
 			{
@@ -84,8 +81,6 @@ public static class MauiProgram
 		builder.Services.AddTransientWithShellRoute<ProjectDetailPage, ProjectDetailPageModel>("project");
 		builder.Services.AddTransientWithShellRoute<TaskDetailPage, TaskDetailPageModel>("task");
 		builder.Services.AddTransientWithShellRoute<ConditionDetailsPage, ConditionDetailPageModel>("condition");
-		builder.Services.AddSingleton<ConditionListPageModel>();
-		builder.Services.AddSingleton<ConditionListPage>();
 
         // Register New Condition Pages and ViewModels
         builder.Services.AddSingleton<ConditionHomePageModel>();
@@ -93,6 +88,9 @@ public static class MauiProgram
 
         builder.Services.AddTransient<ConditionSearchPageModel>();
         builder.Services.AddTransient<ConditionSearchPage>();
+
+        builder.Services.AddSingleton<SearchPageModel>();
+        builder.Services.AddSingleton<SearchPage>();
 
         builder.Services.AddTransientWithShellRoute<ConditionSummaryPage, ConditionSummaryPageModel>(nameof(ConditionSummaryPage));
 

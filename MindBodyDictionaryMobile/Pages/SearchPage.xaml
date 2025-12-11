@@ -4,14 +4,14 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:pm="clr-namespace:MindBodyDictionaryMobile.PageModels"
     xmlns:models="clr-namespace:MindBodyDictionaryMobile.Models"
+    xmlns:controls="clr-namespace:MindBodyDictionaryMobile.Pages.Controls"
     x:DataType="pm:SearchPageModel"
     x:Class="MindBodyDictionaryMobile.Pages.SearchPage"
     Title="Search">
 
-    <VerticalStackLayout Padding="0" Spacing="0">
-
+    <Grid RowDefinitions="Auto,*,Auto">
         <!-- Search Bar -->
-        <Frame Padding="10" Margin="0" CornerRadius="0" HasShadow="False"
+        <Frame Grid.Row="0" Padding="10" Margin="0" CornerRadius="0" HasShadow="False"
             BorderColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray700}}">
             <VerticalStackLayout>
                 <SearchBar
@@ -23,6 +23,7 @@
 
         <!-- Results -->
         <CollectionView
+            Grid.Row="1"
             ItemsSource="{Binding FilteredConditions}"
             SelectionMode="Single"
             SelectionChangedCommand="{Binding SelectConditionCommand}"
@@ -79,5 +80,10 @@
                 </DataTemplate>
             </CollectionView.EmptyViewTemplate>
         </CollectionView>
-    </VerticalStackLayout>
+
+        <controls:AddButton
+            Grid.Row="2"
+            Command="{Binding AddConditionCommand}"
+            SemanticProperties.Description="Add condition" />
+    </Grid>
 </ContentPage>

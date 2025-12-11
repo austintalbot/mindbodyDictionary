@@ -2,13 +2,12 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MindBodyDictionaryMobile.Pages.ConditionSummaryPage"
-             xmlns:admob="clr-namespace:Plugin.AdMob;assembly=Plugin.AdMob"
              xmlns:vm="clr-namespace:MindBodyDictionaryMobile.PageModels"
              x:DataType="vm:ConditionSummaryPageModel"
              xmlns:mi="http://www.aathifmahir.com/dotnet/2022/maui/icons"
              xmlns:local="clr-namespace:MindBodyDictionaryMobile"
              Title="{Binding Title}">
-    <Grid Style="{StaticResource AilmentSummaryGrid}" RowDefinitions="Auto,Auto,Auto,*,Auto,Auto" ColumnDefinitions="*,*,Auto">
+    <Grid Style="{StaticResource AilmentSummaryGrid}" RowDefinitions="Auto,Auto,Auto,*,Auto" ColumnDefinitions="*,*,Auto">
         <Border Grid.Column="0"
                 Grid.ColumnSpan="3"
                 Grid.Row="0"
@@ -58,12 +57,5 @@
                     NumberOfTapsRequired="1" />
             </Image.GestureRecognizers>
         </Image>
-
-        <admob:BannerAd AdUnitId="{Binding BannerAdUnitId}"
-                        x:Name="AdBanner"
-                        Grid.ColumnSpan="3"
-                        Grid.Column="0"
-                        Grid.Row="5"
-                        IsVisible="{Binding ShowAds}" />
     </Grid>
 </ContentPage>
