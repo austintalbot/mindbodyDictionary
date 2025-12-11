@@ -31,29 +31,32 @@
 
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="models:MbdCondition">
-                    <VerticalStackLayout Padding="15" Spacing="10">
-                        <Frame
-                            CornerRadius="12"
-                            Padding="15"
-                            BorderColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray700}}"
-                            HasShadow="False">
+                    <Border Style="{StaticResource SearchConditionCard}">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type pm:SearchPageModel}}, Path=SelectConditionCommand}"
+                                                    CommandParameter="{Binding .}" />
+                        </Border.GestureRecognizers>
 
-                            <VerticalStackLayout Spacing="5">
-                                <Label
-                                    Text="{Binding Name}"
-                                    FontSize="16"
-                                    FontAttributes="Bold"
-                                    TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}"/>
+                        <Grid RowDefinitions="*,Auto">
+                            <!-- Lock overlay -->
+                            <Image Grid.Row="0"
+                                  Style="{StaticResource SearchConditionImage}"
+                                  Opacity="1"
+                                  Source="locked_icon.png"
+                                  ZIndex="1"
+                                  IsVisible="{Binding DisplayLock}" />
 
-                                <Label
-                                    Text="{Binding Description}"
-                                    FontSize="12"
-                                    TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}"
-                                    LineBreakMode="TailTruncation"
-                                    MaxLines="2"/>
-                            </VerticalStackLayout>
-                        </Frame>
-                    </VerticalStackLayout>
+                            <!-- Condition image -->
+                            <Image Grid.Row="0"
+                                  Style="{StaticResource SearchConditionImage}"
+                                  Source="{Binding CachedImageOneSource}" />
+
+                            <!-- Condition name -->
+                            <Label Grid.Row="1"
+                                  Style="{StaticResource SearchConditionLabel}"
+                                  Text="{Binding Name}" />
+                        </Grid>
+                    </Border>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
 
