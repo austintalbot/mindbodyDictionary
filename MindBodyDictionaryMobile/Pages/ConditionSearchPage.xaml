@@ -26,7 +26,7 @@
 
             <CollectionView x:Name="ConditionCollectionView"
                           ItemsSource="{Binding FilteredConditionCollection}"
-                          Style="{StaticResource SearchGridCollectionView}"
+                          SelectionMode="None"
                           IsVisible="{Binding IsInitialized}">
                 <CollectionView.EmptyView>
                     <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="10">
