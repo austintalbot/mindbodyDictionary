@@ -363,6 +363,18 @@
         </Setter>
     </Style>
 
+    <Style x:Key="TabButton" TargetType="Button">
+        <Setter Property="TextColor" Value="{StaticResource White}" />
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="FontFamily" Value="OpenSansSemibold"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="BorderWidth" Value="0"/>
+        <Setter Property="CornerRadius" Value="0"/>
+        <Setter Property="Padding" Value="10,10"/>
+        <Setter Property="HeightRequest" Value="50"/>
+        <Setter Property="HorizontalOptions" Value="FillAndExpand"/>
+    </Style>
+
     <!-- Additional Missing Styles -->
     <Style x:Key="MainPageGrid" TargetType="Grid">
         <Setter Property="HorizontalOptions" Value="Fill"/>

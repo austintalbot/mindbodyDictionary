@@ -19,6 +19,14 @@ public class MbdCondition
 	[JsonProperty("name")]
 	public string? Name { get; set; }
 
+	[JsonPropertyName("imageNegative")]
+	[JsonProperty("imageNegative")]
+	public string? ImageNegative { get; set; }
+
+	[JsonPropertyName("imagePositive")]
+	[JsonProperty("imagePositive")]
+	public string? ImagePositive { get; set; }
+
 	// Add these properties
 	[System.Text.Json.Serialization.JsonIgnore]
 	public ImageSource? CachedImageOneSource { get; set; }

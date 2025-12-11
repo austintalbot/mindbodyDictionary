@@ -80,36 +80,33 @@ namespace MindBodyDictionaryMobile.PageModels
 						return;
 					}
 	
-					InternalCondition = condition;
-					Title = condition.Name; // Or some other relevant title
+									InternalCondition = condition;
+									Title = condition.Name; // Or some other relevant title
+									
+					                string imagePath = "";
 					
-	                var safeName = condition.Name?.Replace(":", "-").Replace("/", "-") ?? "";
-	                string imagePath = "";
-	
-					if (type == "Negative")
-					{
-						MindsetText = "Troubled Mindset"; // Example text
-						Summary = condition.SummaryNegative;
-	                    imagePath = $"{safeName}-Negative.png";
-					}
-					else if (type == "Positive")
-					{
-						MindsetText = "Healing Mindset"; // Example text
-						Summary = condition.SummaryPositive;
-	                    imagePath = $"{safeName}-Positive.png";
-					}
-					else
-					{
-						MindsetText = "Unknown Mindset";
-						Summary = "No specific summary available.";
-						// Default image or error handling
-					}
-					
-	                if (!string.IsNullOrEmpty(imagePath))
-	                {
-	                    CachedImageSource = await _imageCacheService.GetImageAsync(imagePath);
-	                }
-	
+													if (type == "Negative")
+													{
+														MindsetText = "Troubled Mindset"; // Example text
+														Summary = condition.SummaryNegative;
+									                    imagePath = condition.ImageNegative ?? "";
+													}
+													else if (type == "Positive")
+													{
+														MindsetText = "Healing Mindset"; // Example text
+														Summary = condition.SummaryPositive;
+									                    imagePath = condition.ImagePositive ?? "";
+													}									else
+									{
+										MindsetText = "Unknown Mindset";
+										Summary = "No specific summary available.";
+										// Default image or error handling
+									}
+									
+					                if (!string.IsNullOrEmpty(imagePath))
+					                {
+					                    CachedImageSource = await _imageCacheService.GetImageAsync(imagePath);
+					                }	
 					// Assume you have logic to determine if ads should be shown
 					// ShowAds = !SubscriptionService.IsPremiumUser(); 
 				}

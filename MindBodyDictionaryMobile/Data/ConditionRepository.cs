@@ -3,77 +3,17 @@ using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using System;
+using System.Text.Json;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace MindBodyDictionaryMobile.Data;
-
-
-
 
 /// <summary>
 /// Repository class for managing conditions in the database.
 /// </summary>
-/// <remarks>
-/// Initializes a new instance of the <see cref="ConditionRepository"/> class.
-/// </remarks>
-/// <param name="taskRepository">The task repository instance.</param>
-/// <param name="tagRepository">The tag repository instance.</param>
-/// <param name="logger">The logger instance.</param>
 public class ConditionRepository(TaskRepository taskRepository, TagRepository tagRepository, ILogger<ConditionRepository> logger)
 {
-
-	/// <summary>
-	/// Retrieves a page of conditions for lazy loading (infinite scroll), ordered by Name.
-	/// </summary>
-	/// <param name="skip">Number of conditions to skip.</param>
-	/// <param name="take">Number of conditions to take.</param>
-	/// <returns>A list of <see cref="MbdCondition"/> objects.</returns>
-	public async Task<List<MbdCondition>> ListPageAsync(int skip, int take)
-	{
-		await Init();
-		await using var connection = new SqliteConnection(Constants.DatabasePath);
-		await connection.OpenAsync();
-
-		var selectCmd = connection.CreateCommand();
-		selectCmd.CommandText = "SELECT * FROM Condition ORDER BY Name LIMIT @take OFFSET @skip";
-		selectCmd.Parameters.AddWithValue("@take", take);
-		selectCmd.Parameters.AddWithValue("@skip", skip);
-		var conditions = new List<MbdCondition>();
-
-		await using var reader = await selectCmd.ExecuteReaderAsync();
-		while (await reader.ReadAsync())
-		{
-			conditions.Add(new MbdCondition
-			{
-				Id = reader.GetString(0),
-				Name = reader.GetString(1),
-				Description = reader.GetString(2),
-				Icon = reader.GetString(3),
-				CategoryID = reader.GetInt32(4)
-			});
-		}
-
-		// Tags should be loaded on the detail page, not here.
-		return conditions;
-	}
-
-	/// <summary>
-	/// Counts the total number of conditions in the database.
-	/// </summary>
-	/// <returns>The total number of conditions.</returns>
-	public async Task<int> CountAsync()
-	{
-		await Init();
-		await using var connection = new SqliteConnection(Constants.DatabasePath);
-		await connection.OpenAsync();
-
-		var countCmd = connection.CreateCommand();
-		countCmd.CommandText = "SELECT COUNT(*) FROM Condition";
-
-		var result = await countCmd.ExecuteScalarAsync();
-		return Convert.ToInt32(result);
-	}
-
-
 	private bool _hasBeenInitialized = false;
 	private readonly ILogger _logger = logger;
 	private readonly TaskRepository _taskRepository = taskRepository;
@@ -100,6 +40,11 @@ public class ConditionRepository(TaskRepository taskRepository, TagRepository ta
 
 		try
 		{
+            // Drop table to ensure schema update (breaking change allowed)
+            var dropCmd = connection.CreateCommand();
+            dropCmd.CommandText = "DROP TABLE IF EXISTS Condition";
+            await dropCmd.ExecuteNonQueryAsync();
+
 			var createTableCmd = connection.CreateCommand();
 			createTableCmd.CommandText = @"
 			CREATE TABLE IF NOT EXISTS Condition (
@@ -107,7 +52,16 @@ public class ConditionRepository(TaskRepository taskRepository, TagRepository ta
 				Name TEXT NOT NULL,
 				Description TEXT NOT NULL,
 				Icon TEXT NOT NULL,
-				CategoryID INTEGER NOT NULL
+				CategoryID INTEGER NOT NULL,
+                ImageNegative TEXT,
+                ImagePositive TEXT,
+                SummaryNegative TEXT,
+                SummaryPositive TEXT,
+                Affirmations TEXT,
+                PhysicalConnections TEXT,
+                SearchTags TEXT,
+                Recommendations TEXT,
+                SubscriptionOnly INTEGER
 			);";
 			await createTableCmd.ExecuteNonQueryAsync();
 			System.Diagnostics.Debug.WriteLine("=== ConditionRepository.Init: Condition table created/verified ===");
@@ -129,12 +83,34 @@ public class ConditionRepository(TaskRepository taskRepository, TagRepository ta
 	}
 
 	/// <summary>
+	/// Retrieves a page of conditions for lazy loading (infinite scroll), ordered by Name.
+	/// </summary>
+	public async Task<List<MbdCondition>> ListPageAsync(int skip, int take)
+	{
+		await Init();
+		await using var connection = new SqliteConnection(Constants.DatabasePath);
+		await connection.OpenAsync();
+
+		var selectCmd = connection.CreateCommand();
+		selectCmd.CommandText = "SELECT * FROM Condition ORDER BY Name LIMIT @take OFFSET @skip";
+		selectCmd.Parameters.AddWithValue("@take", take);
+		selectCmd.Parameters.AddWithValue("@skip", skip);
+		var conditions = new List<MbdCondition>();
+
+		await using var reader = await selectCmd.ExecuteReaderAsync();
+		while (await reader.ReadAsync())
+		{
+            conditions.Add(ReadCondition(reader));
+		}
+
+		return conditions;
+	}
+
+	/// <summary>
 	/// Retrieves a list of all conditions from the database or cache.
 	/// </summary>
-	/// <returns>A list of <see cref="MbdCondition"/> objects.</returns>
 	public async Task<List<MbdCondition>> ListAsync()
 	{
-		// First check if we have in-memory cache
 		if (_usingInMemoryCache && _inMemoryConditions.Count > 0)
 		{
 			System.Diagnostics.Debug.WriteLine($"=== ListAsync: Returning {_inMemoryConditions.Count} conditions from in-memory cache ===");
@@ -152,14 +128,7 @@ public class ConditionRepository(TaskRepository taskRepository, TagRepository ta
 		await using var reader = await selectCmd.ExecuteReaderAsync();
 		while (await reader.ReadAsync())
 		{
-			conditions.Add(new MbdCondition
-			{
-				Id = reader.GetString(0),
-				Name = reader.GetString(1),
-				Description = reader.GetString(2),
-				Icon = reader.GetString(3),
-				CategoryID = reader.GetInt32(4)
-			});
+            conditions.Add(ReadCondition(reader));
 		}
 
 		if (conditions.Count == 0 && _inMemoryConditions.Count > 0)
@@ -172,10 +141,24 @@ public class ConditionRepository(TaskRepository taskRepository, TagRepository ta
 	}
 
 	/// <summary>
+	/// Counts the total number of conditions in the database.
+	/// </summary>
+	public async Task<int> CountAsync()
+	{
+		await Init();
+		await using var connection = new SqliteConnection(Constants.DatabasePath);
+		await connection.OpenAsync();
+
+		var countCmd = connection.CreateCommand();
+		countCmd.CommandText = "SELECT COUNT(*) FROM Condition";
+
+		var result = await countCmd.ExecuteScalarAsync();
+		return Convert.ToInt32(result);
+	}
+
+	/// <summary>
 	/// Retrieves a specific condition by its ID.
 	/// </summary>
-	/// <param name="id">The ID of the condition.</param>
-	/// <returns>A <see cref="MbdCondition"/> object if found; otherwise, null.</returns>
 	public async Task<MbdCondition?> GetAsync(string id)
 	{
 		await Init();
@@ -189,30 +172,19 @@ public class ConditionRepository(TaskRepository taskRepository, TagRepository ta
 		await using var reader = await selectCmd.ExecuteReaderAsync();
 		if (await reader.ReadAsync())
 		{
-			var condition = new MbdCondition
-			{
-				Id = reader.GetString(0),
-				Name = reader.GetString(1),
-				Description = reader.GetString(2),
-				Icon = reader.GetString(3),
-				CategoryID = reader.GetInt32(4)
-			};
+            var condition = ReadCondition(reader);
 
 			if (!string.IsNullOrEmpty(condition.Id))
 			{
-				// Load tag objects for local UI use (Tags property is API schema, MobileTags is for UI)
 				var tagObjects = await _tagRepository.ListAsync(condition.Id);
 				condition.MobileTags = tagObjects;
-				// Also populate Tags as string list from tag titles
-				condition.Tags = tagObjects.Select(t => t.Title).ToList();
-				// Note: Conditions don't have tasks like projects do
+				condition.Tags = tagObjects.Select(t => t.Title).ToList(); 
 				condition.Tasks = [];
 			}
 
 			return condition;
 		}
 
-		// Fallback: try in-memory cache if not found in DB
 		if (_inMemoryConditions.Count > 0)
 		{
 			var cached = _inMemoryConditions.FirstOrDefault(c => c.Id == id);
@@ -222,11 +194,37 @@ public class ConditionRepository(TaskRepository taskRepository, TagRepository ta
 		return null;
 	}
 
+    private MbdCondition ReadCondition(SqliteDataReader reader)
+    {
+        return new MbdCondition
+        {
+            Id = reader.GetString(0),
+            Name = reader.GetString(1),
+            Description = reader.GetString(2),
+            Icon = reader.GetString(3),
+            CategoryID = reader.GetInt32(4),
+            ImageNegative = reader.IsDBNull(5) ? null : reader.GetString(5),
+            ImagePositive = reader.IsDBNull(6) ? null : reader.GetString(6),
+            SummaryNegative = reader.IsDBNull(7) ? null : reader.GetString(7),
+            SummaryPositive = reader.IsDBNull(8) ? null : reader.GetString(8),
+            Affirmations = DeserializeList<string>(reader, 9),
+            PhysicalConnections = DeserializeList<string>(reader, 10),
+            SearchTags = DeserializeList<string>(reader, 11),
+            Recommendations = DeserializeList<Recommendation>(reader, 12),
+            SubscriptionOnly = reader.GetBoolean(13)
+        };
+    }
+
+    private List<T>? DeserializeList<T>(SqliteDataReader reader, int ordinal)
+    {
+        if (reader.IsDBNull(ordinal)) return null;
+        var json = reader.GetString(ordinal);
+        return string.IsNullOrEmpty(json) ? null : JsonSerializer.Deserialize<List<T>>(json);
+    }
+
 	/// <summary>
-	/// Saves a condition to the database. If the condition ID is null, a new condition is created; otherwise, the existing condition is updated.
+	/// Saves a condition to the database.
 	/// </summary>
-	/// <param name="item">The condition to save.</param>
-	/// <returns>The ID of the saved condition.</returns>
 	public async Task<string> SaveItemAsync(MbdCondition item)
 	{
 		System.Diagnostics.Debug.WriteLine($"=== ConditionRepository.SaveItemAsync: Saving condition {item.Id}: {item.Name} ===");
@@ -238,53 +236,55 @@ public class ConditionRepository(TaskRepository taskRepository, TagRepository ta
 			await connection.OpenAsync();
 
 			var saveCmd = connection.CreateCommand();
+            string query = "";
 			if (string.IsNullOrEmpty(item.Id))
 			{
-				// Generate a new ID for new conditions
 				item.Id = Guid.NewGuid().ToString();
-				saveCmd.CommandText = @"
-					INSERT INTO Condition (Id, Name, Description, Icon, CategoryID)
-					VALUES (@Id, @Name, @Description, @Icon, @CategoryID)";
-				saveCmd.Parameters.AddWithValue("@Id", item.Id);
-				System.Diagnostics.Debug.WriteLine($"=== ConditionRepository.SaveItemAsync: INSERT command ===");
+				query = @"
+					INSERT INTO Condition (Id, Name, Description, Icon, CategoryID, ImageNegative, ImagePositive, SummaryNegative, SummaryPositive, Affirmations, PhysicalConnections, SearchTags, Recommendations, SubscriptionOnly)
+					VALUES (@Id, @Name, @Description, @Icon, @CategoryID, @ImageNegative, @ImagePositive, @SummaryNegative, @SummaryPositive, @Affirmations, @PhysicalConnections, @SearchTags, @Recommendations, @SubscriptionOnly)";
 			}
 			else
 			{
-				saveCmd.CommandText = @"
+				query = @"
 					UPDATE Condition
-					SET Name = @Name, Description = @Description, Icon = @Icon, CategoryID = @CategoryID
+					SET Name = @Name, Description = @Description, Icon = @Icon, CategoryID = @CategoryID, ImageNegative = @ImageNegative, ImagePositive = @ImagePositive,
+                        SummaryNegative = @SummaryNegative, SummaryPositive = @SummaryPositive, Affirmations = @Affirmations, PhysicalConnections = @PhysicalConnections,
+                        SearchTags = @SearchTags, Recommendations = @Recommendations, SubscriptionOnly = @SubscriptionOnly
 					WHERE Id = @Id";
-				saveCmd.Parameters.AddWithValue("@Id", item.Id);
-				System.Diagnostics.Debug.WriteLine($"=== ConditionRepository.SaveItemAsync: UPDATE command ===");
 			}
+            saveCmd.CommandText = query;
 
+            saveCmd.Parameters.AddWithValue("@Id", item.Id);
 			saveCmd.Parameters.AddWithValue("@Name", item.Name ?? string.Empty);
 			saveCmd.Parameters.AddWithValue("@Description", item.Description ?? string.Empty);
 			saveCmd.Parameters.AddWithValue("@Icon", item.Icon ?? string.Empty);
 			saveCmd.Parameters.AddWithValue("@CategoryID", item.CategoryID);
-
-			System.Diagnostics.Debug.WriteLine($"=== ConditionRepository.SaveItemAsync: Executing with Name='{item.Name}', Desc='{item.Description?.Substring(0, Math.Min(30, item.Description?.Length ?? 0))}...', Icon='{item.Icon}', CategoryID={item.CategoryID} ===");
+            saveCmd.Parameters.AddWithValue("@ImageNegative", item.ImageNegative ?? (object)DBNull.Value);
+            saveCmd.Parameters.AddWithValue("@ImagePositive", item.ImagePositive ?? (object)DBNull.Value);
+            saveCmd.Parameters.AddWithValue("@SummaryNegative", item.SummaryNegative ?? (object)DBNull.Value);
+            saveCmd.Parameters.AddWithValue("@SummaryPositive", item.SummaryPositive ?? (object)DBNull.Value);
+            saveCmd.Parameters.AddWithValue("@Affirmations", item.Affirmations != null ? JsonSerializer.Serialize(item.Affirmations) : (object)DBNull.Value);
+            saveCmd.Parameters.AddWithValue("@PhysicalConnections", item.PhysicalConnections != null ? JsonSerializer.Serialize(item.PhysicalConnections) : (object)DBNull.Value);
+            saveCmd.Parameters.AddWithValue("@SearchTags", item.SearchTags != null ? JsonSerializer.Serialize(item.SearchTags) : (object)DBNull.Value);
+            saveCmd.Parameters.AddWithValue("@Recommendations", item.Recommendations != null ? JsonSerializer.Serialize(item.Recommendations) : (object)DBNull.Value);
+            saveCmd.Parameters.AddWithValue("@SubscriptionOnly", item.SubscriptionOnly ? 1 : 0);
 
 			var rowsAffected = await saveCmd.ExecuteNonQueryAsync();
-			System.Diagnostics.Debug.WriteLine($"=== ConditionRepository.SaveItemAsync: Saved {rowsAffected} rows ===");
 			_logger.LogInformation($"Saved condition {item.Id}: {item.Name}");
 		}
 		catch (Exception ex)
 		{
-			System.Diagnostics.Debug.WriteLine($"=== ConditionRepository.SaveItemAsync DATABASE ERROR: {ex.Message} ===");
-			System.Diagnostics.Debug.WriteLine($"=== Using in-memory cache fallback ===");
 			_logger.LogError(ex, $"Error saving condition to database {item.Id}: {item.Name}, using in-memory fallback");
 			_usingInMemoryCache = true;
 		}
 
-		// Also save to in-memory cache as backup
 		var existing = _inMemoryConditions.FirstOrDefault(c => c.Id == item.Id);
 		if (existing != null)
 		{
 			_inMemoryConditions.Remove(existing);
 		}
 		_inMemoryConditions.Add(item);
-		System.Diagnostics.Debug.WriteLine($"=== Cached in-memory: {item.Name} (total: {_inMemoryConditions.Count}) ===");
 
 		return item.Id;
 	}
@@ -292,8 +292,6 @@ public class ConditionRepository(TaskRepository taskRepository, TagRepository ta
 	/// <summary>
 	/// Deletes a condition from the database.
 	/// </summary>
-	/// <param name="item">The condition to delete.</param>
-	/// <returns>The number of rows affected.</returns>
 	public async Task<int> DeleteItemAsync(MbdCondition item)
 	{
 		await Init();
@@ -328,8 +326,6 @@ public class ConditionRepository(TaskRepository taskRepository, TagRepository ta
 	/// <summary>
 	/// Bulk inserts a list of conditions into the database using a transaction.
 	/// </summary>
-	/// <param name="conditions">The list of conditions to insert.</param>
-	/// <returns>The number of rows inserted.</returns>
 	public async Task<int> BulkInsertAsync(List<MbdCondition> conditions)
 	{
 		await Init();
@@ -342,8 +338,8 @@ public class ConditionRepository(TaskRepository taskRepository, TagRepository ta
 		{
 			var insertCmd = connection.CreateCommand();
 			insertCmd.CommandText = @"
-				INSERT OR REPLACE INTO Condition (Id, Name, Description, Icon, CategoryID)
-				VALUES (@Id, @Name, @Description, @Icon, @CategoryID)";
+				INSERT OR REPLACE INTO Condition (Id, Name, Description, Icon, CategoryID, ImageNegative, ImagePositive, SummaryNegative, SummaryPositive, Affirmations, PhysicalConnections, SearchTags, Recommendations, SubscriptionOnly)
+				VALUES (@Id, @Name, @Description, @Icon, @CategoryID, @ImageNegative, @ImagePositive, @SummaryNegative, @SummaryPositive, @Affirmations, @PhysicalConnections, @SearchTags, @Recommendations, @SubscriptionOnly)";
 
 			foreach (var condition in conditions)
 			{
@@ -353,6 +349,15 @@ public class ConditionRepository(TaskRepository taskRepository, TagRepository ta
 				insertCmd.Parameters.AddWithValue("@Description", condition.Description ?? string.Empty);
 				insertCmd.Parameters.AddWithValue("@Icon", condition.Icon ?? string.Empty);
 				insertCmd.Parameters.AddWithValue("@CategoryID", condition.CategoryID);
+                insertCmd.Parameters.AddWithValue("@ImageNegative", condition.ImageNegative ?? (object)DBNull.Value);
+                insertCmd.Parameters.AddWithValue("@ImagePositive", condition.ImagePositive ?? (object)DBNull.Value);
+                insertCmd.Parameters.AddWithValue("@SummaryNegative", condition.SummaryNegative ?? (object)DBNull.Value);
+                insertCmd.Parameters.AddWithValue("@SummaryPositive", condition.SummaryPositive ?? (object)DBNull.Value);
+                insertCmd.Parameters.AddWithValue("@Affirmations", condition.Affirmations != null ? JsonSerializer.Serialize(condition.Affirmations) : (object)DBNull.Value);
+                insertCmd.Parameters.AddWithValue("@PhysicalConnections", condition.PhysicalConnections != null ? JsonSerializer.Serialize(condition.PhysicalConnections) : (object)DBNull.Value);
+                insertCmd.Parameters.AddWithValue("@SearchTags", condition.SearchTags != null ? JsonSerializer.Serialize(condition.SearchTags) : (object)DBNull.Value);
+                insertCmd.Parameters.AddWithValue("@Recommendations", condition.Recommendations != null ? JsonSerializer.Serialize(condition.Recommendations) : (object)DBNull.Value);
+                insertCmd.Parameters.AddWithValue("@SubscriptionOnly", condition.SubscriptionOnly ? 1 : 0);
 
 				await insertCmd.ExecuteNonQueryAsync();
 			}

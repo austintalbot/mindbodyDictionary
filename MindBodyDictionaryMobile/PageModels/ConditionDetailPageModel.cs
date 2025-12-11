@@ -208,16 +208,12 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 			SummaryNegative = _condition.SummaryNegative;
 			SummaryPositive = _condition.SummaryPositive;
 
-			// Construct image paths using the simplified naming convention
-            // Replace : and / with - to match the renamed files
-            var safeName = _condition.Name?.Replace(":", "-").Replace("/", "-") ?? "";
+			// Load Images from properties
+            if (!string.IsNullOrEmpty(_condition.ImageNegative))
+			    _condition.CachedImageOneSource = await _imageCacheService.GetImageAsync(_condition.ImageNegative);
             
-			NegativeImagePath = $"{safeName}-Negative.png";
-			PositiveImagePath = $"{safeName}-Positive.png";
-
-			// Load Images
-			_condition.CachedImageOneSource = await _imageCacheService.GetImageAsync(NegativeImagePath);
-			_condition.CachedImageTwoSource = await _imageCacheService.GetImageAsync(PositiveImagePath);
+            if (!string.IsNullOrEmpty(_condition.ImagePositive))
+			    _condition.CachedImageTwoSource = await _imageCacheService.GetImageAsync(_condition.ImagePositive);
 
 			Icon = Icons.FirstOrDefault(i => i.Icon == _condition.Icon) ?? Icons.First();
 

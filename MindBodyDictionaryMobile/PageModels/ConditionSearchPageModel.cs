@@ -12,7 +12,8 @@ namespace MindBodyDictionaryMobile.PageModels
 	{
 		private readonly ConditionRepository _conditionRepository;
 		private readonly ModalErrorHandler _errorHandler;
-		private readonly ILogger<ConditionSearchPageModel> _logger; // Add this
+		private readonly ILogger<ConditionSearchPageModel> _logger; 
+		private readonly ImageCacheService _imageCacheService;
 
 		[ObservableProperty]
 		private string _title = "Search Conditions";
@@ -37,11 +38,12 @@ namespace MindBodyDictionaryMobile.PageModels
 		[ObservableProperty]
 		private bool _showAds = true; // Assuming ads are shown by default
 
-		public ConditionSearchPageModel(ConditionRepository conditionRepository, ModalErrorHandler errorHandler, ILogger<ConditionSearchPageModel> logger) // Modify constructor
+		public ConditionSearchPageModel(ConditionRepository conditionRepository, ModalErrorHandler errorHandler, ILogger<ConditionSearchPageModel> logger, ImageCacheService imageCacheService) // Modify constructor
 		{
 			_conditionRepository = conditionRepository;
 			_errorHandler = errorHandler;
 			_logger = logger; // Assign injected logger
+			_imageCacheService = imageCacheService; // Assign injected service
 			_allConditions = new ObservableCollection<MbdCondition>();
 			FilteredConditionCollection = new ObservableCollection<MbdCondition>();
 			// Initialize with default values or from preferences/settings
@@ -57,6 +59,16 @@ namespace MindBodyDictionaryMobile.PageModels
 			{
 				IsBusy = true;
 				var conditions = await _conditionRepository.ListAsync();
+
+                // Load images for search results
+                foreach (var c in conditions)
+                {
+                    if (!string.IsNullOrEmpty(c.ImageNegative))
+                    {
+                        c.CachedImageOneSource = await _imageCacheService.GetImageAsync(c.ImageNegative);
+                    }
+                }
+
 				_allConditions = new ObservableCollection<MbdCondition>(conditions);
 				ApplyFilter(); // Apply initial filter based on SearchParam
 				IsInitialized = true;
