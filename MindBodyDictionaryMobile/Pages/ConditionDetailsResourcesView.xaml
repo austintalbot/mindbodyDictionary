@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:MindBodyDictionaryMobile.PageModels"
+             xmlns:model="clr-namespace:MindBodyDictionaryMobile.Models"
+             x:DataType="vm:ConditionDetailPageModel"
+             x:Name="this"
+             x:Class="MindBodyDictionaryMobile.Pages.ConditionDetailsResourcesView">
+    <Grid RowDefinitions="*">
+        <CollectionView
+            x:Name="ResourceCollectionView"
+            ItemsSource="{Binding BooksResourcesList}"
+            x:DataType="vm:ConditionDetailPageModel"
+            EmptyView="There are no corresponding resources for this Condition"
+            ItemsLayout="HorizontalList"
+            HeightRequest="{Binding ResourceListHeight}"
+            SelectionMode="None"
+            InputTransparent="False">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Grid HorizontalOptions="Center"
+                          WidthRequest="300"
+                          HeightRequest="300"
+                          x:DataType="model:Recommendation"
+                          VerticalOptions="Fill"
+                          InputTransparent="False">
+                        <Border Style="{StaticResource RecommendationBorder}"
+                               InputTransparent="False">
+                            <Grid RowDefinitions="Auto,Auto,*,Auto">
+                                <Label Grid.Row="0" Style="{StaticResource RecommendationNameLabel}" />
+                                <BoxView Grid.Row="1" Style="{StaticResource RecommendationBoxView}" />
+                                <Label Grid.Row="2" Style="{StaticResource RecommendationBookProductDescriptionLabel}" />
+                                <Label Grid.Row="3" Style="{StaticResource RecommendationBookProductClickLabel}" />
+                            </Grid>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ConditionDetailPageModel}}, Path=ResourceLinkClickCommand}"
+                                    CommandParameter="{Binding .}" />
+                            </Border.GestureRecognizers>
+                        </Border>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>     
+</ContentView>

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using Newtonsoft.Json;
+using Microsoft.Maui.Controls; // Add this
 
 namespace MindBodyDictionaryMobile.Models;
 
@@ -17,6 +18,15 @@ public class MbdCondition
 	[JsonPropertyName("name")]
 	[JsonProperty("name")]
 	public string? Name { get; set; }
+
+	// Add these properties
+	[System.Text.Json.Serialization.JsonIgnore]
+	public ImageSource? CachedImageOneSource { get; set; }
+
+	[System.Text.Json.Serialization.JsonIgnore]
+	public ImageSource? CachedImageTwoSource { get; set; }
+
+
 
 	[JsonPropertyName("summaryNegative")]
 	[JsonProperty("summaryNegative")]

@@ -20,7 +20,9 @@
       <Frame Grid.Row="1" Padding="10" Margin="0" CornerRadius="0" HasShadow="False" BorderColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray700}}">
           <SearchBar
               Placeholder="Search conditions..."
-              Text="{Binding SearchQuery}" />
+              Text="{Binding SearchQuery}"
+              TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}"
+              PlaceholderColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray300}}"/>
       </Frame>
 
       <CollectionView

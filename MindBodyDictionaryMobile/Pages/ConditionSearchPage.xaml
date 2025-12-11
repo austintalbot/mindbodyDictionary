@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:admob="clr-namespace:Plugin.AdMob;assembly=Plugin.AdMob"
+             xmlns:model="clr-namespace:MindBodyDictionaryMobile.Models"
+             xmlns:vm="clr-namespace:MindBodyDictionaryMobile.PageModels"
+             xmlns:android="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific;assembly=Microsoft.Maui.Controls"
+             x:DataType="vm:ConditionSearchPageModel"
+             x:Class="MindBodyDictionaryMobile.Pages.ConditionSearchPage"
+             Title="{Binding Title}">
+    
+    <Grid Style="{StaticResource MainPageGrid}">
+        <!-- Search Bar -->
+        <SearchBar x:Name="ConditionSearchBar"
+                  Grid.Row="0"
+                  android:Entry.ImeOptions="Done"
+                  Text="{Binding SearchParam}"
+                  TextChanged="ConditionSearchBar_TextChanged"
+                  IsTextPredictionEnabled="False"
+                  Style="{StaticResource AilmentSearchBar}"
+                  SearchCommand="{Binding OnSearchButtonPressedCommand}" 
+                  SearchCommandParameter="{Binding Text, Source={x:Reference ConditionSearchBar}}" />
+        
+        <!-- Collection View with optimized layout -->
+        <Grid Grid.Row="1">
+        
+            <CollectionView x:Name="ConditionCollectionView"
+                          ItemsSource="{Binding FilteredConditionCollection}"
+                          Style="{StaticResource SearchGridCollectionView}"
+                          IsVisible="{Binding IsInitialized}">
+                <CollectionView.EmptyView>
+                    <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="10">
+                        <Label Style="{StaticResource EmptyViewTitleLabel}" />
+                        <Label Style="{StaticResource EmptyViewSubtitleLabel}" />
+                    </VerticalStackLayout>
+                </CollectionView.EmptyView>
+                
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout x:Name="CollectionViewGridItemLayout"
+                                   Orientation="Vertical"
+                                   Span="3"
+                                   VerticalItemSpacing="8"
+                                   HorizontalItemSpacing="8" />
+                </CollectionView.ItemsLayout>
+                
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="model:MbdCondition">
+                        <Border Style="{StaticResource SearchConditionCard}">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="TapGestureRecognizer_SearchConditionTapped"
+                                                    CommandParameter="{Binding Id}" />
+                            </Border.GestureRecognizers>
+                            
+                            <Grid RowDefinitions="*,Auto">
+                                <!-- Lock overlay -->
+                                <Image Grid.Row="0"
+                                      Style="{StaticResource SearchConditionImage}"
+                                      Opacity="1"
+                                      Source="locked_icon.png"
+                                      ZIndex="1"
+                                      IsVisible="{Binding DisplayLock}" />
+                                
+                                <!-- Condition image -->
+                                <Image Grid.Row="0"
+                                      Style="{StaticResource SearchConditionImage}"
+                                      Source="{Binding CachedImageOneSource}" />
+                                
+                                <!-- Condition name -->
+                                <Label Grid.Row="1"
+                                      Style="{StaticResource SearchConditionLabel}"
+                                      Text="{Binding Name}" />
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Grid>
+
+        <admob:BannerAd AdUnitId="{Binding BannerAdUnitId}" 
+                       x:Name="AdBanner" 
+                       Grid.Row="2" 
+                       IsVisible="{Binding ShowAds}" />
+    </Grid>
+</ContentPage>

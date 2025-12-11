@@ -80,6 +80,20 @@ public static class MauiProgram
 		builder.Services.AddSingleton<ConditionListPageModel>();
 		builder.Services.AddSingleton<ConditionListPage>();
 
+        // Register DisclaimerPopup
+        builder.Services.AddTransient<DisclaimerPopup>();
+
+        // Register Sub-Views for Condition Details
+        builder.Services.AddTransient<ConditionDetailsProblemView>();
+        builder.Services.AddTransient<ConditionDetailsAffirmationsView>();
+        builder.Services.AddTransient<RecommendationsView>();
+        builder.Services.AddTransient<ConditionDetailsFoodView>();
+        builder.Services.AddTransient<ConditionDetailsProductsView>();
+        builder.Services.AddTransient<ConditionDetailsResourcesView>();
+
+        // Register PageModels for Sub-Views
+        builder.Services.AddTransient<RecommendationsPageModel>();
+
 		var app = builder.Build();
 		Services = app.Services;
 		return app;

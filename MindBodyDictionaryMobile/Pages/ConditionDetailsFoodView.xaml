@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:MindBodyDictionaryMobile.PageModels"
+             xmlns:model="clr-namespace:MindBodyDictionaryMobile.Models"
+             xmlns:mi="http://www.aathifmahir.com/dotnet/2022/maui/icons"
+             x:DataType="vm:ConditionDetailPageModel"
+             x:Name="this"
+             x:Class="MindBodyDictionaryMobile.Pages.ConditionDetailsFoodView">
+      <CollectionView
+            x:Name="FoodCollectionView"
+            Style="{StaticResource VerticalCollectionView}"
+            ItemsSource="{Binding FoodList}"
+            EmptyView="There are no corresponding foods for this Condition"
+            HeightRequest="250">
+
+        <CollectionView.ItemTemplate>
+            <DataTemplate>
+                <Border Style="{StaticResource FoodItemBorder}"
+                        x:DataType="model:Recommendation">
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                        <Label Style="{StaticResource FoodItemLabel}"
+                               Text="{Binding Name}"
+                               Grid.Column="0"
+                               x:DataType="{x:Type model:Recommendation}" />
+                        <Image x:Name="CheckMarkImage"
+                               HeightRequest="25"
+                               Grid.Column="1"
+                               Source="{mi:Material Icon=Check, IconColor=White}"
+                               WidthRequest="25" />
+                    </Grid>
+                </Border>
+            </DataTemplate>
+        </CollectionView.ItemTemplate>
+    </CollectionView>
+</ContentView>

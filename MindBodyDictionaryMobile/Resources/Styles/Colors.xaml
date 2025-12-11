@@ -55,4 +55,15 @@
     <SolidColorBrush x:Key="Gray800Brush" Color="{StaticResource Gray800}"/>
     <SolidColorBrush x:Key="Gray900Brush" Color="{StaticResource Gray900}"/>
     <SolidColorBrush x:Key="Gray950Brush" Color="{StaticResource Gray950}"/>
+
+    <!-- App Specific Colors -->
+    <Color x:Key="ConditionTextColor">#404040</Color>
+    <Color x:Key="BarColor">#512BD4</Color>
+    <Color x:Key="BarSelectedColor">#ac99ea</Color>
+    <Color x:Key="ConditionDetailCardBorder">#C8C8C8</Color>
+    <Color x:Key="ConditionDetailCardBackground">White</Color>
+    <Color x:Key="ConditionDetailCardText">Black</Color>
+    <Color x:Key="ConditionCardBorder">#C8C8C8</Color>
+    <Color x:Key="ConditionCardBackground">White</Color>
+    <Color x:Key="ButtonColor">#512BD4</Color>
 </ResourceDictionary>

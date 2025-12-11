@@ -1,15 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Maui.Accessibility;
 using Microsoft.Maui.Controls;
 using MindBodyDictionaryMobile.Models;
-using System.IO;
-using System.Text.Json;
-using System.Reflection;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection; // Add this for IServiceProvider
+using Microsoft.Extensions.Logging; // Add this for ILogger
 
 namespace MindBodyDictionaryMobile.PageModels;
 
@@ -21,12 +19,26 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 	private readonly CategoryRepository _categoryRepository;
 	private readonly TagRepository _tagRepository;
 	private readonly ModalErrorHandler _errorHandler;
+	private readonly IServiceProvider _serviceProvider; // Add this for DI
+	private readonly ILogger<ConditionDetailPageModel> _logger; // Add this for logging
 
 	[ObservableProperty]
 	private string _name = string.Empty;
 
 	[ObservableProperty]
 	private string _description = string.Empty;
+
+	[ObservableProperty]
+	private string _summaryNegative;
+
+	[ObservableProperty]
+	private string _summaryPositive;
+	
+	[ObservableProperty]
+	private string _negativeImagePath;
+
+	[ObservableProperty]
+	private string _positiveImagePath;
 
 	[ObservableProperty]
 	private List<ProjectTask> _tasks = [];
@@ -76,16 +88,28 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 	public bool HasCompletedTasks
 		=> _condition?.Tasks.Any(t => t.IsCompleted) ?? false;
 
+    // Tab Management Properties and Command
+    [ObservableProperty]
+    private string _selectedTab = "Problem"; // Default to Problem tab
 
-	public ConditionDetailPageModel(ConditionRepository conditionRepository, TaskRepository taskRepository, CategoryRepository categoryRepository, TagRepository tagRepository, ModalErrorHandler errorHandler)
+    [ObservableProperty]
+    private ContentView _currentView; // Holds the currently displayed ContentView
+
+	public ConditionDetailPageModel(ConditionRepository conditionRepository, TaskRepository taskRepository, CategoryRepository categoryRepository, TagRepository tagRepository, ModalErrorHandler errorHandler, IServiceProvider serviceProvider, ILogger<ConditionDetailPageModel> logger)
 	{
 		_conditionRepository = conditionRepository;
 		_taskRepository = taskRepository;
 		_categoryRepository = categoryRepository;
 		_tagRepository = tagRepository;
 		_errorHandler = errorHandler;
+		_serviceProvider = serviceProvider; // Assign injected serviceProvider
+		_logger = logger; // Assign injected logger
 		_icon = _icons.First();
 		Tasks = [];
+        
+        // Initialize current view
+        CurrentView = _serviceProvider.GetRequiredService<ConditionDetailsProblemView>();
+        CurrentView.BindingContext = this; // Set its BindingContext
 	}
 
 	public void ApplyQueryAttributes(IDictionary<string, object> query)
@@ -111,6 +135,31 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 			Tasks = _condition.Tasks;
 		}
 	}
+
+    partial void OnSelectedTabChanged(string value)
+    {
+        switch (value)
+        {
+            case "Problem":
+                CurrentView = _serviceProvider.GetRequiredService<ConditionDetailsProblemView>();
+                CurrentView.BindingContext = this;
+                break;
+            case "Affirmations":
+                CurrentView = _serviceProvider.GetRequiredService<ConditionDetailsAffirmationsView>();
+                CurrentView.BindingContext = this;
+                break;
+            case "Recommendations":
+                CurrentView = _serviceProvider.GetRequiredService<RecommendationsView>();
+                CurrentView.BindingContext = _serviceProvider.GetRequiredService<RecommendationsPageModel>(); // RecommendationsView has its own ViewModel
+				if (CurrentView.BindingContext is RecommendationsPageModel recommendationsPageModel && _condition != null)
+				{
+					recommendationsPageModel.Condition = _condition; // Pass the condition to the inner ViewModel
+					recommendationsPageModel.InitializeTabs();
+				}
+                break;
+        }
+    }
+
 
 	private async Task LoadCategories() =>
 		Categories = await _categoryRepository.ListAsync();
@@ -152,6 +201,13 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 			Name = _condition.Name ?? string.Empty;
 			Description = _condition.Description;
 			Tasks = _condition.Tasks;
+			SummaryNegative = _condition.SummaryNegative;
+			SummaryPositive = _condition.SummaryPositive;
+
+			// Construct image paths. Assumes image names match condition names.
+			// e.g., "Anxiety" -> "Anxiety1.png", "Anxiety2.png"
+			NegativeImagePath = $"{_condition.Name}1.png";
+			PositiveImagePath = $"{_condition.Name}2.png";
 
 			Icon = Icons.FirstOrDefault(i => i.Icon == _condition.Icon) ?? Icons.First();
 
@@ -166,6 +222,23 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 				tag.IsSelected = _condition.MobileTags.Any(t => t.ID == tag.ID);
 			}
 			AllTags = new(allTags);
+
+            // Set the condition on the current view if it is one of the ConditionDetails views
+            if (CurrentView.BindingContext == this)
+            {
+                if (CurrentView is ConditionDetailsProblemView problemView)
+                {
+                    problemView.MbdCondition = _condition;
+                }
+                else if (CurrentView is ConditionDetailsAffirmationsView affirmationsView)
+                {
+                    affirmationsView.MbdCondition = _condition;
+                }
+            } else if (CurrentView.BindingContext is RecommendationsPageModel recommendationsPageModel)
+            {
+                recommendationsPageModel.Condition = _condition;
+                recommendationsPageModel.InitializeTabs();
+            }
 		}
 		catch (Exception e)
 		{
@@ -319,4 +392,9 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 		await AppShell.DisplayToastAsync("All cleaned up!");
 	}
 
+    [RelayCommand]
+    private void SelectTab(string tabName)
+    {
+        SelectedTab = tabName;
+    }
 }
