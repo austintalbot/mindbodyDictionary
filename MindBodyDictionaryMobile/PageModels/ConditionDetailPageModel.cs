@@ -208,15 +208,19 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 			SummaryNegative = _condition.SummaryNegative;
 			SummaryPositive = _condition.SummaryPositive;
 
-			// Construct image paths. Assumes image names match condition names.
-			// e.g., "Anxiety" -> "Anxiety1.png", "Anxiety2.png"
+			// Construct image paths with fallback logic
+            var availableImages = await _imageCacheService.GetAvailableImagesAsync();
             var safeName = _condition.Name?.Replace(":", "-") ?? "";
-			NegativeImagePath = $"{safeName}1.png";
-			PositiveImagePath = $"{safeName}2.png";
+
+            var image1Name = FindImageFile(_condition.Name, safeName, availableImages, 1);
+            var image2Name = FindImageFile(_condition.Name, safeName, availableImages, 2);
+
+            NegativeImagePath = image1Name ?? $"{safeName}1.png";
+            PositiveImagePath = image2Name ?? $"{safeName}2.png";
 
 			// Load Images
-			_condition.CachedImageOneSource = await _imageCacheService.GetImageAsync(NegativeImagePath);
-			_condition.CachedImageTwoSource = await _imageCacheService.GetImageAsync(PositiveImagePath);
+			_condition.CachedImageOneSource = image1Name != null ? await _imageCacheService.GetImageAsync(image1Name) : null;
+			_condition.CachedImageTwoSource = image2Name != null ? await _imageCacheService.GetImageAsync(image2Name) : null;
 
 			Icon = Icons.FirstOrDefault(i => i.Icon == _condition.Icon) ?? Icons.First();
 
@@ -248,6 +252,9 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
                 recommendationsPageModel.Condition = _condition;
                 recommendationsPageModel.InitializeTabs();
             }
+            
+            // Notify that Condition (and its properties like CachedImageOneSource) might have changed
+            OnPropertyChanged(nameof(Condition));
 		}
 		catch (Exception e)
 		{
@@ -260,6 +267,27 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 			OnPropertyChanged(nameof(HasCompletedTasks));
 		}
 	}
+
+    private string? FindImageFile(string? conditionName, string safeName, List<string> availableImages, int imageNumber)
+    {
+        if (string.IsNullOrEmpty(conditionName)) return null;
+
+        // 1. Try exact match on safe name (e.g., "Lung Problems1.png")
+        var exactName = $"{safeName}{imageNumber}.png";
+        if (availableImages.Any(x => x.Equals(exactName, StringComparison.OrdinalIgnoreCase))) return exactName;
+
+        // 2. Try exact match on original name (unlikely if special chars, but good to check)
+        var origName = $"{conditionName}{imageNumber}.png";
+        if (availableImages.Any(x => x.Equals(origName, StringComparison.OrdinalIgnoreCase))) return origName;
+
+        // 3. Try "Starts With" logic - splitting by space and taking first word
+        // e.g. "Lung Problems" -> "Lung" -> "Lung1.png"
+        var firstWord = conditionName.Split(' ')[0];
+        var firstWordFileName = $"{firstWord}{imageNumber}.png";
+        if (availableImages.Any(x => x.Equals(firstWordFileName, StringComparison.OrdinalIgnoreCase))) return firstWordFileName;
+
+        return null;
+    }
 
 	[RelayCommand]
 	private async Task TaskCompleted(ProjectTask task)
