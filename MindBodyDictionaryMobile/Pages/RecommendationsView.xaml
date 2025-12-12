@@ -4,8 +4,7 @@
              xmlns:pages="clr-namespace:MindBodyDictionaryMobile.Pages"
              xmlns:vm="clr-namespace:MindBodyDictionaryMobile.PageModels"
              xmlns:converter="clr-namespace:MindBodyDictionaryMobile.Converter"
-             x:DataType="vm:RecommendationsPageModel"
-             xmlns:mi="http://www.aathifmahir.com/dotnet/2022/maui/icons"
+             xmlns:fonts="clr-namespace:Fonts;assembly=MindBodyDictionaryMobile"
              x:Class="MindBodyDictionaryMobile.Pages.RecommendationsView">
 
     <ContentView.Resources>

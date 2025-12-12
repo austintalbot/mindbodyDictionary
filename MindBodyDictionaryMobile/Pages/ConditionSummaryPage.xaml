@@ -4,7 +4,7 @@
              x:Class="MindBodyDictionaryMobile.Pages.ConditionSummaryPage"
              xmlns:vm="clr-namespace:MindBodyDictionaryMobile.PageModels"
              x:DataType="vm:ConditionSummaryPageModel"
-             xmlns:mi="http://www.aathifmahir.com/dotnet/2022/maui/icons"
+             xmlns:fonts="clr-namespace:Fonts;assembly=MindBodyDictionaryMobile"
              xmlns:local="clr-namespace:MindBodyDictionaryMobile"
              Title="{Binding Title}">
     <Grid Style="{StaticResource AilmentSummaryGrid}" RowDefinitions="Auto,Auto,Auto,*,Auto" ColumnDefinitions="*,*,Auto">
@@ -50,7 +50,7 @@
                Grid.Column="2"
                Grid.Row="4"
                Style="{StaticResource ShareButton}"
-               Source="{mi:Material Icon=Share}">
+               Source="{FontImageSource FontFamily={x:Static fonts:FluentUI.FontFamily}, Glyph={x:Static fonts:FluentUI.share_24_regular}, Size=24, Color=Black }">
             <Image.GestureRecognizers>
                 <TapGestureRecognizer
                     Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ConditionSummaryPageModel}}, Path=shareConditionSummaryCommand}"
