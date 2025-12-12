@@ -274,6 +274,25 @@
                 Value="{OnPlatform WinUI=None, Default=Bold}" />
     </Style>
 
+    <Style x:Key="HeaderSection" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="5"/>
+        <Setter Property="Padding" Value="0,10,0,10"/>
+        <Setter Property="HorizontalOptions" Value="CenterAndExpand"/>
+    </Style>
+
+    <Style x:Key="SubtitleLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+    </Style>
+
+    <Style x:Key="SectionTitleLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="24"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+    </Style>
+
     <Style TargetType="Border">
         <Setter Property="StrokeShape" Value="RoundRectangle 20"/>
         <Setter Property="Background" Value="{AppThemeBinding Light={StaticResource LightSecondaryBackground},Dark={StaticResource DarkSecondaryBackground}}"/>
@@ -310,7 +329,6 @@
         <Setter Property="ProgressColor" Value="{StaticResource Primary}"/>
     </Style>
 
-    <!-- Missing Styles -->
     <Style x:Key="AilmentSearchBar" TargetType="SearchBar">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
         <Setter Property="PlaceholderColor" Value="{StaticResource Gray500}" />
@@ -451,6 +469,22 @@
         <Setter Property="MaxLines" Value="2"/>
         <Setter Property="Padding" Value="5"/>
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}"/>
+    </Style>
+
+    <Style x:Key="ConditionCardWithShadow" TargetType="Border">
+        <Setter Property="StrokeShape" Value="RoundRectangle 12"/>
+        <Setter Property="StrokeThickness" Value="1"/>
+        <Setter Property="Padding" Value="15"/>
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource ConditionCardBackground}, Dark={StaticResource ConditionCardBackground}}"/>
+        <Setter Property="Stroke" Value="{StaticResource ConditionCardBorder}"/>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="Black"
+                        Opacity="0.1"
+                        Radius="10"
+                        Offset="0,2"/>
+            </Setter.Value>
+        </Setter>
     </Style>
 
 </ResourceDictionary>

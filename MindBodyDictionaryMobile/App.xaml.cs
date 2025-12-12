@@ -5,6 +5,8 @@ namespace MindBodyDictionaryMobile;
 
 public partial class App : Application
 {
+	public static string CopyrightText { get; } = "© Mind Body Dictionary, LLC";
+
 	public App()
 	{
 		InitializeComponent();
