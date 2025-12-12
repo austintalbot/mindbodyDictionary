@@ -33,7 +33,7 @@
                     Margin="0,10,0,0">
                 <VerticalStackLayout>
                     <!-- Inner Tab Headers -->
-                    <HorizontalStackLayout HorizontalOptions="FillAndExpand" BackgroundColor="{StaticResource BarColor}">
+                    <HorizontalStackLayout HorizontalOptions="Fill" BackgroundColor="{StaticResource BarColor}">
                                                 <Button Text="Foods"
                                                         Command="{Binding SelectInnerTabCommand}"
                                                         CommandParameter="Foods"

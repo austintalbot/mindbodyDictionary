@@ -25,9 +25,9 @@
                         <Border Style="{StaticResource RecommendationBorder}"
                                InputTransparent="False">
                             <Grid RowDefinitions="Auto,Auto,*,Auto">
-                                <Label Grid.Row="0" Style="{StaticResource RecommendationNameLabel}" />
+                                <Label Grid.Row="0" Text="{Binding Name}" Style="{StaticResource RecommendationNameLabel}" />
                                 <BoxView Grid.Row="1" Style="{StaticResource RecommendationBoxView}" />
-                                <Label Grid.Row="2" Style="{StaticResource RecommendationBookProductDescriptionLabel}" />
+                                <Label Grid.Row="2" Text="{Binding Url}" Style="{StaticResource RecommendationBookProductDescriptionLabel}" />
                                 <Label Grid.Row="3" Style="{StaticResource RecommendationBookProductClickLabel}" />
                             </Grid>
                             <Border.GestureRecognizers>

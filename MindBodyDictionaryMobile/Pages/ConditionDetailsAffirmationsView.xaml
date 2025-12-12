@@ -81,22 +81,15 @@
                                              VerticalOptions="Center"
                                              VerticalTextAlignment="Center">
                                              </Label>
-                                             <Label
-                                             x:Name="CopyrightLabel"
-                                             FontSize="Small"
-                                             HorizontalOptions="Center"
-                                             HorizontalTextAlignment="Center"
-                                             Text="{x:Static local:App.CopyrightText}"
-                                             TextColor="{StaticResource ConditionDetailCardText}"
-                                             VerticalOptions="End"
-                                             VerticalTextAlignment="End" />
+                                             
                                          </VerticalStackLayout>
                                      </Frame>
                                  </Grid>
                          </DataTemplate>
                      </CarouselView.ItemTemplate>
                  </CarouselView>
-                 <IndicatorView
+        
+        <IndicatorView
                          x:Name="AffirmationIndicatorView"
                          Grid.Row="4"
                          HorizontalOptions="Center"
@@ -131,12 +124,13 @@
                              Margin="10,0,0,0"
                              Text="Share"
                              />
+                             
                          <Image
                                  x:Name="ShareAffirmationImageButton"
                                  Aspect="AspectFit"
                                  BackgroundColor="Transparent"
                                  HeightRequest="32"
-                                 Source="{FontImageSource FontFamily={x:Static fonts:FluentUI.FontFamily}, Glyph={x:Static fonts:FluentUI.share_24_regular}, Size=24, Color=Black }"
+                                 Source="{FontImageSource FontFamily={x:Static fonts:FluentUI.FontFamily}, Glyph={x:Static fonts:FluentUI.share_24_regular}, Size=24, Color={AppThemeBinding Light={StaticResource PrimaryDarkText}, Dark={StaticResource Gray100}}}"
                                  WidthRequest="32" >
                          </Image>
                      </HorizontalStackLayout>

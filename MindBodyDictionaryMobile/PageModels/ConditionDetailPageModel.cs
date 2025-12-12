@@ -86,6 +86,15 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 	[ObservableProperty]
 	private List<Recommendation> _booksResourcesList = [];
 
+    [ObservableProperty]
+    private double _productListHeight;
+
+    [ObservableProperty]
+    private double _resourceListHeight;
+
+    [ObservableProperty]
+    private double _foodListHeight;
+
 	private bool _canDelete;
 
 	public bool CanDelete
@@ -273,6 +282,12 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
             _logger.LogInformation($"FoodList count: {FoodList.Count}");
             _logger.LogInformation($"ProductList count: {ProductList.Count}");
             _logger.LogInformation($"BooksResourcesList count: {BooksResourcesList.Count}");
+
+            // Calculate heights for CollectionViews
+            const double ItemHeight = 300; // Define a constant for item height
+            ProductListHeight = ProductList.Count * ItemHeight;
+            ResourceListHeight = BooksResourcesList.Count * ItemHeight;
+            FoodListHeight = FoodList.Count * ItemHeight;
 
             // Set the condition on the current view if it is one of the ConditionDetails views
             if (CurrentView.BindingContext == this)
