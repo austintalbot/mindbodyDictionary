@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:pages="clr-namespace:MindBodyDictionaryMobile.Pages"
+             xmlns:vm="clr-namespace:MindBodyDictionaryMobile.PageModels"
+             xmlns:fonts="clr-namespace:Fonts;assembly=MindBodyDictionaryMobile"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:converter="clr-namespace:MindBodyDictionaryMobile.Converter"
+             x:Class="MindBodyDictionaryMobile.Pages.ConditionDetailsPage"
+             Title="{Binding Title}">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+            <converter:SelectedTabColorConverter x:Key="SelectedTabColorConverter" />
+            <converter:SelectedTabBackgroundColorConverter x:Key="SelectedTabBackgroundColorConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,*" Style="{StaticResource MainPageGrid}">
+        <!-- Tab Headers -->
+        <HorizontalStackLayout Grid.Row="0" HorizontalOptions="CenterAndExpand" BackgroundColor="{StaticResource BarColor}">
+            <Button Text="Mindsets"
+                    Command="{Binding SelectTabCommand}"
+                    CommandParameter="Problem"
+                    Style="{StaticResource TabButton}"
+                    TextColor="{Binding SelectedTab, ConverterParameter=Problem, Converter={StaticResource SelectedTabColorConverter}}"
+                    BackgroundColor="{Binding SelectedTab, ConverterParameter=Problem, Converter={StaticResource SelectedTabBackgroundColorConverter}}"/>
+            <Button Text="Affirmations"
+                    Command="{Binding SelectTabCommand}"
+                    CommandParameter="Affirmations"
+                    Style="{StaticResource TabButton}"
+                    TextColor="{Binding SelectedTab, ConverterParameter=Affirmations, Converter={StaticResource SelectedTabColorConverter}}"
+                    BackgroundColor="{Binding SelectedTab, ConverterParameter=Affirmations, Converter={StaticResource SelectedTabBackgroundColorConverter}}"/>
+            <Button Text="Recommendations"
+                    Command="{Binding SelectTabCommand}"
+                    CommandParameter="Recommendations"
+                    Style="{StaticResource TabButton}"
+                    TextColor="{Binding SelectedTab, ConverterParameter=Recommendations, Converter={StaticResource SelectedTabColorConverter}}"
+                    BackgroundColor="{Binding SelectedTab, ConverterParameter=Recommendations, Converter={StaticResource SelectedTabBackgroundColorConverter}}"/>
+        </HorizontalStackLayout>
+
+        <!-- Tab Content -->
+        <ContentView Grid.Row="1" Content="{Binding CurrentView}" />
+    </Grid>
+</ContentPage>

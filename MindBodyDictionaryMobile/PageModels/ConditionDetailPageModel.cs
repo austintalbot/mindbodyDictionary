@@ -1,29 +1,48 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Maui.Accessibility;
 using Microsoft.Maui.Controls;
 using MindBodyDictionaryMobile.Models;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection; // Add this for IServiceProvider
+using Microsoft.Extensions.Logging; // Add this for logging
+using MindBodyDictionaryMobile.Enums; // Add this using statement
 
 namespace MindBodyDictionaryMobile.PageModels;
 
 public partial class ConditionDetailPageModel : ObservableObject, IQueryAttributable, IProjectTaskPageModel
 {
+	[ObservableProperty]
 	private MbdCondition? _condition;
+
 	private readonly ConditionRepository _conditionRepository;
 	private readonly TaskRepository _taskRepository;
 	private readonly CategoryRepository _categoryRepository;
 	private readonly TagRepository _tagRepository;
 	private readonly ModalErrorHandler _errorHandler;
+	private readonly IServiceProvider _serviceProvider; // Add this for DI
+	private readonly ILogger<ConditionDetailPageModel> _logger; // Add this for logging
+	private readonly ImageCacheService _imageCacheService; // Add this
 
 	[ObservableProperty]
 	private string _name = string.Empty;
 
 	[ObservableProperty]
 	private string _description = string.Empty;
+
+	[ObservableProperty]
+	private string _summaryNegative;
+
+	[ObservableProperty]
+	private string _summaryPositive;
+
+	[ObservableProperty]
+	private string _negativeImagePath;
+
+	[ObservableProperty]
+	private string _positiveImagePath;
 
 	[ObservableProperty]
 	private List<ProjectTask> _tasks = [];
@@ -58,6 +77,24 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 		new IconData { Icon = FluentUI.bot_24_regular, Description = "Bot Icon" }
 	];
 
+	[ObservableProperty]
+	private List<Recommendation> _foodList = [];
+
+	[ObservableProperty]
+	private List<Recommendation> _productList = [];
+
+	[ObservableProperty]
+	private List<Recommendation> _booksResourcesList = [];
+
+    [ObservableProperty]
+    private double _productListHeight;
+
+    [ObservableProperty]
+    private double _resourceListHeight;
+
+    [ObservableProperty]
+    private double _foodListHeight;
+
 	private bool _canDelete;
 
 	public bool CanDelete
@@ -71,18 +108,31 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 	}
 
 	public bool HasCompletedTasks
-		=> _condition?.Tasks.Any(t => t.IsCompleted) ?? false;
+		=> 	Condition?.Tasks.Any(t => t.IsCompleted) ?? false;
 
+    // Tab Management Properties and Command
+    [ObservableProperty]
+    private string _selectedTab = "Problem"; // Default to Problem tab
 
-	public ConditionDetailPageModel(ConditionRepository conditionRepository, TaskRepository taskRepository, CategoryRepository categoryRepository, TagRepository tagRepository, ModalErrorHandler errorHandler)
+    [ObservableProperty]
+    private ContentView _currentView; // Holds the currently displayed ContentView
+
+	public ConditionDetailPageModel(ConditionRepository conditionRepository, TaskRepository taskRepository, CategoryRepository categoryRepository, TagRepository tagRepository, ModalErrorHandler errorHandler, IServiceProvider serviceProvider, ILogger<ConditionDetailPageModel> logger, ImageCacheService imageCacheService)
 	{
 		_conditionRepository = conditionRepository;
 		_taskRepository = taskRepository;
 		_categoryRepository = categoryRepository;
 		_tagRepository = tagRepository;
 		_errorHandler = errorHandler;
+		_serviceProvider = serviceProvider; // Assign injected serviceProvider
+		_logger = logger; // Assign injected logger
+		_imageCacheService = imageCacheService; // Assign injected service
 		_icon = _icons.First();
 		Tasks = [];
+
+        // Initialize current view
+        CurrentView = _serviceProvider.GetRequiredService<ConditionDetailsProblemView>();
+        CurrentView.BindingContext = this; // Set its BindingContext
 	}
 
 	public void ApplyQueryAttributes(IDictionary<string, object> query)
@@ -102,12 +152,39 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 		else
 		{
 			Task.WhenAll(LoadCategories(), LoadTags()).FireAndForgetSafeAsync(_errorHandler);
-			_condition = new();
-			_condition.Tags = [];
-			_condition.Tasks = [];
-			Tasks = _condition.Tasks;
+			Condition = new()
+			{
+				Tags = [],
+				Tasks = []
+			};
+			Tasks = Condition.Tasks;
 		}
 	}
+
+    partial void OnSelectedTabChanged(string value)
+    {
+        switch (value)
+        {
+            case "Problem":
+                CurrentView = _serviceProvider.GetRequiredService<ConditionDetailsProblemView>();
+                CurrentView.BindingContext = this;
+                break;
+            case "Affirmations":
+                CurrentView = _serviceProvider.GetRequiredService<ConditionDetailsAffirmationsView>();
+                CurrentView.BindingContext = this;
+                break;
+            case "Recommendations":
+                CurrentView = _serviceProvider.GetRequiredService<RecommendationsView>();
+                CurrentView.BindingContext = _serviceProvider.GetRequiredService<RecommendationsPageModel>(); // RecommendationsView has its own ViewModel
+				if (CurrentView.BindingContext is RecommendationsPageModel recommendationsPageModel && Condition != null)
+				{
+					recommendationsPageModel.Condition = Condition; // Pass the condition to the inner ViewModel
+					recommendationsPageModel.InitializeTabs();
+				}
+                break;
+        }
+    }
+
 
 	private async Task LoadCategories() =>
 		Categories = await _categoryRepository.ListAsync();
@@ -117,18 +194,18 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 
 	private async Task RefreshData()
 	{
-		if (_condition.IsNullOrNew())
+		if (Condition.IsNullOrNew())
 		{
-			if (_condition is not null)
-				Tasks = [.. _condition.Tasks];
+			if (Condition is not null)
+				Tasks = [.. Condition.Tasks];
 
 			return;
 		}
 
-		if (!string.IsNullOrEmpty(_condition.Id))
+		if (!string.IsNullOrEmpty(Condition.Id))
 		{
-			Tasks = await _taskRepository.ListAsync(_condition.Id);
-			_condition.Tasks = Tasks;
+			Tasks = await _taskRepository.ListAsync(Condition.Id);
+			Condition.Tasks = Tasks;
 		}
 	}
 
@@ -138,31 +215,99 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 		{
 			IsBusy = true;
 
-			_condition = await _conditionRepository.GetAsync(id);
+			Condition = await _conditionRepository.GetAsync(id);
 
-			if (_condition.IsNullOrNew())
+			if (Condition.IsNullOrNew())
 			{
 				_errorHandler.HandleError(new Exception($"Condition with id {id} could not be found."));
 				return;
 			}
 
-			Name = _condition.Name ?? string.Empty;
-			Description = _condition.Description;
-			Tasks = _condition.Tasks;
+			Name = Condition.Name ?? string.Empty;
+			Description = Condition.Description ?? string.Empty;
+			Tasks = Condition.Tasks;
+			SummaryNegative = Condition.SummaryNegative ?? string.Empty;
+			SummaryPositive = Condition.SummaryPositive ?? string.Empty;
+			// Load Images from properties
+            if (!string.IsNullOrEmpty(Condition.ImageNegative))
+			    Condition.CachedImageOneSource = await _imageCacheService.GetImageAsync(Condition.ImageNegative);
 
-			Icon = Icons.FirstOrDefault(i => i.Icon == _condition.Icon) ?? Icons.First();
+            if (!string.IsNullOrEmpty(Condition.ImagePositive))
+			    Condition.CachedImageTwoSource = await _imageCacheService.GetImageAsync(Condition.ImagePositive);
+
+			Icon = Icons.FirstOrDefault(i => i.Icon == Condition.Icon) ?? Icons.First();
 
 			Categories = await _categoryRepository.ListAsync();
-			Category = Categories?.FirstOrDefault(c => c.ID == _condition.CategoryID);
-			CategoryIndex = Categories?.FindIndex(c => c.ID == _condition.CategoryID) ?? -1;
+			Category = Categories?.FirstOrDefault(c => c.ID == Condition.CategoryID);
+			CategoryIndex = Categories?.FindIndex(c => c.ID == Condition.CategoryID) ?? -1;
 
 			var allTags = await _tagRepository.ListAsync();
 			foreach (var tag in allTags)
 			{
 				// Use MobileTags (List<Tag>) instead of Tags (List<string> from API)
-				tag.IsSelected = _condition.MobileTags.Any(t => t.ID == tag.ID);
+				tag.IsSelected = Condition.MobileTags.Any(t => t.ID == tag.ID);
 			}
 			AllTags = new(allTags);
+
+            // Logging for Recommendations
+            _logger.LogInformation($"Condition ID: {Condition.Id}");
+            _logger.LogInformation($"Condition Name: {Condition.Name}");
+            if (Condition.Recommendations != null && Condition.Recommendations.Any())
+            {
+                _logger.LogInformation($"Total recommendations found: {Condition.Recommendations.Count}");
+                foreach (var rec in Condition.Recommendations)
+                {
+                    _logger.LogInformation($"  Recommendation: Name={rec.Name}, Type={(MindBodyDictionaryMobile.Enums.RecommendationType)rec.RecommendationType}");
+                }
+            }
+            else
+            {
+                _logger.LogInformation("No recommendations found for this condition.");
+            }
+
+            // Populate FoodList, ProductList, and BooksResourcesList
+            if (Condition.Recommendations != null)
+            {
+                FoodList = Condition.Recommendations
+                                .Where(r => r.RecommendationType == (int)RecommendationType.Food)
+                                .ToList();
+                ProductList = Condition.Recommendations
+                                .Where(r => r.RecommendationType == (int)RecommendationType.Product)
+                                .ToList();
+                BooksResourcesList = Condition.Recommendations
+                                .Where(r => r.RecommendationType == (int)RecommendationType.Book)
+                                .ToList();
+            }
+
+            _logger.LogInformation($"FoodList count: {FoodList.Count}");
+            _logger.LogInformation($"ProductList count: {ProductList.Count}");
+            _logger.LogInformation($"BooksResourcesList count: {BooksResourcesList.Count}");
+
+            // Calculate heights for CollectionViews
+            const double ItemHeight = 300; // Define a constant for item height
+            ProductListHeight = ProductList.Count * ItemHeight;
+            ResourceListHeight = BooksResourcesList.Count * ItemHeight;
+            FoodListHeight = FoodList.Count * ItemHeight;
+
+            // Set the condition on the current view if it is one of the ConditionDetails views
+            if (CurrentView.BindingContext == this)
+            {
+                if (CurrentView is ConditionDetailsProblemView problemView)
+                {
+                    problemView.MbdCondition = Condition;
+                }
+                else if (CurrentView is ConditionDetailsAffirmationsView affirmationsView)
+                {
+                    affirmationsView.MbdCondition = Condition;
+                }
+            } else if (CurrentView.BindingContext is RecommendationsPageModel recommendationsPageModel)
+            {
+                recommendationsPageModel.Condition = Condition;
+                recommendationsPageModel.InitializeTabs();
+            }
+
+            // Notify that Condition (and its properties like CachedImageOneSource) might have changed
+            OnPropertyChanged(nameof(Condition));
 		}
 		catch (Exception e)
 		{
@@ -171,7 +316,7 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 		finally
 		{
 			IsBusy = false;
-			CanDelete = !_condition.IsNullOrNew();
+			CanDelete = !Condition.IsNullOrNew();
 			OnPropertyChanged(nameof(HasCompletedTasks));
 		}
 	}
@@ -187,7 +332,7 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 	[RelayCommand]
 	private async Task Save()
 	{
-		if (_condition is null)
+		if (Condition is null)
 		{
 			_errorHandler.HandleError(
 				new Exception("Condition is null. Cannot Save."));
@@ -195,33 +340,33 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 			return;
 		}
 
-		_condition.Name = Name;
-		_condition.Description = Description;
-		_condition.CategoryID = Category?.ID ?? 0;
-		_condition.Icon = Icon.Icon ?? FluentUI.ribbon_24_regular;
+		Condition.Name = Name;
+		Condition.Description = Description;
+		Condition.CategoryID = Category?.ID ?? 0;
+		Condition.Icon = Icon.Icon ?? FluentUI.ribbon_24_regular;
 
 		// Save the condition and get the ID back (important for new conditions)
-		var savedConditionId = await _conditionRepository.SaveItemAsync(_condition);
-		_condition.Id = savedConditionId;
+		var savedConditionId = await _conditionRepository.SaveItemAsync(Condition);
+		Condition.Id = savedConditionId;
 
-		if (_condition.IsNullOrNew())
+		if (Condition.IsNullOrNew())
 		{
 			foreach (var tag in AllTags)
 			{
-				if (tag.IsSelected && !string.IsNullOrEmpty(_condition.Id))
+				if (tag.IsSelected && !string.IsNullOrEmpty(Condition.Id))
 				{
-					await _tagRepository.SaveItemAsync(tag, _condition.Id);
+					await _tagRepository.SaveItemAsync(tag, Condition.Id);
 				}
 			}
 		}
 
-		foreach (var task in _condition.Tasks)
+		foreach (var task in Condition.Tasks)
 		{
 			if (task.ID == 0)
 			{
-				if (!string.IsNullOrEmpty(_condition.Id))
+				if (!string.IsNullOrEmpty(Condition.Id))
 				{
-					task.ProjectID = _condition.Id;
+					task.ProjectID = Condition.Id;
 				}
 				await _taskRepository.SaveItemAsync(task);
 			}
@@ -234,7 +379,7 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 	[RelayCommand]
 	private async Task AddTask()
 	{
-		if (_condition is null)
+		if (Condition is null)
 		{
 			_errorHandler.HandleError(
 				new Exception("Condition is null. Cannot navigate to task."));
@@ -246,20 +391,20 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 		// the tasks to the condition and then save them all from here.
 		await Shell.Current.GoToAsync($"task",
 			new ShellNavigationQueryParameters(){
-				{TaskDetailPageModel.ProjectQueryKey, _condition}
+				{TaskDetailPageModel.ProjectQueryKey, Condition}
 			});
 	}
 
 	[RelayCommand(CanExecute = nameof(CanDelete))]
 	private async Task Delete()
 	{
-		if (_condition.IsNullOrNew())
+		if (Condition.IsNullOrNew())
 		{
 			await Shell.Current.GoToAsync("..");
 			return;
 		}
 
-		await _conditionRepository.DeleteItemAsync(_condition);
+		await _conditionRepository.DeleteItemAsync(Condition);
 		await Shell.Current.GoToAsync("..");
 		await AppShell.DisplayToastAsync("Condition deleted");
 	}
@@ -273,17 +418,17 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 	{
 		tag.IsSelected = !tag.IsSelected;
 
-		if (!_condition.IsNullOrNew() && !string.IsNullOrEmpty(_condition.Id))
+		if (!Condition.IsNullOrNew() && !string.IsNullOrEmpty(Condition.Id))
 		{
 			if (tag.IsSelected)
 			{
-				await _tagRepository.SaveItemAsync(tag, _condition.Id);
+				await _tagRepository.SaveItemAsync(tag, Condition.Id);
 				AllTags = new(AllTags);
 				SemanticScreenReader.Announce($"{tag.Title} selected");
 			}
 			else
 			{
-				await _tagRepository.DeleteItemAsync(tag, _condition.Id);
+				await _tagRepository.DeleteItemAsync(tag, Condition.Id);
 				AllTags = new(AllTags);
 				SemanticScreenReader.Announce($"{tag.Title} unselected");
 			}
@@ -292,7 +437,7 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 		{
 			AllTags = new(AllTags);
 		}
-	}
+	} // Closing curly brace for ToggleTag method
 
 	[RelayCommand]
 	private void IconSelected(IconData icon)
@@ -316,4 +461,9 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 		await AppShell.DisplayToastAsync("All cleaned up!");
 	}
 
+    [RelayCommand]
+    private void SelectTab(string tabName)
+    {
+        SelectedTab = tabName;
+    }
 }

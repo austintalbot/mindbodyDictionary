@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Maui;
+using CommunityToolkit.Maui;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Syncfusion.Maui.Toolkit.Hosting;
 using MindBodyDictionaryMobile.Services.billing;
@@ -16,6 +17,10 @@ public static class MauiProgram
 			.UseMauiApp<App>()
 			.UseMauiCommunityToolkit()
 			.ConfigureSyncfusionToolkit()
+            .ConfigureMauiHandlers(handlers =>
+            {
+                // Removed AdMob handler registration
+            })
 			.ConfigureFonts(fonts =>
 			{
 				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -38,6 +43,8 @@ public static class MauiProgram
 		builder.Services.AddSingleton<ImageCacheService>();
 		builder.Services.AddSingleton<IImageCacheHelper, ImageCacheHelper>();
 		builder.Services.AddSingleton<SeedDataService>();
+		builder.Services.AddSingleton<MbdConditionApiService>();
+		builder.Services.AddSingleton<AppDataPreloaderService>();
 		builder.Services.AddSingleton<ModalErrorHandler>();
 		builder.Services.AddSingleton<MainPageModel>();
 		builder.Services.AddSingleton<ProjectListPageModel>();
@@ -73,9 +80,33 @@ public static class MauiProgram
 
 		builder.Services.AddTransientWithShellRoute<ProjectDetailPage, ProjectDetailPageModel>("project");
 		builder.Services.AddTransientWithShellRoute<TaskDetailPage, TaskDetailPageModel>("task");
-		builder.Services.AddTransientWithShellRoute<ConditionDetailPage, ConditionDetailPageModel>("condition");
-		builder.Services.AddSingleton<ConditionListPageModel>();
-		builder.Services.AddSingleton<ConditionListPage>();
+		builder.Services.AddTransientWithShellRoute<ConditionDetailsPage, ConditionDetailPageModel>("condition");
+
+        // Register New Condition Pages and ViewModels
+        builder.Services.AddSingleton<ConditionHomePageModel>();
+        builder.Services.AddSingleton<ConditionHomePage>();
+
+        builder.Services.AddTransient<ConditionSearchPageModel>();
+        builder.Services.AddTransient<ConditionSearchPage>();
+
+        builder.Services.AddSingleton<SearchPageModel>();
+        builder.Services.AddSingleton<SearchPage>();
+
+        builder.Services.AddTransientWithShellRoute<ConditionSummaryPage, ConditionSummaryPageModel>(nameof(ConditionSummaryPage));
+
+        // Register DisclaimerPopup
+        builder.Services.AddTransient<DisclaimerPopup>();
+
+        // Register Sub-Views for Condition Details
+        builder.Services.AddTransient<ConditionDetailsProblemView>();
+        builder.Services.AddTransient<ConditionDetailsAffirmationsView>();
+        builder.Services.AddTransient<RecommendationsView>();
+        builder.Services.AddTransient<ConditionDetailsFoodView>();
+        builder.Services.AddTransient<ConditionDetailsProductsView>();
+        builder.Services.AddTransient<ConditionDetailsResourcesView>();
+
+        // Register PageModels for Sub-Views
+        builder.Services.AddTransient<RecommendationsPageModel>();
 
 		var app = builder.Build();
 		Services = app.Services;

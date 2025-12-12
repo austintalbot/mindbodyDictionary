@@ -66,100 +66,65 @@
 
     <Grid>
         <ScrollView>
-            <VerticalStackLayout Padding="{StaticResource LayoutPadding}" Spacing="{StaticResource LayoutSpacing}">
-                <sf:SfTextInputLayout
-                    Hint="Name" >
-                    <Entry
-                        Text="{Binding Name}" SemanticProperties.Description="Name" />
-                </sf:SfTextInputLayout>
+            <VerticalStackLayout Padding="{StaticResource LayoutPadding}" Spacing="20">
 
-                <sf:SfTextInputLayout
-                    Hint="Description">
-                    <Entry
-                        Text="{Binding Description}" SemanticProperties.Description="Description" />
-                </sf:SfTextInputLayout>
-
-               <sf:SfTextInputLayout
-                    Hint="Category"
-                    SemanticProperties.Description="ComboBox to Select Category"
-                    SemanticProperties.Hint="State Collapsed">
-                    <Picker SemanticProperties.Hint="Select the category for the condition"
-                            ItemsSource="{Binding Categories}"
-                            SelectedItem="{Binding Category}"
-                            SelectedIndex="{Binding CategoryIndex}"
-                            SemanticProperties.Description="Category State Expanded"/>
-                </sf:SfTextInputLayout>
-
+                <!-- Condition Name as Title -->
                 <Label
-                    Text="Icon"
-                    Style="{StaticResource Title2}"/>
-                <CollectionView
-                    HeightRequest="44" Margin="0,0,0,15"
-                    SelectionMode="Single"
-                    x:Name="IconsCollectionView"
-                    SelectedItem="{Binding Icon}"
-                    ItemsSource="{Binding Icons}">
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate x:DataType="models:IconData">
-                                <Grid RowDefinitions="Auto,4" RowSpacing="{StaticResource size60}"
-                                 SemanticProperties.Description="{Binding Description}"
-                                 SemanticProperties.Hint="Icon representing the type of condition . Tap to select">
-                                <VisualStateManager.VisualStateGroups>
-                                    <VisualStateGroup x:Name="CommonStates">
-                                        <VisualState x:Name="Normal">
-                                            <VisualState.Setters>
-                                                <Setter Property="BackgroundColor" Value="Transparent"/>
-                                                <Setter TargetName="SelectedIndicator" Property="BoxView.IsVisible" Value="False"/>
-                                            </VisualState.Setters>
-                                        </VisualState>
-                                        <VisualState x:Name="Selected">
-                                            <VisualState.Setters>
-                                                <Setter Property="BackgroundColor" Value="Transparent"/>
-                                                <Setter Property="Background" Value="Transparent"/>
-                                                <Setter TargetName="SelectedIndicator" Property="BoxView.IsVisible" Value="True"/>
-                                            </VisualState.Setters>
-                                        </VisualState>
-                                    </VisualStateGroup>
-                                </VisualStateManager.VisualStateGroups>
+                    Text="{Binding Name}"
+                    Style="{StaticResource Headline}"
+                    HorizontalOptions="Center"
+                    SemanticProperties.HeadingLevel="Level1" />
 
-                                <Label
-                                    Text="{Binding Icon}"
-                                    x:Name="IconImage"
-                                    FontFamily="{x:Static fonts:FluentUI.FontFamily}"
-                                    FontSize="24"
-                                    VerticalOptions="Center"
-                                    HorizontalOptions="Center"
-                                    TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground},Dark={StaticResource LightOnDarkBackground}}"/>
-                                <BoxView x:Name="SelectedIndicator" Color="{StaticResource Primary}" HeightRequest="4" HorizontalOptions="Fill" Grid.Row="1"/>
-                            </Grid>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                    <CollectionView.ItemsLayout>
-                        <LinearItemsLayout Orientation="Horizontal" ItemSpacing="{StaticResource LayoutSpacing}"/>
-                    </CollectionView.ItemsLayout>
-                </CollectionView>
+                <!-- Summary Section -->
+                <VerticalStackLayout Spacing="15">
+                    <!-- Negative Summary -->
+                    <Border Stroke="{AppThemeBinding Light=#E0E0E0, Dark=#333333}" StrokeThickness="1" Padding="15" StrokeShape="RoundRectangle 12">
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="Mind (The Perceived Problem)" Style="{StaticResource SubHeadline}" FontAttributes="Bold" />
+                            <Image
+                                Source="{Binding NegativeImagePath}"
+                                HeightRequest="200"
+                                Aspect="AspectFit"
+                                SemanticProperties.Description="{Binding Name, StringFormat='Image representing the negative summary for {0}'}"/>
+                            <Label
+                                Text="{Binding SummaryNegative}"
+                                 />
+                        </VerticalStackLayout>
+                    </Border>
 
+                    <!-- Positive Summary -->
+                    <Border Stroke="{AppThemeBinding Light=#E0E0E0, Dark=#333333}" StrokeThickness="1" Padding="15" StrokeShape="RoundRectangle 12">
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="Body (The Empowered Solution)" Style="{StaticResource SubHeadline}" FontAttributes="Bold" />
+                            <Image
+                                Source="{Binding PositiveImagePath}"
+                                HeightRequest="200"
+                                Aspect="AspectFit"
+                                SemanticProperties.Description="{Binding Name, StringFormat='Image representing the positive summary for {0}'}"/>
+                            <Label
+                                Text="{Binding SummaryPositive}"
+                                 />
+                        </VerticalStackLayout>
+                    </Border>
+                </VerticalStackLayout>
 
-                <Label
-                    Text="Tags"
-                    Style="{StaticResource Title2}"/>
-                <ScrollView Orientation="Horizontal">
-                    <HorizontalStackLayout
-                        Spacing="{StaticResource LayoutSpacing}"
-                        HeightRequest="44"
-                        Margin="0,0,0,15"
-                        BindableLayout.ItemsSource="{Binding AllTags}"
-                        BindableLayout.ItemTemplateSelector="{StaticResource ChipDataTemplateSelector}"/>
-                </ScrollView>
+                <!-- Food Section -->
+                <Label Text="Foods" Style="{StaticResource SubHeadline}" />
+                <pages:ConditionDetailsFoodView />
 
-                <Button Text="Save"
-                    MinimumHeightRequest="{OnIdiom 44, Desktop=60}"
-                    Command="{Binding SaveCommand}" />
+                <!-- Products Section -->
+                <Label Text="Products" Style="{StaticResource SubHeadline}" />
+                <pages:ConditionDetailsProductsView />
 
+                <!-- Resources Section -->
+                <Label Text="Resources" Style="{StaticResource SubHeadline}" />
+                <pages:ConditionDetailsResourcesView />
+
+                <!-- Existing Tasks Section -->
                 <Grid HeightRequest="44">
                     <Label
                         Text="Tasks"
-                        Style="{StaticResource Title2}"
+                        Style="{StaticResource SubHeadline}"
                         VerticalOptions="Center"/>
                     <ImageButton
                         Source="{StaticResource IconClean}"
@@ -188,5 +153,4 @@
         <controls:AddButton Command="{Binding AddTaskCommand}"
                             SemanticProperties.Description="Add task" />
     </Grid>
-
 </ContentPage>

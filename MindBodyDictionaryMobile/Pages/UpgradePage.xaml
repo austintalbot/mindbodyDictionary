@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:MindBodyDictionaryMobile.PageModels"
+             xmlns:fonts="clr-namespace:Fonts;assembly=MindBodyDictionaryMobile"
+             x:Class="MindBodyDictionaryMobile.Pages.UpgradePage"
+             x:DataType="vm:UpgradePremiumPageModel"
+             Title="{Binding Title}">
+    <Grid >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <StackLayout>
+            <Label
+                x:Name="DescriptionLabel"
+                FontSize="18"
+                HorizontalTextAlignment="Center"
+                Style="{StaticResource ParagraphLabel}"
+                VerticalOptions="Center"
+                VerticalTextAlignment="Start" />
+            <VerticalStackLayout
+                Margin="5"
+                VerticalOptions="StartAndExpand">
+                <Image
+                     Source="mbd_logo.png"
+                     HeightRequest="150"
+                     HorizontalOptions="Center"
+                     VerticalOptions="Center"
+                     Aspect="AspectFit"
+                     x:Name="MindBodyDictionaryLogo"
+                     SemanticProperties.Description="Mind Body Dictionary Logo" />
+
+
+
+                <Button Margin="5"
+                        Text="Privacy Policy"
+                        Style="{StaticResource SubmitButton}"
+                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:UpgradePremiumPageModel}}, Path=privacyCommand}"
+                />
+                <Button Margin="5"
+                        Text="Terms of Use"
+                        Style="{StaticResource SubmitButton}"
+                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:UpgradePremiumPageModel}}, Path=termsCommand}"
+                        CommandParameter="https://www.mindbodydictionary.com/termsandconditions"/>
+
+
+            </VerticalStackLayout>
+            <VerticalStackLayout
+                VerticalOptions="Fill">
+
+                <Label
+                    Text="Enjoy an ad free experience while helping support development."
+                    IsVisible="{Binding NotSubscribed}"
+                    HorizontalOptions="CenterAndExpand"
+                    HorizontalTextAlignment="Center"
+                    FontSize="20"
+                    />
+                <Label
+                    Text="No trial period, and the subscription will be renewed automatically on the subscription date, unless canceled before the renewal date."
+                    IsVisible="{Binding NotSubscribed}"
+                    HorizontalOptions="CenterAndExpand"
+                    HorizontalTextAlignment="Center"
+
+                    FontSize="16"
+                    />
+            <Button
+                x:Name="SubscribeButton"
+                Margin="5"
+                IsVisible="{Binding NotSubscribed}"
+                Style="{StaticResource SubmitButton}"
+                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:UpgradePremiumPageModel}}, Path=purchaseCommand}"
+                Text="Subscribe for $9.99/year" />
+            <Button
+                x:Name="RestoreButton"
+                Margin="5"
+                IsVisible="{Binding NotSubscribed}"
+                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:UpgradePremiumPageModel}}, Path=restoreCommand}"
+                Style="{StaticResource SubmitButton}"
+                Text="Restore Subscription" />
+            </VerticalStackLayout>
+
+        </StackLayout>
+    </Grid>
+</ContentPage>

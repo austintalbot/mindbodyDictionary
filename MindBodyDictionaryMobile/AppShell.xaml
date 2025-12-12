@@ -15,28 +15,16 @@
 
   <!-- Main Navigation Items -->
   <ShellContent
-    Title="Dashboard"
+    Title="Home"
     Icon="{StaticResource IconDashboard}"
-    ContentTemplate="{DataTemplate pages:MainPage}"
-    Route="main" />
+    ContentTemplate="{DataTemplate pages:ConditionHomePage}"
+    Route="home" />
 
   <ShellContent
     Title="Search"
     Icon="{StaticResource IconMeta}"
     ContentTemplate="{DataTemplate pages:SearchPage}"
     Route="search" />
-
-  <ShellContent
-    Title="Projects"
-    Icon="{StaticResource IconProjects}"
-    ContentTemplate="{DataTemplate pages:ProjectListPage}"
-    Route="projects" />
-
-  <ShellContent
-    Title="Conditions"
-    Icon="{StaticResource IconMeta}"
-    ContentTemplate="{DataTemplate pages:ConditionListPage}"
-    Route="conditions" />
 
   <ShellContent
     Title="Manage Meta"

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MindBodyDictionaryMobile.Pages.ConditionSummaryPage"
+             xmlns:vm="clr-namespace:MindBodyDictionaryMobile.PageModels"
+             x:DataType="vm:ConditionSummaryPageModel"
+             xmlns:fonts="clr-namespace:Fonts;assembly=MindBodyDictionaryMobile"
+             xmlns:local="clr-namespace:MindBodyDictionaryMobile"
+             Title="{Binding Title}">
+    <Grid Style="{StaticResource AilmentSummaryGrid}" RowDefinitions="Auto,Auto,Auto,*,Auto" ColumnDefinitions="*,*,Auto">
+        <Border Grid.Column="0"
+                Grid.ColumnSpan="3"
+                Grid.Row="0"
+                Style="{StaticResource AilmentImageBorder}">
+            <Image x:Name="AilmentImage"
+                   Style="{StaticResource AilmentSummaryImage}"
+                   Source="{Binding CachedImageSource}" />
+        </Border>
+
+        <Label Grid.Row="1"
+               Grid.Column="0"
+               Grid.ColumnSpan="3"
+               Style="{StaticResource MindsetLabel}"
+               Text="{Binding MindsetText}" />
+
+        <Label Grid.Row="2"
+               Grid.ColumnSpan="3"
+               Grid.Column="0"
+               Style="{StaticResource AilmentNameLabel}"
+               Text="{Binding InternalCondition.Name}" />
+
+        <ScrollView x:Name="SummaryLabelScroll"
+                    Grid.Row="3"
+                    Grid.ColumnSpan="3"
+                    Grid.Column="0"
+                    Style="{StaticResource SummaryScrollView}">
+            <VerticalStackLayout>
+                <Label Style="{StaticResource SummaryLabel}"
+                       Text="{Binding Summary}" />
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <Label Grid.Column="0"
+               Grid.ColumnSpan="3"
+               Grid.Row="4"
+               Style="{StaticResource CopyrightLabel}"
+               Text="{x:Static local:App.CopyrightText}" />
+
+        <Image x:Name="ShareButton"
+               Grid.Column="2"
+               Grid.Row="4"
+               Style="{StaticResource ShareButton}"
+               Source="{FontImageSource FontFamily={x:Static fonts:FluentUI.FontFamily}, Glyph={x:Static fonts:FluentUI.share_24_regular}, Size=24, Color=Black }">
+            <Image.GestureRecognizers>
+                <TapGestureRecognizer
+                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ConditionSummaryPageModel}}, Path=shareConditionSummaryCommand}"
+                    NumberOfTapsRequired="1" />
+            </Image.GestureRecognizers>
+        </Image>
+    </Grid>
+</ContentPage>

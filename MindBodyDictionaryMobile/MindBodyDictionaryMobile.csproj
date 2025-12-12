@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFrameworks>net10.0-android;net10.0-ios;</TargetFrameworks>
@@ -84,15 +84,18 @@
 
 		<!-- Embedded Images for cache -->
 		<EmbeddedResource Include="Resources\Raw\images\**" LogicalName="MindBodyDictionaryMobile.Resources.Raw.images.%(Filename)%(Extension)" />
+		<EmbeddedResource Include="Resources\Raw\conditionData.json" />
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="BenchmarkDotNet" Version="0.15.8" />
 		<PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="10.0.0" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
+		<Compile Include="Helpers/**/*.cs" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
 		<PackageReference Include="CommunityToolkit.Maui" Version="13.0.0" />
 		<PackageReference Include="Microsoft.Data.Sqlite.Core" Version="10.0.0" />

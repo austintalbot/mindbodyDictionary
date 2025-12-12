@@ -12,9 +12,9 @@ public class MbdConditionApiService(ConditionRepository conditionRepository)
 {
 private readonly ConditionRepository _conditionRepository = conditionRepository;
 
-private const string BaseUrl = "https://mbd-functions.azurewebsites.net/api";
+private const string BaseUrl = "https://mbd-functions.azurewebsites.net/api"; // TODO: Configure this URL (e.g., from app settings or environment variables)
 private const string MbdConditionsEndpoint = "MbdConditions";
-private const string ApiKey = "YOUR_API_KEY"; // Set via configuration
+private const string ApiKey = "YOUR_API_KEY_GOES_HERE"; // IMPORTANT: Replace with your actual Azure Function API key!
 
 /// <summary>
 /// Retrieves all MbdConditions from the backend API.
