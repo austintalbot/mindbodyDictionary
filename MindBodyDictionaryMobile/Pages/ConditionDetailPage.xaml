@@ -108,6 +108,18 @@
                     </Border>
                 </VerticalStackLayout>
 
+                <!-- Food Section -->
+                <Label Text="Foods" Style="{StaticResource SubHeadline}" />
+                <pages:ConditionDetailsFoodView />
+
+                <!-- Products Section -->
+                <Label Text="Products" Style="{StaticResource SubHeadline}" />
+                <pages:ConditionDetailsProductsView />
+
+                <!-- Resources Section -->
+                <Label Text="Resources" Style="{StaticResource SubHeadline}" />
+                <pages:ConditionDetailsResourcesView />
+
                 <!-- Existing Tasks Section -->
                 <Grid HeightRequest="44">
                     <Label

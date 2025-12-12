@@ -7,7 +7,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection; // Add this for IServiceProvider
-using Microsoft.Extensions.Logging; // Add this for ILogger
+using Microsoft.Extensions.Logging; // Add this for logging
+using backend.Enums;
 
 namespace MindBodyDictionaryMobile.PageModels;
 
@@ -75,6 +76,15 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 		new IconData { Icon = FluentUI.people_24_regular, Description = "People Icon" },
 		new IconData { Icon = FluentUI.bot_24_regular, Description = "Bot Icon" }
 	];
+
+	[ObservableProperty]
+	private List<Recommendation> _foodList = [];
+
+	[ObservableProperty]
+	private List<Recommendation> _productList = [];
+
+	[ObservableProperty]
+	private List<Recommendation> _booksResourcesList = [];
 
 	private bool _canDelete;
 
@@ -245,6 +255,20 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
             {
                 recommendationsPageModel.Condition = Condition;
                 recommendationsPageModel.InitializeTabs();
+            }
+
+            // Populate FoodList, ProductList, and BooksResourcesList
+            if (Condition.Recommendations != null)
+            {
+                FoodList = Condition.Recommendations
+                                .Where(r => r.RecommendationType == (int)backend.Enums.RecommendationType.Food)
+                                .ToList();
+                ProductList = Condition.Recommendations
+                                .Where(r => r.RecommendationType == (int)backend.Enums.RecommendationType.Product)
+                                .ToList();
+                BooksResourcesList = Condition.Recommendations
+                                .Where(r => r.RecommendationType == (int)backend.Enums.RecommendationType.Book)
+                                .ToList();
             }
 
             // Notify that Condition (and its properties like CachedImageOneSource) might have changed
