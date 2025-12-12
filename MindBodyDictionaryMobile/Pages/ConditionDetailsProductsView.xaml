@@ -3,16 +3,16 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:MindBodyDictionaryMobile.PageModels"
              xmlns:model="clr-namespace:MindBodyDictionaryMobile.Models"
-             x:DataType="vm:ConditionDetailPageModel"
+             x:DataType="vm:RecommendationsPageModel"
              x:Name="this"
              x:Class="MindBodyDictionaryMobile.Pages.ConditionDetailsProductsView">
     <Grid RowDefinitions="*">
         <CollectionView x:Name="ProductCollectionView"
                         ItemsSource="{Binding ProductList}"
                         Style="{StaticResource HorizontalCollectionView}"
-                        x:DataType="vm:ConditionDetailPageModel"
+                        x:DataType="vm:RecommendationsPageModel"
                         EmptyView="There are no corresponding products for this Condition"
-                        HeightRequest="{Binding ProductListHeight}"
+
                         InputTransparent="False">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
@@ -32,7 +32,7 @@
                             </Grid>
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer
-                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ConditionDetailPageModel}}, Path=ProductLinkClickCommand}"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RecommendationsPageModel}}, Path=ProductClickedCommand}"
                                     CommandParameter="{Binding .}" />
                             </Border.GestureRecognizers>
                         </Border>

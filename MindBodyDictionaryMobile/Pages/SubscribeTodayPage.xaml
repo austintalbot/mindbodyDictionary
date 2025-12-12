@@ -19,14 +19,14 @@
                 HeightRequest="100"
                 Margin="20"
                 Source="locked_icon.png"
-                VerticalOptions="CenterAndExpand"
+                VerticalOptions="Fill"
                 WidthRequest="100" />
             <Label
                 FontAttributes="Italic"
                 FontSize="20"
                 Style="{StaticResource ParagraphLabel}"
                 Text="Subscribe to remove ads and gain access to this and more content!"
-                VerticalOptions="CenterAndExpand" />
+                VerticalOptions="Fill" />
 
             <Button
                 x:Name="SubscribeButton"

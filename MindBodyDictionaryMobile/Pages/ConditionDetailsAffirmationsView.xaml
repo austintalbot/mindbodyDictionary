@@ -1,142 +1,128 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-                          xmlns:vm="clr-namespace:MindBodyDictionaryMobile.PageModels"
-                          xmlns:fonts="clr-namespace:Fonts;assembly=MindBodyDictionaryMobile"
-                          xmlns:local="clr-namespace:MindBodyDictionaryMobile"
-                          x:DataType="vm:ConditionDetailPageModel"
-                          x:Name="this"
-                          x:Class="MindBodyDictionaryMobile.Pages.ConditionDetailsAffirmationsView">
-                <Grid
-                         HorizontalOptions="CenterAndExpand"
-                         VerticalOptions="StartAndExpand">
-                     <Grid.RowDefinitions>
-                         <RowDefinition Height="auto"/>
-                         <RowDefinition Height="auto"/>
-                         <RowDefinition Height="auto"/>
-                     </Grid.RowDefinitions>
-                     <!-- Affirmations Header -->
-                     <VerticalStackLayout
-                         Grid.Row="0"
-                         HorizontalOptions="CenterAndExpand"
-                         VerticalOptions="CenterAndExpand">
-                         <Image
-                                 x:Name="AffirmationsMindBodyLogo"
-                                 Source="mbd_icon.png"
-                                 HeightRequest="100"
-                                 HorizontalOptions="CenterAndExpand">
-                         </Image>
-                         <Label
-                             Text="Affirmations for"
-                             FontSize="18"
-                             TextColor="{StaticResource ConditionTextColor}"
-                             HorizontalOptions="Center"/>
-                         <Label
-                             Text="{Binding Condition.Name}"
-                             HorizontalOptions="Center"
-                             TextColor="{StaticResource ConditionTextColor}"
-                             FontSize="24"
-                             Padding="0,0,0,10"
-                             FontAttributes="Bold"/>
-                     </VerticalStackLayout>
-                 <CarouselView
-                         x:Name="AffirmationCarouselView"
-                         ItemsSource="{Binding Condition.Affirmations}"
-                         CurrentItem="{Binding CurrentAffirmation}"
-                         Grid.Row="1"
-                         IndicatorView="AffirmationIndicatorView"
-                         HeightRequest="280"
-                         IsBounceEnabled="True"
-                         HorizontalOptions="CenterAndExpand"
-                         VerticalOptions="CenterAndExpand">
-                     <CarouselView.ItemTemplate>
-                         <DataTemplate>
+             xmlns:vm="clr-namespace:MindBodyDictionaryMobile.PageModels"
+             xmlns:fonts="clr-namespace:Fonts;assembly=MindBodyDictionaryMobile"
+             xmlns:local="clr-namespace:MindBodyDictionaryMobile"
+             x:DataType="vm:ConditionDetailPageModel"
+             x:Name="this"
+             x:Class="MindBodyDictionaryMobile.Pages.ConditionDetailsAffirmationsView">
+    <Grid
+        HorizontalOptions="Fill"
+        VerticalOptions="Fill">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <!-- Affirmations Header -->
+        <VerticalStackLayout
+            Grid.Row="0"
+            HorizontalOptions="Fill"
+            VerticalOptions="Fill">
+            <Image
+                x:Name="AffirmationsMindBodyLogo"
+                Source="mbd_icon.png"
+                HeightRequest="100"
+                HorizontalOptions="Fill">
+            </Image>
+            <Label
+                Text="Affirmations for"
+                FontSize="18"
+                TextColor="{StaticResource ConditionTextColor}"
+                HorizontalOptions="Center"/>
+            <Label
+                Text="{Binding Condition.Name}"
+                HorizontalOptions="Center"
+                TextColor="{StaticResource ConditionTextColor}"
+                FontSize="24"
+                Padding="0,0,0,10"
+                FontAttributes="Bold"/>
+        </VerticalStackLayout>
+        <CarouselView
+            x:Name="AffirmationCarouselView"
+            ItemsSource="{Binding Condition.Affirmations}"
+            CurrentItem="{Binding CurrentAffirmation}"
+            Grid.Row="1"
+            IndicatorView="AffirmationIndicatorView"
+            HeightRequest="280"
+            IsBounceEnabled="True"
+            HorizontalOptions="Fill"
+            VerticalOptions="Fill">
+            <CarouselView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Padding="10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+                        <Border
+                            Grid.Row="0"
+                            Padding="10"
+                            Margin="2"
+                            HeightRequest="260"
+                            Stroke="{StaticResource ConditionDetailCardBorder}"
+                            StrokeShape="RoundRectangle 12"
+                            Background="{StaticResource ConditionDetailCardBackground}">
+                            <VerticalStackLayout>
+                                <Label
+                                    x:Name="AffirmationLabel"
+                                    FontAttributes="Bold,Italic"
+                                    FontSize="18"
+                                    HorizontalOptions="Center"
+                                    HorizontalTextAlignment="Start"
+                                    Text="{x:Binding .}"
+                                    x:DataType="{x:Type x:String}"
+                                    Padding="10"
+                                    Margin="10"
+                                    TextColor="{StaticResource ConditionDetailCardText}"
+                                    VerticalOptions="Center"
+                                    VerticalTextAlignment="Center">
+                                </Label>
+                            </VerticalStackLayout>
+                        </Border>
+                    </Grid>
+                </DataTemplate>
+            </CarouselView.ItemTemplate>
+        </CarouselView>
 
-                                 <Grid Padding="10">
-                                     <Grid.RowDefinitions>
-                                         <RowDefinition Height="auto"/>
-                                         <RowDefinition Height="auto"/>
-
-                                     </Grid.RowDefinitions>
-                                     <Frame
-                                     Grid.Row="0"
-                                     Padding="10"
-                                     Margin="2"
-                                     HeightRequest="260"
-                                     CornerRadius="12"
-                                     BorderColor="{StaticResource ConditionDetailCardBorder}"
-                                     BackgroundColor="{StaticResource ConditionDetailCardBackground}">
-                                         <VerticalStackLayout>
-                                             <Label
-                                             x:Name="AffirmationLabel"
-                                             FontAttributes="Bold,Italic"
-                                             FontSize="18"
-                                             HorizontalOptions="Center"
-                                             HorizontalTextAlignment="Start"
-                                             Text="{x:Binding .}"
-                                             x:DataType="{x:Type x:String}"
-                                             Padding="10"
-                                             Margin="10"
-                                             TextColor="{StaticResource ConditionDetailCardText}"
-                                             VerticalOptions="Center"
-                                             VerticalTextAlignment="Center">
-                                             </Label>
-                                             
-                                         </VerticalStackLayout>
-                                     </Frame>
-                                 </Grid>
-                         </DataTemplate>
-                     </CarouselView.ItemTemplate>
-                 </CarouselView>
-        
         <IndicatorView
-                         x:Name="AffirmationIndicatorView"
-                         Grid.Row="4"
-                         HorizontalOptions="Center"
-                         IndicatorColor="LightGray"
-                         IndicatorsShape="Square"
-                         IsVisible="{Binding IsAndroid}"
-                         SelectedIndicatorColor="DarkGray" />
-                 <HorizontalStackLayout
-                     Grid.Row="5"
-                     Padding="20"
-                     Margin="10"
-                     HorizontalOptions="CenterAndExpand"
-                     VerticalOptions="CenterAndExpand">
-
-
-
-
-
-
-                         <HorizontalStackLayout>
-                         <HorizontalStackLayout.GestureRecognizers>
-                             <TapGestureRecognizer
-                             Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ConditionDetailPageModel}}, Path=ShareCarouselConditionCommand}"
-                             CommandParameter="{Binding CurrentAffirmation}"/>
-                         </HorizontalStackLayout.GestureRecognizers>
-                             <Label
-
-                             x:Name="ShareAffirmationLabel"
-                             HorizontalOptions="EndAndExpand"
-                             HorizontalTextAlignment="End"
-                             VerticalOptions="Center"
-                             Margin="10,0,0,0"
-                             Text="Share"
-                             />
-                             
-                         <Image
-                                 x:Name="ShareAffirmationImageButton"
-                                 Aspect="AspectFit"
-                                 BackgroundColor="Transparent"
-                                 HeightRequest="32"
-                                 Source="{FontImageSource FontFamily={x:Static fonts:FluentUI.FontFamily}, Glyph={x:Static fonts:FluentUI.share_24_regular}, Size=24, Color={AppThemeBinding Light={StaticResource PrimaryDarkText}, Dark={StaticResource Gray100}}}"
-                                 WidthRequest="32" >
-                         </Image>
-                     </HorizontalStackLayout>
-
-
-                 </HorizontalStackLayout>
-                 </Grid>
-
-             </ContentView>
+            x:Name="AffirmationIndicatorView"
+            Grid.Row="4"
+            HorizontalOptions="Center"
+            IndicatorColor="LightGray"
+            IndicatorsShape="Square"
+            IsVisible="{Binding IsAndroid}"
+            SelectedIndicatorColor="DarkGray" />
+        <HorizontalStackLayout
+            Grid.Row="5"
+            Padding="20"
+            Margin="10"
+            HorizontalOptions="Fill"
+            VerticalOptions="Fill">
+            <HorizontalStackLayout>
+                <HorizontalStackLayout.GestureRecognizers>
+                    <TapGestureRecognizer
+                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ConditionDetailPageModel}}, Path=ShareCarouselConditionCommand}"
+                        CommandParameter="{Binding CurrentAffirmation}"/>
+                </HorizontalStackLayout.GestureRecognizers>
+                <Label
+                    x:Name="ShareAffirmationLabel"
+                    HorizontalOptions="EndAndExpand"
+                    HorizontalTextAlignment="End"
+                    VerticalOptions="Center"
+                    Margin="10,0,0,0"
+                    Text="Share"
+                    />
+                <Image
+                    x:Name="ShareAffirmationImageButton"
+                    Aspect="AspectFit"
+                    BackgroundColor="Transparent"
+                    HeightRequest="32"
+                    Source="{FontImageSource FontFamily={x:Static fonts:FluentUI.FontFamily}, Glyph={x:Static fonts:FluentUI.share_24_regular}, Size=24, Color={AppThemeBinding Light={StaticResource PrimaryDarkText}, Dark={StaticResource Gray100}}}"
+                    WidthRequest="32" >
+                </Image>
+            </HorizontalStackLayout>
+        </HorizontalStackLayout>
+    </Grid>
+</ContentView>

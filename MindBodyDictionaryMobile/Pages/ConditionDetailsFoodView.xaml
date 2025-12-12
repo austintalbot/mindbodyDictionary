@@ -4,7 +4,7 @@
              xmlns:vm="clr-namespace:MindBodyDictionaryMobile.PageModels"
              xmlns:model="clr-namespace:MindBodyDictionaryMobile.Models"
              xmlns:fonts="clr-namespace:Fonts;assembly=MindBodyDictionaryMobile"
-             x:DataType="vm:ConditionDetailPageModel"
+             x:DataType="vm:RecommendationsPageModel"
              x:Name="this"
              x:Class="MindBodyDictionaryMobile.Pages.ConditionDetailsFoodView">
       <CollectionView
@@ -19,8 +19,7 @@
                 <Border Style="{StaticResource FoodItemBorder}"
                         x:DataType="model:Recommendation">
                     <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
-                        <Label Style="{StaticResource FoodItemLabel}"
-                               Text="{Binding Name}"
+                        <Label Text="{Binding Name}"
                                Grid.Column="0"
                                x:DataType="{x:Type model:Recommendation}" />
                         <Image x:Name="CheckMarkImage"

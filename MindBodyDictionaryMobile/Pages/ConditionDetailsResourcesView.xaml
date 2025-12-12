@@ -3,17 +3,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:MindBodyDictionaryMobile.PageModels"
              xmlns:model="clr-namespace:MindBodyDictionaryMobile.Models"
-             x:DataType="vm:ConditionDetailPageModel"
+             x:DataType="vm:RecommendationsPageModel"
              x:Name="this"
              x:Class="MindBodyDictionaryMobile.Pages.ConditionDetailsResourcesView">
     <Grid RowDefinitions="*">
         <CollectionView
             x:Name="ResourceCollectionView"
             ItemsSource="{Binding BooksResourcesList}"
-            x:DataType="vm:ConditionDetailPageModel"
+            x:DataType="vm:RecommendationsPageModel"
             EmptyView="There are no corresponding resources for this Condition"
             ItemsLayout="HorizontalList"
-            HeightRequest="{Binding ResourceListHeight}"
+
             SelectionMode="None"
             InputTransparent="False">
             <CollectionView.ItemTemplate>
@@ -34,7 +34,7 @@
                             </Grid>
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer
-                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ConditionDetailPageModel}}, Path=ResourceLinkClickCommand}"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RecommendationsPageModel}}, Path=ResourceClickedCommand}"
                                     CommandParameter="{Binding .}" />
                             </Border.GestureRecognizers>
                         </Border>

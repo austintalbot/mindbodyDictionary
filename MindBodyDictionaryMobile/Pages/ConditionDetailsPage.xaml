@@ -19,7 +19,7 @@
 
     <Grid RowDefinitions="Auto,*" Style="{StaticResource MainPageGrid}">
         <!-- Tab Headers -->
-        <HorizontalStackLayout Grid.Row="0" HorizontalOptions="CenterAndExpand" BackgroundColor="{StaticResource BarColor}">
+        <HorizontalStackLayout Grid.Row="0" HorizontalOptions="Fill" BackgroundColor="{StaticResource BarColor}">
             <Button Text="Mindsets"
                     Command="{Binding SelectTabCommand}"
                     CommandParameter="Problem"

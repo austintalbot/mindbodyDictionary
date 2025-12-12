@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Maui.Controls;
 using MindBodyDictionaryMobile.Models;
 using MindBodyDictionaryMobile.Services; // For ModalErrorHandler
+using Microsoft.Maui.ApplicationModel; // For Launcher
 
 namespace MindBodyDictionaryMobile.PageModels
 {
@@ -23,11 +24,49 @@ namespace MindBodyDictionaryMobile.PageModels
 		[ObservableProperty]
 		private ContentView _currentInnerView;
 
+		[ObservableProperty]
+		private List<Recommendation> _foodList = [];
+
+		[ObservableProperty]
+		private List<Recommendation> _productList = [];
+
+		[ObservableProperty]
+		private List<Recommendation> _booksResourcesList = [];
+
+
+
+
 		public RecommendationsPageModel(IServiceProvider serviceProvider, ILogger<RecommendationsPageModel> logger, ModalErrorHandler errorHandler)
 		{
 			_serviceProvider = serviceProvider;
 			_logger = logger;
 			_errorHandler = errorHandler;
+		}
+
+		partial void OnConditionChanged(MbdCondition value)
+		{
+			if (value == null) return;
+
+			// Populate FoodList, ProductList, and BooksResourcesList
+			if (value.Recommendations != null)
+			{
+				FoodList = value.Recommendations
+								.Where(r => r.RecommendationType == (int)MindBodyDictionaryMobile.Enums.RecommendationType.Food)
+								.ToList();
+				ProductList = value.Recommendations
+								.Where(r => r.RecommendationType == (int)MindBodyDictionaryMobile.Enums.RecommendationType.Product)
+								.ToList();
+				BooksResourcesList = value.Recommendations
+								.Where(r => r.RecommendationType == (int)MindBodyDictionaryMobile.Enums.RecommendationType.Book)
+								.ToList();
+			}
+
+
+
+			// Log counts for verification
+			_logger.LogInformation($"RecommendationsPageModel - FoodList count: {FoodList.Count}");
+			_logger.LogInformation($"RecommendationsPageModel - ProductList count: {ProductList.Count}");
+			_logger.LogInformation($"RecommendationsPageModel - BooksResourcesList count: {BooksResourcesList.Count}");
 		}
 
 		// Method to initialize tabs, called by ConditionDetailPageModel after setting Condition
@@ -42,7 +81,6 @@ namespace MindBodyDictionaryMobile.PageModels
 			// Set initial view
 			CurrentInnerView = _serviceProvider.GetRequiredService<ConditionDetailsFoodView>();
 			CurrentInnerView.BindingContext = this; // Bind to this ViewModel
-			((ConditionDetailsFoodView)CurrentInnerView).MbdCondition = Condition; // Set the MbdCondition property
 		}
 
 		partial void OnSelectedInnerTabChanged(string value)
@@ -58,21 +96,52 @@ namespace MindBodyDictionaryMobile.PageModels
 				case "Foods":
 					CurrentInnerView = _serviceProvider.GetRequiredService<ConditionDetailsFoodView>();
 					CurrentInnerView.BindingContext = this; // Bind to this ViewModel
-					((ConditionDetailsFoodView)CurrentInnerView).MbdCondition = Condition;
 					break;
 				case "Products":
 					CurrentInnerView = _serviceProvider.GetRequiredService<ConditionDetailsProductsView>();
 					CurrentInnerView.BindingContext = this; // Bind to this ViewModel
-					((ConditionDetailsProductsView)CurrentInnerView).MbdCondition = Condition;
 					break;
 				case "Resources":
 					CurrentInnerView = _serviceProvider.GetRequiredService<ConditionDetailsResourcesView>();
 					CurrentInnerView.BindingContext = this; // Bind to this ViewModel
-					((ConditionDetailsResourcesView)CurrentInnerView).MbdCondition = Condition;
 					break;
 				default:
 					_logger.LogWarning($"Unknown inner tab selected: {value}");
 					break;
+			}
+		}
+
+		[RelayCommand]
+		private async Task ProductClicked(Recommendation recommendation)
+		{
+			if (!string.IsNullOrEmpty(recommendation.Url))
+			{
+				try
+				{
+					await Launcher.OpenAsync(recommendation.Url);
+				}
+				catch (Exception ex)
+				{
+					_logger.LogError(ex, "Failed to open product URL: {Url}", recommendation.Url);
+					_errorHandler.HandleError(new Exception("Could not open product link."));
+				}
+			}
+		}
+
+		[RelayCommand]
+		private async Task ResourceClicked(Recommendation recommendation)
+		{
+			if (!string.IsNullOrEmpty(recommendation.Url))
+			{
+				try
+				{
+					await Launcher.OpenAsync(recommendation.Url);
+				}
+				catch (Exception ex)
+				{
+					_logger.LogError(ex, "Failed to open resource URL: {Url}", recommendation.Url);
+					_errorHandler.HandleError(new Exception("Could not open resource link."));
+				}
 			}
 		}
 
