@@ -7,9 +7,9 @@
              xmlns:sf="clr-namespace:Syncfusion.Maui.Toolkit.TextInputLayout;assembly=Syncfusion.Maui.Toolkit"
              xmlns:controls="clr-namespace:MindBodyDictionaryMobile.Pages.Controls"
              xmlns:fonts="clr-namespace:Fonts"
-             x:Class="MindBodyDictionaryMobile.Pages.ConditionDetailPage"
-             x:DataType="pageModels:ConditionDetailPageModel"
-             Title="Condition">
+             x:Class="MindBodyDictionaryMobile.Pages.MbdConditionDetailPage"
+             x:DataType="pageModels:MbdConditionDetailPageModel"
+             Title="MbdCondition">
 
     <ContentPage.Resources>
         <DataTemplate x:Key="NormalTagTemplate" x:DataType="models:Tag">
@@ -20,7 +20,7 @@
                         Padding="{OnPlatform '18,0,18,8',Android='18,0,18,0'}"
                         SemanticProperties.Description="{Binding Title}">
                         <Border.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding ToggleTagCommand, Source={RelativeSource AncestorType={x:Type pageModels:ConditionDetailPageModel}}, x:DataType=pageModels:ConditionDetailPageModel}" CommandParameter="{Binding .}"/>
+                            <TapGestureRecognizer Command="{Binding ToggleTagCommand, Source={RelativeSource AncestorType={x:Type pageModels:MbdConditionDetailPageModel}}, x:DataType=pageModels:MbdConditionDetailPageModel}" CommandParameter="{Binding .}"/>
                         </Border.GestureRecognizers>
                         <Label Text="{Binding Title}"
                             TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground},Dark={StaticResource LightOnDarkBackground}}"
@@ -38,7 +38,7 @@
                         Padding="{OnPlatform '18,0,18,8',Android='18,0,18,0'}"
                         SemanticProperties.Description="{Binding Title}">
                 <Border.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding ToggleTagCommand, Source={RelativeSource AncestorType={x:Type pageModels:ConditionDetailPageModel}}, x:DataType=pageModels:ConditionDetailPageModel}" CommandParameter="{Binding .}"/>
+                    <TapGestureRecognizer Command="{Binding ToggleTagCommand, Source={RelativeSource AncestorType={x:Type pageModels:MbdConditionDetailPageModel}}, x:DataType=pageModels:MbdConditionDetailPageModel}" CommandParameter="{Binding .}"/>
                 </Border.GestureRecognizers>
                 <Label Text="{Binding Title}"
                     TextColor="{AppThemeBinding Light={StaticResource LightBackground},Dark={StaticResource DarkBackground}}"
@@ -110,15 +110,15 @@
 
                 <!-- Food Section -->
                 <Label Text="Foods" Style="{StaticResource SubHeadline}" />
-                <pages:ConditionDetailsFoodView />
+                <pages:MbdConditionDetailsFoodView />
 
                 <!-- Products Section -->
                 <Label Text="Products" Style="{StaticResource SubHeadline}" />
-                <pages:ConditionDetailsProductsView />
+                <pages:MbdConditionDetailsProductsView />
 
                 <!-- Resources Section -->
                 <Label Text="Resources" Style="{StaticResource SubHeadline}" />
-                <pages:ConditionDetailsResourcesView />
+                <pages:MbdConditionDetailsResourcesView />
 
                 <!-- Existing Tasks Section -->
                 <Grid HeightRequest="44">
@@ -143,7 +143,7 @@
                     BindableLayout.ItemsSource="{Binding Tasks}">
                     <BindableLayout.ItemTemplate>
                         <DataTemplate>
-                            <controls:TaskView TaskCompletedCommand="{Binding TaskCompletedCommand, Source={RelativeSource AncestorType={x:Type pageModels:ConditionDetailPageModel}}, x:DataType=pageModels:ConditionDetailPageModel}" />
+                            <controls:TaskView TaskCompletedCommand="{Binding TaskCompletedCommand, Source={RelativeSource AncestorType={x:Type pageModels:MbdConditionDetailPageModel}}, x:DataType=pageModels:MbdConditionDetailPageModel}" />
                         </DataTemplate>
                     </BindableLayout.ItemTemplate>
                 </VerticalStackLayout>

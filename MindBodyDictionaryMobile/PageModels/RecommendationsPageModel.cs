@@ -15,7 +15,7 @@ namespace MindBodyDictionaryMobile.PageModels
 		private readonly ModalErrorHandler _errorHandler; // Assuming it might be used
 
 		[ObservableProperty]
-		private MbdCondition _condition; // To be set by ConditionDetailPageModel
+		private MbdCondition _condition; // To be set by MbdConditionDetailPageModel
 
 		[ObservableProperty]
 		private string _selectedInnerTab = "Foods"; // Default inner tab
@@ -30,19 +30,19 @@ namespace MindBodyDictionaryMobile.PageModels
 			_errorHandler = errorHandler;
 		}
 
-		// Method to initialize tabs, called by ConditionDetailPageModel after setting Condition
+		// Method to initialize tabs, called by MbdConditionDetailPageModel after setting Condition
 		public void InitializeTabs()
 		{
 			// Ensure condition is set before initializing views
 			if (Condition == null)
 			{
-				_logger.LogWarning("Condition is null in RecommendationsPageModel, cannot initialize tabs.");
+				_logger.LogWarning("Condition is null in MbdConditionDetailsRecommendationsPageModel, cannot initialize tabs.");
 				return;
 			}
 			// Set initial view
-			CurrentInnerView = _serviceProvider.GetRequiredService<ConditionDetailsFoodView>();
+			CurrentInnerView = _serviceProvider.GetRequiredService<MbdConditionDetailsFoodView>();
 			CurrentInnerView.BindingContext = this; // Bind to this ViewModel
-			((ConditionDetailsFoodView)CurrentInnerView).MbdCondition = Condition; // Set the MbdCondition property
+			((MbdConditionDetailsFoodView)CurrentInnerView).MbdCondition = Condition; // Set the MbdCondition property
 		}
 
 		partial void OnSelectedInnerTabChanged(string value)
@@ -56,19 +56,19 @@ namespace MindBodyDictionaryMobile.PageModels
 			switch (value)
 			{
 				case "Foods":
-					CurrentInnerView = _serviceProvider.GetRequiredService<ConditionDetailsFoodView>();
+					CurrentInnerView = _serviceProvider.GetRequiredService<MbdConditionDetailsFoodView>();
 					CurrentInnerView.BindingContext = this; // Bind to this ViewModel
-					((ConditionDetailsFoodView)CurrentInnerView).MbdCondition = Condition;
+					((MbdConditionDetailsFoodView)CurrentInnerView).MbdCondition = Condition;
 					break;
 				case "Products":
-					CurrentInnerView = _serviceProvider.GetRequiredService<ConditionDetailsProductsView>();
+					CurrentInnerView = _serviceProvider.GetRequiredService<MbdConditionDetailsProductsView>();
 					CurrentInnerView.BindingContext = this; // Bind to this ViewModel
-					((ConditionDetailsProductsView)CurrentInnerView).MbdCondition = Condition;
+					((MbdConditionDetailsProductsView)CurrentInnerView).MbdCondition = Condition;
 					break;
 				case "Resources":
-					CurrentInnerView = _serviceProvider.GetRequiredService<ConditionDetailsResourcesView>();
+					CurrentInnerView = _serviceProvider.GetRequiredService<MbdConditionDetailsResourcesView>();
 					CurrentInnerView.BindingContext = this; // Bind to this ViewModel
-					((ConditionDetailsResourcesView)CurrentInnerView).MbdCondition = Condition;
+					((MbdConditionDetailsResourcesView)CurrentInnerView).MbdCondition = Condition;
 					break;
 				default:
 					_logger.LogWarning($"Unknown inner tab selected: {value}");

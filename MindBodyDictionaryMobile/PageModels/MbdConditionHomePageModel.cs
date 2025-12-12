@@ -8,75 +8,73 @@ using System.Threading.Tasks;
 
 namespace MindBodyDictionaryMobile.PageModels
 {
-	public partial class ConditionHomePageModel : ObservableObject
+	public partial class MbdConditionHomePageModel : ObservableObject
 	{
-		private readonly ConditionRepository _conditionRepository;
+		private readonly MbdConditionRepository _mbdConditionRepository;
 		private readonly ModalErrorHandler _errorHandler;
-		private readonly ILogger<ConditionHomePageModel> _logger; // Add this
-
-		[ObservableProperty]
-		private string _title = "MindBody Dictionary";
-
-		[ObservableProperty]
-		private string _version = "1.0.0"; // Placeholder, can be loaded from assembly
-
-		[ObservableProperty]
-		private bool _isRefreshing;
-
-		[ObservableProperty]
-		private bool _isInitialized;
-
-		[ObservableProperty]
-		private bool _isBusy;
-
-		[ObservableProperty]
-		private ObservableCollection<MbdCondition> _randomConditionCollection;
-
-
-
-		public ConditionHomePageModel(ConditionRepository conditionRepository, ModalErrorHandler errorHandler, ILogger<ConditionHomePageModel> logger) // Modify constructor
-		{
-			_conditionRepository = conditionRepository;
-			_errorHandler = errorHandler;
-			_logger = logger; // Assign injected logger
-			RandomConditionCollection = new ObservableCollection<MbdCondition>();
-			// Initialize with default values or from preferences/settings
-		}
-
-		[RelayCommand]
-		public async Task GetConditionList()
-		{
-			if (IsBusy)
-				return;
-
-			try
+		private readonly ILogger<MbdConditionHomePageModel> _logger; // Add this
+		
+			[ObservableProperty]
+			private string _title = "MindBody Dictionary";
+		
+			[ObservableProperty]
+			private string _version = "1.0.0"; // Placeholder, can be loaded from assembly
+		
+			[ObservableProperty]
+			private bool _isRefreshing;
+		
+			[ObservableProperty]
+			private bool _isInitialized;
+		
+			[ObservableProperty]
+			private bool _isBusy;
+		
+			[ObservableProperty]
+			private ObservableCollection<MbdCondition> _randomConditionCollection;
+		
+		
+		
+			public MbdConditionHomePageModel(MbdConditionRepository mbdConditionRepository, ModalErrorHandler errorHandler, ILogger<MbdConditionHomePageModel> logger) // Modify constructor
 			{
-				IsBusy = true;
-				IsRefreshing = true;
-				// Simulate loading or fetch data
-				var allConditions = await _conditionRepository.ListAsync();
-				// For now, just taking a few random ones, or all if less than 5
-				var random = new Random();
-				var conditionsToShow = allConditions.OrderBy(x => random.Next()).Take(5).ToList();
-				RandomConditionCollection.Clear();
-				foreach (var condition in conditionsToShow)
+				_mbdConditionRepository = mbdConditionRepository;
+				_errorHandler = errorHandler;
+				_logger = logger; // Assign injected logger
+				RandomConditionCollection = new ObservableCollection<MbdCondition>();
+				// Initialize with default values or from preferences/settings
+			}
+		
+			[RelayCommand]
+			public async Task GetConditionList()
+			{
+				if (IsBusy)
+					return;
+		
+				try
 				{
-					RandomConditionCollection.Add(condition);
+					IsBusy = true;
+					IsRefreshing = true;
+					// Simulate loading or fetch data
+					var allConditions = await _mbdConditionRepository.ListAsync();
+					// For now, just taking a few random ones, or all if less than 5
+					var random = new Random();
+					var conditionsToShow = allConditions.OrderBy(x => random.Next()).Take(5).ToList();
+					RandomConditionCollection.Clear();
+					foreach (var condition in conditionsToShow)
+					{
+						RandomConditionCollection.Add(condition);
+					}
+					IsInitialized = true;
 				}
-				IsInitialized = true;
+				catch (Exception ex)			{
+					_logger.LogError(ex, "Error loading condition list."); // Replace Logger.Error
+					_errorHandler.HandleError(ex);
+				}
+				finally
+				{
+					IsBusy = false;
+					IsRefreshing = false;
+				}
 			}
-			catch (Exception ex)
-			{
-				_logger.LogError(ex, "Error loading condition list."); // Replace Logger.Error
-				_errorHandler.HandleError(ex);
-			}
-			finally
-			{
-				IsBusy = false;
-				IsRefreshing = false;
-			}
-		}
-
 
 
 		[RelayCommand]

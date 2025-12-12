@@ -4,12 +4,12 @@ using System.Threading.Tasks; // For Task
 
 namespace MindBodyDictionaryMobile.Pages;
 
-public partial class ConditionDetailsProblemView : ContentView
+public partial class MbdConditionDetailsProblemView : ContentView
 {
-	private readonly ILogger<ConditionDetailsProblemView> _logger; // Add this
+	private readonly ILogger<MbdConditionDetailsProblemView> _logger; // Add this
 
 	public static readonly BindableProperty MbdConditionProperty = BindableProperty.Create(
-       nameof(MbdCondition), typeof(MbdCondition), typeof(ConditionDetailsProblemView));
+       nameof(MbdCondition), typeof(MbdCondition), typeof(MbdConditionDetailsProblemView));
 
 	public MbdCondition MbdCondition
 	{
@@ -18,23 +18,23 @@ public partial class ConditionDetailsProblemView : ContentView
 	}
 
 
-	public ConditionDetailsProblemView(ILogger<ConditionDetailsProblemView> logger) // Modify constructor
+	public MbdConditionDetailsProblemView(ILogger<MbdConditionDetailsProblemView> logger) // Modify constructor
 	{
 		InitializeComponent();
 		_logger = logger; // Assign injected logger
 	}
 
-	private async void TapGestureRecognizer_NegativeConditionTap(object? sender, TappedEventArgs e)
+	private async void TapGestureRecognizer_NegativeMbdConditionTap(object? sender, TappedEventArgs e)
 	{
-		await HandleConditionNavigation(e, "Negative");
+		await HandleMbdConditionNavigation(e, "Negative");
 	}
 
-	private async void TapGestureRecognizer_HealingConditionTap(object? sender, TappedEventArgs e)
+	private async void TapGestureRecognizer_HealingMbdConditionTap(object? sender, TappedEventArgs e)
 	{
-		await HandleConditionNavigation(e, "Positive");
+		await HandleMbdConditionNavigation(e, "Positive");
 	}
 
-	private async Task HandleConditionNavigation(TappedEventArgs e, string type)
+	private async Task HandleMbdConditionNavigation(TappedEventArgs e, string type)
 	{
 		try
 		{
@@ -45,7 +45,7 @@ public partial class ConditionDetailsProblemView : ContentView
 				return;
 			}
 
-			await Shell.Current.GoToAsync($"{nameof(ConditionSummaryPage)}?{type}={id}");
+			await Shell.Current.GoToAsync($"{nameof(MbdConditionSummaryPage)}?{type}={id}");
 		}
 		catch (Exception err)
 		{

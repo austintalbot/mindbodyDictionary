@@ -38,7 +38,7 @@ public static class MauiProgram
 		builder.Services.AddSingleton<TaskRepository>();
 		builder.Services.AddSingleton<CategoryRepository>();
 		builder.Services.AddSingleton<TagRepository>();
-		builder.Services.AddSingleton<ConditionRepository>();
+		builder.Services.AddSingleton<MbdConditionRepository>();
 		builder.Services.AddSingleton<ImageCacheRepository>();
 		builder.Services.AddSingleton<ImageCacheService>();
 		builder.Services.AddSingleton<IImageCacheHelper, ImageCacheHelper>();
@@ -80,30 +80,30 @@ public static class MauiProgram
 
 		builder.Services.AddTransientWithShellRoute<ProjectDetailPage, ProjectDetailPageModel>("project");
 		builder.Services.AddTransientWithShellRoute<TaskDetailPage, TaskDetailPageModel>("task");
-		builder.Services.AddTransientWithShellRoute<ConditionDetailsPage, ConditionDetailPageModel>("condition");
+		builder.Services.AddTransientWithShellRoute<MbdConditionDetailsPage, MbdConditionDetailPageModel>("mbdcondition");
 
         // Register New Condition Pages and ViewModels
-        builder.Services.AddSingleton<ConditionHomePageModel>();
-        builder.Services.AddSingleton<ConditionHomePage>();
+        builder.Services.AddSingleton<MbdConditionHomePageModel>();
+        builder.Services.AddSingleton<MbdConditionHomePage>();
 
-        builder.Services.AddTransient<ConditionSearchPageModel>();
-        builder.Services.AddTransient<ConditionSearchPage>();
+        builder.Services.AddTransient<MbdConditionSearchPageModel>();
+        builder.Services.AddTransient<MbdConditionSearchPage>();
 
         builder.Services.AddSingleton<SearchPageModel>();
         builder.Services.AddSingleton<SearchPage>();
 
-        builder.Services.AddTransientWithShellRoute<ConditionSummaryPage, ConditionSummaryPageModel>(nameof(ConditionSummaryPage));
+        builder.Services.AddTransientWithShellRoute<MbdConditionSummaryPage, MbdConditionSummaryPageModel>(nameof(MbdConditionSummaryPage));
 
         // Register DisclaimerPopup
         builder.Services.AddTransient<DisclaimerPopup>();
 
         // Register Sub-Views for Condition Details
-        builder.Services.AddTransient<ConditionDetailsProblemView>();
-        builder.Services.AddTransient<ConditionDetailsAffirmationsView>();
-        builder.Services.AddTransient<RecommendationsView>();
-        builder.Services.AddTransient<ConditionDetailsFoodView>();
-        builder.Services.AddTransient<ConditionDetailsProductsView>();
-        builder.Services.AddTransient<ConditionDetailsResourcesView>();
+        builder.Services.AddTransient<MbdConditionDetailsProblemView>();
+        builder.Services.AddTransient<MbdConditionDetailsAffirmationsView>();
+        builder.Services.AddTransient<MbdConditionDetailsRecommendationsView>();
+        builder.Services.AddTransient<MbdConditionDetailsFoodView>();
+        builder.Services.AddTransient<MbdConditionDetailsProductsView>();
+        builder.Services.AddTransient<MbdConditionDetailsResourcesView>();
 
         // Register PageModels for Sub-Views
         builder.Services.AddTransient<RecommendationsPageModel>();

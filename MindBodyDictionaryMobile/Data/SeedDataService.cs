@@ -7,14 +7,14 @@ using System.Reflection;
 
 namespace MindBodyDictionaryMobile.Data;
 
-public class SeedDataService(ProjectRepository projectRepository, TaskRepository taskRepository, TagRepository tagRepository, CategoryRepository categoryRepository, ConditionRepository conditionRepository, ImageCacheService imageCacheService, ILogger<SeedDataService> logger)
+public class SeedDataService(ProjectRepository projectRepository, TaskRepository taskRepository, TagRepository tagRepository, CategoryRepository categoryRepository, MbdConditionRepository mbdConditionRepository, ImageCacheService imageCacheService, ILogger<SeedDataService> logger)
 {
 	public string? RawApiConditionsJson { get; private set; }
 	private readonly ProjectRepository _projectRepository = projectRepository;
 	private readonly TaskRepository _taskRepository = taskRepository;
 	private readonly TagRepository _tagRepository = tagRepository;
 	private readonly CategoryRepository _categoryRepository = categoryRepository;
-	private readonly ConditionRepository _conditionRepository = conditionRepository;
+	private readonly MbdConditionRepository _mbdConditionRepository = mbdConditionRepository;
 	private readonly ImageCacheService _imageCacheService = imageCacheService;
 	private readonly string _seedDataFilePath = "SeedData.json";
 	private readonly ILogger<SeedDataService> _logger = logger;
@@ -143,7 +143,7 @@ public class SeedDataService(ProjectRepository projectRepository, TaskRepository
 				_taskRepository.DropTableAsync(),
 				_tagRepository.DropTableAsync(),
 				_categoryRepository.DropTableAsync(),
-				_conditionRepository.DropTableAsync());
+				_mbdConditionRepository.DropTableAsync());
 		}
 		catch (Exception e)
 		{
@@ -162,7 +162,7 @@ public class SeedDataService(ProjectRepository projectRepository, TaskRepository
 			_logger.LogInformation("Starting to seed conditions");
 
 			// Only seed if DB is empty
-			var existingConditions = await _conditionRepository.ListAsync();
+			var existingConditions = await _mbdConditionRepository.ListAsync();
 			if (existingConditions != null && existingConditions.Count > 0)
 			{
 				_logger.LogInformation($"Database already has {existingConditions.Count} conditions. Skipping seeding.");
@@ -195,7 +195,7 @@ public class SeedDataService(ProjectRepository projectRepository, TaskRepository
 			}
 
 			// Verify what was loaded
-			var conditions = await _conditionRepository.ListAsync();
+			var conditions = await _mbdConditionRepository.ListAsync();
 			System.Diagnostics.Debug.WriteLine($"=== SeedConditionsAsync: Total conditions in DB: {conditions.Count} ===");
 		}
 		catch (Exception e)
@@ -436,7 +436,7 @@ public class SeedDataService(ProjectRepository projectRepository, TaskRepository
 					_logger.LogInformation($"Saving condition - Id: {condition.Id}, Name: {condition.Name}, Desc: {condition.Description?.Substring(0, Math.Min(50, condition.Description?.Length ?? 0))}..., Icon: {condition.Icon}, CategoryID: {condition.CategoryID}");
 
 					// Save the condition - will throw if fails
-					var savedConditionId = await _conditionRepository.SaveItemAsync(condition);
+					var savedConditionId = await _mbdConditionRepository.SaveItemAsync(condition);
 					System.Diagnostics.Debug.WriteLine($"[{savedConditionsCount + failedConditionsCount + 1}] ✓ {condition.Name}");
 					_logger.LogInformation($"Saved condition with ID: {savedConditionId}");
 

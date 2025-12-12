@@ -3,8 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:model="clr-namespace:MindBodyDictionaryMobile.Models"
              xmlns:vm="clr-namespace:MindBodyDictionaryMobile.PageModels"
-             x:DataType="vm:ConditionHomePageModel"
-             x:Class="MindBodyDictionaryMobile.Pages.ConditionHomePage"
+             x:DataType="vm:MbdConditionHomePageModel"
+             x:Class="MindBodyDictionaryMobile.Pages.MbdConditionHomePage"
              Title="{Binding Title}">
 
     <Grid Style="{StaticResource MainPageGrid}" RowDefinitions="*">
@@ -18,8 +18,8 @@
                     <Image Style="{StaticResource AppLogoImage}" />
                     <Label Text="{Binding Version}"
                            Style="{StaticResource VersionLabel}" />
-                    <SearchBar x:Name="ConditionSearchBar"
-                               SearchButtonPressed="ConditionSearchBar_SearchButtonPressed"
+                    <SearchBar x:Name="MbdConditionSearchBar"
+                               SearchButtonPressed="MbdConditionHomePage_SearchButtonPressed"
                                Style="{StaticResource AilmentSearchBar}" />
 
                     <Button Text="Refresh Conditions"
@@ -53,7 +53,7 @@
                                                 Offset="0,2"/>
                                     </Border.Shadow>
                                     <Border.GestureRecognizers>
-                                        <TapGestureRecognizer Tapped="TapGestureRecognizer_HomeConditionTapped"
+                                        <TapGestureRecognizer Tapped="TapGestureRecognizer_HomeMbdConditionTapped"
                                                               CommandParameter="{Binding Id}"/>
                                     </Border.GestureRecognizers>
 

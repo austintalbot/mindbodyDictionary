@@ -7,24 +7,6 @@
     xmlns:sf="clr-namespace:Syncfusion.Maui.Toolkit.TextInputLayout;assembly=Syncfusion.Maui.Toolkit"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
-    <x:Double x:Key="sizeNone">0</x:Double>
-    <x:Double x:Key="size20">2</x:Double>
-    <x:Double x:Key="size40">4</x:Double>
-    <x:Double x:Key="size60">6</x:Double>
-    <x:Double x:Key="size80">8</x:Double>
-    <x:Double x:Key="size100">10</x:Double>
-    <x:Double x:Key="size120">12</x:Double>
-    <x:Double x:Key="size160">16</x:Double>
-    <x:Double x:Key="size200">20</x:Double>
-    <x:Double x:Key="size240">24</x:Double>
-    <x:Double x:Key="size280">28</x:Double>
-    <x:Double x:Key="size320">32</x:Double>
-    <x:Double x:Key="size360">36</x:Double>
-    <x:Double x:Key="size400">40</x:Double>
-    <x:Double x:Key="size480">48</x:Double>
-    <x:Double x:Key="size520">52</x:Double>
-    <x:Double x:Key="size560">56</x:Double>
-
     <!-- https://fluent2.microsoft.design/typography/ -->
     <OnIdiom x:Key="IconSize"
              x:TypeArguments="x:Double"
@@ -115,17 +97,6 @@
                 FontFamily="{x:Static f:FluentUI.FontFamily}"
                 Color="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"
                 Size="{StaticResource IconSize}" />
-
-        <FontImageSource x:Key="IconLight"
-                Glyph="{x:Static f:FluentUI.weather_sunny_28_regular}"
-                FontFamily="{x:Static f:FluentUI.FontFamily}"
-                Color="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"
-                Size="{StaticResource size240}" />
-        <FontImageSource x:Key="IconDark"
-                Glyph="{x:Static f:FluentUI.weather_moon_28_regular}"
-                FontFamily="{x:Static f:FluentUI.FontFamily}"
-                Color="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"
-                Size="{StaticResource size240}" />
 
     <Style TargetType="Label">
         <Setter Property="TextColor"
@@ -354,9 +325,9 @@
         </Setter>
     </Style>
 
-    <Style x:Key="RandomConditionButton" TargetType="Button">
+    <Style x:Key="RandomMbdConditionButton" TargetType="Button">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource White}}" />
-        <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+        <Setter Property="BackgroundColor" Value="{StaticResource Primary}"/>
         <Setter Property="FontFamily" Value="OpenSansRegular"/>
         <Setter Property="FontSize" Value="18"/>
         <Setter Property="BorderWidth" Value="0"/>
@@ -448,12 +419,12 @@
         <Setter Property="Text" Value="Try adjusting your search terms"/>
     </Style>
 
-    <Style x:Key="SearchConditionCard" TargetType="Border" BasedOn="{StaticResource CardStyle}">
+    <Style x:Key="SearchMbdConditionCard" TargetType="Border" BasedOn="{StaticResource CardStyle}">
         <Setter Property="Padding" Value="0"/>
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource DarkSecondaryBackground}}"/>
     </Style>
 
-    <Style x:Key="SearchConditionImage" TargetType="Image">
+    <Style x:Key="SearchMbdConditionImage" TargetType="Image">
         <Setter Property="Aspect" Value="AspectFill"/>
         <Setter Property="HorizontalOptions" Value="Center"/>
         <Setter Property="VerticalOptions" Value="Start"/>
@@ -461,7 +432,7 @@
         <Setter Property="WidthRequest" Value="100"/>
     </Style>
 
-    <Style x:Key="SearchConditionLabel" TargetType="Label">
+    <Style x:Key="SearchMbdConditionLabel" TargetType="Label">
         <Setter Property="HorizontalOptions" Value="Center"/>
         <Setter Property="HorizontalTextAlignment" Value="Center"/>
         <Setter Property="FontSize" Value="14"/>
@@ -471,12 +442,12 @@
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}"/>
     </Style>
 
-    <Style x:Key="ConditionCardWithShadow" TargetType="Border">
+    <Style x:Key="MbdConditionCardWithShadow" TargetType="Border">
         <Setter Property="StrokeShape" Value="RoundRectangle 12"/>
         <Setter Property="StrokeThickness" Value="1"/>
         <Setter Property="Padding" Value="15"/>
-        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource ConditionCardBackground}, Dark={StaticResource ConditionCardBackground}}"/>
-        <Setter Property="Stroke" Value="{StaticResource ConditionCardBorder}"/>
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource MbdConditionCardBackground}, Dark={StaticResource MbdConditionCardBackground}}"/>
+        <Setter Property="Stroke" Value="{StaticResource MbdConditionCardBorder}"/>
         <Setter Property="Shadow">
             <Setter.Value>
                 <Shadow Brush="Black"

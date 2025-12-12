@@ -1,12 +1,11 @@
 using MindBodyDictionaryMobile.Models;
-
 namespace MindBodyDictionaryMobile.Pages;
 
-public partial class ConditionDetailsAffirmationsView : ContentView
+public partial class MbdConditionDetailsProductsView : ContentView
 {
 
 	public static readonly BindableProperty MbdConditionProperty = BindableProperty.Create(
-      nameof(MbdCondition), typeof(MbdCondition), typeof(ConditionDetailsAffirmationsView));
+	nameof(MbdCondition), typeof(MbdCondition), typeof(MbdConditionDetailsProductsView));
 
 	public MbdCondition MbdCondition
 	{
@@ -14,7 +13,7 @@ public partial class ConditionDetailsAffirmationsView : ContentView
 		set { SetValue(MbdConditionProperty, value); }
 	}
 
-	public ConditionDetailsAffirmationsView()
+	public MbdConditionDetailsProductsView()
 	{
 		InitializeComponent();
 	}

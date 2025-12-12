@@ -2,11 +2,10 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                           xmlns:vm="clr-namespace:MindBodyDictionaryMobile.PageModels"
-                          xmlns:fonts="clr-namespace:Fonts;assembly=MindBodyDictionaryMobile"
                           xmlns:local="clr-namespace:MindBodyDictionaryMobile"
                           x:DataType="vm:ConditionDetailPageModel"
                           x:Name="this"
-                          x:Class="MindBodyDictionaryMobile.Pages.ConditionDetailsAffirmationsView">
+                          x:Class="MindBodyDictionaryMobile.Pages.MbdConditionDetailsAffirmationsView">
                 <Grid
                          HorizontalOptions="CenterAndExpand"
                          VerticalOptions="StartAndExpand">
@@ -44,7 +43,6 @@
                          ItemsSource="{Binding Condition.Affirmations}"
                          CurrentItem="{Binding CurrentAffirmation}"
                          Grid.Row="1"
-                         IndicatorView="AffirmationIndicatorView"
                          HeightRequest="280"
                          IsBounceEnabled="True"
                          HorizontalOptions="CenterAndExpand"
@@ -119,7 +117,7 @@
                          <HorizontalStackLayout>
                          <HorizontalStackLayout.GestureRecognizers>
                              <TapGestureRecognizer
-                             Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ConditionDetailPageModel}}, Path=ShareCarouselConditionCommand}"
+                             Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ConditionDetailPageModel}}, Path=ShareCarouselMbdConditionCommand}"
                              CommandParameter="{Binding CurrentAffirmation}"/>
                          </HorizontalStackLayout.GestureRecognizers>
                              <Label
@@ -136,7 +134,7 @@
                                  Aspect="AspectFit"
                                  BackgroundColor="Transparent"
                                  HeightRequest="32"
-                                 Source="{FontImageSource FontFamily={x:Static fonts:FluentUI.FontFamily}, Glyph={x:Static fonts:FluentUI.share_24_regular}, Size=24, Color=Black }"
+                                 Source="{mi:Material Icon=Share }"
                                  WidthRequest="32" >
                          </Image>
                      </HorizontalStackLayout>

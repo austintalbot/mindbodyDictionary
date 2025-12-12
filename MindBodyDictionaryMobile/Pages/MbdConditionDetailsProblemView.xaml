@@ -3,9 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:MindBodyDictionaryMobile.PageModels"
              xmlns:model="clr-namespace:MindBodyDictionaryMobile.Models"
-             x:DataType="vm:ConditionDetailPageModel"
+             x:DataType="vm:MbdConditionDetailPageModel"
              x:Name="this"
-             x:Class="MindBodyDictionaryMobile.Pages.ConditionDetailsProblemView">
+             x:Class="MindBodyDictionaryMobile.Pages.MbdConditionDetailsProblemView">
 
     <Grid Padding="0"
         VerticalOptions="Fill"
@@ -48,7 +48,7 @@
         BackgroundColor="{StaticResource ConditionCardBackground}"
         VerticalOptions="Fill">
     <Border.GestureRecognizers>
-        <TapGestureRecognizer Tapped="TapGestureRecognizer_NegativeConditionTap"
+        <TapGestureRecognizer Tapped="TapGestureRecognizer_NegativeMbdConditionTap"
                               CommandParameter="{Binding Id}"></TapGestureRecognizer>
     </Border.GestureRecognizers>
     <Grid HorizontalOptions="Fill"
@@ -100,7 +100,7 @@
         Stroke="{StaticResource ConditionCardBorder}"
         BackgroundColor="{StaticResource ConditionCardBackground}">
     <Border.GestureRecognizers>
-        <TapGestureRecognizer Tapped="TapGestureRecognizer_HealingConditionTap"
+        <TapGestureRecognizer Tapped="TapGestureRecognizer_HealingMbdConditionTap"
                               CommandParameter="{Binding Id}"></TapGestureRecognizer>
     </Border.GestureRecognizers>
     <Grid HorizontalOptions="Fill"

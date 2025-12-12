@@ -90,7 +90,7 @@ public class MbdCondition
 	/// <summary>
 	/// Gets accessibility description combining name and summaryPositive.
 	/// </summary>
-	public string AccessibilityDescription => $"{Name} Condition. {SummaryPositive}";
+	public string AccessibilityDescription => $"{Name} MbdCondition. {SummaryPositive}";
 
 	public override string ToString() => Name ?? "Unknown Condition";
 }
@@ -117,7 +117,7 @@ public class Recommendation
 /// <summary>
 /// Root object for JSON deserialization of conditions data.
 /// </summary>
-public class MbdMbdConditionsJson
+public class MbdConditionsJson
 {
 	public List<MbdCondition> Conditions { get; set; } = [];
 }

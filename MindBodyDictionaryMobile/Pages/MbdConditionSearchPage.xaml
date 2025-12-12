@@ -4,21 +4,21 @@
              xmlns:model="clr-namespace:MindBodyDictionaryMobile.Models"
              xmlns:vm="clr-namespace:MindBodyDictionaryMobile.PageModels"
              xmlns:android="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific;assembly=Microsoft.Maui.Controls"
-             x:DataType="vm:ConditionSearchPageModel"
-             x:Class="MindBodyDictionaryMobile.Pages.ConditionSearchPage"
+             x:DataType="vm:MbdConditionSearchPageModel"
+             x:Class="MindBodyDictionaryMobile.Pages.MbdConditionSearchPage"
              Title="{Binding Title}">
 
     <Grid Style="{StaticResource MainPageGrid}" RowDefinitions="Auto,*">
         <!-- Search Bar -->
-        <SearchBar x:Name="ConditionSearchBar"
+        <SearchBar x:Name="MbdConditionSearchBar"
                   Grid.Row="0"
                   android:Entry.ImeOptions="Done"
                   Text="{Binding SearchParam}"
-                  TextChanged="ConditionSearchBar_TextChanged"
+                  TextChanged="MbdConditionSearchBar_TextChanged"
                   IsTextPredictionEnabled="False"
                   Style="{StaticResource AilmentSearchBar}"
                   SearchCommand="{Binding OnSearchButtonPressedCommand}"
-                  SearchCommandParameter="{Binding Text, Source={x:Reference ConditionSearchBar}}" />
+                  SearchCommandParameter="{Binding Text, Source={x:Reference MbdConditionSearchBar}}" />
 
         <!-- Collection View with optimized layout -->
         <Grid Grid.Row="1">

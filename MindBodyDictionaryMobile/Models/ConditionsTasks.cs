@@ -9,5 +9,5 @@ public class ConditionTask
 	public bool IsCompleted { get; set; }
 
 	[JsonIgnore]
-	public int ConditionID { get; set; }
+	public string MbdConditionID { get; set; }
 }

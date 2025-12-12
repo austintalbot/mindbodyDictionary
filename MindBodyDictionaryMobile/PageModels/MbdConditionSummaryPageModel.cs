@@ -10,11 +10,11 @@ namespace MindBodyDictionaryMobile.PageModels
 {
 		[QueryProperty(nameof(Id), "Id")]
 		[QueryProperty(nameof(Type), "Type")]
-		public partial class ConditionSummaryPageModel : ObservableObject, IQueryAttributable
+		public partial class MbdConditionSummaryPageModel : ObservableObject, IQueryAttributable
 		{
-			private readonly ConditionRepository _conditionRepository;
+			private readonly MbdConditionRepository _mbdConditionRepository;
 			private readonly ModalErrorHandler _errorHandler;
-			private readonly ILogger<ConditionSummaryPageModel> _logger; // Add this
+			private readonly ILogger<MbdConditionSummaryPageModel> _logger; // Add this
 			private readonly ImageCacheService _imageCacheService; // Add this
 
 			[ObservableProperty]
@@ -36,9 +36,9 @@ namespace MindBodyDictionaryMobile.PageModels
 			public string Id { get; set; }
 			public string Type { get; set; } // "Negative" or "Positive"
 
-			public ConditionSummaryPageModel(ConditionRepository conditionRepository, ModalErrorHandler errorHandler, ILogger<ConditionSummaryPageModel> logger, ImageCacheService imageCacheService) // Modify constructor
+			public MbdConditionSummaryPageModel(MbdConditionRepository mbdConditionRepository, ModalErrorHandler errorHandler, ILogger<MbdConditionSummaryPageModel> logger, ImageCacheService imageCacheService) // Modify constructor
 			{
-				_conditionRepository = conditionRepository;
+				_mbdConditionRepository = mbdConditionRepository;
 				_errorHandler = errorHandler;
 				_logger = logger; // Assign injected logger
 				_imageCacheService = imageCacheService; // Assign injected service
@@ -67,7 +67,7 @@ namespace MindBodyDictionaryMobile.PageModels
 			{
 				try
 				{
-					MbdCondition condition = await _conditionRepository.GetAsync(id);
+					MbdCondition condition = await _mbdConditionRepository.GetAsync(id);
 					if (condition == null)
 					{
 						// Handle case where condition is not found
@@ -92,11 +92,11 @@ namespace MindBodyDictionaryMobile.PageModels
 														Summary = condition.SummaryPositive;
 									                    imagePath = condition.ImagePositive ?? "";
 													}									else
-									{
-										MindsetText = "Unknown Mindset";
-										Summary = "No specific summary available.";
-										// Default image or error handling
-									}
+													{
+														MindsetText = "Unknown Mindset";
+														Summary = "No specific summary available.";
+														// Default image or error handling
+													}
 
 					                if (!string.IsNullOrEmpty(imagePath))
 					                {
@@ -111,20 +111,22 @@ namespace MindBodyDictionaryMobile.PageModels
 					_errorHandler.HandleError(ex);
 				}
 			}
-		[RelayCommand]
-		private async Task ShareConditionSummary()
-		{
-			if (InternalCondition == null)
+			[RelayCommand]
+			private async Task ShareConditionSummary()
 			{
-				await Shell.Current.DisplayAlertAsync("Error", "No condition to share.", "OK");
-				return;
-			}
+				if (InternalCondition == null)
+				{
+					await Shell.Current.DisplayAlertAsync("Error", "No condition to share.", "OK");
+					return;
+				}
 
-			await Share.RequestAsync(new ShareTextRequest
-			{
-				Text = $"Mindset for {InternalCondition.Name}: {MindsetText}\nSummary: {Summary}",
-				Title = $"Share {InternalCondition.Name} Summary"
-			});
+				await Share.RequestAsync(new ShareTextRequest
+				{
+					Text = $"Mindset for {InternalCondition.Name}: {MindsetText}\nSummary: {Summary}",
+					Title = $"Share {InternalCondition.Name} Summary"
+				});
+			}
 		}
 	}
-}
+
+

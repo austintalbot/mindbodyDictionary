@@ -16,12 +16,12 @@ namespace MindBodyDictionaryMobile.PageModels;
 /// <summary>
 /// Page model for searching MbdConditions with debouncing.
 /// </summary>
-public partial class SearchPageModel(ConditionRepository conditionRepository) : ObservableObject, IRecipient<ConditionsUpdatedMessage> // Modified
+public partial class SearchPageModel(MbdConditionRepository mbdConditionRepository) : ObservableObject, IRecipient<ConditionsUpdatedMessage> // Modified
 {
-private readonly ConditionRepository _conditionRepository = conditionRepository;
+private readonly MbdConditionRepository _mbdConditionRepository = mbdConditionRepository;
 private CancellationTokenSource? _searchCancellationTokenSource;
 private const int SearchDebounceDelayMs = 150;
-private List<MbdCondition> _allConditions = [];
+private List<MbdCondition> _allMbdConditions = [];
 
 [ObservableProperty]
 private ObservableCollection<MbdCondition> filteredConditions = [];
@@ -39,9 +39,9 @@ private bool hasNoResults;
 public async Task InitializeAsync()
 {
 WeakReferenceMessenger.Default.Register<ConditionsUpdatedMessage>(this); // Added
-if (_allConditions.Count == 0) // Only load if not already loaded
+if (_allMbdConditions.Count == 0) // Only load if not already loaded
 {
-_allConditions = await _conditionRepository.ListAsync();
+_allMbdConditions = await _mbdConditionRepository.ListAsync();
 FilterConditions(); // Initial filter to show all conditions
 }
 }
@@ -55,7 +55,7 @@ public async void Receive(ConditionsUpdatedMessage message) // Added
 {
 System.Diagnostics.Debug.WriteLine("[SearchPageModel] Received ConditionsUpdatedMessage. Reloading list.");
 // Reload conditions and re-filter
-_allConditions = await _conditionRepository.ListAsync();
+_allMbdConditions = await _mbdConditionRepository.ListAsync();
 FilterConditions();
 }
 
@@ -72,7 +72,7 @@ private void FilterConditions()
 if (string.IsNullOrWhiteSpace(SearchQuery))
 {
 FilteredConditions.Clear();
-foreach (var condition in _allConditions)
+foreach (var condition in _allMbdConditions)
 {
 FilteredConditions.Add(condition);
 }
@@ -80,7 +80,7 @@ FilteredConditions.Add(condition);
 else
 {
 var lowerCaseSearchParam = SearchQuery.ToLowerInvariant();
-var filtered = _allConditions
+var filtered = _allMbdConditions
 .Where(c => c.Name.ToLowerInvariant().Contains(lowerCaseSearchParam) ||
             (c.MobileTags?.Any(tag => tag.Title.ToLowerInvariant().Contains(lowerCaseSearchParam)) == true))
 .ToList();
@@ -105,10 +105,10 @@ return;
 
 IsSearching = true;
 
-// _allConditions should already be loaded by InitializeAsync, but as a fallback
-if (_allConditions.Count == 0)
+// _allMbdConditions should already be loaded by InitializeAsync, but as a fallback
+if (_allMbdConditions.Count == 0)
 {
-_allConditions = await _conditionRepository.ListAsync();
+_allMbdConditions = await _mbdConditionRepository.ListAsync();
 }
 
 FilterConditions(); // Call FilterConditions to apply the search query
@@ -124,7 +124,7 @@ IsSearching = false;
 }
 
 [RelayCommand]
-private async Task SelectCondition(MbdCondition condition)
+private async Task SelectMbdCondition(MbdCondition condition)
 {
     if (condition == null || string.IsNullOrEmpty(condition.Id))
     {
@@ -132,7 +132,7 @@ private async Task SelectCondition(MbdCondition condition)
         System.Diagnostics.Debug.WriteLine("Attempted to select a null or invalid condition.");
         return;
     }
-    await Shell.Current.GoToAsync($"condition?id={condition.Id}");
+    await Shell.Current.GoToAsync($"mbdcondition?id={condition.Id}");
 }
 
 [RelayCommand]
@@ -143,5 +143,5 @@ FilteredConditions.Clear();
 }
 
 [RelayCommand]
-private static Task AddCondition() => Shell.Current.GoToAsync($"condition");
+private static Task AddMbdCondition() => Shell.Current.GoToAsync($"mbdcondition");
 }

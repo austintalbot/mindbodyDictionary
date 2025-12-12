@@ -11,11 +11,11 @@ namespace MindBodyDictionaryMobile.Services;
 /// Service responsible for pre-loading application data in the background on startup.
 /// </summary>
 public class AppDataPreloaderService(
-    ConditionRepository conditionRepository,
+    MbdConditionRepository mbdConditionRepository,
     SeedDataService seedDataService,
     MbdConditionApiService mbdConditionApiService)
 {
-    private readonly ConditionRepository _conditionRepository = conditionRepository;
+    private readonly MbdConditionRepository _mbdConditionRepository = mbdConditionRepository;
     private readonly SeedDataService _seedDataService = seedDataService;
     private readonly MbdConditionApiService _mbdConditionApiService = mbdConditionApiService;
     private static bool _isPreloadStarted = false;
@@ -37,7 +37,7 @@ public class AppDataPreloaderService(
             try
             {
                 // 1. Check for local data and seed if necessary
-                var localCount = await _conditionRepository.CountAsync();
+                var localCount = await _mbdConditionRepository.CountAsync();
                 if (localCount == 0)
                 {
                     System.Diagnostics.Debug.WriteLine("[AppDataPreloader] No local data found. Seeding...");

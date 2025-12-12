@@ -3,11 +3,11 @@ using MindBodyDictionaryMobile.Models;
 namespace MindBodyDictionaryMobile.Pages;
 
 
-public partial class ConditionDetailsFoodView : ContentView
+public partial class MbdConditionDetailsFoodView : ContentView
 {
 
 	public static readonly BindableProperty MbdConditionProperty = BindableProperty.Create(
-      nameof(MbdCondition), typeof(MbdCondition), typeof(ConditionDetailsFoodView));
+      nameof(MbdCondition), typeof(MbdCondition), typeof(MbdConditionDetailsFoodView));
 
 	public MbdCondition MbdCondition
 	{
@@ -15,7 +15,7 @@ public partial class ConditionDetailsFoodView : ContentView
 		set { SetValue(MbdConditionProperty, value); }
 	}
 
-	public ConditionDetailsFoodView()
+	public MbdConditionDetailsFoodView()
 	{
 		InitializeComponent();
 	}

@@ -156,7 +156,7 @@ All health condition images are available, including:
 - Emotional state images (Anxiety, Depression, Fear, etc.)
 - Plus 400+ more...
 
-Format: `{ConditionName}1.png` and `{ConditionName}2.png`
+Format: `{MbdConditionName}1.png` and `{MbdConditionName}2.png`
 
 Special files:
 - `MBDIcon.png` - App logo/icon

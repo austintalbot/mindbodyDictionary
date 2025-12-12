@@ -5,7 +5,7 @@
              xmlns:vm="clr-namespace:MindBodyDictionaryMobile.PageModels"
              xmlns:converter="clr-namespace:MindBodyDictionaryMobile.Converter"
              xmlns:fonts="clr-namespace:Fonts;assembly=MindBodyDictionaryMobile"
-             x:Class="MindBodyDictionaryMobile.Pages.RecommendationsView">
+             x:Class="MindBodyDictionaryMobile.Pages.MbdConditionDetailsRecommendationsView">
 
     <ContentView.Resources>
         <ResourceDictionary>
@@ -16,7 +16,7 @@
 
     <ScrollView Style="{StaticResource ContentScrollView}">
         <VerticalStackLayout Style="{StaticResource MainContentStack}">
-            <Image Style="{StaticResource AppLogoImage}"
+            <Image Style="{StaticResource AppIconImage}"
                    x:Name="FoodAffirmationsMindBodyLogo" />
 
             <VerticalStackLayout Style="{StaticResource HeaderSection}">

@@ -12,10 +12,10 @@ namespace MindBodyDictionaryMobile.Data;
 /// <summary>
 /// Repository class for managing conditions in the database.
 /// </summary>
-public class ConditionRepository(TaskRepository taskRepository, TagRepository tagRepository, ILogger<ConditionRepository> logger)
+public class MbdConditionRepository(TaskRepository taskRepository, TagRepository tagRepository, ILogger<MbdConditionRepository> logger)
 {
 	private bool _hasBeenInitialized = false;
-	private readonly ILogger _logger = logger;
+	private readonly ILogger<MbdConditionRepository> _logger = logger;
 	private readonly TaskRepository _taskRepository = taskRepository;
 	private readonly TagRepository _tagRepository = tagRepository;
 

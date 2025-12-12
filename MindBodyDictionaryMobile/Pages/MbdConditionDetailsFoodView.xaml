@@ -3,10 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:MindBodyDictionaryMobile.PageModels"
              xmlns:model="clr-namespace:MindBodyDictionaryMobile.Models"
-             xmlns:fonts="clr-namespace:Fonts;assembly=MindBodyDictionaryMobile"
-             x:DataType="vm:ConditionDetailPageModel"
+             xmlns:mi="http://www.aathifmahir.com/dotnet/2022/maui/icons"
+             x:DataType="vm:MbdConditionDetailPageModel"
              x:Name="this"
-             x:Class="MindBodyDictionaryMobile.Pages.ConditionDetailsFoodView">
+             x:Class="MindBodyDictionaryMobile.Pages.MbdConditionDetailsFoodView">
       <CollectionView
             x:Name="FoodCollectionView"
             Style="{StaticResource VerticalCollectionView}"
@@ -26,7 +26,7 @@
                         <Image x:Name="CheckMarkImage"
                                HeightRequest="25"
                                Grid.Column="1"
-                               Source="{FontImageSource FontFamily={x:Static fonts:FluentUI.FontFamily}, Glyph={x:Static fonts:FluentUI.checkmark_24_regular}, Size=24, Color=White }"
+                               Source="{mi:Material Icon=Check, IconColor=White}"
                                WidthRequest="25" />
                     </Grid>
                 </Border>
