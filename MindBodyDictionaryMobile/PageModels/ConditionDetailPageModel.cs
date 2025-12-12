@@ -77,23 +77,7 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 		new IconData { Icon = FluentUI.bot_24_regular, Description = "Bot Icon" }
 	];
 
-	[ObservableProperty]
-	private List<Recommendation> _foodList = [];
 
-	[ObservableProperty]
-	private List<Recommendation> _productList = [];
-
-	[ObservableProperty]
-	private List<Recommendation> _booksResourcesList = [];
-
-    [ObservableProperty]
-    private double _productListHeight;
-
-    [ObservableProperty]
-    private double _resourceListHeight;
-
-    [ObservableProperty]
-    private double _foodListHeight;
 
 	private bool _canDelete;
 
@@ -265,29 +249,7 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
                 _logger.LogInformation("No recommendations found for this condition.");
             }
 
-            // Populate FoodList, ProductList, and BooksResourcesList
-            if (Condition.Recommendations != null)
-            {
-                FoodList = Condition.Recommendations
-                                .Where(r => r.RecommendationType == (int)RecommendationType.Food)
-                                .ToList();
-                ProductList = Condition.Recommendations
-                                .Where(r => r.RecommendationType == (int)RecommendationType.Product)
-                                .ToList();
-                BooksResourcesList = Condition.Recommendations
-                                .Where(r => r.RecommendationType == (int)RecommendationType.Book)
-                                .ToList();
-            }
 
-            _logger.LogInformation($"FoodList count: {FoodList.Count}");
-            _logger.LogInformation($"ProductList count: {ProductList.Count}");
-            _logger.LogInformation($"BooksResourcesList count: {BooksResourcesList.Count}");
-
-            // Calculate heights for CollectionViews
-            const double ItemHeight = 300; // Define a constant for item height
-            ProductListHeight = ProductList.Count * ItemHeight;
-            ResourceListHeight = BooksResourcesList.Count * ItemHeight;
-            FoodListHeight = FoodList.Count * ItemHeight;
 
             // Set the condition on the current view if it is one of the ConditionDetails views
             if (CurrentView.BindingContext == this)

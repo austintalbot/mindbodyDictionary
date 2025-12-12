@@ -19,7 +19,7 @@
         <ScrollView Grid.Row="0">
             <VerticalStackLayout Margin="{StaticResource LayoutPadding}"
                                  Spacing="{StaticResource LayoutSpacing}"
-                                 VerticalOptions="StartAndExpand">
+                                 VerticalOptions="Fill">
 
                 <!-- Logo -->
                 <Image Source="mbd_logo.png"
@@ -32,7 +32,7 @@
                 <!-- Description -->
                 <Label Text="Enjoy an ad free experience while helping support development."
                        IsVisible="{Binding IsSubscribed, StringFormat='!{0}'}"
-                       HorizontalOptions="CenterAndExpand"
+                       HorizontalOptions="Fill"
                        HorizontalTextAlignment="Center"
                        FontSize="18"
                        FontAttributes="Bold"
@@ -43,7 +43,7 @@
                 <!-- Terms -->
                 <Label Text="No trial period, and the subscription will be renewed automatically on the subscription date, unless canceled before the renewal date."
                        IsVisible="{Binding IsSubscribed, StringFormat='!{0}'}"
-                       HorizontalOptions="CenterAndExpand"
+                       HorizontalOptions="Fill"
                        HorizontalTextAlignment="Center"
                        FontSize="14"
                        TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray400}}"
@@ -78,7 +78,7 @@
                         BackgroundColor="{AppThemeBinding Light={StaticResource LightSecondaryBackground}, Dark={StaticResource DarkSecondaryBackground}}"
                         StrokeShape="RoundRectangle 8">
                     <Label Text="✓ Premium Active"
-                           HorizontalOptions="CenterAndExpand"
+                           HorizontalOptions="Fill"
                            HorizontalTextAlignment="Center"
                            FontSize="18"
                            FontAttributes="Bold"
@@ -116,12 +116,12 @@
                        Margin="0,15,0,10"
                        IsVisible="{Binding IsDebug}" />
 
-                <Frame BorderColor="{StaticResource Primary}"
-                       CornerRadius="8"
-                       Padding="12"
-                       HasShadow="False"
-                       IsVisible="{Binding IsDebug}"
-                       BackgroundColor="{AppThemeBinding Light={StaticResource LightSecondaryBackground}, Dark={StaticResource DarkSecondaryBackground}}">
+                <Border IsVisible="{Binding IsDebug}"
+                        Padding="12"
+                        StrokeThickness="2"
+                        Stroke="{StaticResource Primary}"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource LightSecondaryBackground}, Dark={StaticResource DarkSecondaryBackground}}"
+                        StrokeShape="RoundRectangle 8">
                     <VerticalStackLayout Spacing="10">
                         <Editor x:Name="DebugInfoEditor"
                                 Text="{Binding DebugInfo}"
@@ -135,13 +135,13 @@
                         <HorizontalStackLayout Spacing="10">
                             <Button Text="📋 Copy"
                                     Command="{Binding CopyDebugInfoCommand}"
-                                    HorizontalOptions="FillAndExpand"
+                                    HorizontalOptions="Fill"
                                     Padding="10,8"
                                     FontSize="12" />
 
                             <Button Text="🗑️ Clear"
                                     Command="{Binding ClearDebugInfoCommand}"
-                                    HorizontalOptions="FillAndExpand"
+                                    HorizontalOptions="Fill"
                                     Padding="10,8"
                                     FontSize="12"
                                     BackgroundColor="Transparent"
@@ -155,7 +155,7 @@
                                TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray400}}"
                                Opacity="0.7" />
                     </VerticalStackLayout>
-                </Frame>
+                </Border>
             </VerticalStackLayout>
         </ScrollView>
 
