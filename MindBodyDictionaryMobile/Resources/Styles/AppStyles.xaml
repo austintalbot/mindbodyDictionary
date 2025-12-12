@@ -277,7 +277,7 @@
     <Style x:Key="HeaderSection" TargetType="VerticalStackLayout">
         <Setter Property="Spacing" Value="5"/>
         <Setter Property="Padding" Value="0,10,0,10"/>
-        <Setter Property="HorizontalOptions" Value="CenterAndExpand"/>
+        <Setter Property="HorizontalOptions" Value="Fill"/>
     </Style>
 
     <Style x:Key="SubtitleLabel" TargetType="Label">
@@ -319,8 +319,8 @@
 
     <Style TargetType="BoxView" x:Key="ShimmerCustomViewStyle">
         <Setter Property="BackgroundColor" Value="Gray" />
-        <Setter Property="HorizontalOptions" Value="FillAndExpand" />
-        <Setter Property="VerticalOptions" Value="CenterAndExpand" />
+        <Setter Property="HorizontalOptions" Value="Fill" />
+        <Setter Property="VerticalOptions" Value="Fill" />
     </Style>
 
     <Style TargetType="pullToRefresh:SfPullToRefresh">
@@ -390,7 +390,7 @@
         <Setter Property="CornerRadius" Value="0"/>
         <Setter Property="Padding" Value="10,10"/>
         <Setter Property="HeightRequest" Value="50"/>
-        <Setter Property="HorizontalOptions" Value="FillAndExpand"/>
+        <Setter Property="HorizontalOptions" Value="Fill"/>
     </Style>
 
     <!-- Additional Missing Styles -->
