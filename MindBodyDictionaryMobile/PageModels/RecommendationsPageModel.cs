@@ -146,6 +146,13 @@ namespace MindBodyDictionaryMobile.PageModels
 		}
 
 		[RelayCommand]
+		private async Task AddToMyList(Recommendation recommendation)
+		{
+			// This will eventually add the item to a persistent list, but for now, just show a message.
+			await AppShell.DisplayToastAsync($"Adding '{recommendation.Name}' to your list!");
+		}
+
+		[RelayCommand]
 		private void SelectInnerTab(string tabName)
 		{
 			SelectedInnerTab = tabName;
