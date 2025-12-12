@@ -79,8 +79,10 @@ FilteredConditions.Add(condition);
 }
 else
 {
+var lowerCaseSearchParam = SearchQuery.ToLowerInvariant();
 var filtered = _allConditions
-.Where(c => c.Name.Contains(SearchQuery, StringComparison.OrdinalIgnoreCase))
+.Where(c => c.Name.ToLowerInvariant().Contains(lowerCaseSearchParam) ||
+            (c.MobileTags?.Any(tag => tag.Title.ToLowerInvariant().Contains(lowerCaseSearchParam)) == true))
 .ToList();
 
 FilteredConditions.Clear();

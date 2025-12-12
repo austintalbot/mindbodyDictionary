@@ -17,15 +17,15 @@ for item in data:
     # 3. replace ' ' (space) with -
     # 4. remove 's
     safe_name = name.replace(':', '-').replace('/', '-').replace(' ', '-').replace("'s", "")
-    
+
     neg_img = f"{safe_name}-Negative.png"
     pos_img = f"{safe_name}-Positive.png"
-    
+
     # Update JSON properties
     # Remove old keys if present
     item.pop('cachedImageOne', None)
     item.pop('cachedImageTwo', None)
-    
+
     if neg_img in files_set:
         item['imageNegative'] = neg_img
     else:
@@ -34,7 +34,7 @@ for item in data:
         # But we want to persist null if not found so code doesn't try to load invalid path.
         item['imageNegative'] = None
         print(f"Warning: Image not found: {neg_img}")
-        
+
     if pos_img in files_set:
         item['imagePositive'] = pos_img
     else:

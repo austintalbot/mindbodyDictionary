@@ -178,7 +178,7 @@ public class ConditionRepository(TaskRepository taskRepository, TagRepository ta
 			{
 				var tagObjects = await _tagRepository.ListAsync(condition.Id);
 				condition.MobileTags = tagObjects;
-				condition.Tags = tagObjects.Select(t => t.Title).ToList(); 
+				condition.Tags = tagObjects.Select(t => t.Title).ToList();
 				condition.Tasks = [];
 			}
 

@@ -12,7 +12,7 @@ namespace MindBodyDictionaryMobile.PageModels
 	{
 		private readonly ConditionRepository _conditionRepository;
 		private readonly ModalErrorHandler _errorHandler;
-		private readonly ILogger<ConditionSearchPageModel> _logger; 
+		private readonly ILogger<ConditionSearchPageModel> _logger;
 		private readonly ImageCacheService _imageCacheService;
 
 		[ObservableProperty]
@@ -32,11 +32,7 @@ namespace MindBodyDictionaryMobile.PageModels
 		[ObservableProperty]
 		private ObservableCollection<MbdCondition> _filteredConditionCollection;
 
-		[ObservableProperty]
-		private string _bannerAdUnitId = "ca-app-pub-3940256099942544/6300978111"; // Default AdMob Test ID
 
-		[ObservableProperty]
-		private bool _showAds = true; // Assuming ads are shown by default
 
 		public ConditionSearchPageModel(ConditionRepository conditionRepository, ModalErrorHandler errorHandler, ILogger<ConditionSearchPageModel> logger, ImageCacheService imageCacheService) // Modify constructor
 		{

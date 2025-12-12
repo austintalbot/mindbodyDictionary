@@ -16,31 +16,26 @@ namespace MindBodyDictionaryMobile.PageModels
 			private readonly ModalErrorHandler _errorHandler;
 			private readonly ILogger<ConditionSummaryPageModel> _logger; // Add this
 			private readonly ImageCacheService _imageCacheService; // Add this
-	
+
 			[ObservableProperty]
 			private string _title = string.Empty;
-	
+
 			[ObservableProperty]
 			private ImageSource _cachedImageSource;
-	
+
 			[ObservableProperty]
 			private string _mindsetText = string.Empty;
-	
+
 			[ObservableProperty]
 			private MbdCondition _internalCondition;
-	
+
 			[ObservableProperty]
 			private string _summary = string.Empty;
-	
-			[ObservableProperty]
-			private string _bannerAdUnitId = "ca-app-pub-3940256099942544/6300978111"; // Default AdMob Test ID
-	
-			[ObservableProperty]
-			private bool _showAds = true; // Assuming ads are shown by default
-	
+
+
 			public string Id { get; set; }
 			public string Type { get; set; } // "Negative" or "Positive"
-	
+
 			public ConditionSummaryPageModel(ConditionRepository conditionRepository, ModalErrorHandler errorHandler, ILogger<ConditionSummaryPageModel> logger, ImageCacheService imageCacheService) // Modify constructor
 			{
 				_conditionRepository = conditionRepository;
@@ -50,7 +45,7 @@ namespace MindBodyDictionaryMobile.PageModels
 				// Initialize with default values or from preferences/settings
 				// For BannerAdUnitId and ShowAds, you might want to load from settings or a service.
 			}
-	
+
 			public void ApplyQueryAttributes(IDictionary<string, object> query)
 			{
 				if (query.ContainsKey("Id"))
@@ -61,13 +56,13 @@ namespace MindBodyDictionaryMobile.PageModels
 				{
 					Type = query["Type"]?.ToString();
 				}
-	
+
 				if (!string.IsNullOrEmpty(Id) && !string.IsNullOrEmpty(Type))
 				{
 					LoadConditionSummary(Id, Type).FireAndForgetSafeAsync(_errorHandler);
 				}
 			}
-	
+
 			private async Task LoadConditionSummary(string id, string type)
 			{
 				try
@@ -76,15 +71,15 @@ namespace MindBodyDictionaryMobile.PageModels
 					if (condition == null)
 					{
 						// Handle case where condition is not found
-						await Shell.Current.DisplayAlert("Error", "Condition not found.", "OK");
+						await Shell.Current.DisplayAlertAsync("Error", "Condition not found.", "OK");
 						return;
 					}
-	
+
 									InternalCondition = condition;
 									Title = condition.Name; // Or some other relevant title
-									
+
 					                string imagePath = "";
-					
+
 													if (type == "Negative")
 													{
 														MindsetText = "Troubled Mindset"; // Example text
@@ -102,13 +97,13 @@ namespace MindBodyDictionaryMobile.PageModels
 										Summary = "No specific summary available.";
 										// Default image or error handling
 									}
-									
+
 					                if (!string.IsNullOrEmpty(imagePath))
 					                {
 					                    CachedImageSource = await _imageCacheService.GetImageAsync(imagePath);
-					                }	
+					                }
 					// Assume you have logic to determine if ads should be shown
-					// ShowAds = !SubscriptionService.IsPremiumUser(); 
+					// ShowAds = !SubscriptionService.IsPremiumUser();
 				}
 				catch (Exception ex)
 				{
@@ -121,7 +116,7 @@ namespace MindBodyDictionaryMobile.PageModels
 		{
 			if (InternalCondition == null)
 			{
-				await Shell.Current.DisplayAlert("Error", "No condition to share.", "OK");
+				await Shell.Current.DisplayAlertAsync("Error", "No condition to share.", "OK");
 				return;
 			}
 

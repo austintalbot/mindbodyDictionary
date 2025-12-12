@@ -13,10 +13,10 @@ for item in data:
     name = item.get('name', '')
     # Apply all sanitization rules
     safe_name = name.replace(':', '-').replace('/', '-').replace(' ', '-').replace("'s", "")
-    
+
     neg_img = f"{safe_name}-Negative.png"
     pos_img = f"{safe_name}-Positive.png"
-    
+
     # Verify existence (optional but good for data integrity)
     if neg_img in files_set:
         item['cachedImageOne'] = neg_img
@@ -24,7 +24,7 @@ for item in data:
         # Fallback logic or keep null?
         # Maybe log it?
         print(f"Warning: Image not found: {neg_img} for condition '{name}'")
-        
+
     if pos_img in files_set:
         item['cachedImageTwo'] = pos_img
     else:

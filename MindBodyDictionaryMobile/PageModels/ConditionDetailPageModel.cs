@@ -89,7 +89,7 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 	}
 
 	public bool HasCompletedTasks
-		=> _condition?.Tasks.Any(t => t.IsCompleted) ?? false;
+		=> 	Condition?.Tasks.Any(t => t.IsCompleted) ?? false;
 
     // Tab Management Properties and Command
     [ObservableProperty]
@@ -133,10 +133,12 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 		else
 		{
 			Task.WhenAll(LoadCategories(), LoadTags()).FireAndForgetSafeAsync(_errorHandler);
-			_condition = new();
-			_condition.Tags = [];
-			_condition.Tasks = [];
-			Tasks = _condition.Tasks;
+			Condition = new()
+			{
+				Tags = [],
+				Tasks = []
+			};
+			Tasks = Condition.Tasks;
 		}
 	}
 
@@ -155,9 +157,9 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
             case "Recommendations":
                 CurrentView = _serviceProvider.GetRequiredService<RecommendationsView>();
                 CurrentView.BindingContext = _serviceProvider.GetRequiredService<RecommendationsPageModel>(); // RecommendationsView has its own ViewModel
-				if (CurrentView.BindingContext is RecommendationsPageModel recommendationsPageModel && _condition != null)
+				if (CurrentView.BindingContext is RecommendationsPageModel recommendationsPageModel && Condition != null)
 				{
-					recommendationsPageModel.Condition = _condition; // Pass the condition to the inner ViewModel
+					recommendationsPageModel.Condition = Condition; // Pass the condition to the inner ViewModel
 					recommendationsPageModel.InitializeTabs();
 				}
                 break;
@@ -173,18 +175,18 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 
 	private async Task RefreshData()
 	{
-		if (_condition.IsNullOrNew())
+		if (Condition.IsNullOrNew())
 		{
-			if (_condition is not null)
-				Tasks = [.. _condition.Tasks];
+			if (Condition is not null)
+				Tasks = [.. Condition.Tasks];
 
 			return;
 		}
 
-		if (!string.IsNullOrEmpty(_condition.Id))
+		if (!string.IsNullOrEmpty(Condition.Id))
 		{
-			Tasks = await _taskRepository.ListAsync(_condition.Id);
-			_condition.Tasks = Tasks;
+			Tasks = await _taskRepository.ListAsync(Condition.Id);
+			Condition.Tasks = Tasks;
 		}
 	}
 
@@ -194,38 +196,37 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 		{
 			IsBusy = true;
 
-			_condition = await _conditionRepository.GetAsync(id);
+			Condition = await _conditionRepository.GetAsync(id);
 
-			if (_condition.IsNullOrNew())
+			if (Condition.IsNullOrNew())
 			{
 				_errorHandler.HandleError(new Exception($"Condition with id {id} could not be found."));
 				return;
 			}
 
-			Name = _condition.Name ?? string.Empty;
-			Description = _condition.Description;
-			Tasks = _condition.Tasks;
-			SummaryNegative = _condition.SummaryNegative;
-			SummaryPositive = _condition.SummaryPositive;
-
+			Name = Condition.Name ?? string.Empty;
+			Description = Condition.Description ?? string.Empty;
+			Tasks = Condition.Tasks;
+			SummaryNegative = Condition.SummaryNegative ?? string.Empty;
+			SummaryPositive = Condition.SummaryPositive ?? string.Empty;
 			// Load Images from properties
-            if (!string.IsNullOrEmpty(_condition.ImageNegative))
-			    _condition.CachedImageOneSource = await _imageCacheService.GetImageAsync(_condition.ImageNegative);
+            if (!string.IsNullOrEmpty(Condition.ImageNegative))
+			    Condition.CachedImageOneSource = await _imageCacheService.GetImageAsync(Condition.ImageNegative);
 
-            if (!string.IsNullOrEmpty(_condition.ImagePositive))
-			    _condition.CachedImageTwoSource = await _imageCacheService.GetImageAsync(_condition.ImagePositive);
+            if (!string.IsNullOrEmpty(Condition.ImagePositive))
+			    Condition.CachedImageTwoSource = await _imageCacheService.GetImageAsync(Condition.ImagePositive);
 
-			Icon = Icons.FirstOrDefault(i => i.Icon == _condition.Icon) ?? Icons.First();
+			Icon = Icons.FirstOrDefault(i => i.Icon == Condition.Icon) ?? Icons.First();
 
 			Categories = await _categoryRepository.ListAsync();
-			Category = Categories?.FirstOrDefault(c => c.ID == _condition.CategoryID);
-			CategoryIndex = Categories?.FindIndex(c => c.ID == _condition.CategoryID) ?? -1;
+			Category = Categories?.FirstOrDefault(c => c.ID == Condition.CategoryID);
+			CategoryIndex = Categories?.FindIndex(c => c.ID == Condition.CategoryID) ?? -1;
 
 			var allTags = await _tagRepository.ListAsync();
 			foreach (var tag in allTags)
 			{
 				// Use MobileTags (List<Tag>) instead of Tags (List<string> from API)
-				tag.IsSelected = _condition.MobileTags.Any(t => t.ID == tag.ID);
+				tag.IsSelected = Condition.MobileTags.Any(t => t.ID == tag.ID);
 			}
 			AllTags = new(allTags);
 
@@ -234,15 +235,15 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
             {
                 if (CurrentView is ConditionDetailsProblemView problemView)
                 {
-                    problemView.MbdCondition = _condition;
+                    problemView.MbdCondition = Condition;
                 }
                 else if (CurrentView is ConditionDetailsAffirmationsView affirmationsView)
                 {
-                    affirmationsView.MbdCondition = _condition;
+                    affirmationsView.MbdCondition = Condition;
                 }
             } else if (CurrentView.BindingContext is RecommendationsPageModel recommendationsPageModel)
             {
-                recommendationsPageModel.Condition = _condition;
+                recommendationsPageModel.Condition = Condition;
                 recommendationsPageModel.InitializeTabs();
             }
 
@@ -256,7 +257,7 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 		finally
 		{
 			IsBusy = false;
-			CanDelete = !_condition.IsNullOrNew();
+			CanDelete = !Condition.IsNullOrNew();
 			OnPropertyChanged(nameof(HasCompletedTasks));
 		}
 	}
@@ -272,7 +273,7 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 	[RelayCommand]
 	private async Task Save()
 	{
-		if (_condition is null)
+		if (Condition is null)
 		{
 			_errorHandler.HandleError(
 				new Exception("Condition is null. Cannot Save."));
@@ -280,33 +281,33 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 			return;
 		}
 
-		_condition.Name = Name;
-		_condition.Description = Description;
-		_condition.CategoryID = Category?.ID ?? 0;
-		_condition.Icon = Icon.Icon ?? FluentUI.ribbon_24_regular;
+		Condition.Name = Name;
+		Condition.Description = Description;
+		Condition.CategoryID = Category?.ID ?? 0;
+		Condition.Icon = Icon.Icon ?? FluentUI.ribbon_24_regular;
 
 		// Save the condition and get the ID back (important for new conditions)
-		var savedConditionId = await _conditionRepository.SaveItemAsync(_condition);
-		_condition.Id = savedConditionId;
+		var savedConditionId = await _conditionRepository.SaveItemAsync(Condition);
+		Condition.Id = savedConditionId;
 
-		if (_condition.IsNullOrNew())
+		if (Condition.IsNullOrNew())
 		{
 			foreach (var tag in AllTags)
 			{
-				if (tag.IsSelected && !string.IsNullOrEmpty(_condition.Id))
+				if (tag.IsSelected && !string.IsNullOrEmpty(Condition.Id))
 				{
-					await _tagRepository.SaveItemAsync(tag, _condition.Id);
+					await _tagRepository.SaveItemAsync(tag, Condition.Id);
 				}
 			}
 		}
 
-		foreach (var task in _condition.Tasks)
+		foreach (var task in Condition.Tasks)
 		{
 			if (task.ID == 0)
 			{
-				if (!string.IsNullOrEmpty(_condition.Id))
+				if (!string.IsNullOrEmpty(Condition.Id))
 				{
-					task.ProjectID = _condition.Id;
+					task.ProjectID = Condition.Id;
 				}
 				await _taskRepository.SaveItemAsync(task);
 			}
@@ -319,7 +320,7 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 	[RelayCommand]
 	private async Task AddTask()
 	{
-		if (_condition is null)
+		if (Condition is null)
 		{
 			_errorHandler.HandleError(
 				new Exception("Condition is null. Cannot navigate to task."));
@@ -331,20 +332,20 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 		// the tasks to the condition and then save them all from here.
 		await Shell.Current.GoToAsync($"task",
 			new ShellNavigationQueryParameters(){
-				{TaskDetailPageModel.ProjectQueryKey, _condition}
+				{TaskDetailPageModel.ProjectQueryKey, Condition}
 			});
 	}
 
 	[RelayCommand(CanExecute = nameof(CanDelete))]
 	private async Task Delete()
 	{
-		if (_condition.IsNullOrNew())
+		if (Condition.IsNullOrNew())
 		{
 			await Shell.Current.GoToAsync("..");
 			return;
 		}
 
-		await _conditionRepository.DeleteItemAsync(_condition);
+		await _conditionRepository.DeleteItemAsync(Condition);
 		await Shell.Current.GoToAsync("..");
 		await AppShell.DisplayToastAsync("Condition deleted");
 	}

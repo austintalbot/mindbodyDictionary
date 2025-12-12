@@ -32,11 +32,7 @@ namespace MindBodyDictionaryMobile.PageModels
 		[ObservableProperty]
 		private ObservableCollection<MbdCondition> _randomConditionCollection;
 
-		[ObservableProperty]
-		private string _bannerAdUnitId = "ca-app-pub-3940256099942544/6300978111"; // Default AdMob Test ID
 
-		[ObservableProperty]
-		private bool _showAds = true; // Assuming ads are shown by default
 
 		public ConditionHomePageModel(ConditionRepository conditionRepository, ModalErrorHandler errorHandler, ILogger<ConditionHomePageModel> logger) // Modify constructor
 		{
@@ -81,13 +77,7 @@ namespace MindBodyDictionaryMobile.PageModels
 			}
 		}
 
-		public async Task VerifySubscriptionStatusAsync()
-		{
-			// TODO: Implement actual subscription verification logic
-			// For now, just a placeholder.
-			await Task.Delay(100); // Simulate async operation
-			ShowAds = !Preferences.Get("IsPremiumUser", false);
-		}
+
 
 		[RelayCommand]
 		public async Task OnSearchButtonPressed()
@@ -98,6 +88,45 @@ namespace MindBodyDictionaryMobile.PageModels
 			// For now, it just ensures the ViewModel is aware of the search action.
 			_logger.LogDebug("Search button pressed in ConditionHomePageModel."); // Replace Logger.Debug
 			await Task.CompletedTask;
+		}
+
+		/// <summary>
+		/// Verifies subscription status and updates ad display accordingly.
+		/// This is called on home page load to check if subscriptions are still active.
+		/// If subscription has expired, ads will be re-enabled across the app.
+		/// </summary>
+		public async Task VerifySubscriptionStatusAsync()
+		{
+			try
+			{
+				_logger.LogInformation("Verifying subscription status.");
+
+				// Check if user has an active subscription
+				// This would typically involve checking with a subscription service
+				// or validating stored subscription data
+				bool hasActiveSubscription = Preferences.Get("hasPremiumSubscription", false);
+
+				if (hasActiveSubscription)
+				{
+					_logger.LogInformation("User has active subscription.");
+					// Subscriptions are valid, ads remain disabled
+					Preferences.Set("showAds", false);
+				}
+				else
+				{
+					_logger.LogInformation("No active subscription found, enabling ads.");
+					// No subscription, enable ads
+					Preferences.Set("showAds", true);
+				}
+
+				await Task.CompletedTask;
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex, "Error verifying subscription status.");
+				// Default to showing ads on error
+				Preferences.Set("showAds", true);
+			}
 		}
 	}
 }
