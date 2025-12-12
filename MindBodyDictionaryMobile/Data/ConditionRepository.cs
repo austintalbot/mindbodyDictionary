@@ -172,9 +172,9 @@ public class ConditionRepository(TaskRepository taskRepository, TagRepository ta
 		await using var reader = await selectCmd.ExecuteReaderAsync();
 		if (await reader.ReadAsync())
 		{
-            var condition = ReadCondition(reader);
+            var condition = ReadCondition(reader)!;
 
-			if (!string.IsNullOrEmpty(condition.Id))
+			if (!string.IsNullOrEmpty(condition!.Id))
 			{
 				var tagObjects = await _tagRepository.ListAsync(condition.Id);
 				condition.MobileTags = tagObjects;

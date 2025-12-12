@@ -8,7 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection; // Add this for IServiceProvider
 using Microsoft.Extensions.Logging; // Add this for logging
-using backend.Enums;
+using MindBodyDictionaryMobile.Enums; // Add this using statement
 
 namespace MindBodyDictionaryMobile.PageModels;
 
@@ -240,6 +240,40 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
 			}
 			AllTags = new(allTags);
 
+            // Logging for Recommendations
+            _logger.LogInformation($"Condition ID: {Condition.Id}");
+            _logger.LogInformation($"Condition Name: {Condition.Name}");
+            if (Condition.Recommendations != null && Condition.Recommendations.Any())
+            {
+                _logger.LogInformation($"Total recommendations found: {Condition.Recommendations.Count}");
+                foreach (var rec in Condition.Recommendations)
+                {
+                    _logger.LogInformation($"  Recommendation: Name={rec.Name}, Type={(MindBodyDictionaryMobile.Enums.RecommendationType)rec.RecommendationType}");
+                }
+            }
+            else
+            {
+                _logger.LogInformation("No recommendations found for this condition.");
+            }
+
+            // Populate FoodList, ProductList, and BooksResourcesList
+            if (Condition.Recommendations != null)
+            {
+                FoodList = Condition.Recommendations
+                                .Where(r => r.RecommendationType == (int)RecommendationType.Food)
+                                .ToList();
+                ProductList = Condition.Recommendations
+                                .Where(r => r.RecommendationType == (int)RecommendationType.Product)
+                                .ToList();
+                BooksResourcesList = Condition.Recommendations
+                                .Where(r => r.RecommendationType == (int)RecommendationType.Book)
+                                .ToList();
+            }
+
+            _logger.LogInformation($"FoodList count: {FoodList.Count}");
+            _logger.LogInformation($"ProductList count: {ProductList.Count}");
+            _logger.LogInformation($"BooksResourcesList count: {BooksResourcesList.Count}");
+
             // Set the condition on the current view if it is one of the ConditionDetails views
             if (CurrentView.BindingContext == this)
             {
@@ -255,20 +289,6 @@ public partial class ConditionDetailPageModel : ObservableObject, IQueryAttribut
             {
                 recommendationsPageModel.Condition = Condition;
                 recommendationsPageModel.InitializeTabs();
-            }
-
-            // Populate FoodList, ProductList, and BooksResourcesList
-            if (Condition.Recommendations != null)
-            {
-                FoodList = Condition.Recommendations
-                                .Where(r => r.RecommendationType == (int)backend.Enums.RecommendationType.Food)
-                                .ToList();
-                ProductList = Condition.Recommendations
-                                .Where(r => r.RecommendationType == (int)backend.Enums.RecommendationType.Product)
-                                .ToList();
-                BooksResourcesList = Condition.Recommendations
-                                .Where(r => r.RecommendationType == (int)backend.Enums.RecommendationType.Book)
-                                .ToList();
             }
 
             // Notify that Condition (and its properties like CachedImageOneSource) might have changed
