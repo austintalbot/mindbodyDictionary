@@ -1,5 +1,5 @@
-using MindBodyDictionaryMobile.PageModels;
 using Microsoft.Maui.Controls.Xaml;
+using MindBodyDictionaryMobile.PageModels;
 
 namespace MindBodyDictionaryMobile.Pages;
 
@@ -12,7 +12,7 @@ public partial class MbdConditionDetailPage : ContentPage
 	{
 		InitializeComponent();
 		BindingContext = mbdConditionDetailPageModel;
-		this._mbdConditionDetailPageModel = mbdConditionDetailPageModel;
+		_mbdConditionDetailPageModel = mbdConditionDetailPageModel;
 	}
 
 

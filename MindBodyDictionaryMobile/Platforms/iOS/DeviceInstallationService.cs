@@ -1,7 +1,7 @@
+using System.Diagnostics;
 using MindBodyDictionaryMobile.Models;
 using MindBodyDictionaryMobile.Services;
 using UIKit;
-using System.Diagnostics;
 
 namespace MindBodyDictionaryMobile.Platforms.iOS;
 

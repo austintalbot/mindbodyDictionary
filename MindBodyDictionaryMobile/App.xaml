@@ -17,7 +17,7 @@
             <converters:BoolToColorConverter x:Key="BoolToColorConverter" />
             <converters:BoolToTextConverter x:Key="BoolToTextConverter" />
             <converters:InverseBoolConverter x:Key="InverseBoolConverter" />
-            
+
             <!-- App-specific Colors -->
             <Color x:Key="ActionColor">#00606E</Color>
             <Color x:Key="PrimaryColor">#6B329B</Color>

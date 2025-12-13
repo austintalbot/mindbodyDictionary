@@ -1,3 +1,8 @@
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging; // Added
@@ -5,11 +10,6 @@ using Microsoft.Maui.Controls;
 using MindBodyDictionaryMobile.Data;
 using MindBodyDictionaryMobile.Models;
 using MindBodyDictionaryMobile.Models.Messaging; // Added
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace MindBodyDictionaryMobile.PageModels;
 

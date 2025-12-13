@@ -9,7 +9,7 @@
              xmlns:fonts="clr-namespace:Fonts"
              x:Class="MindBodyDictionaryMobile.Pages.MbdConditionDetailPage"
              x:DataType="pageModels:MbdConditionDetailPageModel"
-             Title="MbdCondition">
+             Title="Condition">
 
     <ContentPage.Resources>
         <DataTemplate x:Key="NormalTagTemplate" x:DataType="models:Tag">

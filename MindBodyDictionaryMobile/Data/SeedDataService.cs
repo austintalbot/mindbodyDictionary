@@ -1,9 +1,9 @@
-using System.Text.Json;
 using System.Collections.Generic;
 using System.Linq;
-using MindBodyDictionaryMobile.Models;
-using Microsoft.Extensions.Logging;
 using System.Reflection;
+using System.Text.Json;
+using Microsoft.Extensions.Logging;
+using MindBodyDictionaryMobile.Models;
 
 namespace MindBodyDictionaryMobile.Data;
 

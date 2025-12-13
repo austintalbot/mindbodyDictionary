@@ -1,7 +1,7 @@
 
+using Android.BillingClient.Api;
 using Microsoft.Extensions.Logging;
 using MindBodyDictionaryMobile.Models;
-using Android.BillingClient.Api;
 using AndroidBillingResult = Android.BillingClient.Api.BillingResult;
 
 namespace MindBodyDictionaryMobile.Services.billing;

@@ -1,9 +1,9 @@
-using MindBodyDictionaryMobile.Data;
-using MindBodyDictionaryMobile.Services;
-using System.Threading.Tasks;
 using System;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
+using MindBodyDictionaryMobile.Data;
 using MindBodyDictionaryMobile.Models.Messaging;
+using MindBodyDictionaryMobile.Services;
 
 namespace MindBodyDictionaryMobile.Services;
 

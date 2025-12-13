@@ -1,5 +1,5 @@
-using MindBodyDictionaryMobile.PageModels;
 using Microsoft.Maui.Controls.Shapes;
+using MindBodyDictionaryMobile.PageModels;
 
 namespace MindBodyDictionaryMobile.Pages;
 

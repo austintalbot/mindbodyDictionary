@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
-using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
+using CommunityToolkit.Maui.Views;
 using Microsoft.Extensions.Logging; // Using ILogger
 
 namespace MindBodyDictionaryMobile.Pages;

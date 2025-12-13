@@ -1,7 +1,7 @@
 using System.Text.Json;
-using MindBodyDictionaryMobile.Models;
 using Microsoft.Azure.NotificationHubs;
 using Microsoft.Extensions.Logging;
+using MindBodyDictionaryMobile.Models;
 
 namespace MindBodyDictionaryMobile.Services;
 

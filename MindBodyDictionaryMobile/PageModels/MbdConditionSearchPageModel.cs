@@ -1,10 +1,10 @@
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using MindBodyDictionaryMobile.Models;
 using Microsoft.Extensions.Logging; // Add this for ILogger
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
-using System.Linq;
+using MindBodyDictionaryMobile.Models;
 
 namespace MindBodyDictionaryMobile.PageModels
 {
@@ -14,26 +14,26 @@ namespace MindBodyDictionaryMobile.PageModels
 		private readonly ModalErrorHandler _errorHandler;
 		private readonly ILogger<MbdConditionSearchPageModel> _logger;
 		private readonly ImageCacheService _imageCacheService;
-	
+
 		[ObservableProperty]
 		private string _title = "Search Conditions";
-	
+
 		[ObservableProperty]
 		private string _searchParam = string.Empty;
-	
+
 		[ObservableProperty]
 		private bool _isBusy;
-	
+
 		[ObservableProperty]
 		private bool _isInitialized;
-	
+
 		private ObservableCollection<MbdCondition> _allConditions;
-	
+
 		[ObservableProperty]
 		private ObservableCollection<MbdCondition> _filteredConditionCollection;
-	
-	
-	
+
+
+
 		public MbdConditionSearchPageModel(MbdConditionRepository mbdConditionRepository, ModalErrorHandler errorHandler, ILogger<MbdConditionSearchPageModel> logger, ImageCacheService imageCacheService) // Modify constructor
 		{
 			_mbdConditionRepository = mbdConditionRepository;
@@ -44,18 +44,18 @@ namespace MindBodyDictionaryMobile.PageModels
 			FilteredConditionCollection = new ObservableCollection<MbdCondition>();
 			// Initialize with default values or from preferences/settings
 		}
-	
+
 		[RelayCommand]
 		public async Task GetConditionShortList()
 		{
 			if (IsBusy)
 				return;
-	
+
 			try
 			{
 				IsBusy = true;
 				var conditions = await _mbdConditionRepository.ListAsync();
-	
+
 	                // Load images for search results
 	                foreach (var c in conditions)
 	                {
@@ -64,7 +64,7 @@ namespace MindBodyDictionaryMobile.PageModels
 	                        c.CachedImageOneSource = await _imageCacheService.GetImageAsync(c.ImageNegative);
 	                    }
 	                }
-	
+
 				_allConditions = new ObservableCollection<MbdCondition>(conditions);
 				ApplyFilter(); // Apply initial filter based on SearchParam
 				IsInitialized = true;
@@ -79,13 +79,13 @@ namespace MindBodyDictionaryMobile.PageModels
 				IsBusy = false;
 			}
 		}
-	
+
 		[RelayCommand]
 		public void OnTextChanged()
 		{
 			ApplyFilter();
 		}
-	
+
 		private void ApplyFilter()
 		{
 			FilteredConditionCollection.Clear();
@@ -105,7 +105,7 @@ namespace MindBodyDictionaryMobile.PageModels
 				}
 			}
 		}
-	
+
 		[RelayCommand]
 		public async Task OnSearchButtonPressed()
 		{
@@ -118,5 +118,5 @@ namespace MindBodyDictionaryMobile.PageModels
 			await Task.CompletedTask;
 		}
 	}
-	
+
 }

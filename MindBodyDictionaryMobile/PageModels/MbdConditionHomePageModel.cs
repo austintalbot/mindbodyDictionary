@@ -1,10 +1,10 @@
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using MindBodyDictionaryMobile.Models;
-using Microsoft.Maui.Controls; // For Preferences
-using Microsoft.Extensions.Logging; // Add this for ILogger
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.Logging; // Add this for ILogger
+using Microsoft.Maui.Controls; // For Preferences
+using MindBodyDictionaryMobile.Models;
 
 namespace MindBodyDictionaryMobile.PageModels
 {
@@ -13,22 +13,22 @@ namespace MindBodyDictionaryMobile.PageModels
 		private readonly MbdConditionRepository _mbdConditionRepository;
 		private readonly ModalErrorHandler _errorHandler;
 		private readonly ILogger<MbdConditionHomePageModel> _logger; // Add this
-		
+
 			[ObservableProperty]
 			private string _title = "MindBody Dictionary";
-		
+
 			[ObservableProperty]
 			private string _version = "1.0.0"; // Placeholder, can be loaded from assembly
-		
+
 			[ObservableProperty]
 			private bool _isRefreshing;
-		
+
 			[ObservableProperty]
 			private bool _isInitialized;
-		
+
 			[ObservableProperty]
 			private bool _isBusy;
-		
+
 			[ObservableProperty]
 			private ObservableCollection<MbdCondition> _randomConditionCollection;
 
@@ -43,9 +43,9 @@ namespace MindBodyDictionaryMobile.PageModels
 				SelectedCondition = null;
 			}
 		}
-		
-		
-		
+
+
+
 			public MbdConditionHomePageModel(MbdConditionRepository mbdConditionRepository, ModalErrorHandler errorHandler, ILogger<MbdConditionHomePageModel> logger) // Modify constructor
 			{
 				_mbdConditionRepository = mbdConditionRepository;
@@ -54,13 +54,13 @@ namespace MindBodyDictionaryMobile.PageModels
 				RandomConditionCollection = new ObservableCollection<MbdCondition>();
 				// Initialize with default values or from preferences/settings
 			}
-		
+
 			[RelayCommand]
 			public async Task GetConditionList()
 			{
 				if (IsBusy)
 					return;
-		
+
 				try
 				{
 					IsBusy = true;

@@ -1,8 +1,8 @@
-using CommunityToolkit.Maui;
+﻿using CommunityToolkit.Maui;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Syncfusion.Maui.Toolkit.Hosting;
 using MindBodyDictionaryMobile.Services.billing;
+using Syncfusion.Maui.Toolkit.Hosting;
 
 namespace MindBodyDictionaryMobile;
 

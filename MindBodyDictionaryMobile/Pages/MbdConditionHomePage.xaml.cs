@@ -1,11 +1,11 @@
+using System.Threading;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Maui.Views;
-using MindBodyDictionaryMobile.PageModels;
-using System.Threading;
-using Microsoft.Extensions.Logging; // Add this
 using Microsoft.Extensions.DependencyInjection; // Add this
+using Microsoft.Extensions.Logging; // Add this
+using MindBodyDictionaryMobile.PageModels;
 
 namespace MindBodyDictionaryMobile.Pages;
 

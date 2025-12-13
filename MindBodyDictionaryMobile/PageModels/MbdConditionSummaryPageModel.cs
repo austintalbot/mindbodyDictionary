@@ -1,10 +1,10 @@
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using MindBodyDictionaryMobile.Models;
-using Microsoft.Maui.Controls; // For ImageSource and Shell
-using Microsoft.Extensions.Logging; // Add this for ILogger
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.Logging; // Add this for ILogger
+using Microsoft.Maui.Controls; // For ImageSource and Shell
+using MindBodyDictionaryMobile.Models;
 
 namespace MindBodyDictionaryMobile.PageModels
 {
@@ -128,5 +128,3 @@ namespace MindBodyDictionaryMobile.PageModels
 			}
 		}
 	}
-
-

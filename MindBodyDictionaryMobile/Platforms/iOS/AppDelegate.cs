@@ -1,6 +1,6 @@
 ﻿using Foundation;
-using UserNotifications;
 using Microsoft.Maui.ApplicationModel;
+using UserNotifications;
 
 namespace MindBodyDictionaryMobile;
 
