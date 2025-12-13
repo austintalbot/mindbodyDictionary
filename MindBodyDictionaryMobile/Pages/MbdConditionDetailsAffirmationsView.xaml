@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                           xmlns:vm="clr-namespace:MindBodyDictionaryMobile.PageModels"
                           xmlns:local="clr-namespace:MindBodyDictionaryMobile"
-                          x:DataType="vm:ConditionDetailPageModel"
+                          xmlns:f="clr-namespace:Fonts"
+                          x:DataType="vm:MbdConditionDetailPageModel"
                           x:Name="this"
                           x:Class="MindBodyDictionaryMobile.Pages.MbdConditionDetailsAffirmationsView">
                 <Grid
@@ -28,12 +29,12 @@
                          <Label
                              Text="Affirmations for"
                              FontSize="18"
-                             TextColor="{StaticResource ConditionTextColor}"
+                             TextColor="{StaticResource MbdConditionTextColor}"
                              HorizontalOptions="Center"/>
                          <Label
                              Text="{Binding Condition.Name}"
                              HorizontalOptions="Center"
-                             TextColor="{StaticResource ConditionTextColor}"
+                             TextColor="{StaticResource MbdConditionTextColor}"
                              FontSize="24"
                              Padding="0,0,0,10"
                              FontAttributes="Bold"/>
@@ -62,8 +63,8 @@
                                      Margin="2"
                                      HeightRequest="260"
                                      CornerRadius="12"
-                                     BorderColor="{StaticResource ConditionDetailCardBorder}"
-                                     BackgroundColor="{StaticResource ConditionDetailCardBackground}">
+                                     BorderColor="{StaticResource MbdConditionDetailCardBorder}"
+                                     BackgroundColor="{StaticResource MbdConditionDetailCardBackground}">
                                          <VerticalStackLayout>
                                              <Label
                                              x:Name="AffirmationLabel"
@@ -75,7 +76,7 @@
                                              x:DataType="{x:Type x:String}"
                                              Padding="10"
                                              Margin="10"
-                                             TextColor="{StaticResource ConditionDetailCardText}"
+                                             TextColor="{StaticResource MbdConditionDetailCardText}"
                                              VerticalOptions="Center"
                                              VerticalTextAlignment="Center">
                                              </Label>
@@ -85,7 +86,7 @@
                                              HorizontalOptions="Center"
                                              HorizontalTextAlignment="Center"
                                              Text="{x:Static local:App.CopyrightText}"
-                                             TextColor="{StaticResource ConditionDetailCardText}"
+                                             TextColor="{StaticResource MbdConditionDetailCardText}"
                                              VerticalOptions="End"
                                              VerticalTextAlignment="End" />
                                          </VerticalStackLayout>
@@ -117,7 +118,7 @@
                          <HorizontalStackLayout>
                          <HorizontalStackLayout.GestureRecognizers>
                              <TapGestureRecognizer
-                             Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ConditionDetailPageModel}}, Path=ShareCarouselMbdConditionCommand}"
+                             Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MbdConditionDetailPageModel}}, Path=ShareCarouselMbdConditionCommand}"
                              CommandParameter="{Binding CurrentAffirmation}"/>
                          </HorizontalStackLayout.GestureRecognizers>
                              <Label
@@ -134,8 +135,12 @@
                                  Aspect="AspectFit"
                                  BackgroundColor="Transparent"
                                  HeightRequest="32"
-                                 Source="{mi:Material Icon=Share }"
                                  WidthRequest="32" >
+                             <Image.Source>
+                                 <FontImageSource Glyph="{x:Static f:FluentUI.share_24_regular}"
+                                                  FontFamily="{x:Static f:FluentUI.FontFamily}"
+                                                  Color="{StaticResource MbdConditionTextColor}" />
+                             </Image.Source>
                          </Image>
                      </HorizontalStackLayout>
 

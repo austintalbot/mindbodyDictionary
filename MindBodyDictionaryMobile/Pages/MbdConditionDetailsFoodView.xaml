@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:MindBodyDictionaryMobile.PageModels"
              xmlns:model="clr-namespace:MindBodyDictionaryMobile.Models"
-             xmlns:mi="http://www.aathifmahir.com/dotnet/2022/maui/icons"
+             xmlns:f="clr-namespace:Fonts"
              x:DataType="vm:MbdConditionDetailPageModel"
              x:Name="this"
              x:Class="MindBodyDictionaryMobile.Pages.MbdConditionDetailsFoodView">
@@ -26,8 +26,13 @@
                         <Image x:Name="CheckMarkImage"
                                HeightRequest="25"
                                Grid.Column="1"
-                               Source="{mi:Material Icon=Check, IconColor=White}"
-                               WidthRequest="25" />
+                               WidthRequest="25">
+                            <Image.Source>
+                                <FontImageSource Glyph="{x:Static f:FluentUI.checkmark_24_regular}"
+                                                 FontFamily="{x:Static f:FluentUI.FontFamily}"
+                                                 Color="White" />
+                            </Image.Source>
+                        </Image>
                     </Grid>
                 </Border>
             </DataTemplate>

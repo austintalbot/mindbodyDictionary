@@ -31,6 +31,18 @@ namespace MindBodyDictionaryMobile.PageModels
 		
 			[ObservableProperty]
 			private ObservableCollection<MbdCondition> _randomConditionCollection;
+
+		[ObservableProperty]
+		private MbdCondition? _selectedCondition;
+
+		async partial void OnSelectedConditionChanged(MbdCondition? value)
+		{
+			if (value is not null)
+			{
+				await SelectCondition(value);
+				SelectedCondition = null;
+			}
+		}
 		
 		
 		

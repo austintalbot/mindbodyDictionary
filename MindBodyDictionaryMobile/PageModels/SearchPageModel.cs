@@ -35,6 +35,18 @@ private bool isSearching;
 [ObservableProperty]
 private bool hasNoResults;
 
+[ObservableProperty]
+private MbdCondition? _selectedCondition;
+
+async partial void OnSelectedConditionChanged(MbdCondition? value)
+{
+    if (value is not null)
+    {
+        await SelectMbdCondition(value);
+        SelectedCondition = null;
+    }
+}
+
 // This method will be called when the page appears
 public async Task InitializeAsync()
 {

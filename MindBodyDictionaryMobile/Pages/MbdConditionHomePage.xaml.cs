@@ -88,7 +88,8 @@ public partial class MbdConditionHomePage : ContentPage
 	{
 		try
 		{
-			var id = e.Parameter.ToString();
+			var condition = e.Parameter as Models.MbdCondition;
+			var id = condition?.Id;
 			if (string.IsNullOrEmpty(id))
 				return;
 			await Shell.Current.GoToAsync($"mbdcondition?id={id}");
@@ -96,7 +97,7 @@ public partial class MbdConditionHomePage : ContentPage
 		catch (Exception err)
 		{
 			// Log navigation errors but don't crash the app - user can retry the tap
-			_logger.LogError(err, "Error navigating to condition details"); // Replace Logger.Error
+			_logger.LogError(err, "Error navigating to condition details");
 		}
 	}
 }

@@ -23,20 +23,15 @@
 
         <!-- Results -->
         <CollectionView
+            x:Name="SearchResultsList"
             Grid.Row="1"
             ItemsSource="{Binding FilteredConditions}"
             SelectionMode="Single"
-            SelectionChangedCommand="{Binding SelectMbdConditionCommand}"
-            SelectionChangedCommandParameter="{Binding SelectedItem, Source={RelativeSource Self}}">
+            SelectedItem="{Binding SelectedCondition, Mode=TwoWay}">
 
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="models:MbdCondition">
                     <Border Style="{StaticResource SearchMbdConditionCard}">
-                        <Border.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type pm:SearchPageModel}}, Path=SelectMbdConditionCommand}"
-                                                    CommandParameter="{Binding .}" />
-                        </Border.GestureRecognizers>
-
                         <Grid RowDefinitions="*,Auto">
                             <!-- Lock overlay -->
                             <Image Grid.Row="0"

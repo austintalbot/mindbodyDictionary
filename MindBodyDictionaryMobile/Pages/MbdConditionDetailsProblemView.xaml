@@ -30,11 +30,11 @@
                 Source="mbd_icon.png"
                 MaximumHeightRequest="100"></Image>
         <Label Text="Mindsets for"
-                TextColor="{StaticResource ConditionTextColor}"
+                TextColor="{StaticResource MbdConditionTextColor}"
                 HorizontalOptions="Center"
                 FontSize="16" />
         <Label Text="{Binding Condition.Name}"
-                TextColor="{StaticResource ConditionTextColor}"
+                TextColor="{StaticResource MbdConditionTextColor}"
                 Style="{StaticResource SubHeadline}"
                 HorizontalOptions="Center"
                 Padding="0,0,0,10" />
@@ -44,8 +44,8 @@
         Grid.Column="0"
         Grid.ColumnSpan="2"
         HorizontalOptions="Fill"
-        Stroke="{StaticResource ConditionCardBorder}"
-        BackgroundColor="{StaticResource ConditionCardBackground}"
+        Stroke="{StaticResource MbdConditionCardBorder}"
+        BackgroundColor="{StaticResource MbdConditionCardBackground}"
         VerticalOptions="Fill">
     <Border.GestureRecognizers>
         <TapGestureRecognizer Tapped="TapGestureRecognizer_NegativeMbdConditionTap"
@@ -72,7 +72,7 @@
                 Grid.Row="1"
                 FontSize="12"
                 Text="Troubled Mindset"
-                TextColor="{StaticResource ConditionTextColor }" />
+                TextColor="{StaticResource MbdConditionTextColor}" />
 
         <Label x:Name="NegativeLabel"
                Grid.Column="1"
@@ -97,8 +97,8 @@
         Grid.Row="2"
         Grid.Column="0"
         Grid.ColumnSpan="2"
-        Stroke="{StaticResource ConditionCardBorder}"
-        BackgroundColor="{StaticResource ConditionCardBackground}">
+        Stroke="{StaticResource MbdConditionCardBorder}"
+        BackgroundColor="{StaticResource MbdConditionCardBackground}">
     <Border.GestureRecognizers>
         <TapGestureRecognizer Tapped="TapGestureRecognizer_HealingMbdConditionTap"
                               CommandParameter="{Binding Id}"></TapGestureRecognizer>
@@ -125,7 +125,7 @@
                 Grid.Row="1"
                 FontSize="12"
                 Text="Healing Mindset"
-                TextColor="{StaticResource ConditionTextColor }" />
+                TextColor="{StaticResource MbdConditionTextColor}" />
         <Label Grid.Column="0"
                 Grid.Row="0"
                 Grid.ColumnSpan="2"

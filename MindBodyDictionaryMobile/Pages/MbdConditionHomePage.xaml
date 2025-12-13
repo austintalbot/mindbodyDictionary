@@ -27,8 +27,10 @@
                             IsEnabled="{Binding IsInitialized}"
                             Command="{Binding GetConditionListCommand}"/>
 
-                    <CollectionView ItemsSource="{Binding RandomConditionCollection}"
-                                    SelectionMode="None"
+                    <CollectionView x:Name="ConditionsList"
+                                    ItemsSource="{Binding RandomConditionCollection}"
+                                    SelectionMode="Single"
+                                    SelectedItem="{Binding SelectedCondition, Mode=TwoWay}"
                                     ItemSizingStrategy="MeasureAllItems"
                                     IsVisible="{Binding IsInitialized}">
                         <CollectionView.ItemsLayout>
@@ -52,10 +54,6 @@
                                                 Radius="10"
                                                 Offset="0,2"/>
                                     </Border.Shadow>
-                                    <Border.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MbdConditionHomePageModel}}, Path=SelectConditionCommand}"
-                                                              CommandParameter="{Binding .}"/>
-                                    </Border.GestureRecognizers>
 
                                     <Grid RowDefinitions="*,Auto">
                                         <Label Grid.Row="0"
