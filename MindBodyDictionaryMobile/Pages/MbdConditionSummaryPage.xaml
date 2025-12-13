@@ -7,13 +7,13 @@
              xmlns:local="clr-namespace:MindBodyDictionaryMobile"
              xmlns:mi="http://www.aathifmahir.com/dotnet/2022/maui/icons"
              Title="{Binding Title}">
-    <Grid Style="{StaticResource AilmentSummaryGrid}" RowDefinitions="Auto,Auto,Auto,*,Auto" ColumnDefinitions="*,*,Auto">
+    <Grid Style="{StaticResource MbdConditionSummaryGrid}" RowDefinitions="Auto,Auto,Auto,*,Auto" ColumnDefinitions="*,*,Auto">
         <Border Grid.Column="0"
                 Grid.ColumnSpan="3"
                 Grid.Row="0"
-                Style="{StaticResource AilmentImageBorder}">
+                Style="{StaticResource MbdConditionImageBorder}">
             <Image x:Name="AilmentImage"
-                   Style="{StaticResource AilmentSummaryImage}"
+                   Style="{StaticResource MbdConditionSummaryImage}"
                    Source="{Binding CachedImageSource}" />
         </Border>
 
@@ -26,7 +26,7 @@
         <Label Grid.Row="2"
                Grid.ColumnSpan="3"
                Grid.Column="0"
-               Style="{StaticResource AilmentNameLabel}"
+               Style="{StaticResource MbdConditionNameLabel}"
                Text="{Binding InternalCondition.Name}" />
 
         <ScrollView x:Name="SummaryLabelScroll"

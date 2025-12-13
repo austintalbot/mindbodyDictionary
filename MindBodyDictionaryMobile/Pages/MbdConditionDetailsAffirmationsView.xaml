@@ -64,8 +64,8 @@
                                      Margin="2"
                                      HeightRequest="260"
                                      CornerRadius="12"
-                                     BorderColor="{StaticResource ConditionDetailCardBorder}"
-                                     BackgroundColor="{StaticResource ConditionDetailCardBackground}">
+                                     BorderColor="{StaticResource MbdConditionDetailCardBorder}"
+                                     BackgroundColor="{StaticResource MbdConditionDetailCardBackground}">
                                          <VerticalStackLayout>
                                              <Label
                                              x:Name="AffirmationLabel"
@@ -77,7 +77,7 @@
                                              x:DataType="{x:Type x:String}"
                                              Padding="10"
                                              Margin="10"
-                                             TextColor="{StaticResource ConditionDetailCardText}"
+                                             TextColor="{StaticResource MbdConditionDetailCardText}"
                                              VerticalOptions="Center"
                                              VerticalTextAlignment="Center">
                                              </Label>
@@ -87,7 +87,7 @@
                                              HorizontalOptions="Center"
                                              HorizontalTextAlignment="Center"
                                              Text="{x:Static local:App.CopyrightText}"
-                                             TextColor="{StaticResource ConditionDetailCardText}"
+                                             TextColor="{StaticResource MbdConditionDetailCardText}"
                                              VerticalOptions="End"
                                              VerticalTextAlignment="End" />
                                          </VerticalStackLayout>

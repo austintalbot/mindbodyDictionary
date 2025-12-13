@@ -27,7 +27,7 @@
             <Color x:Key="GoColor">#4F794E</Color>
             <Color x:Key="BarColor">#00606E</Color>
             <Color x:Key="BarSelectedColor">#73ABC9</Color>
-            <Color x:Key="AilmentCardColor">#B4B1AF</Color>
+            <Color x:Key="MbdConditionCardColor">#B4B1AF</Color>
             <Color x:Key="ButtonColor">#00606E</Color>
             <Color x:Key="MbdConditionTextColor">#00606E</Color>
             <Color x:Key="MbdConditionCardBackground">#FFFFFF</Color>
@@ -199,7 +199,7 @@
             </Style>
 
             <!-- SearchBar Styles -->
-            <Style x:Key="AilmentSearchBar" TargetType="SearchBar">
+            <Style x:Key="MbdConditionSearchBar" TargetType="SearchBar">
                 <Setter Property="Placeholder" Value="Search conditions..." />
                 <Setter Property="CancelButtonColor" Value="{StaticResource PrimaryColor}" />
                 <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource PrimaryColor}, Dark=White}" />
@@ -412,14 +412,14 @@
             </Style>
 
             <!-- Ailment Summary Page Styles -->
-            <Style x:Key="AilmentSummaryGrid" TargetType="Grid">
+            <Style x:Key="MbdConditionSummaryGrid" TargetType="Grid">
                 <Setter Property="Margin" Value="10,15" />
                 <Setter Property="Padding" Value="0" />
                 <Setter Property="RowDefinitions" Value="Auto,Auto,*,4*,*,*" />
                 <Setter Property="ColumnDefinitions" Value="50,*,50" />
             </Style>
 
-            <Style x:Key="AilmentImageBorder" TargetType="Border">
+            <Style x:Key="MbdConditionImageBorder" TargetType="Border">
                 <Setter Property="BackgroundColor" Value="{StaticResource MbdConditionCardBackground}" />
                 <Setter Property="Stroke" Value="{StaticResource MbdConditionCardBorder}" />
                 <Setter Property="StrokeThickness" Value="1" />
@@ -428,7 +428,7 @@
                 <Setter Property="Padding" Value="10" />
             </Style>
 
-            <Style x:Key="AilmentSummaryImage" TargetType="Image">
+            <Style x:Key="MbdConditionSummaryImage" TargetType="Image">
                 <Setter Property="HeightRequest" Value="175" />
                 <Setter Property="WidthRequest" Value="175" />
                 <Setter Property="Aspect" Value="AspectFit" />
@@ -444,7 +444,7 @@
                 <Setter Property="Margin" Value="0,10,0,5" />
             </Style>
 
-            <Style x:Key="AilmentNameLabel" TargetType="Label">
+            <Style x:Key="MbdConditionNameLabel" TargetType="Label">
                 <Setter Property="HorizontalTextAlignment" Value="Center" />
                 <Setter Property="FontSize" Value="24" />
                 <Setter Property="FontAttributes" Value="Bold" />

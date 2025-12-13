@@ -18,10 +18,10 @@ public partial class MbdConditionDetailsProblemView : ContentView
 	}
 
 
-	public MbdConditionDetailsProblemView(ILogger<MbdConditionDetailsProblemView> logger) // Modify constructor
+	public MbdConditionDetailsProblemView()
 	{
 		InitializeComponent();
-		_logger = logger; // Assign injected logger
+		_logger = IPlatformApplication.Current?.Services.GetService<ILogger<MbdConditionDetailsProblemView>>();
 	}
 
 	private async void TapGestureRecognizer_NegativeMbdConditionTap(object? sender, TappedEventArgs e)
