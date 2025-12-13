@@ -23,7 +23,7 @@
                                Style="{StaticResource AilmentSearchBar}" />
 
                     <Button Text="Refresh Conditions"
-                            Style="{StaticResource RandomConditionButton}"
+                            Style="{StaticResource RandomMbdConditionButton}"
                             IsEnabled="{Binding IsInitialized}"
                             Command="{Binding GetConditionListCommand}"/>
 
@@ -39,8 +39,8 @@
                             <DataTemplate x:DataType="model:MbdCondition">
                                 <Border MinimumHeightRequest="120"
                                         MaximumHeightRequest="240"
-                                        Stroke="{StaticResource ConditionCardBorder}"
-                                        BackgroundColor="{StaticResource ConditionCardBackground}"
+                                        Stroke="{StaticResource MbdConditionCardBorder}"
+                                        BackgroundColor="{StaticResource MbdConditionCardBackground}"
                                         StrokeThickness="1"
                                         Padding="15">
                                     <Border.StrokeShape>
@@ -73,7 +73,7 @@
                                                FontSize="15"
                                                FontAttributes="Bold"
                                                HorizontalTextAlignment="Center"
-                                               TextColor="{StaticResource ConditionTextColor}"
+                                               TextColor="{StaticResource MbdConditionTextColor}"
                                                Margin="0,10,0,0"/>
                                     </Grid>
                                 </Border>

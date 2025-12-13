@@ -7,6 +7,48 @@
     xmlns:sf="clr-namespace:Syncfusion.Maui.Toolkit.TextInputLayout;assembly=Syncfusion.Maui.Toolkit"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="Colors.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <!-- App-specific Colors -->
+    <Color x:Key="ActionColor">#00606E</Color>
+    <Color x:Key="PrimaryColor">#6B329B</Color>
+    <Color x:Key="HeaderColor">#4A1085</Color>
+    <Color x:Key="PrimaryColorDark">#4A1085</Color>
+    <Color x:Key="BackgroundColor">#FFFFFF</Color>
+    <Color x:Key="GoColor">#4F794E</Color>
+    <Color x:Key="BarColor">#00606E</Color>
+    <Color x:Key="BarSelectedColor">#73ABC9</Color>
+    <Color x:Key="AilmentCardColor">#B4B1AF</Color>
+    <Color x:Key="ButtonColor">#00606E</Color>
+    <Color x:Key="MbdConditionTextColor">#00606E</Color>
+    <Color x:Key="MbdConditionCardBackground">#FFFFFF</Color>
+    <Color x:Key="MbdConditionCardBorder">#6A7D95</Color>
+    <Color x:Key="MbdConditionDetailCardBackground">#00606E</Color>
+    <Color x:Key="MbdConditionDetailCardText">#FFFFFF</Color>
+    <Color x:Key="MbdConditionDetailCardBorder">#73ABC9</Color>
+    <Color x:Key="LightIconColor">black</Color>
+    <Color x:Key="DarkIconColor">white</Color>
+
+    <x:Double x:Key="sizeNone">0</x:Double>
+    <x:Double x:Key="size20">2</x:Double>
+    <x:Double x:Key="size40">4</x:Double>
+    <x:Double x:Key="size60">6</x:Double>
+    <x:Double x:Key="size80">8</x:Double>
+    <x:Double x:Key="size100">10</x:Double>
+    <x:Double x:Key="size120">12</x:Double>
+    <x:Double x:Key="size160">16</x:Double>
+    <x:Double x:Key="size200">20</x:Double>
+    <x:Double x:Key="size240">24</x:Double>
+    <x:Double x:Key="size280">28</x:Double>
+    <x:Double x:Key="size320">32</x:Double>
+    <x:Double x:Key="size360">36</x:Double>
+    <x:Double x:Key="size400">40</x:Double>
+    <x:Double x:Key="size480">48</x:Double>
+    <x:Double x:Key="size520">52</x:Double>
+    <x:Double x:Key="size560">56</x:Double>
+
     <!-- https://fluent2.microsoft.design/typography/ -->
     <OnIdiom x:Key="IconSize"
              x:TypeArguments="x:Double"

@@ -8,8 +8,9 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
+                <ResourceDictionary Source="Resources/Styles/AppStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
-
+            
             <!-- App-specific Colors -->
             <Color x:Key="ActionColor">#00606E</Color>
             <Color x:Key="PrimaryColor">#6B329B</Color>
@@ -30,24 +31,6 @@
             <Color x:Key="LightIconColor">black</Color>
             <Color x:Key="DarkIconColor">white</Color>
 
-            <x:Double x:Key="sizeNone">0</x:Double>
-            <x:Double x:Key="size20">2</x:Double>
-            <x:Double x:Key="size40">4</x:Double>
-            <x:Double x:Key="size60">6</x:Double>
-            <x:Double x:Key="size80">8</x:Double>
-            <x:Double x:Key="size100">10</x:Double>
-            <x:Double x:Key="size120">12</x:Double>
-            <x:Double x:Key="size160">16</x:Double>
-            <x:Double x:Key="size200">20</x:Double>
-            <x:Double x:Key="size240">24</x:Double>
-            <x:Double x:Key="size280">28</x:Double>
-            <x:Double x:Key="size320">32</x:Double>
-            <x:Double x:Key="size360">36</x:Double>
-            <x:Double x:Key="size400">40</x:Double>
-            <x:Double x:Key="size480">48</x:Double>
-            <x:Double x:Key="size520">52</x:Double>
-            <x:Double x:Key="size560">56</x:Double>
-
             <FontImageSource x:Key="IconLight"
                 Glyph="{x:Static f:FluentUI.weather_sunny_28_regular}"
                 FontFamily="{x:Static f:FluentUI.FontFamily}"
@@ -55,42 +38,6 @@
                 Size="{StaticResource size240}" />
             <FontImageSource x:Key="IconDark"
                 Glyph="{x:Static f:FluentUI.weather_moon_28_regular}"
-                FontFamily="{x:Static f:FluentUI.FontFamily}"
-                Color="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"
-                Size="{StaticResource size240}" />
-
-            <FontImageSource x:Key="IconDashboard"
-                Glyph="{x:Static f:FluentUI.home_24_regular}"
-                FontFamily="{x:Static f:FluentUI.FontFamily}"
-                Color="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"
-                Size="{StaticResource size240}" />
-
-            <FontImageSource x:Key="IconMeta"
-                Glyph="{x:Static f:FluentUI.search_24_regular}"
-                FontFamily="{x:Static f:FluentUI.FontFamily}"
-                Color="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"
-                Size="{StaticResource size240}" />
-
-            <FontImageSource x:Key="IconNotifications"
-                Glyph="{x:Static f:FluentUI.alert_24_regular}"
-                FontFamily="{x:Static f:FluentUI.FontFamily}"
-                Color="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"
-                Size="{StaticResource size240}" />
-
-            <FontImageSource x:Key="IconPremium"
-                Glyph="{x:Static f:FluentUI.premium_24_regular}"
-                FontFamily="{x:Static f:FluentUI.FontFamily}"
-                Color="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"
-                Size="{StaticResource size240}" />
-
-            <FontImageSource x:Key="IconImageCache"
-                Glyph="{x:Static f:FluentUI.image_24_regular}"
-                FontFamily="{x:Static f:FluentUI.FontFamily}"
-                Color="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"
-                Size="{StaticResource size240}" />
-
-            <FontImageSource x:Key="IconTest"
-                Glyph="{x:Static f:FluentUI.beaker_24_regular}"
                 FontFamily="{x:Static f:FluentUI.FontFamily}"
                 Color="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"
                 Size="{StaticResource size240}" />
