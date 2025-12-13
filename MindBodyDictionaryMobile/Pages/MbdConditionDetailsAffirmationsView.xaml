@@ -4,9 +4,9 @@
                           xmlns:vm="clr-namespace:MindBodyDictionaryMobile.PageModels"
                           xmlns:fonts="clr-namespace:Fonts;assembly=MindBodyDictionaryMobile"
                           xmlns:local="clr-namespace:MindBodyDictionaryMobile"
-                          x:DataType="vm:ConditionDetailPageModel"
+                          x:DataType="vm:MbdConditionDetailPageModel"
                           x:Name="this"
-                          x:Class="MindBodyDictionaryMobile.Pages.ConditionDetailsAffirmationsView">
+                          x:Class="MindBodyDictionaryMobile.Pages.MbdConditionDetailsAffirmationsView">
                 <Grid
                          HorizontalOptions="CenterAndExpand"
                          VerticalOptions="StartAndExpand">
@@ -119,7 +119,7 @@
                          <HorizontalStackLayout>
                          <HorizontalStackLayout.GestureRecognizers>
                              <TapGestureRecognizer
-                             Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ConditionDetailPageModel}}, Path=ShareCarouselConditionCommand}"
+                             Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MbdConditionDetailPageModel}}, Path=ShareCarouselConditionCommand}"
                              CommandParameter="{Binding CurrentAffirmation}"/>
                          </HorizontalStackLayout.GestureRecognizers>
                              <Label
