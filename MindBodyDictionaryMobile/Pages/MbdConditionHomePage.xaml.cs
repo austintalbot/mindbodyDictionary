@@ -88,8 +88,7 @@ public partial class MbdConditionHomePage : ContentPage
 	{
 		try
 		{
-			var condition = e.Parameter as Models.MbdCondition;
-			var id = condition?.Id;
+			var id = e.Parameter?.ToString();
 			if (string.IsNullOrEmpty(id))
 				return;
 			await Shell.Current.GoToAsync($"mbdcondition?id={id}");
