@@ -86,9 +86,6 @@ public static class MauiProgram
         builder.Services.AddSingleton<MbdConditionHomePageModel>();
         builder.Services.AddSingleton<MbdConditionHomePage>();
 
-        builder.Services.AddTransient<MbdConditionSearchPageModel>();
-        builder.Services.AddTransient<MbdConditionSearchPage>();
-
         builder.Services.AddSingleton<SearchPageModel>();
         builder.Services.AddSingleton<SearchPage>();
 

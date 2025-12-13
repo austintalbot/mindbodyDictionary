@@ -290,7 +290,7 @@
 
             <Style x:Key="RecommendationClickLabel" TargetType="Label">
                 <Setter Property="FontSize" Value="15" />
-                <Setter Property="TextColor" Value="White" />
+                <Setter Property="TextColor" Value="{StaticResource White}" />
                 <Setter Property="VerticalOptions" Value="End" />
                 <Setter Property="HorizontalOptions" Value="Center" />
                 <Setter Property="Text" Value="Tap to Learn More" />

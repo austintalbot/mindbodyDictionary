@@ -486,7 +486,7 @@
 
     <Style x:Key="SearchMbdConditionCard" TargetType="Border" BasedOn="{StaticResource CardStyle}">
         <Setter Property="Padding" Value="0"/>
-        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource DarkSecondaryBackground}}"/>
+        <Setter Property="BackgroundColor" Value="White"/>
     </Style>
 
     <Style x:Key="SearchMbdConditionImage" TargetType="Image">
@@ -511,7 +511,7 @@
         <Setter Property="StrokeShape" Value="RoundRectangle 12"/>
         <Setter Property="StrokeThickness" Value="1"/>
         <Setter Property="Padding" Value="15"/>
-        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource MbdConditionCardBackground}, Dark={StaticResource MbdConditionCardBackground}}"/>
+        <Setter Property="BackgroundColor" Value="White"/>
         <Setter Property="Stroke" Value="{StaticResource MbdConditionCardBorder}"/>
         <Setter Property="Shadow">
             <Setter.Value>
