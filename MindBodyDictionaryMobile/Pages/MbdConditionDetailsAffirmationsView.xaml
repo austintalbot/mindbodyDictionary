@@ -2,11 +2,11 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                           xmlns:vm="clr-namespace:MindBodyDictionaryMobile.PageModels"
+                          xmlns:fonts="clr-namespace:Fonts;assembly=MindBodyDictionaryMobile"
                           xmlns:local="clr-namespace:MindBodyDictionaryMobile"
-                          xmlns:f="clr-namespace:Fonts"
-                          x:DataType="vm:MbdConditionDetailPageModel"
+                          x:DataType="vm:ConditionDetailPageModel"
                           x:Name="this"
-                          x:Class="MindBodyDictionaryMobile.Pages.MbdConditionDetailsAffirmationsView">
+                          x:Class="MindBodyDictionaryMobile.Pages.ConditionDetailsAffirmationsView">
                 <Grid
                          HorizontalOptions="CenterAndExpand"
                          VerticalOptions="StartAndExpand">
@@ -18,13 +18,13 @@
                      <!-- Affirmations Header -->
                      <VerticalStackLayout
                          Grid.Row="0"
-                         HorizontalOptions="CenterAndExpand"
-                         VerticalOptions="CenterAndExpand">
+                         HorizontalOptions="Fill"
+                         VerticalOptions="Fill">
                          <Image
                                  x:Name="AffirmationsMindBodyLogo"
                                  Source="mbd_icon.png"
                                  HeightRequest="100"
-                                 HorizontalOptions="CenterAndExpand">
+                                 HorizontalOptions="Fill">
                          </Image>
                          <Label
                              Text="Affirmations for"
@@ -44,6 +44,7 @@
                          ItemsSource="{Binding Condition.Affirmations}"
                          CurrentItem="{Binding CurrentAffirmation}"
                          Grid.Row="1"
+                         IndicatorView="AffirmationIndicatorView"
                          HeightRequest="280"
                          IsBounceEnabled="True"
                          HorizontalOptions="CenterAndExpand"
@@ -63,8 +64,8 @@
                                      Margin="2"
                                      HeightRequest="260"
                                      CornerRadius="12"
-                                     BorderColor="{StaticResource MbdConditionDetailCardBorder}"
-                                     BackgroundColor="{StaticResource MbdConditionDetailCardBackground}">
+                                     BorderColor="{StaticResource ConditionDetailCardBorder}"
+                                     BackgroundColor="{StaticResource ConditionDetailCardBackground}">
                                          <VerticalStackLayout>
                                              <Label
                                              x:Name="AffirmationLabel"
@@ -76,7 +77,7 @@
                                              x:DataType="{x:Type x:String}"
                                              Padding="10"
                                              Margin="10"
-                                             TextColor="{StaticResource MbdConditionDetailCardText}"
+                                             TextColor="{StaticResource ConditionDetailCardText}"
                                              VerticalOptions="Center"
                                              VerticalTextAlignment="Center">
                                              </Label>
@@ -86,7 +87,7 @@
                                              HorizontalOptions="Center"
                                              HorizontalTextAlignment="Center"
                                              Text="{x:Static local:App.CopyrightText}"
-                                             TextColor="{StaticResource MbdConditionDetailCardText}"
+                                             TextColor="{StaticResource ConditionDetailCardText}"
                                              VerticalOptions="End"
                                              VerticalTextAlignment="End" />
                                          </VerticalStackLayout>
@@ -118,7 +119,7 @@
                          <HorizontalStackLayout>
                          <HorizontalStackLayout.GestureRecognizers>
                              <TapGestureRecognizer
-                             Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MbdConditionDetailPageModel}}, Path=ShareCarouselMbdConditionCommand}"
+                             Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ConditionDetailPageModel}}, Path=ShareCarouselConditionCommand}"
                              CommandParameter="{Binding CurrentAffirmation}"/>
                          </HorizontalStackLayout.GestureRecognizers>
                              <Label
@@ -135,12 +136,8 @@
                                  Aspect="AspectFit"
                                  BackgroundColor="Transparent"
                                  HeightRequest="32"
+                                 Source="{FontImageSource FontFamily={x:Static fonts:FluentUI.FontFamily}, Glyph={x:Static fonts:FluentUI.share_24_regular}, Size=24, Color=Black }"
                                  WidthRequest="32" >
-                             <Image.Source>
-                                 <FontImageSource Glyph="{x:Static f:FluentUI.share_24_regular}"
-                                                  FontFamily="{x:Static f:FluentUI.FontFamily}"
-                                                  Color="{StaticResource MbdConditionTextColor}" />
-                             </Image.Source>
                          </Image>
                      </HorizontalStackLayout>
 

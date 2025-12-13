@@ -8,6 +8,7 @@
     Shell.FlyoutBehavior="Flyout"
     Title="Mind Body Dictionary">
 
+
   <!-- Flyout Header with Logo -->
   <Shell.FlyoutHeader>
     <pages:FlyoutHeaderView />

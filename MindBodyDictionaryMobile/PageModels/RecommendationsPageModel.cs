@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Maui.Controls;
 using MindBodyDictionaryMobile.Models;
 using MindBodyDictionaryMobile.Services; // For ModalErrorHandler
+using Microsoft.Maui.ApplicationModel; // For Launcher
 
 namespace MindBodyDictionaryMobile.PageModels
 {
@@ -22,6 +23,18 @@ namespace MindBodyDictionaryMobile.PageModels
 
 		[ObservableProperty]
 		private ContentView _currentInnerView;
+
+		[ObservableProperty]
+		private List<Recommendation> _foodList = [];
+
+		[ObservableProperty]
+		private List<Recommendation> _productList = [];
+
+		[ObservableProperty]
+		private List<Recommendation> _booksResourcesList = [];
+
+
+
 
 		public RecommendationsPageModel(IServiceProvider serviceProvider, ILogger<RecommendationsPageModel> logger, ModalErrorHandler errorHandler)
 		{
@@ -74,6 +87,47 @@ namespace MindBodyDictionaryMobile.PageModels
 					_logger.LogWarning($"Unknown inner tab selected: {value}");
 					break;
 			}
+		}
+
+		[RelayCommand]
+		private async Task ProductClicked(Recommendation recommendation)
+		{
+			if (!string.IsNullOrEmpty(recommendation.Url))
+			{
+				try
+				{
+					await Launcher.OpenAsync(recommendation.Url);
+				}
+				catch (Exception ex)
+				{
+					_logger.LogError(ex, "Failed to open product URL: {Url}", recommendation.Url);
+					_errorHandler.HandleError(new Exception("Could not open product link."));
+				}
+			}
+		}
+
+		[RelayCommand]
+		private async Task ResourceClicked(Recommendation recommendation)
+		{
+			if (!string.IsNullOrEmpty(recommendation.Url))
+			{
+				try
+				{
+					await Launcher.OpenAsync(recommendation.Url);
+				}
+				catch (Exception ex)
+				{
+					_logger.LogError(ex, "Failed to open resource URL: {Url}", recommendation.Url);
+					_errorHandler.HandleError(new Exception("Could not open resource link."));
+				}
+			}
+		}
+
+		[RelayCommand]
+		private async Task AddToMyList(Recommendation recommendation)
+		{
+			// This will eventually add the item to a persistent list, but for now, just show a message.
+			await AppShell.DisplayToastAsync($"Adding '{recommendation.Name}' to your list!");
 		}
 
 		[RelayCommand]

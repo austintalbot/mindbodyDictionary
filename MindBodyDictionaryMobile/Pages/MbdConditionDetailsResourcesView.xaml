@@ -12,25 +12,26 @@
             ItemsSource="{Binding BooksResourcesList}"
             x:DataType="vm:MbdConditionDetailPageModel"
             EmptyView="There are no corresponding resources for this Condition"
-            ItemsLayout="HorizontalList"
-            HeightRequest="{Binding ResourceListHeight}"
+
             SelectionMode="None"
             InputTransparent="False">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <Grid HorizontalOptions="Center"
-                          WidthRequest="300"
-                          HeightRequest="300"
                           x:DataType="model:Recommendation"
                           VerticalOptions="Fill"
                           InputTransparent="False">
                         <Border Style="{StaticResource RecommendationBorder}"
                                InputTransparent="False">
-                            <Grid RowDefinitions="Auto,Auto,*,Auto">
-                                <Label Grid.Row="0" Style="{StaticResource RecommendationNameLabel}" />
+                            <Grid RowDefinitions="Auto,Auto,Auto">
+                                <Label Grid.Row="0" Text="{Binding Name}" Style="{StaticResource RecommendationNameLabel}" />
                                 <BoxView Grid.Row="1" Style="{StaticResource RecommendationBoxView}" />
-                                <Label Grid.Row="2" Style="{StaticResource RecommendationBookProductDescriptionLabel}" />
-                                <Label Grid.Row="3" Style="{StaticResource RecommendationBookProductClickLabel}" />
+                                <Button Grid.Row="2"
+                                        Text="Add to List"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RecommendationsPageModel}}, Path=AddToMyListCommand}"
+                                        CommandParameter="{Binding .}"
+                                        Style="{StaticResource AccentButton}"
+                                        Margin="0,10,0,0"/>
                             </Grid>
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer

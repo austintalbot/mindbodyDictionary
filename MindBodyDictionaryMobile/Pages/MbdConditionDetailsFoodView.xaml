@@ -12,7 +12,7 @@
             Style="{StaticResource VerticalCollectionView}"
             ItemsSource="{Binding FoodList}"
             EmptyView="There are no corresponding foods for this Condition"
-            HeightRequest="250">
+            HeightRequest="{Binding FoodListHeight}">
 
         <CollectionView.ItemTemplate>
             <DataTemplate>

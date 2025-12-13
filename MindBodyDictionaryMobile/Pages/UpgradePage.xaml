@@ -21,7 +21,7 @@
                 VerticalTextAlignment="Start" />
             <VerticalStackLayout
                 Margin="5"
-                VerticalOptions="StartAndExpand">
+                VerticalOptions="Fill">
                 <Image
                      Source="mbd_logo.png"
                      HeightRequest="150"
@@ -36,12 +36,12 @@
                 <Button Margin="5"
                         Text="Privacy Policy"
                         Style="{StaticResource SubmitButton}"
-                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:UpgradePremiumPageModel}}, Path=privacyCommand}"
+                        Command="{Binding PrivacyCommand}"
                 />
                 <Button Margin="5"
                         Text="Terms of Use"
                         Style="{StaticResource SubmitButton}"
-                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:UpgradePremiumPageModel}}, Path=termsCommand}"
+                        Command="{Binding TermsCommand}"
                         CommandParameter="https://www.mindbodydictionary.com/termsandconditions"/>
 
 
@@ -52,14 +52,14 @@
                 <Label
                     Text="Enjoy an ad free experience while helping support development."
                     IsVisible="{Binding NotSubscribed}"
-                    HorizontalOptions="CenterAndExpand"
+                    HorizontalOptions="Fill"
                     HorizontalTextAlignment="Center"
                     FontSize="20"
                     />
                 <Label
                     Text="No trial period, and the subscription will be renewed automatically on the subscription date, unless canceled before the renewal date."
                     IsVisible="{Binding NotSubscribed}"
-                    HorizontalOptions="CenterAndExpand"
+                    HorizontalOptions="Fill"
                     HorizontalTextAlignment="Center"
 
                     FontSize="16"
@@ -69,13 +69,13 @@
                 Margin="5"
                 IsVisible="{Binding NotSubscribed}"
                 Style="{StaticResource SubmitButton}"
-                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:UpgradePremiumPageModel}}, Path=purchaseCommand}"
+                Command="{Binding PurchaseCommand}"
                 Text="Subscribe for $9.99/year" />
             <Button
                 x:Name="RestoreButton"
                 Margin="5"
                 IsVisible="{Binding NotSubscribed}"
-                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:UpgradePremiumPageModel}}, Path=restoreCommand}"
+                Command="{Binding RestoreCommand}"
                 Style="{StaticResource SubmitButton}"
                 Text="Restore Subscription" />
             </VerticalStackLayout>

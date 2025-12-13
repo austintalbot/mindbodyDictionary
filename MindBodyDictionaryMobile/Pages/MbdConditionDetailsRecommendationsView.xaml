@@ -33,24 +33,27 @@
                     Margin="0,10,0,0">
                 <VerticalStackLayout>
                     <!-- Inner Tab Headers -->
-                    <HorizontalStackLayout HorizontalOptions="FillAndExpand" BackgroundColor="{StaticResource BarColor}">
-                                                <Button Text="Foods"
-                                                        Command="{Binding SelectInnerTabCommand}"
-                                                        CommandParameter="Foods"
-                                                        Style="{StaticResource TabButton}"
-                                                        TextColor="{Binding SelectedInnerTab, ConverterParameter=Foods, Converter={StaticResource SelectedTabColorConverter}}"
-                                                        BackgroundColor="{Binding SelectedInnerTab, ConverterParameter=Foods, Converter={StaticResource SelectedTabBackgroundColorConverter}}"/>
-                                                <Button Text="Products"
-                                                        Command="{Binding SelectInnerTabCommand}"
-                                                        CommandParameter="Products"
-                                                        Style="{StaticResource TabButton}"
-                                                        TextColor="{Binding SelectedInnerTab, ConverterParameter=Products, Converter={StaticResource SelectedTabColorConverter}}"
-                                                        BackgroundColor="{Binding SelectedInnerTab, ConverterParameter=Products, Converter={StaticResource SelectedTabBackgroundColorConverter}}"/>                        <Button Text="Resources"
+                    <HorizontalStackLayout HorizontalOptions="Fill" BackgroundColor="{StaticResource BarColor}">
+                        <Button Text="Foods"
                                 Command="{Binding SelectInnerTabCommand}"
-                                CommandParameter="Resources"
+                                CommandParameter="Foods"
                                 Style="{StaticResource TabButton}"
-                                TextColor="{Binding SelectedInnerTab, ConverterParameter=Resources, Converter={StaticResource SelectedTabColorConverter}}"
-                                BackgroundColor="{Binding SelectedInnerTab, ConverterParameter=Resources, Converter={StaticResource SelectedTabBackgroundColorConverter}}"/>                    </HorizontalStackLayout>
+                                TextColor="{Binding SelectedInnerTab, ConverterParameter=Foods, Converter={StaticResource SelectedTabColorConverter}}"
+                                BackgroundColor="{Binding SelectedInnerTab, ConverterParameter=Foods, Converter={StaticResource SelectedTabBackgroundColorConverter}}"/>
+
+                        <Button Text="Resources"
+          Command="{Binding SelectInnerTabCommand}"
+          CommandParameter="Resources"
+          Style="{StaticResource TabButton}"
+          TextColor="{Binding SelectedInnerTab, ConverterParameter=Resources, Converter={StaticResource SelectedTabColorConverter}}"
+          BackgroundColor="{Binding SelectedInnerTab, ConverterParameter=Resources, Converter={StaticResource SelectedTabBackgroundColorConverter}}"/>
+                        <Button Text="Products"
+                                Command="{Binding SelectInnerTabCommand}"
+                                CommandParameter="Products"
+                                Style="{StaticResource TabButton}"
+                                TextColor="{Binding SelectedInnerTab, ConverterParameter=Products, Converter={StaticResource SelectedTabColorConverter}}"
+                                BackgroundColor="{Binding SelectedInnerTab, ConverterParameter=Products, Converter={StaticResource SelectedTabBackgroundColorConverter}}"/>
+                                          </HorizontalStackLayout>
 
                     <!-- Inner Tab Content -->
                     <ContentView Content="{Binding CurrentInnerView}" />
