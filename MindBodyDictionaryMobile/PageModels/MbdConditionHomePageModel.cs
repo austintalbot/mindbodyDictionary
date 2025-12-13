@@ -88,6 +88,22 @@ namespace MindBodyDictionaryMobile.PageModels
 			await Task.CompletedTask;
 		}
 
+		[RelayCommand]
+		public async Task SelectCondition(MbdCondition condition)
+		{
+			if (condition == null)
+				return;
+
+			try
+			{
+				await Shell.Current.GoToAsync($"mbdcondition?id={condition.Id}");
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex, "Error navigating to condition details");
+			}
+		}
+
 		/// <summary>
 		/// Verifies subscription status and updates ad display accordingly.
 		/// This is called on home page load to check if subscriptions are still active.
