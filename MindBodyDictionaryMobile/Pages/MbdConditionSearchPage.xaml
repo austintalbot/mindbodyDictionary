@@ -22,6 +22,55 @@
 
         <!-- Collection View with optimized layout -->
         <Grid Grid.Row="1">
+            <!-- Shimmer loading grid when busy -->
+            <CollectionView IsVisible="{Binding IsBusy}" 
+                           Style="{StaticResource SearchGridCollectionView}">
+                <CollectionView.ItemsSource>
+                    <x:Array Type="{x:Type x:String}">
+                        <x:String>1</x:String>
+                        <x:String>2</x:String>
+                        <x:String>3</x:String>
+                        <x:String>4</x:String>
+                        <x:String>5</x:String>
+                        <x:String>6</x:String>
+                        <x:String>7</x:String>
+                        <x:String>8</x:String>
+                        <x:String>9</x:String>
+                        <x:String>10</x:String>
+                        <x:String>11</x:String>
+                        <x:String>12</x:String>
+                    </x:Array>
+                </CollectionView.ItemsSource>
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical"
+                                   Span="3"
+                                   VerticalItemSpacing="8"
+                                   HorizontalItemSpacing="8" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Border Style="{StaticResource SearchMbdConditionCard}">
+                            <VerticalStackLayout Spacing="8" VerticalOptions="Center">
+                                <!-- Image placeholder -->
+                                <Border Style="{StaticResource ShimmerPlaceholderBorder}"
+                                       HeightRequest="50"
+                                       WidthRequest="50"
+                                       HorizontalOptions="Center">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="8" />
+                                    </Border.StrokeShape>
+                                </Border>
+                                
+                                <!-- Text placeholder -->
+                                <Border Style="{StaticResource ShimmerPlaceholderBorder}"
+                                       HeightRequest="12"
+                                       WidthRequest="60"
+                                       HorizontalOptions="Center" />
+                            </VerticalStackLayout>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
 
             <CollectionView x:Name="ConditionCollectionView"
                           ItemsSource="{Binding FilteredConditionCollection}"
@@ -46,7 +95,7 @@
                     <DataTemplate x:DataType="model:MbdCondition">
                         <Border Style="{StaticResource SearchMbdConditionCard}">
                             <Border.GestureRecognizers>
-                                <TapGestureRecognizer Tapped="TapGestureRecognizer_SearchConditionTapped"
+                                <TapGestureRecognizer Tapped="TapGestureRecognizer_SearchMbdConditionTapped"
                                                     CommandParameter="{Binding Id}" />
                             </Border.GestureRecognizers>
 
