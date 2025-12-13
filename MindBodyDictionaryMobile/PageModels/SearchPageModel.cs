@@ -103,7 +103,7 @@ public partial class SearchPageModel : ObservableObject
         }
         HasNoResults = FilteredConditionCollection.Count == 0 && !string.IsNullOrWhiteSpace(SearchParam);
     }
-    
+
     [RelayCommand]
     public async Task OnSearchButtonPressed()
     {

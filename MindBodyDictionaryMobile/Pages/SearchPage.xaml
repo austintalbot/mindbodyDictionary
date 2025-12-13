@@ -23,7 +23,7 @@
         <!-- Collection View with optimized layout -->
         <Grid Grid.Row="1">
             <!-- Shimmer loading grid when busy -->
-            <CollectionView IsVisible="{Binding IsBusy}" 
+            <CollectionView IsVisible="{Binding IsBusy}"
                            Style="{StaticResource SearchGridCollectionView}">
                 <CollectionView.ItemsSource>
                     <x:Array Type="{x:Type x:String}">
@@ -60,7 +60,7 @@
                                         <RoundRectangle CornerRadius="8" />
                                     </Border.StrokeShape>
                                 </Border>
-                                
+
                                 <!-- Text placeholder -->
                                 <Border Style="{StaticResource ShimmerPlaceholderBorder}"
                                        HeightRequest="12"
