@@ -99,6 +99,6 @@ public partial class ManageMetaPageModel(CategoryRepository categoryRepository, 
 		Preferences.Default.Remove("is_seeded");
 		await _seedDataService.LoadSeedDataAsync();
 		Preferences.Default.Set("is_seeded", true);
-		await Shell.Current.GoToAsync("//main");
+		await Shell.Current.GoToAsync("//home");
 	}
 }
