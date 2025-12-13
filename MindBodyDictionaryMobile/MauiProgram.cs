@@ -80,7 +80,7 @@ public static class MauiProgram
 
 		builder.Services.AddTransientWithShellRoute<ProjectDetailPage, ProjectDetailPageModel>("project");
 		builder.Services.AddTransientWithShellRoute<TaskDetailPage, TaskDetailPageModel>("task");
-		builder.Services.AddTransientWithShellRoute<MbdConditionDetailsPage, MbdConditionDetailPageModel>("mbdcondition");
+		builder.Services.AddTransientWithShellRoute<MbdConditionDetailPage, MbdConditionDetailPageModel>("mbdcondition");
 
         // Register New Condition Pages and ViewModels
         builder.Services.AddSingleton<MbdConditionHomePageModel>();

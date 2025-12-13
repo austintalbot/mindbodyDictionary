@@ -4,13 +4,13 @@ using Microsoft.Maui.Controls.Xaml;
 namespace MindBodyDictionaryMobile.Pages;
 
 
-public partial class MbdConditionDetailsPage : ContentPage
+public partial class MbdConditionDetailPage : ContentPage
 {
 
 	private readonly MbdConditionDetailPageModel _mbdConditionDetailPageModel;
-	public MbdConditionDetailsPage(MbdConditionDetailPageModel mbdConditionDetailPageModel)
+	public MbdConditionDetailPage(MbdConditionDetailPageModel mbdConditionDetailPageModel)
 	{
-		// InitializeComponent();
+		InitializeComponent();
 		BindingContext = mbdConditionDetailPageModel;
 		this._mbdConditionDetailPageModel = mbdConditionDetailPageModel;
 	}
