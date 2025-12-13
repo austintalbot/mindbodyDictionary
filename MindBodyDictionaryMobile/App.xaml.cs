@@ -10,7 +10,6 @@ public partial class App : Application
 	public App()
 	{
 		InitializeComponent();
-		MainPage = new AppShell();
 	}
 
 	protected override void OnStart()
@@ -21,5 +20,5 @@ public partial class App : Application
 		preloader?.PreloadData();
 	}
 
-	protected override Window CreateWindow(IActivationState? activationState) => new(MainPage);
+	protected override Window CreateWindow(IActivationState? activationState) => new(new AppShell());
 }
