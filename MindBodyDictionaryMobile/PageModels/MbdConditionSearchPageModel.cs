@@ -1,18 +1,18 @@
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using MindBodyDictionaryMobile.Models;
 using Microsoft.Extensions.Logging; // Add this for ILogger
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
-using System.Linq;
+using MindBodyDictionaryMobile.Models;
 
 namespace MindBodyDictionaryMobile.PageModels
 {
-	public partial class ConditionSearchPageModel : ObservableObject
+	public partial class MbdConditionSearchPageModel : ObservableObject
 	{
-		private readonly ConditionRepository _conditionRepository;
+		private readonly MbdConditionRepository _mbdConditionRepository;
 		private readonly ModalErrorHandler _errorHandler;
-		private readonly ILogger<ConditionSearchPageModel> _logger;
+		private readonly ILogger<MbdConditionSearchPageModel> _logger;
 		private readonly ImageCacheService _imageCacheService;
 
 		[ObservableProperty]
@@ -34,9 +34,9 @@ namespace MindBodyDictionaryMobile.PageModels
 
 
 
-		public ConditionSearchPageModel(ConditionRepository conditionRepository, ModalErrorHandler errorHandler, ILogger<ConditionSearchPageModel> logger, ImageCacheService imageCacheService) // Modify constructor
+		public MbdConditionSearchPageModel(MbdConditionRepository mbdConditionRepository, ModalErrorHandler errorHandler, ILogger<MbdConditionSearchPageModel> logger, ImageCacheService imageCacheService) // Modify constructor
 		{
-			_conditionRepository = conditionRepository;
+			_mbdConditionRepository = mbdConditionRepository;
 			_errorHandler = errorHandler;
 			_logger = logger; // Assign injected logger
 			_imageCacheService = imageCacheService; // Assign injected service
@@ -54,16 +54,16 @@ namespace MindBodyDictionaryMobile.PageModels
 			try
 			{
 				IsBusy = true;
-				var conditions = await _conditionRepository.ListAsync();
+				var conditions = await _mbdConditionRepository.ListAsync();
 
-                // Load images for search results
-                foreach (var c in conditions)
-                {
-                    if (!string.IsNullOrEmpty(c.ImageNegative))
-                    {
-                        c.CachedImageOneSource = await _imageCacheService.GetImageAsync(c.ImageNegative);
-                    }
-                }
+	                // Load images for search results
+	                foreach (var c in conditions)
+	                {
+	                    if (!string.IsNullOrEmpty(c.ImageNegative))
+	                    {
+	                        c.CachedImageOneSource = await _imageCacheService.GetImageAsync(c.ImageNegative);
+	                    }
+	                }
 
 				_allConditions = new ObservableCollection<MbdCondition>(conditions);
 				ApplyFilter(); // Apply initial filter based on SearchParam
@@ -113,9 +113,10 @@ namespace MindBodyDictionaryMobile.PageModels
 			// The actual navigation is handled in the code-behind for now.
 			// This can be refined if SearchBar.SearchCommandParameter is used more effectively.
 			// For now, it just ensures the ViewModel is aware of the search action.
-			_logger.LogDebug("Search button pressed in ConditionSearchPageModel."); // Replace Logger.Debug
+			_logger.LogDebug("Search button pressed in MbdConditionSearchPageModel."); // Replace Logger.Debug
 			ApplyFilter(); // Re-apply filter on explicit search button press
 			await Task.CompletedTask;
 		}
 	}
+
 }

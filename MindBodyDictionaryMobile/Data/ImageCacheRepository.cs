@@ -1,7 +1,7 @@
-using MindBodyDictionaryMobile.Models;
+using System.Text.RegularExpressions;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Logging;
-using System.Text.RegularExpressions;
+using MindBodyDictionaryMobile.Models;
 
 namespace MindBodyDictionaryMobile.Data;
 

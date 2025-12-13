@@ -1,4 +1,4 @@
-﻿namespace backend.Enums;
+namespace backend.Enums;
 
 public enum RecommendationType
 {

@@ -1,27 +1,27 @@
+using System.Threading;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Maui.Views;
-using MindBodyDictionaryMobile.PageModels;
-using System.Threading;
-using Microsoft.Extensions.Logging; // Add this
 using Microsoft.Extensions.DependencyInjection; // Add this
+using Microsoft.Extensions.Logging; // Add this
+using MindBodyDictionaryMobile.PageModels;
 
 namespace MindBodyDictionaryMobile.Pages;
 
-public partial class ConditionHomePage : ContentPage
+public partial class MbdConditionHomePage : ContentPage
 {
-	private readonly ConditionHomePageModel conditionHomePageModel;
-	private readonly ILogger<ConditionHomePage> _logger; // Add this
+	private readonly MbdConditionHomePageModel _mbdConditionHomePageModel;
+	private readonly ILogger<MbdConditionHomePage> _logger; // Add this
 	private readonly IServiceProvider _serviceProvider; // Add this
 
 	public string Version { get; set; }
-	public ConditionHomePage(ConditionHomePageModel conditionHomePageModel, ILogger<ConditionHomePage> logger, IServiceProvider serviceProvider) // Modify constructor
+	public MbdConditionHomePage(MbdConditionHomePageModel mbdConditionHomePageModel, ILogger<MbdConditionHomePage> logger, IServiceProvider serviceProvider) // Modify constructor
 	{
 
 		InitializeComponent();
-		BindingContext = conditionHomePageModel;
-		this.conditionHomePageModel = conditionHomePageModel;
+		BindingContext = mbdConditionHomePageModel;
+		this._mbdConditionHomePageModel = mbdConditionHomePageModel;
 		_logger = logger; // Assign injected logger
 		_serviceProvider = serviceProvider; // Assign injected serviceProvider
 	}
@@ -35,7 +35,7 @@ public partial class ConditionHomePage : ContentPage
 		// CENTRAL SUBSCRIPTION CHECK: Verify subscription status on home page load
 		// This is the main entry point for checking if subscriptions are still active
 		// If subscription has expired, ads will be re-enabled across the app
-		await conditionHomePageModel.VerifySubscriptionStatusAsync();
+		await _mbdConditionHomePageModel.VerifySubscriptionStatusAsync();
 
 		if (!Preferences.Get("hasPushRegistered", false))
 			RegisterDeviceWithAzureNotificationHub(this);
@@ -51,7 +51,7 @@ public partial class ConditionHomePage : ContentPage
 			Preferences.Set("hasShownDisclaimer", true);
 		}
 
-		await conditionHomePageModel.GetConditionList();
+		await _mbdConditionHomePageModel.GetConditionList();
 	}
 
 
@@ -66,14 +66,14 @@ public partial class ConditionHomePage : ContentPage
 
 
 
-	private async void ConditionSearchBar_SearchButtonPressed(object sender, EventArgs e)
+	private async void MbdConditionHomePage_SearchButtonPressed(object sender, EventArgs e)
 	{
 		try
 		{
 			//Gather search params
-			var searchParams = ConditionSearchBar.Text;
+			var searchParams = MbdConditionSearchBar.Text;
 			//clear search box
-			ConditionSearchBar.Text = "";
+			MbdConditionSearchBar.Text = "";
 			//navigate to page with search params
 			await Shell.Current.GoToAsync($"///search?SearchParam={searchParams}");
 		}
@@ -84,19 +84,20 @@ public partial class ConditionHomePage : ContentPage
 	}
 
 
-	private async void TapGestureRecognizer_HomeConditionTapped(object? sender, TappedEventArgs e)
+	private async void TapGestureRecognizer_HomeMbdConditionTapped(object? sender, TappedEventArgs e)
 	{
 		try
 		{
-			var id = e.Parameter.ToString();
+			var condition = e.Parameter as Models.MbdCondition;
+			var id = condition?.Id;
 			if (string.IsNullOrEmpty(id))
 				return;
-			await Shell.Current.GoToAsync($"condition?id={id}");
+			await Shell.Current.GoToAsync($"mbdcondition?id={id}");
 		}
 		catch (Exception err)
 		{
 			// Log navigation errors but don't crash the app - user can retry the tap
-			_logger.LogError(err, "Error navigating to condition details"); // Replace Logger.Error
+			_logger.LogError(err, "Error navigating to condition details");
 		}
 	}
 }

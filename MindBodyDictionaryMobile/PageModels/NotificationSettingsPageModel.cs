@@ -1,8 +1,8 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using MindBodyDictionaryMobile.Services;
-using MindBodyDictionaryMobile.Models;
 using Microsoft.Extensions.Logging;
+using MindBodyDictionaryMobile.Models;
+using MindBodyDictionaryMobile.Services;
 
 namespace MindBodyDictionaryMobile.PageModels;
 

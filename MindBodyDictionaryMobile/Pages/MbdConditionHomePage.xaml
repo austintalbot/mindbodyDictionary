@@ -3,8 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:model="clr-namespace:MindBodyDictionaryMobile.Models"
              xmlns:vm="clr-namespace:MindBodyDictionaryMobile.PageModels"
-             x:DataType="vm:ConditionHomePageModel"
-             x:Class="MindBodyDictionaryMobile.Pages.ConditionHomePage"
+             x:DataType="vm:MbdConditionHomePageModel"
+             x:Class="MindBodyDictionaryMobile.Pages.MbdConditionHomePage"
              Title="{Binding Title}">
 
     <Grid Style="{StaticResource MainPageGrid}" RowDefinitions="*">
@@ -18,17 +18,19 @@
                     <Image Style="{StaticResource AppLogoImage}" />
                     <Label Text="{Binding Version}"
                            Style="{StaticResource VersionLabel}" />
-                    <SearchBar x:Name="ConditionSearchBar"
-                               SearchButtonPressed="ConditionSearchBar_SearchButtonPressed"
+                    <SearchBar x:Name="MbdConditionSearchBar"
+                               SearchButtonPressed="MbdConditionHomePage_SearchButtonPressed"
                                Style="{StaticResource AilmentSearchBar}" />
 
                     <Button Text="Refresh Conditions"
-                            Style="{StaticResource RandomConditionButton}"
+                            Style="{StaticResource RandomMbdConditionButton}"
                             IsEnabled="{Binding IsInitialized}"
                             Command="{Binding GetConditionListCommand}"/>
 
-                    <CollectionView ItemsSource="{Binding RandomConditionCollection}"
-                                    SelectionMode="None"
+                    <CollectionView x:Name="ConditionsList"
+                                    ItemsSource="{Binding RandomConditionCollection}"
+                                    SelectionMode="Single"
+                                    SelectedItem="{Binding SelectedCondition, Mode=TwoWay}"
                                     ItemSizingStrategy="MeasureAllItems"
                                     IsVisible="{Binding IsInitialized}">
                         <CollectionView.ItemsLayout>
@@ -39,8 +41,8 @@
                             <DataTemplate x:DataType="model:MbdCondition">
                                 <Border MinimumHeightRequest="120"
                                         MaximumHeightRequest="240"
-                                        Stroke="{StaticResource ConditionCardBorder}"
-                                        BackgroundColor="{StaticResource ConditionCardBackground}"
+                                        Stroke="{StaticResource MbdConditionCardBorder}"
+                                        BackgroundColor="{StaticResource MbdConditionCardBackground}"
                                         StrokeThickness="1"
                                         Padding="15">
                                     <Border.StrokeShape>
@@ -52,10 +54,6 @@
                                                 Radius="10"
                                                 Offset="0,2"/>
                                     </Border.Shadow>
-                                    <Border.GestureRecognizers>
-                                        <TapGestureRecognizer Tapped="TapGestureRecognizer_HomeConditionTapped"
-                                                              CommandParameter="{Binding Id}"/>
-                                    </Border.GestureRecognizers>
 
                                     <Grid RowDefinitions="*,Auto">
                                         <Label Grid.Row="0"
@@ -73,7 +71,7 @@
                                                FontSize="15"
                                                FontAttributes="Bold"
                                                HorizontalTextAlignment="Center"
-                                               TextColor="{StaticResource ConditionTextColor}"
+                                               TextColor="{StaticResource MbdConditionTextColor}"
                                                Margin="0,10,0,0"/>
                                     </Grid>
                                 </Border>

@@ -88,6 +88,15 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<MauiXaml Update="Pages\MbdConditionDetailPage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<Compile Update="Pages\MbdConditionDetailPage.xaml.cs">
+		  <DependentUpon>MbdConditionDetailPage.xaml</DependentUpon>
+		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="BenchmarkDotNet" Version="0.15.8" />
 		<PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="10.0.0" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />

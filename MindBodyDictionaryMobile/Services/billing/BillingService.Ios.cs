@@ -1,9 +1,9 @@
 
 
-using Microsoft.Extensions.Logging;
 using Foundation;
-using StoreKit;
+using Microsoft.Extensions.Logging;
 using MindBodyDictionaryMobile.Models;
+using StoreKit;
 
 namespace MindBodyDictionaryMobile.Services.billing;
 

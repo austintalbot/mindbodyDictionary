@@ -58,7 +58,7 @@
             ]
         }
     ],
-    "Conditions": [
+    "MbdConditions": [
         {
             "Name": "Anxiety Disorder",
             "Description": "Characterized by persistent worry, fear, and physical symptoms. Mind-body practices like meditation and breathing exercises can help manage symptoms.",
