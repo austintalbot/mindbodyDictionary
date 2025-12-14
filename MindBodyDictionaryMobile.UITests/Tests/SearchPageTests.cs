@@ -60,8 +60,8 @@ public class SearchPageTests : BaseTest
         var searchBar = Driver.FindElement(By.Id("MbdConditionSearchBar"));
         searchBar.SendKeys(searchText);
         
-        // Assert
-        var text = searchBar.Text;
+        // Assert - Use GetAttribute for more reliable text retrieval
+        var text = searchBar.GetAttribute("value") ?? searchBar.GetAttribute("text") ?? searchBar.Text;
         Assert.Contains(searchText, text, StringComparison.OrdinalIgnoreCase);
     }
 }

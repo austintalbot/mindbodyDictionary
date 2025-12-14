@@ -28,7 +28,7 @@ public abstract class BaseTest : IDisposable
         }
         
         // Set implicit wait for element finding
-        Driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+        Driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
     }
     
     private AppiumOptions GetAndroidOptions()

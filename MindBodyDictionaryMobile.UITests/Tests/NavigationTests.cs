@@ -1,4 +1,5 @@
 using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
 
 namespace MindBodyDictionaryMobile.UITests.Tests;
 
@@ -7,6 +8,12 @@ namespace MindBodyDictionaryMobile.UITests.Tests;
 /// </summary>
 public class NavigationTests : BaseTest
 {
+    private void WaitForElement(By locator, int timeoutSeconds = 10)
+    {
+        var wait = new WebDriverWait(Driver!, TimeSpan.FromSeconds(timeoutSeconds));
+        wait.Until(driver => driver.FindElement(locator).Displayed);
+    }
+    
     [Theory]
     [InlineData(Platform.Android)]
     [InlineData(Platform.iOS)]
@@ -19,7 +26,7 @@ public class NavigationTests : BaseTest
         Driver!.Navigate().GoToUrl("mindbodydictionary://search");
         
         // Wait for search page to load
-        System.Threading.Thread.Sleep(1000);
+        WaitForElement(By.Id("MbdConditionSearchBar"));
         
         var searchBar = Driver.FindElement(By.Id("MbdConditionSearchBar"));
         
@@ -40,7 +47,7 @@ public class NavigationTests : BaseTest
         Driver!.Navigate().GoToUrl("mindbodydictionary://notifications");
         
         // Wait for page to load
-        System.Threading.Thread.Sleep(1000);
+        WaitForElement(By.Id("RegisterNotificationsButton"));
         
         var registerButton = Driver.FindElement(By.Id("RegisterNotificationsButton"));
         
@@ -61,7 +68,7 @@ public class NavigationTests : BaseTest
         Driver!.Navigate().GoToUrl("mindbodydictionary://premium");
         
         // Wait for page to load
-        System.Threading.Thread.Sleep(1000);
+        WaitForElement(By.Id("SubscribeButton"));
         
         var subscribeButton = Driver.FindElement(By.Id("SubscribeButton"));
         
@@ -81,7 +88,7 @@ public class NavigationTests : BaseTest
         Driver!.Navigate().GoToUrl("mindbodydictionary://about");
         
         // Wait for page to load
-        System.Threading.Thread.Sleep(1000);
+        WaitForElement(By.Id("AppNameLabel"));
         
         var appNameLabel = Driver.FindElement(By.Id("AppNameLabel"));
         var appVersionLabel = Driver.FindElement(By.Id("AppVersionLabel"));
@@ -105,7 +112,7 @@ public class NavigationTests : BaseTest
         Driver!.Navigate().GoToUrl("mindbodydictionary://faq");
         
         // Wait for page to load
-        System.Threading.Thread.Sleep(1000);
+        WaitForElement(By.Id("FaqCollectionView"));
         
         var faqCollectionView = Driver.FindElement(By.Id("FaqCollectionView"));
         
