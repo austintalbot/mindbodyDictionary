@@ -48,13 +48,15 @@ namespace MindBodyDictionaryMobile.PageModels
 
 			public void ApplyQueryAttributes(IDictionary<string, object> query)
 			{
-				if (query.ContainsKey("Id"))
+				if (query.ContainsKey("Positive"))
 				{
-					Id = query["Id"]?.ToString();
+					Id = query["Positive"]?.ToString();
+                    Type = "Positive";
 				}
-				if (query.ContainsKey("Type"))
+				else if (query.ContainsKey("Negative"))
 				{
-					Type = query["Type"]?.ToString();
+					Id = query["Negative"]?.ToString();
+                    Type = "Negative";
 				}
 
 				if (!string.IsNullOrEmpty(Id) && !string.IsNullOrEmpty(Type))

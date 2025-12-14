@@ -79,6 +79,8 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
 	private string _positiveImagePath;
 
 
+    [ObservableProperty]
+    private string _currentAffirmation;
 
 	[ObservableProperty]
 
@@ -925,4 +927,17 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
 	{
 		await Shell.Current.GoToAsync("//premium");
 	}
+
+    [RelayCommand]
+    private async Task ShareCarouselCondition(string affirmation)
+    {
+        if (string.IsNullOrEmpty(affirmation))
+            return;
+
+        await Share.Default.RequestAsync(new ShareTextRequest
+        {
+            Text = affirmation,
+            Title = "Share Affirmation"
+        });
+    }
 }

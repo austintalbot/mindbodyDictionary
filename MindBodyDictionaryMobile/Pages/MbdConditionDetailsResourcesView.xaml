@@ -22,6 +22,7 @@
                           VerticalOptions="Fill"
                           InputTransparent="False">
                         <Border Style="{StaticResource RecommendationBorder}"
+                               Background="White"
                                InputTransparent="False">
                             <Grid RowDefinitions="Auto,Auto,Auto">
                                 <Label Grid.Row="0" Text="{Binding Name}" Style="{StaticResource RecommendationNameLabel}" />

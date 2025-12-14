@@ -90,6 +90,9 @@ public class MbdCondition
 	[System.Text.Json.Serialization.JsonIgnore]
 	public bool DisplayLock { get; set; }
 
+    [System.Text.Json.Serialization.JsonIgnore]
+    public string DisplayedAffirmation { get; set; } = string.Empty;
+
 	/// <summary>
 	/// Gets accessibility description combining name and summaryPositive.
 	/// </summary>
