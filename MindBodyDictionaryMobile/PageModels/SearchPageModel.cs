@@ -4,12 +4,15 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MindBodyDictionaryMobile.Models;
+using MindBodyDictionaryMobile.Services.billing;
 
 namespace MindBodyDictionaryMobile.PageModels;
 
 public partial class SearchPageModel : ObservableObject
 {
     private readonly MbdConditionRepository _mbdConditionRepository;
+    private readonly MindBodyDictionaryMobile.Data.ImageCacheService _imageCacheService;
+    private readonly IBillingService _billingService;
 
     [ObservableProperty]
     private string _title = "Search Conditions";
@@ -34,9 +37,11 @@ public partial class SearchPageModel : ObservableObject
     [ObservableProperty]
     private MbdCondition? _selectedCondition;
 
-    public SearchPageModel(MbdConditionRepository mbdConditionRepository)
+    public SearchPageModel(MbdConditionRepository mbdConditionRepository, MindBodyDictionaryMobile.Data.ImageCacheService imageCacheService, IBillingService billingService)
     {
         _mbdConditionRepository = mbdConditionRepository;
+        _imageCacheService = imageCacheService;
+        _billingService = billingService;
     }
 
     // Called when the page appears, analogous to InitializeAsync from old SearchPageModel
@@ -48,14 +53,22 @@ public partial class SearchPageModel : ObservableObject
         try
         {
             IsBusy = true;
+            
+            // Check subscription status
+            var purchasedProducts = await _billingService.GetPurchasedProductsAsync();
+            var hasSubscription = purchasedProducts.Contains("mbdpremiumyr") || purchasedProducts.Contains("MBDPremiumYr");
+
             // Load images for search results
             var conditions = await _mbdConditionRepository.ListAsync();
             foreach (var c in conditions)
             {
-                // Assuming _imageCacheService is handled elsewhere or not critical for basic functionality
-                // If images are needed, I'll need to re-introduce ImageCacheService or a similar mechanism.
-                // For now, I'll keep the CachedImageOneSource assignment.
-                // It looks like CachedImageOneSource might be set directly in the MbdCondition object loading.
+                if (!string.IsNullOrEmpty(c.ImageNegative))
+                {
+                    c.CachedImageOneSource = await _imageCacheService.GetImageAsync(c.ImageNegative);
+                }
+                
+                // Set lock display based on subscription
+                c.DisplayLock = c.SubscriptionOnly && !hasSubscription;
             }
 
             _allConditions = new ObservableCollection<MbdCondition>(conditions);
