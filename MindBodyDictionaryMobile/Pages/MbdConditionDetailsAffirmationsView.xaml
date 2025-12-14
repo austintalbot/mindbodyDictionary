@@ -14,6 +14,7 @@
                          <RowDefinition Height="auto"/>
                          <RowDefinition Height="auto"/>
                          <RowDefinition Height="auto"/>
+                         <RowDefinition Height="auto"/>
                      </Grid.RowDefinitions>
                      <!-- Affirmations Header -->
                      <VerticalStackLayout
@@ -98,14 +99,14 @@
                  </CarouselView>
                  <IndicatorView
                          x:Name="AffirmationIndicatorView"
-                         Grid.Row="4"
+                         Grid.Row="2"
                          HorizontalOptions="Center"
                          IndicatorColor="LightGray"
                          IndicatorsShape="Square"
                          IsVisible="{Binding IsAndroid}"
                          SelectedIndicatorColor="DarkGray" />
                  <HorizontalStackLayout
-                     Grid.Row="5"
+                     Grid.Row="3"
                      Padding="20"
                      Margin="10"
                      HorizontalOptions="CenterAndExpand"
