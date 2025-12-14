@@ -3,9 +3,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.Extensions.DependencyInjection; // Add this for IServiceProvider
 using Microsoft.Extensions.Logging; // Add this for logging
 using Microsoft.Maui.Accessibility;
+using MindBodyDictionaryMobile.Services.billing;
 using Microsoft.Maui.Controls;
 using MindBodyDictionaryMobile.Enums; // Add this using statement
 using MindBodyDictionaryMobile.Models;
@@ -32,13 +32,17 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
 
 	private readonly ModalErrorHandler _errorHandler;
 
-	private readonly IServiceProvider _serviceProvider; // Add this for DI
-
 	private readonly ILogger<MbdConditionDetailPageModel> _logger; // Add this for logging
 
 	private readonly ImageCacheService _imageCacheService; // Add this
 
+	private readonly IBillingService _billingService;
 
+    // Injected Views
+    private readonly MbdConditionDetailsProblemView _problemView;
+    private readonly MbdConditionDetailsAffirmationsView _affirmationsView;
+    private readonly MbdConditionDetailsRecommendationsView _recommendationsView;
+    private readonly RecommendationsPageModel _recommendationsPageModel;
 
 	[ObservableProperty]
 
@@ -200,8 +204,19 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
 
 
 
-	public MbdConditionDetailPageModel(MbdConditionRepository mbdConditionRepository, TaskRepository taskRepository, CategoryRepository categoryRepository, TagRepository tagRepository, ModalErrorHandler errorHandler, IServiceProvider serviceProvider, ILogger<MbdConditionDetailPageModel> logger, ImageCacheService imageCacheService)
-
+	public MbdConditionDetailPageModel(
+        MbdConditionRepository mbdConditionRepository, 
+        TaskRepository taskRepository, 
+        CategoryRepository categoryRepository, 
+        TagRepository tagRepository, 
+        ModalErrorHandler errorHandler, 
+        ILogger<MbdConditionDetailPageModel> logger, 
+        ImageCacheService imageCacheService, 
+        IBillingService billingService,
+        MbdConditionDetailsProblemView problemView,
+        MbdConditionDetailsAffirmationsView affirmationsView,
+        MbdConditionDetailsRecommendationsView recommendationsView,
+        RecommendationsPageModel recommendationsPageModel)
 	{
 
 		_mbdConditionRepository = mbdConditionRepository;
@@ -214,11 +229,16 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
 
 		_errorHandler = errorHandler;
 
-		_serviceProvider = serviceProvider; // Assign injected serviceProvider
-
 		_logger = logger; // Assign injected logger
 
 		_imageCacheService = imageCacheService; // Assign injected service
+		
+		_billingService = billingService;
+
+        _problemView = problemView;
+        _affirmationsView = affirmationsView;
+        _recommendationsView = recommendationsView;
+        _recommendationsPageModel = recommendationsPageModel;
 
 		_icon = _icons.First();
 
@@ -228,7 +248,7 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
 
         // Initialize current view
 
-        CurrentView = _serviceProvider.GetRequiredService<MbdConditionDetailsProblemView>();
+        CurrentView = _problemView;
 
         CurrentView.BindingContext = this; // Set its BindingContext
 
@@ -298,7 +318,7 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
 
             case "Problem":
 
-                CurrentView = _serviceProvider.GetRequiredService<MbdConditionDetailsProblemView>();
+                CurrentView = _problemView;
 
                 CurrentView.BindingContext = this;
 
@@ -306,7 +326,7 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
 
             case "Affirmations":
 
-                CurrentView = _serviceProvider.GetRequiredService<MbdConditionDetailsAffirmationsView>();
+                CurrentView = _affirmationsView;
 
                 CurrentView.BindingContext = this;
 
@@ -314,17 +334,17 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
 
             case "Recommendations":
 
-                CurrentView = _serviceProvider.GetRequiredService<MbdConditionDetailsRecommendationsView>();
+                CurrentView = _recommendationsView;
 
-                CurrentView.BindingContext = _serviceProvider.GetRequiredService<RecommendationsPageModel>(); // MbdConditionDetailsRecommendationsView has its own ViewModel
+                CurrentView.BindingContext = _recommendationsPageModel; // MbdConditionDetailsRecommendationsView has its own ViewModel
 
-				if (CurrentView.BindingContext is RecommendationsPageModel recommendationsPageModel && Condition != null)
+				if (Condition != null)
 
 				{
 
-					recommendationsPageModel.Condition = Condition; // Pass the condition to the inner ViewModel
+					_recommendationsPageModel.Condition = Condition; // Pass the condition to the inner ViewModel
 
-					recommendationsPageModel.InitializeTabs();
+					_recommendationsPageModel.InitializeTabs();
 
 				}
 
@@ -421,6 +441,20 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
 			SummaryNegative = Condition.SummaryNegative ?? string.Empty;
 
 			SummaryPositive = Condition.SummaryPositive ?? string.Empty;
+
+            // Check subscription
+            bool isSubscribed = false;
+            try {
+                string productId = "MBDPremiumYr";
+#if ANDROID
+                productId = "mbdpremiumyr";
+#endif
+                isSubscribed = await _billingService.IsProductOwnedAsync(productId);
+            } catch (Exception ex) {
+                _logger.LogError(ex, "Error checking subscription status");
+            }
+
+            Condition.DisplayLock = Condition.SubscriptionOnly && !isSubscribed;
 
 			// Load Images from properties
 
@@ -886,4 +920,9 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
 
     }
 
+	[RelayCommand]
+	private async Task GoToSubscription()
+	{
+		await Shell.Current.GoToAsync("//premium");
+	}
 }

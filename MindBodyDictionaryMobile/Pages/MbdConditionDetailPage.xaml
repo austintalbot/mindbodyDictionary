@@ -7,11 +7,13 @@
              xmlns:sf="clr-namespace:Syncfusion.Maui.Toolkit.TextInputLayout;assembly=Syncfusion.Maui.Toolkit"
              xmlns:controls="clr-namespace:MindBodyDictionaryMobile.Pages.Controls"
              xmlns:fonts="clr-namespace:Fonts"
+             xmlns:converters="clr-namespace:MindBodyDictionaryMobile.Converter"
              x:Class="MindBodyDictionaryMobile.Pages.MbdConditionDetailPage"
              x:DataType="pageModels:MbdConditionDetailPageModel"
              Title="Condition">
 
     <ContentPage.Resources>
+        <converters:InverseBoolConverter x:Key="InverseBoolConverter" />
         <DataTemplate x:Key="NormalTagTemplate" x:DataType="models:Tag">
                 <Border StrokeShape="RoundRectangle 22"
                         HeightRequest="44"
@@ -65,7 +67,7 @@
     </ContentPage.ToolbarItems>
 
     <Grid>
-        <ScrollView>
+        <ScrollView IsVisible="{Binding Condition.DisplayLock, Converter={StaticResource InverseBoolConverter}}">
             <VerticalStackLayout Padding="{StaticResource LayoutPadding}" Spacing="20">
 
                 <!-- Condition Name as Title -->
@@ -124,6 +126,17 @@
         </ScrollView>
 
         <controls:AddButton Command="{Binding AddTaskCommand}"
-                            SemanticProperties.Description="Add task" />
+                            SemanticProperties.Description="Add task" 
+                            IsVisible="{Binding Condition.DisplayLock, Converter={StaticResource InverseBoolConverter}}" />
+
+        <!-- Lock Overlay -->
+        <Grid IsVisible="{Binding Condition.DisplayLock}" BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}" ZIndex="10">
+             <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="20">
+                 <Image Source="locked_icon.png" HeightRequest="100" WidthRequest="100" />
+                 <Label Text="Premium Content" Style="{StaticResource Headline}" HorizontalOptions="Center" />
+                 <Label Text="Upgrade to unlock this condition and more." HorizontalOptions="Center" HorizontalTextAlignment="Center" />
+                 <Button Text="Upgrade Now" Command="{Binding GoToSubscriptionCommand}" />
+             </VerticalStackLayout>
+        </Grid>
     </Grid>
 </ContentPage>
