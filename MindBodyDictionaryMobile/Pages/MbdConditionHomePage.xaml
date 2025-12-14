@@ -35,9 +35,7 @@
                             <DataTemplate x:DataType="model:MbdCondition">
                                 <Border Style="{StaticResource MbdHomePageConditionCard}">
                                     <Border.GestureRecognizers>
-                                        <TapGestureRecognizer
-    Command="{Binding BindingContext.ShowConditionDetailsCommand, Source={x:Reference ConditionsList}}"
-    CommandParameter="{Binding .}" />
+                                        <TapGestureRecognizer Tapped="TapGestureRecognizer_HomeMbdConditionTapped" />
                                     </Border.GestureRecognizers>
                                     <Grid RowDefinitions="Auto,*" ColumnDefinitions="*,Auto">
                                         <!-- Name -->

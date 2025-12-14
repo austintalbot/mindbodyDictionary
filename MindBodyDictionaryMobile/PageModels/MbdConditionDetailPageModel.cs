@@ -1,3 +1,5 @@
+namespace MindBodyDictionaryMobile.PageModels;
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,8 +11,6 @@ using MindBodyDictionaryMobile.Services.billing;
 using Microsoft.Maui.Controls;
 using MindBodyDictionaryMobile.Enums; // Add this using statement
 using MindBodyDictionaryMobile.Models;
-
-namespace MindBodyDictionaryMobile.PageModels;
 
 public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttributable, IProjectTaskPageModel
 
@@ -38,11 +38,11 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
 
 	private readonly IBillingService _billingService;
 
-    // Injected Views
-    private readonly MbdConditionDetailsProblemView _problemView;
-    private readonly MbdConditionDetailsAffirmationsView _affirmationsView;
-    private readonly MbdConditionDetailsRecommendationsView _recommendationsView;
-    private readonly RecommendationsPageModel _recommendationsPageModel;
+	// Injected Views
+	private readonly MbdConditionDetailsProblemView _problemView;
+	private readonly MbdConditionDetailsAffirmationsView _affirmationsView;
+	private readonly MbdConditionDetailsRecommendationsView _recommendationsView;
+	private readonly RecommendationsPageModel _recommendationsPageModel;
 
 	[ObservableProperty]
 
@@ -79,8 +79,8 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
 	private string _positiveImagePath;
 
 
-    [ObservableProperty]
-    private string _currentAffirmation;
+	[ObservableProperty]
+	private string _currentAffirmation;
 
 	[ObservableProperty]
 
@@ -136,7 +136,7 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
 
 		new IconData { Icon = FluentUI.trophy_24_regular, Description = "Trophy Icon" },
 
-		new IconData { Icon = FluentUI.badge_24_regular, Description = "Badge Icon" },		new IconData { Icon = FluentUI.book_24_regular, Description = "Book Icon" },		new IconData { Icon = FluentUI.people_24_regular, Description = "People Icon" },
+		new IconData { Icon = FluentUI.badge_24_regular, Description = "Badge Icon" },      new IconData { Icon = FluentUI.book_24_regular, Description = "Book Icon" },        new IconData { Icon = FluentUI.people_24_regular, Description = "People Icon" },
 
 		new IconData { Icon = FluentUI.bot_24_regular, Description = "Bot Icon" }
 
@@ -188,37 +188,37 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
 
 	public bool HasCompletedTasks
 
-		=> 	Condition?.Tasks.Any(t => t.IsCompleted) ?? false;
+		=> Condition?.Tasks.Any(t => t.IsCompleted) ?? false;
 
 
 
-    // Tab Management Properties and Command
+	// Tab Management Properties and Command
 
-    [ObservableProperty]
+	[ObservableProperty]
 
-    private string _selectedTab = "Problem"; // Default to Problem tab
+	private string _selectedTab = "Problem"; // Default to Problem tab
 
 
 
-    [ObservableProperty]
+	[ObservableProperty]
 
-    private ContentView _currentView; // Holds the currently displayed ContentView
+	private ContentView _currentView; // Holds the currently displayed ContentView
 
 
 
 	public MbdConditionDetailPageModel(
-        MbdConditionRepository mbdConditionRepository,
-        TaskRepository taskRepository,
-        CategoryRepository categoryRepository,
-        TagRepository tagRepository,
-        ModalErrorHandler errorHandler,
-        ILogger<MbdConditionDetailPageModel> logger,
-        ImageCacheService imageCacheService,
-        IBillingService billingService,
-        MbdConditionDetailsProblemView problemView,
-        MbdConditionDetailsAffirmationsView affirmationsView,
-        MbdConditionDetailsRecommendationsView recommendationsView,
-        RecommendationsPageModel recommendationsPageModel)
+		MbdConditionRepository mbdConditionRepository,
+		TaskRepository taskRepository,
+		CategoryRepository categoryRepository,
+		TagRepository tagRepository,
+		ModalErrorHandler errorHandler,
+		ILogger<MbdConditionDetailPageModel> logger,
+		ImageCacheService imageCacheService,
+		IBillingService billingService,
+		MbdConditionDetailsProblemView problemView,
+		MbdConditionDetailsAffirmationsView affirmationsView,
+		MbdConditionDetailsRecommendationsView recommendationsView,
+		RecommendationsPageModel recommendationsPageModel)
 	{
 
 		_mbdConditionRepository = mbdConditionRepository;
@@ -237,10 +237,10 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
 
 		_billingService = billingService;
 
-        _problemView = problemView;
-        _affirmationsView = affirmationsView;
-        _recommendationsView = recommendationsView;
-        _recommendationsPageModel = recommendationsPageModel;
+		_problemView = problemView;
+		_affirmationsView = affirmationsView;
+		_recommendationsView = recommendationsView;
+		_recommendationsPageModel = recommendationsPageModel;
 
 		_icon = _icons.First();
 
@@ -248,97 +248,81 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
 
 
 
-        // Initialize current view
+		// Initialize current view
 
-        CurrentView = _problemView;
+		CurrentView = _problemView;
 
-        CurrentView.BindingContext = this; // Set its BindingContext
+		CurrentView.BindingContext = this; // Set its BindingContext
 
 	}
 
 
 
 	public void ApplyQueryAttributes(IDictionary<string, object> query)
-
 	{
-
-		if (query.ContainsKey("id"))
-
+		_logger.LogInformation($"ApplyQueryAttributes called with query: {string.Join(", ", query.Select(kvp => $"{kvp.Key}={kvp.Value}"))}");
+		if (query.TryGetValue("id", out object? value))
 		{
 
-			string? id = query["id"]?.ToString();
-
+			string? id = value?.ToString();
+			_logger.LogInformation($"ApplyQueryAttributes received ID: {id}");
 			if (!string.IsNullOrEmpty(id))
-
 			{
-
 				LoadData(id).FireAndForgetSafeAsync(_errorHandler);
-
+			}
+			else
+			{
+				_logger.LogWarning("ApplyQueryAttributes received null or empty ID.");
 			}
 
 		}
-
-		else if (query.ContainsKey("refresh"))
-
+		else if (query.TryGetValue("refresh", out object? refreshValue))
 		{
-
+			_logger.LogInformation("ApplyQueryAttributes received refresh query.");
 			RefreshData().FireAndForgetSafeAsync(_errorHandler);
-
 		}
-
 		else
-
 		{
 
 			Task.WhenAll(LoadCategories(), LoadTags()).FireAndForgetSafeAsync(_errorHandler);
-
 			Condition = new()
-
 			{
-
 				Tags = [],
-
 				Tasks = []
-
 			};
-
 			Tasks = Condition.Tasks;
-
 		}
 
 	}
 
 
 
-    partial void OnSelectedTabChanged(string value)
+	partial void OnSelectedTabChanged(string value)
+	{
+		switch (value)
+		{
 
-    {
+			case "Problem":
 
-        switch (value)
+				CurrentView = _problemView;
 
-        {
+				CurrentView.BindingContext = this;
 
-            case "Problem":
+				break;
 
-                CurrentView = _problemView;
+			case "Affirmations":
 
-                CurrentView.BindingContext = this;
+				CurrentView = _affirmationsView;
 
-                break;
+				CurrentView.BindingContext = this;
 
-            case "Affirmations":
+				break;
 
-                CurrentView = _affirmationsView;
+			case "Recommendations":
 
-                CurrentView.BindingContext = this;
+				CurrentView = _recommendationsView;
 
-                break;
-
-            case "Recommendations":
-
-                CurrentView = _recommendationsView;
-
-                CurrentView.BindingContext = _recommendationsPageModel; // MbdConditionDetailsRecommendationsView has its own ViewModel
+				CurrentView.BindingContext = _recommendationsPageModel; // MbdConditionDetailsRecommendationsView has its own ViewModel
 
 				if (Condition != null)
 
@@ -350,11 +334,11 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
 
 				}
 
-                break;
+				break;
 
-        }
+		}
 
-    }
+	}
 
 
 
@@ -444,31 +428,34 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
 
 			SummaryPositive = Condition.SummaryPositive ?? string.Empty;
 
-            // Check subscription
-            bool isSubscribed = false;
-            try {
-                string productId = "MBDPremiumYr";
+			// Check subscription
+			bool isSubscribed = false;
+			try
+			{
+				string productId = "MBDPremiumYr";
 #if ANDROID
                 productId = "mbdpremiumyr";
 #endif
-                isSubscribed = await _billingService.IsProductOwnedAsync(productId);
-            } catch (Exception ex) {
-                _logger.LogError(ex, "Error checking subscription status");
-            }
+				isSubscribed = await _billingService.IsProductOwnedAsync(productId);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex, "Error checking subscription status");
+			}
 
-            Condition.DisplayLock = Condition.SubscriptionOnly && !isSubscribed;
+			Condition.DisplayLock = Condition.SubscriptionOnly && !isSubscribed;
 
 			// Load Images from properties
 
-            if (!string.IsNullOrEmpty(Condition.ImageNegative))
+			if (!string.IsNullOrEmpty(Condition.ImageNegative))
 
-			    Condition.CachedImageOneSource = await _imageCacheService.GetImageAsync(Condition.ImageNegative);
+				Condition.CachedImageOneSource = await _imageCacheService.GetImageAsync(Condition.ImageNegative);
 
 
 
-            if (!string.IsNullOrEmpty(Condition.ImagePositive))
+			if (!string.IsNullOrEmpty(Condition.ImagePositive))
 
-			    Condition.CachedImageTwoSource = await _imageCacheService.GetImageAsync(Condition.ImagePositive);
+				Condition.CachedImageTwoSource = await _imageCacheService.GetImageAsync(Condition.ImagePositive);
 
 
 
@@ -500,103 +487,104 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
 
 
 
-            // Logging for Recommendations
+			// Logging for Recommendations
 
-            _logger.LogInformation($"Condition ID: {Condition.Id}");
+			_logger.LogInformation($"Condition ID: {Condition.Id}");
 
-            _logger.LogInformation($"Condition Name: {Condition.Name}");
+			_logger.LogInformation($"Condition Name: {Condition.Name}");
 
-            if (Condition.Recommendations != null && Condition.Recommendations.Any())
+			if (Condition.Recommendations != null && Condition.Recommendations.Any())
 
-            {
+			{
 
-                _logger.LogInformation($"Total recommendations found: {Condition.Recommendations.Count}");
+				_logger.LogInformation($"Total recommendations found: {Condition.Recommendations.Count}");
 
-                foreach (var rec in Condition.Recommendations)
+				foreach (var rec in Condition.Recommendations)
 
-                {
+				{
 
-                    _logger.LogInformation($"  Recommendation: Name={rec.Name}, Type={(MindBodyDictionaryMobile.Enums.RecommendationType)rec.RecommendationType}");
+					_logger.LogInformation($"  Recommendation: Name={rec.Name}, Type={(MindBodyDictionaryMobile.Enums.RecommendationType)rec.RecommendationType}");
 
-                }
+				}
 
-            }
+			}
 
-            else
+			else
 
-            {
+			{
 
-                _logger.LogInformation("No recommendations found for this condition.");
+				_logger.LogInformation("No recommendations found for this condition.");
 
-            }
-
-
-
-            // Populate FoodList, ProductList, and BooksResourcesList
-
-            if (Condition.Recommendations != null)
-
-            {
-
-                FoodList = Condition.Recommendations
-
-                                .Where(r => r.RecommendationType == (int)RecommendationType.Food)
-
-                                .ToList();
-
-                ProductList = Condition.Recommendations
-
-                                .Where(r => r.RecommendationType == (int)RecommendationType.Product)
-
-                                .ToList();
-
-                BooksResourcesList = Condition.Recommendations
-
-                                .Where(r => r.RecommendationType == (int)RecommendationType.Book)
-
-                                .ToList();
-
-            }
+			}
 
 
 
-            _logger.LogInformation($"FoodList count: {FoodList.Count}");
+			// Populate FoodList, ProductList, and BooksResourcesList
 
-            _logger.LogInformation($"ProductList count: {ProductList.Count}");
+			if (Condition.Recommendations != null)
 
-            _logger.LogInformation($"BooksResourcesList count: {BooksResourcesList.Count}");
+			{
 
+				FoodList = Condition.Recommendations
 
+								.Where(r => r.RecommendationType == (int)RecommendationType.Food)
 
-            // Set the condition on the current view if it is one of the ConditionDetails views
+								.ToList();
 
-            if (CurrentView.BindingContext == this)
+				ProductList = Condition.Recommendations
 
-            {
+								.Where(r => r.RecommendationType == (int)RecommendationType.Product)
 
-                if (CurrentView is MbdConditionDetailsAffirmationsView affirmationsView)
+								.ToList();
 
-                {
+				BooksResourcesList = Condition.Recommendations
 
-                    affirmationsView.MbdCondition = Condition;
+								.Where(r => r.RecommendationType == (int)RecommendationType.Book)
 
-                }
+								.ToList();
 
-            } else if (CurrentView.BindingContext is RecommendationsPageModel recommendationsPageModel)
-
-            {
-
-                recommendationsPageModel.Condition = Condition;
-
-                recommendationsPageModel.InitializeTabs();
-
-            }
+			}
 
 
 
-            // Notify that Condition (and its properties like CachedImageOneSource) might have changed
+			_logger.LogInformation($"FoodList count: {FoodList.Count}");
 
-            OnPropertyChanged(nameof(Condition));
+			_logger.LogInformation($"ProductList count: {ProductList.Count}");
+
+			_logger.LogInformation($"BooksResourcesList count: {BooksResourcesList.Count}");
+
+
+
+			// Set the condition on the current view if it is one of the ConditionDetails views
+
+			if (CurrentView.BindingContext == this)
+
+			{
+
+				if (CurrentView is MbdConditionDetailsAffirmationsView affirmationsView)
+
+				{
+
+					affirmationsView.MbdCondition = Condition;
+
+				}
+
+			}
+			else if (CurrentView.BindingContext is RecommendationsPageModel recommendationsPageModel)
+
+			{
+
+				recommendationsPageModel.Condition = Condition;
+
+				recommendationsPageModel.InitializeTabs();
+
+			}
+
+
+
+			// Notify that Condition (and its properties like CachedImageOneSource) might have changed
+
+			OnPropertyChanged(nameof(Condition));
 
 		}
 
@@ -904,15 +892,15 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
 
 
 
-    [RelayCommand]
+	[RelayCommand]
 
-    private void SelectTab(string tabName)
+	private void SelectTab(string tabName)
 
-    {
+	{
 
-        SelectedTab = tabName;
+		SelectedTab = tabName;
 
-    }
+	}
 
 	[RelayCommand]
 	private async Task GoToSubscription()
@@ -920,25 +908,25 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
 		await Shell.Current.GoToAsync("//premium");
 	}
 
-    [RelayCommand]
-    private async Task ShareCarouselCondition(string affirmation)
-    {
-        if (string.IsNullOrEmpty(affirmation))
-            return;
+	[RelayCommand]
+	private async Task ShareCarouselCondition(string affirmation)
+	{
+		if (string.IsNullOrEmpty(affirmation))
+			return;
 
-        await Share.Default.RequestAsync(new ShareTextRequest
-        {
-            Text = affirmation,
-            Title = "Share Affirmation"
-        });
-    }
+		await Share.Default.RequestAsync(new ShareTextRequest
+		{
+			Text = affirmation,
+			Title = "Share Affirmation"
+		});
+	}
 
-    [RelayCommand]
-    private async Task NavigateToSummary(string type)
-    {
-        if (Condition == null || string.IsNullOrEmpty(Condition.Id))
-            return;
+	[RelayCommand]
+	private async Task NavigateToSummary(string type)
+	{
+		if (Condition == null || string.IsNullOrEmpty(Condition.Id))
+			return;
 
-        await Shell.Current.GoToAsync($"{nameof(MbdConditionSummaryPage)}?{type}={Condition.Id}");
-    }
+		await Shell.Current.GoToAsync($"{nameof(MbdConditionSummaryPage)}?{type}={Condition.Id}");
+	}
 }

@@ -1,3 +1,5 @@
+namespace MindBodyDictionaryMobile.Pages;
+
 using System.Threading;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
@@ -6,8 +8,7 @@ using CommunityToolkit.Maui.Views;
 using Microsoft.Extensions.DependencyInjection; // Add this
 using Microsoft.Extensions.Logging; // Add this
 using MindBodyDictionaryMobile.PageModels;
-
-namespace MindBodyDictionaryMobile.Pages;
+using MindBodyDictionaryMobile.Models; // Add this for MbdCondition
 
 public partial class MbdConditionHomePage : ContentPage
 {
@@ -89,15 +90,25 @@ public partial class MbdConditionHomePage : ContentPage
 	{
 		try
 		{
-			var id = e.Parameter?.ToString();
-			if (string.IsNullOrEmpty(id))
-				return;
-			await Shell.Current.GoToAsync($"mbdcondition?id={id}");
+            var tappedElement = sender as VisualElement;
+            if (tappedElement == null)
+            {
+                _logger.LogWarning("Tapped element is null or not a VisualElement.");
+                return;
+            }
+
+            var condition = tappedElement.BindingContext as MbdCondition;
+            if (condition == null)
+            {
+                _logger.LogWarning("Tapped element's BindingContext is not an MbdCondition.");
+                return;
+            }
+            await Shell.Current.GoToAsync($"mbdcondition?id={condition.Id}");
 		}
-		catch (Exception err)
+		catch (Exception ex)
 		{
-			// Log navigation errors but don't crash the app - user can retry the tap
-			_logger.LogError(err, "Error navigating to condition details");
+            _logger.LogError(ex, "Error navigating to condition details");
+            // await DisplayAlertAsync("Navigation Error", $"An error occurred during navigation: {ex.Message}", "OK");
 		}
 	}
 }
