@@ -1,9 +1,9 @@
+namespace MindBodyDictionaryMobile.Data;
+
 using System.Text.RegularExpressions;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Logging;
 using MindBodyDictionaryMobile.Models;
-
-namespace MindBodyDictionaryMobile.Data;
 
 /// <summary>
 /// Repository class for managing cached images in the local database.

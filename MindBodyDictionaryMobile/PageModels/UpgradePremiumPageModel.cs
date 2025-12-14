@@ -1,9 +1,9 @@
+namespace MindBodyDictionaryMobile.PageModels;
+
 using System.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MindBodyDictionaryMobile.Services.billing;
-
-namespace MindBodyDictionaryMobile.PageModels;
 
 public partial class UpgradePremiumPageModel : ObservableObject
 {

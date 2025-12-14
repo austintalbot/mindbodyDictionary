@@ -1,6 +1,6 @@
-using System.Globalization;
-
 namespace MindBodyDictionaryMobile.Converter;
+
+using System.Globalization;
 
 public class BoolToColorConverter : IValueConverter
 {

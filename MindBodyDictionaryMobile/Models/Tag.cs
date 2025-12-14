@@ -1,7 +1,7 @@
+namespace MindBodyDictionaryMobile.Models;
+
 using System.Text.Json.Serialization;
 using CommunityToolkit.Maui.Core.Extensions;
-
-namespace MindBodyDictionaryMobile.Models;
 
 /// <summary>
 /// Represents a tag for categorizing and organizing conditions.

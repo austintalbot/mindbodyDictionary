@@ -1,8 +1,8 @@
-using Android.App;
+namespace MindBodyDictionaryMobile.Platforms.Android;
+
+using global::Android.App;
 using Firebase.Messaging;
 using Microsoft.Extensions.Logging;
-
-namespace MindBodyDictionaryMobile.Platforms.Android;
 
 [Service(Exported = true)]
 [IntentFilter(["com.google.firebase.MESSAGING_EVENT"])]

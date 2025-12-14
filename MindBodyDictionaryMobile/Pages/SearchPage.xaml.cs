@@ -1,7 +1,7 @@
+namespace MindBodyDictionaryMobile.Pages;
+
 using Microsoft.Extensions.Logging; // Add this
 using MindBodyDictionaryMobile.PageModels;
-
-namespace MindBodyDictionaryMobile.Pages;
 
 public partial class SearchPage : ContentPage
 {

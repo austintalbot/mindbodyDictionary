@@ -1,7 +1,7 @@
-using Android.App;
-using Android.Content;
-
 namespace MindBodyDictionaryMobile.Platforms.Android;
+
+using global::Android.App;
+using global::Android.Content;
 
 public static class LocalNotificationService
 {

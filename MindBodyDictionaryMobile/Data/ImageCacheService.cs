@@ -1,7 +1,7 @@
+namespace MindBodyDictionaryMobile.Data;
+
 using Microsoft.Extensions.Logging;
 using MindBodyDictionaryMobile.Models;
-
-namespace MindBodyDictionaryMobile.Data;
 
 /// <summary>
 /// Service for loading and caching images from the app's embedded resources into the local database.

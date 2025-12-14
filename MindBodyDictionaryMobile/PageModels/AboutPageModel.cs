@@ -1,3 +1,5 @@
+namespace MindBodyDictionaryMobile.PageModels;
+
 using System;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -6,8 +8,6 @@ using Microsoft.Maui.ApplicationModel;
 using Microsoft.Maui.ApplicationModel.Communication;
 using Microsoft.Maui.Controls;
 using MindBodyDictionaryMobile.Models;
-
-namespace MindBodyDictionaryMobile.PageModels;
 
 /// <summary>
 /// Page model for the About page.

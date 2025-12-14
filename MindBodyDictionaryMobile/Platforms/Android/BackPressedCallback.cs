@@ -1,8 +1,8 @@
-using AndroidX.Activity;
-
 namespace MindBodyDictionaryMobile.Platforms.Android
 {
-    public class BackPressedCallback : OnBackPressedCallback
+  using AndroidX.Activity;
+
+  public class BackPressedCallback : OnBackPressedCallback
     {
         private readonly MainActivity activity;
 

@@ -1,7 +1,7 @@
+namespace MindBodyDictionaryMobile.Pages.Controls;
+
 using System.Windows.Input;
 using MindBodyDictionaryMobile.Models;
-
-namespace MindBodyDictionaryMobile.Pages.Controls;
 
 public partial class TaskView
 {

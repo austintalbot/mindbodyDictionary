@@ -1,4 +1,4 @@
-﻿namespace MindBodyDictionaryMobile;
+namespace MindBodyDictionaryMobile;
 
 using CommunityToolkit.Maui;
 using Microsoft.Extensions.Hosting;

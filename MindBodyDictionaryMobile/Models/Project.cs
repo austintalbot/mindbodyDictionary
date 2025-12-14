@@ -1,6 +1,6 @@
-using System.Text.Json.Serialization;
-
 namespace MindBodyDictionaryMobile.Models;
+
+using System.Text.Json.Serialization;
 
 /// <summary>
 /// Represents a project with associated tasks, tags, and category.

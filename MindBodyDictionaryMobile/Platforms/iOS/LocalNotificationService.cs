@@ -1,6 +1,6 @@
-using UserNotifications;
-
 namespace MindBodyDictionaryMobile.Platforms.iOS;
+
+using UserNotifications;
 
 public static class LocalNotificationService
 {

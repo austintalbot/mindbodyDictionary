@@ -1,6 +1,6 @@
-using System;
-
 namespace MindBodyDictionaryMobile.Models;
+
+using System;
 
 public class IconData
 {

@@ -1,6 +1,6 @@
-using MindBodyDictionaryMobile.Models;
-
 namespace MindBodyDictionaryMobile.Services.billing;
+
+using MindBodyDictionaryMobile.Models;
 
 /// <summary>
 /// Defines the interface for cross-platform in-app billing operations.

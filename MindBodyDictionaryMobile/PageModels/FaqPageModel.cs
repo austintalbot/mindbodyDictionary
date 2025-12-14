@@ -1,7 +1,7 @@
+namespace MindBodyDictionaryMobile.PageModels;
+
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
-
-namespace MindBodyDictionaryMobile.PageModels;
 
 /// <summary>
 /// Page model for the FAQ page with expandable Q&amp;A items.

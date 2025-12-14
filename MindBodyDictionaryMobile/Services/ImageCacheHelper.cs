@@ -1,7 +1,7 @@
+namespace MindBodyDictionaryMobile.Services;
+
 using Microsoft.Extensions.Logging;
 using MindBodyDictionaryMobile.Models;
-
-namespace MindBodyDictionaryMobile.Services;
 
 /// <summary>
 /// Utility service for using cached images in XAML UI.

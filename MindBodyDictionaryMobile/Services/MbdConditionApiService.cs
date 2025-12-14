@@ -1,8 +1,8 @@
+namespace MindBodyDictionaryMobile.Services;
+
 using System.Diagnostics;
 using MindBodyDictionaryMobile.Data;
 using MindBodyDictionaryMobile.Models;
-
-namespace MindBodyDictionaryMobile.Services;
 
 /// <summary>
 /// API service for retrieving MbdConditions from the backend.

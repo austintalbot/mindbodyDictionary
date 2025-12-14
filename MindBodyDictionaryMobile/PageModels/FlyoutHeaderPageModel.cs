@@ -1,6 +1,6 @@
-using CommunityToolkit.Mvvm.ComponentModel;
-
 namespace MindBodyDictionaryMobile.PageModels;
+
+using CommunityToolkit.Mvvm.ComponentModel;
 
 /// <summary>
 /// Page model for the flyout header view.

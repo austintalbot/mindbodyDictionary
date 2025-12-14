@@ -1,6 +1,6 @@
-using MindBodyDictionaryMobile.PageModels;
-
 namespace MindBodyDictionaryMobile.Pages;
+
+using MindBodyDictionaryMobile.PageModels;
 
 public partial class MbdConditionSummaryPage : ContentPage
 {

@@ -1,14 +1,14 @@
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using Microsoft.Extensions.Logging; // Add this for ILogger
-using Microsoft.Maui.Controls; // For Preferences
-using MindBodyDictionaryMobile.Models;
-
 namespace MindBodyDictionaryMobile.PageModels
 {
-	public partial class MbdConditionHomePageModel : ObservableObject
+  using System.Collections.ObjectModel;
+  using System.Threading.Tasks;
+  using CommunityToolkit.Mvvm.ComponentModel;
+  using CommunityToolkit.Mvvm.Input;
+  using Microsoft.Extensions.Logging; // Add this for ILogger
+  using Microsoft.Maui.Controls; // For Preferences
+  using MindBodyDictionaryMobile.Models;
+
+  public partial class MbdConditionHomePageModel : ObservableObject
 	{
 		private readonly MbdConditionRepository _mbdConditionRepository;
 		private readonly ModalErrorHandler _errorHandler;

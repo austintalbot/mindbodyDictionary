@@ -1,6 +1,6 @@
-using MindBodyDictionaryMobile.Models;
-
 namespace MindBodyDictionaryMobile.Services;
+
+using MindBodyDictionaryMobile.Models;
 
 public class NotificationActionService : INotificationActionServiceExtended
 {

@@ -1,11 +1,11 @@
+namespace MindBodyDictionaryMobile.PageModels;
+
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MindBodyDictionaryMobile.Data;
 using MindBodyDictionaryMobile.Models;
 using MindBodyDictionaryMobile.Services;
-
-namespace MindBodyDictionaryMobile.PageModels;
 
 public partial class ManageMetaPageModel(CategoryRepository categoryRepository, TagRepository tagRepository, SeedDataService seedDataService) : ObservableObject
 {

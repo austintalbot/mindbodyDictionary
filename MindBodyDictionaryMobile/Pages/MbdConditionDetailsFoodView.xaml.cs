@@ -1,6 +1,6 @@
-using MindBodyDictionaryMobile.Models;
-
 namespace MindBodyDictionaryMobile.Pages;
+
+using MindBodyDictionaryMobile.Models;
 
 
 public partial class MbdConditionDetailsFoodView : ContentView

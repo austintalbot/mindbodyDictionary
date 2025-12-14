@@ -1,8 +1,8 @@
+namespace MindBodyDictionaryMobile.Converter;
+
 using System.Globalization;
 using Microsoft.Maui.Controls;
 using MindBodyDictionaryMobile.Models;
-
-namespace MindBodyDictionaryMobile.Converter;
 
 public class DataLabelValueConverter : IValueConverter
 {

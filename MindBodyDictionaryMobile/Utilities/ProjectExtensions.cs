@@ -1,7 +1,7 @@
+namespace MindBodyDictionaryMobile.Utilities;
+
 using System.Diagnostics.CodeAnalysis;
 using MindBodyDictionaryMobile.Models;
-
-namespace MindBodyDictionaryMobile.Utilities;
 
 /// <summary>
 /// Project Model Extensions

@@ -1,11 +1,11 @@
+namespace MindBodyDictionaryMobile.Services;
+
 using System;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
 using MindBodyDictionaryMobile.Data;
 using MindBodyDictionaryMobile.Models.Messaging;
 using MindBodyDictionaryMobile.Services;
-
-namespace MindBodyDictionaryMobile.Services;
 
 /// <summary>
 /// Service responsible for pre-loading application data in the background on startup.

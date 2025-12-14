@@ -1,9 +1,9 @@
+namespace MindBodyDictionaryMobile.Models;
+
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using Microsoft.Maui.Controls; // Add this
 using Newtonsoft.Json;
-
-namespace MindBodyDictionaryMobile.Models;
 
 /// <summary>
 /// Represents a mind-body condition with associated tags, recommendations, and metadata.

@@ -1,7 +1,7 @@
-﻿using MindBodyDictionaryMobile.Models;
-using MindBodyDictionaryMobile.PageModels;
+﻿namespace MindBodyDictionaryMobile.Pages;
 
-namespace MindBodyDictionaryMobile.Pages;
+using MindBodyDictionaryMobile.Models;
+using MindBodyDictionaryMobile.PageModels;
 
 public partial class MainPage : ContentPage
 {

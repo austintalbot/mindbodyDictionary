@@ -1,6 +1,6 @@
-using MindBodyDictionaryMobile.Models;
-
 namespace MindBodyDictionaryMobile.Pages.Controls;
+
+using MindBodyDictionaryMobile.Models;
 
 public class ChipDataTemplateSelector : DataTemplateSelector
 {

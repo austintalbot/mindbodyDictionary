@@ -1,7 +1,7 @@
+namespace MindBodyDictionaryMobile.Platforms.Android;
+
 using MindBodyDictionaryMobile.Models;
 using MindBodyDictionaryMobile.Services;
-
-namespace MindBodyDictionaryMobile.Platforms.Android;
 
 public class DeviceInstallationService : IDeviceInstallationService
 {

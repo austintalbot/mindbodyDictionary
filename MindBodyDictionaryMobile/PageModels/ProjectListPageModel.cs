@@ -1,11 +1,10 @@
+namespace MindBodyDictionaryMobile.PageModels;
 #nullable disable
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MindBodyDictionaryMobile.Data;
 using MindBodyDictionaryMobile.Models;
 using MindBodyDictionaryMobile.Services;
-
-namespace MindBodyDictionaryMobile.PageModels;
 
 public partial class ProjectListPageModel(ProjectRepository projectRepository) : ObservableObject
 {

@@ -1,7 +1,7 @@
+namespace MindBodyDictionaryMobile.Pages;
+
 using Microsoft.Maui.Controls.Xaml;
 using MindBodyDictionaryMobile.PageModels;
-
-namespace MindBodyDictionaryMobile.Pages;
 
 
 public partial class MbdConditionDetailPage : ContentPage

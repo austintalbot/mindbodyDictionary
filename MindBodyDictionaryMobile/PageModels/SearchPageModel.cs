@@ -1,3 +1,5 @@
+namespace MindBodyDictionaryMobile.PageModels;
+
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -5,8 +7,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MindBodyDictionaryMobile.Models;
 using MindBodyDictionaryMobile.Services.billing;
-
-namespace MindBodyDictionaryMobile.PageModels;
 
 public partial class SearchPageModel : ObservableObject
 {

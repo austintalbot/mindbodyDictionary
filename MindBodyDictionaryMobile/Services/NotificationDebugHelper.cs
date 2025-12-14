@@ -1,6 +1,6 @@
-using System.Text;
-
 namespace MindBodyDictionaryMobile.Services;
+
+using System.Text;
 
 public static class NotificationDebugHelper
 {

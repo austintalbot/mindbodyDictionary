@@ -1,10 +1,10 @@
+namespace MindBodyDictionaryMobile.PageModels;
+
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
 using MindBodyDictionaryMobile.Models;
 using MindBodyDictionaryMobile.Services;
-
-namespace MindBodyDictionaryMobile.PageModels;
 
 public partial class NotificationSettingsPageModel : ObservableObject
 {

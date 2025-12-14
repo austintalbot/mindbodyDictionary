@@ -1,11 +1,11 @@
+namespace MindBodyDictionaryMobile.Data;
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using MindBodyDictionaryMobile.Models;
-
-namespace MindBodyDictionaryMobile.Data;
 
 public class SeedDataService(ProjectRepository projectRepository, TaskRepository taskRepository, TagRepository tagRepository, CategoryRepository categoryRepository, MbdConditionRepository mbdConditionRepository, ImageCacheService imageCacheService, ILogger<SeedDataService> logger)
 {

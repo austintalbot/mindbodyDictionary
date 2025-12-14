@@ -1,10 +1,10 @@
+namespace MindBodyDictionaryMobile.PageModels;
+
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MindBodyDictionaryMobile.Data;
 using MindBodyDictionaryMobile.Models;
 using MindBodyDictionaryMobile.Services;
-
-namespace MindBodyDictionaryMobile.PageModels;
 
 public partial class TaskDetailPageModel(ProjectRepository projectRepository, TaskRepository taskRepository, ModalErrorHandler errorHandler) : ObservableObject, IQueryAttributable
 {

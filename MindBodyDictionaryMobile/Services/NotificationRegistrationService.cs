@@ -1,9 +1,9 @@
+namespace MindBodyDictionaryMobile.Services;
+
 using System.Text.Json;
 using Microsoft.Azure.NotificationHubs;
 using Microsoft.Extensions.Logging;
 using MindBodyDictionaryMobile.Models;
-
-namespace MindBodyDictionaryMobile.Services;
 
 public class NotificationRegistrationService : INotificationRegistrationService
 {

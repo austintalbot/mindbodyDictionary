@@ -1,6 +1,6 @@
-using MindBodyDictionaryMobile.Services;
-
 namespace MindBodyDictionaryMobile.Utilities;
+
+using MindBodyDictionaryMobile.Services;
 
 /// <summary>
 /// Task Utilities.

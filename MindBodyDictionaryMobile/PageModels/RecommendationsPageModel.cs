@@ -1,15 +1,15 @@
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Maui.Controls;
-using MindBodyDictionaryMobile.Models;
-using MindBodyDictionaryMobile.Services; // For ModalErrorHandler
-using Microsoft.Maui.ApplicationModel; // For Launcher
-
 namespace MindBodyDictionaryMobile.PageModels
 {
-	public partial class RecommendationsPageModel : ObservableObject
+  using CommunityToolkit.Mvvm.ComponentModel;
+  using CommunityToolkit.Mvvm.Input;
+  using Microsoft.Extensions.DependencyInjection;
+  using Microsoft.Extensions.Logging;
+  using Microsoft.Maui.Controls;
+  using MindBodyDictionaryMobile.Models;
+  using MindBodyDictionaryMobile.Services; // For ModalErrorHandler
+  using Microsoft.Maui.ApplicationModel; // For Launcher
+
+  public partial class RecommendationsPageModel : ObservableObject
 	{
 		private readonly IServiceProvider _serviceProvider;
 		private readonly ILogger<RecommendationsPageModel> _logger;

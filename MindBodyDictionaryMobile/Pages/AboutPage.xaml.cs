@@ -1,7 +1,6 @@
-using Microsoft.Maui.Controls;
-
-
 namespace MindBodyDictionaryMobile.Pages;
+
+using Microsoft.Maui.Controls;
 
 public partial class AboutPage : ContentPage
 {

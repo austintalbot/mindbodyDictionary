@@ -1,11 +1,11 @@
+namespace MindBodyDictionaryMobile.PageModels;
+
 using System.Text;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
 using MindBodyDictionaryMobile.Data;
 using MindBodyDictionaryMobile.Models;
-
-namespace MindBodyDictionaryMobile.PageModels;
 
 public partial class ImageCachePageModel : ObservableObject
 {

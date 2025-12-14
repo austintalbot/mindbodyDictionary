@@ -1,11 +1,10 @@
+namespace MindBodyDictionaryMobile.Services.billing;
 
 
 using Foundation;
 using Microsoft.Extensions.Logging;
 using MindBodyDictionaryMobile.Models;
 using StoreKit;
-
-namespace MindBodyDictionaryMobile.Services.billing;
 
 // Suppress StoreKit 1 deprecation warnings
 // Note: StoreKit 1 APIs are deprecated in iOS 18.0+ but remain fully functional

@@ -1,7 +1,7 @@
+namespace MindBodyDictionaryMobile.Converter;
+
 using System.Globalization;
 using Microsoft.Maui.Controls;
-
-namespace MindBodyDictionaryMobile.Converter;
 
 public class SelectedTabBackgroundColorConverter : IValueConverter
 {

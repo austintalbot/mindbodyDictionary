@@ -1,14 +1,14 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using Microsoft.Extensions.Logging; // Add this for ILogger
-using Microsoft.Maui.Controls; // For ImageSource and Shell
-using MindBodyDictionaryMobile.Models;
-
 namespace MindBodyDictionaryMobile.PageModels
 {
-		[QueryProperty(nameof(Id), "Id")]
+  using System.Collections.Generic;
+  using System.Threading.Tasks;
+  using CommunityToolkit.Mvvm.ComponentModel;
+  using CommunityToolkit.Mvvm.Input;
+  using Microsoft.Extensions.Logging; // Add this for ILogger
+  using Microsoft.Maui.Controls; // For ImageSource and Shell
+  using MindBodyDictionaryMobile.Models;
+
+  [QueryProperty(nameof(Id), "Id")]
 		[QueryProperty(nameof(Type), "Type")]
 		public partial class MbdConditionSummaryPageModel : ObservableObject, IQueryAttributable
 		{

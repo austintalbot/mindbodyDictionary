@@ -1,7 +1,7 @@
+namespace MindBodyDictionaryMobile.Pages;
+
 using Microsoft.Maui.Controls.Shapes;
 using MindBodyDictionaryMobile.PageModels;
-
-namespace MindBodyDictionaryMobile.Pages;
 
 public partial class NotificationSettingsPage : ContentPage
 {

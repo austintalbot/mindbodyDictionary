@@ -1,8 +1,8 @@
+namespace MindBodyDictionaryMobile.PageModels;
+
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MindBodyDictionaryMobile.Models;
-
-namespace MindBodyDictionaryMobile.PageModels;
 
 public partial class ProjectDetailPageModel : ObservableObject, IQueryAttributable, IProjectTaskPageModel
 {

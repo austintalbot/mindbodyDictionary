@@ -1,7 +1,7 @@
-﻿using ObjCRuntime;
-using UIKit;
+﻿namespace MindBodyDictionaryMobile;
 
-namespace MindBodyDictionaryMobile;
+using ObjCRuntime;
+using UIKit;
 
 public class Program
 {

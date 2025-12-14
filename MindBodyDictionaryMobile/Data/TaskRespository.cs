@@ -1,8 +1,8 @@
+namespace MindBodyDictionaryMobile.Data;
+
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Logging;
 using MindBodyDictionaryMobile.Models;
-
-namespace MindBodyDictionaryMobile.Data;
 
 /// <summary>
 /// Repository class for managing tasks in the database.

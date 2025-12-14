@@ -1,9 +1,9 @@
+namespace MindBodyDictionaryMobile.Platforms.iOS;
+
 using System.Diagnostics;
 using MindBodyDictionaryMobile.Models;
 using MindBodyDictionaryMobile.Services;
 using UIKit;
-
-namespace MindBodyDictionaryMobile.Platforms.iOS;
 
 public class DeviceInstallationService : IDeviceInstallationService
 {

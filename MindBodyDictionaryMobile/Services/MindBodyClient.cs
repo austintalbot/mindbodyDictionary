@@ -1,12 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
-
 namespace MindBodyDictionaryMobile.Services
 {
-    public class MindBodyClient : HttpClient
+  using System;
+  using System.Collections.Generic;
+  using System.Net.Http;
+  using System.Threading.Tasks;
+  using Newtonsoft.Json.Linq;
+
+  public class MindBodyClient : HttpClient
     {
         private readonly bool testingServer = true;
         public MindBodyClient()
