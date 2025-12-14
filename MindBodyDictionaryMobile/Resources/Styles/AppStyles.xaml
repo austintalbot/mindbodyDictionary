@@ -539,7 +539,8 @@
         <Setter Property="StrokeShape" Value="RoundRectangle 12"/>
         <Setter Property="StrokeThickness" Value="1"/>
         <Setter Property="Stroke" Value="{StaticResource MbdConditionCardBorder}"/>
-        <Setter Property="BackgroundColor" Value="{StaticResource White}"/>
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="BackgroundColor" Value="White"/>
         <Setter Property="HorizontalOptions" Value="Center"/>
         <Setter Property="Padding" Value="0"/>
         <Setter Property="Margin" Value="0,20,0,10"/>

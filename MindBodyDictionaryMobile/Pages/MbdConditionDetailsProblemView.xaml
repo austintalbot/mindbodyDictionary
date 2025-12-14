@@ -53,7 +53,8 @@
                               CommandParameter="Negative"></TapGestureRecognizer>
     </Border.GestureRecognizers>
     <Grid HorizontalOptions="Fill"
-            VerticalOptions="Fill">
+            VerticalOptions="Fill"
+            Background="White">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
@@ -106,7 +107,8 @@
                               CommandParameter="Positive"></TapGestureRecognizer>
     </Border.GestureRecognizers>
     <Grid HorizontalOptions="Fill"
-            VerticalOptions="Fill">
+            VerticalOptions="Fill"
+            Background="White">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
