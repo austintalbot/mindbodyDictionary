@@ -7,7 +7,9 @@
     x:Class="MindBodyDictionaryMobile.Pages.FaqPage"
     Title="FAQ">
 
-    <CollectionView ItemsSource="{Binding FaqItems}" SelectionMode="Single">
+    <CollectionView ItemsSource="{Binding FaqItems}"
+                    AutomationId="FaqCollectionView"
+                    SelectionMode="Single">
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="pm:FaqItem">
                 <VerticalStackLayout Style="{StaticResource FaqItemVerticalStackLayout}">

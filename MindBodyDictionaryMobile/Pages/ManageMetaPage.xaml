@@ -23,7 +23,9 @@
 
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Reset App" Command="{Binding ResetCommand}" />
+        <ToolbarItem Text="Reset App"
+                     AutomationId="ResetAppToolbarItem"
+                     Command="{Binding ResetCommand}" />
     </ContentPage.ToolbarItems>
 
     <ScrollView>
@@ -59,11 +61,17 @@
             </VerticalStackLayout>
 
             <Grid Style="{StaticResource MetaActionGridStyle}">
-                <Button Command="{Binding SaveCategoriesCommand}" Style="{StaticResource MetaSaveButtonStyle}"
-                    SemanticProperties.Description="Save Categories" Grid.Column="0" />
+                <Button Command="{Binding SaveCategoriesCommand}"
+                        AutomationId="SaveCategoriesButton"
+                        Style="{StaticResource MetaSaveButtonStyle}"
+                        SemanticProperties.Description="Save Categories"
+                        Grid.Column="0" />
 
-                <Button Command="{Binding AddCategoryCommand}" Style="{StaticResource MetaAddButtonStyle}" Grid.Column="1"
-                    SemanticProperties.Description="Add Categories" />
+                <Button Command="{Binding AddCategoryCommand}"
+                        AutomationId="AddCategoryButton"
+                        Style="{StaticResource MetaAddButtonStyle}"
+                        Grid.Column="1"
+                        SemanticProperties.Description="Add Categories" />
             </Grid>
 
             <Label Text="Tags" Style="{StaticResource Title2}" />
@@ -97,11 +105,17 @@
             </VerticalStackLayout>
 
             <Grid Style="{StaticResource MetaActionGridStyle}">
-                <Button Command="{Binding SaveTagsCommand}" Style="{StaticResource MetaSaveButtonStyle}"
-                    SemanticProperties.Description="Save Tags" Grid.Column="0" />
+                <Button Command="{Binding SaveTagsCommand}"
+                        AutomationId="SaveTagsButton"
+                        Style="{StaticResource MetaSaveButtonStyle}"
+                        SemanticProperties.Description="Save Tags"
+                        Grid.Column="0" />
 
-                <Button Command="{Binding AddTagCommand}" Style="{StaticResource MetaAddButtonStyle}" Grid.Column="1"
-                    SemanticProperties.Description="Add Tags" />
+                <Button Command="{Binding AddTagCommand}"
+                        AutomationId="AddTagButton"
+                        Style="{StaticResource MetaAddButtonStyle}"
+                        Grid.Column="1"
+                        SemanticProperties.Description="Add Tags" />
             </Grid>
         </VerticalStackLayout>
     </ScrollView>

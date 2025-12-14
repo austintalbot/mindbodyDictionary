@@ -20,6 +20,7 @@
     <ContentPage.ToolbarItems>
         <ToolbarItem
             Text="Delete"
+            AutomationId="DeleteToolbarItem"
             Command="{Binding DeleteCommand}"
             Order="Primary"
             Priority="0"
@@ -31,6 +32,7 @@
         <tabView:SfTabView
             Grid.Row="0"
             x:Name="AilmentDetailsTabview"
+            AutomationId="AilmentDetailsTabview"
             TabBarBackground="{StaticResource BarColor}"
             TabBarPlacement="Bottom"
             IndicatorPlacement="Fill"
@@ -39,6 +41,7 @@
 
             <!-- Problem Tab -->
             <tabView:SfTabItem
+                AutomationId="ProblemTab"
                 Style="{StaticResource BaseSfTabItem}"
                 Header="Problem">
                 <tabView:SfTabItem.ImageSource ResourceKey="IconWarning" />
@@ -65,6 +68,7 @@
 
             <!-- Affirmations Tab -->
             <tabView:SfTabItem
+                AutomationId="AffirmationsTab"
                 Style="{StaticResource BaseSfTabItem}"
                 Header="Affirmations">
                 <tabView:SfTabItem.ImageSource ResourceKey="IconLightbulb" />
@@ -90,6 +94,7 @@
 
             <!-- Recommendations Tab -->
             <tabView:SfTabItem
+                AutomationId="RecommendationsTab"
                 Style="{StaticResource BaseSfTabItem}"
                 Header="Recommendations">
                 <tabView:SfTabItem.ImageSource ResourceKey="IconStar" />
@@ -109,6 +114,7 @@
                                     Margin="0,10,0,0">
                                 <tabView:SfTabView
                                     x:Name="RecommendationsTab"
+                                    AutomationId="RecommendationsTabView"
                                     TabBarPlacement="Top"
                                     TabBarBackground="{StaticResource BarColor}"
                                     IndicatorBackground="{StaticResource BarSelectedColor}"

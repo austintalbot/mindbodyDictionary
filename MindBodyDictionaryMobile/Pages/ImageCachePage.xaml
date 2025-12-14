@@ -53,17 +53,20 @@
             <!-- Action Buttons -->
             <VerticalStackLayout Spacing="10">
                 <Button Text="Refresh Cache from Resources"
+                        AutomationId="RefreshCacheButton"
                         Command="{Binding RefreshCacheCommand}"
                         Style="{StaticResource ImageCacheActionButton}"
                         IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}" />
 
                 <Button Text="Clear Cache"
+                        AutomationId="ClearCacheButton"
                         Command="{Binding ClearCacheCommand}"
                         Style="{StaticResource ImageCacheActionButton}"
                         BackgroundColor="{StaticResource Secondary}"
                         IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}" />
 
                 <Button Text="Reload Stats"
+                        AutomationId="ReloadStatsButton"
                         Command="{Binding LoadCacheStatsCommand}"
                         Style="{StaticResource ImageCacheActionButton}"
                         BackgroundColor="{StaticResource Tertiary}"

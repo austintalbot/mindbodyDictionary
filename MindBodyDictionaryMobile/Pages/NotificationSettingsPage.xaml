@@ -16,7 +16,9 @@
             <Border Style="{StaticResource NotificationInfoBorder}">
                 <VerticalStackLayout Spacing="10">
                     <Label Text="Device Status" Style="{StaticResource NotificationInfoTitleLabel}" />
-                    <Label Text="{Binding StatusMessage}" Style="{StaticResource NotificationInfoMessageLabel}" />
+                    <Label Text="{Binding StatusMessage}"
+                           AutomationId="StatusMessageLabel"
+                           Style="{StaticResource NotificationInfoMessageLabel}" />
                     <Label Text="{Binding LastActionReceived, StringFormat='Last Action: {0}'}"
                            IsVisible="{Binding LastActionReceived, Converter={StaticResource IsNotNullOrEmptyConverter}}"
                            Style="{StaticResource NotificationInfoLastActionLabel}" />
@@ -36,12 +38,14 @@
             <!-- Action Buttons -->
             <VerticalStackLayout Spacing="15">
                 <Button Text="Register for Notifications"
+                        AutomationId="RegisterNotificationsButton"
                         Command="{Binding RegisterDeviceCommand}"
                         IsEnabled="{Binding NotificationsSupported}"
                         BackgroundColor="{StaticResource Primary}"
                         Style="{StaticResource NotificationActionButton}" />
 
                 <Button Text="Deregister from Notifications"
+                        AutomationId="DeregisterNotificationsButton"
                         Command="{Binding DeregisterDeviceCommand}"
                         IsEnabled="{Binding IsRegistered}"
                         BackgroundColor="{StaticResource Secondary}"

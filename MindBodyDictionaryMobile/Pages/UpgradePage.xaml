@@ -15,13 +15,16 @@
             <Label x:Name="DescriptionLabel" Style="{StaticResource UpgradePageDescriptionLabel}" />
             <VerticalStackLayout Margin="5" VerticalOptions="Fill">
                 <Image Style="{StaticResource UpgradePremiumPageLogoImage}"
+                     AutomationId="MindBodyDictionaryLogo"
                      x:Name="MindBodyDictionaryLogo" />
 
                 <Button Text="Privacy Policy"
+                        AutomationId="PrivacyPolicyButton"
                         Style="{StaticResource UpgradePremiumLegalButton}"
                         Command="{Binding PrivacyCommand}"
                 />
                 <Button Text="Terms of Use"
+                        AutomationId="TermsButton"
                         Style="{StaticResource UpgradePremiumLegalButton}"
                         Command="{Binding TermsCommand}"
                         CommandParameter="https://www.mindbodydictionary.com/termsandconditions"/>
@@ -32,11 +35,13 @@
                 <Label Style="{StaticResource UpgradePremiumTermsLabel}"
                     IsVisible="{Binding NotSubscribed}" />
             <Button x:Name="SubscribeButton"
+                AutomationId="SubscribeButton"
                 IsVisible="{Binding NotSubscribed}"
                 Style="{StaticResource UpgradePremiumPrimaryButton}"
                 Command="{Binding PurchaseCommand}"
                 Text="Subscribe for $9.99/year" />
             <Button x:Name="RestoreButton"
+                AutomationId="RestoreButton"
                 IsVisible="{Binding NotSubscribed}"
                 Command="{Binding RestoreCommand}"
                 Style="{StaticResource UpgradePremiumRestoreButton}"

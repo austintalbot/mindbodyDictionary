@@ -17,42 +17,49 @@
   <!-- Main Navigation Items -->
   <ShellContent
     Title="Home"
+    AutomationId="HomeShellContent"
     Icon="{StaticResource IconDashboard}"
     ContentTemplate="{DataTemplate pages:MbdConditionHomePage}"
     Route="home" />
 
   <ShellContent
     Title="Search"
+    AutomationId="SearchShellContent"
     Icon="{StaticResource IconMeta}"
     ContentTemplate="{DataTemplate pages:SearchPage}"
     Route="search" />
 
   <ShellContent
     Title="Manage Meta"
+    AutomationId="ManageMetaShellContent"
     Icon="{StaticResource IconMeta}"
     ContentTemplate="{DataTemplate pages:ManageMetaPage}"
     Route="manage" />
 
   <ShellContent
     Title="Notifications"
+    AutomationId="NotificationsShellContent"
     Icon="{StaticResource IconNotifications}"
     ContentTemplate="{DataTemplate pages:NotificationSettingsPage}"
     Route="notifications" />
 
   <ShellContent
     Title="Premium"
+    AutomationId="PremiumShellContent"
     Icon="{StaticResource IconPremium}"
     ContentTemplate="{DataTemplate pages:UpgradePremiumPage}"
     Route="premium" />
 
   <ShellContent
     Title="About"
+    AutomationId="AboutShellContent"
     Icon="{StaticResource IconMeta}"
     ContentTemplate="{DataTemplate pages:AboutPage}"
     Route="about" />
 
   <ShellContent
     Title="FAQ"
+    AutomationId="FaqShellContent"
     Icon="{StaticResource IconMeta}"
     ContentTemplate="{DataTemplate pages:FaqPage}"
     Route="faq" />
@@ -60,6 +67,7 @@
   <!-- Debug Pages -->
   <ShellContent
     Title="Image Cache (Debug)"
+    AutomationId="ImageCacheShellContent"
     x:Name="ImageCacheContent"
     Icon="{StaticResource IconImageCache}"
     ContentTemplate="{DataTemplate pages:ImageCachePage}"
@@ -67,6 +75,7 @@
 
   <ShellContent
     Title="Notification Test (Debug)"
+    AutomationId="NotificationTestShellContent"
     Icon="{StaticResource IconTest}"
     ContentTemplate="{DataTemplate pages:NotificationTestPage}"
     Route="notificationtest" />
@@ -83,6 +92,7 @@
 
       <sf:SfSegmentedControl
         x:Name="ThemeSegmentedControl"
+        AutomationId="ThemeSegmentedControl"
         Grid.Row="1"
         VerticalOptions="Center"
         HorizontalOptions="Center"

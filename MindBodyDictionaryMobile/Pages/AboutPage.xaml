@@ -11,26 +11,41 @@
         <VerticalStackLayout Padding="20" Spacing="20">
 
             <!-- Logo -->
-            <Image Style="{StaticResource AboutPageLogoImage}"/>
+            <Image Style="{StaticResource AboutPageLogoImage}"
+                   AutomationId="AboutPageLogo"/>
 
             <!-- App Name and Version -->
             <VerticalStackLayout HorizontalOptions="Center" Spacing="5">
-                <Label Text="{Binding AppName}" Style="{StaticResource AboutAppNameLabel}"/>
+                <Label Text="{Binding AppName}"
+                       AutomationId="AppNameLabel"
+                       Style="{StaticResource AboutAppNameLabel}"/>
 
-                <Label Text="{Binding AppVersion}" Style="{StaticResource AboutAppVersionLabel}"/>
+                <Label Text="{Binding AppVersion}"
+                       AutomationId="AppVersionLabel"
+                       Style="{StaticResource AboutAppVersionLabel}"/>
             </VerticalStackLayout>
 
             <!-- Divider -->
             <BoxView Style="{StaticResource DividerBoxView}"/>
 
             <!-- About Description -->
-            <Label Text="Discover the mind-body connection and explore how physical symptoms relate to emotional and psychological states." Style="{StaticResource AboutDescriptionLabel}"/>
+            <Label Text="Discover the mind-body connection and explore how physical symptoms relate to emotional and psychological states."
+                   AutomationId="AboutDescriptionLabel"
+                   Style="{StaticResource AboutDescriptionLabel}"/>
 
             <!-- Website Button -->
-            <Button Text="Visit Website" Command="{Binding VisitWebsiteCommand}" Style="{StaticResource AboutPageActionButton}" BackgroundColor="{StaticResource Primary}"/>
+            <Button Text="Visit Website"
+                    AutomationId="VisitWebsiteButton"
+                    Command="{Binding VisitWebsiteCommand}"
+                    Style="{StaticResource AboutPageActionButton}"
+                    BackgroundColor="{StaticResource Primary}"/>
 
             <!-- Email Button -->
-            <Button Text="Send Feedback" Command="{Binding SendEmailCommand}" Style="{StaticResource AboutPageActionButton}" BackgroundColor="{StaticResource Secondary}"/>
+            <Button Text="Send Feedback"
+                    AutomationId="SendFeedbackButton"
+                    Command="{Binding SendEmailCommand}"
+                    Style="{StaticResource AboutPageActionButton}"
+                    BackgroundColor="{StaticResource Secondary}"/>
 
             <!-- Copyright -->
             <Label Text="© 2025 Mind Body Dictionary, LLC. All rights reserved." Style="{StaticResource AboutPageCopyrightLabel}"/>

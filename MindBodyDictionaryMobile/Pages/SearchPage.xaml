@@ -11,6 +11,7 @@
     <Grid Style="{StaticResource MainPageGrid}" RowDefinitions="Auto,*">
         <!-- Search Bar -->
         <SearchBar x:Name="MbdConditionSearchBar"
+                  AutomationId="MbdConditionSearchBar"
                   Grid.Row="0"
                   android:Entry.ImeOptions="Done"
                   Text="{Binding SearchParam}"
@@ -73,6 +74,7 @@
             </CollectionView>
 
             <CollectionView x:Name="ConditionCollectionView"
+                          AutomationId="ConditionCollectionView"
                           ItemsSource="{Binding FilteredConditionCollection}"
                           SelectionMode="None"
                           IsVisible="{Binding IsInitialized}">

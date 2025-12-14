@@ -41,6 +41,7 @@
             </Grid>
         </Frame>
         <CollectionView ItemsSource="{Binding MbdConditions}"
+                       AutomationId="MbdConditionsCollectionView"
                        Margin="{StaticResource LayoutPadding}">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="models:MbdCondition">
@@ -51,8 +52,11 @@
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
-        <Button Command="{Binding LoadFromApiCommand}" Style="{StaticResource MbdConditionListLoadFromApiButton}" />
+        <Button Command="{Binding LoadFromApiCommand}"
+                AutomationId="LoadFromApiButton"
+                Style="{StaticResource MbdConditionListLoadFromApiButton}" />
         <controls:AddButton
+            AutomationId="AddConditionButton"
             Command="{Binding AddmbdConditionCommand}"
             SemanticProperties.Description="Add mbdCondition" />
     </VerticalStackLayout>
