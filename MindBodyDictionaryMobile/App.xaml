@@ -32,9 +32,9 @@
             <Color x:Key="MbdConditionTextColor">#00606E</Color>
             <Color x:Key="MbdConditionCardBackground">#FFFFFF</Color>
             <Color x:Key="MbdConditionCardBorder">#6A7D95</Color>
-            <Color x:Key="MbdConditionDetailCardBackground">#00606E</Color>
-            <Color x:Key="MbdConditionDetailCardText">#FFFFFF</Color>
-            <Color x:Key="MbdConditionDetailCardBorder">#73ABC9</Color>
+            <Color x:Key="MbdConditionDetailCardBackground">#FFFFFF</Color>
+            <Color x:Key="MbdConditionDetailCardText">#000000</Color>
+            <Color x:Key="MbdConditionDetailCardBorder">#6A7D95</Color>
             <Color x:Key="LightIconColor">black</Color>
             <Color x:Key="DarkIconColor">white</Color>
 

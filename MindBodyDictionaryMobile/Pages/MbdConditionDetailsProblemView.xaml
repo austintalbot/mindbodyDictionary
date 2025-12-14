@@ -45,6 +45,7 @@
         Grid.ColumnSpan="2"
         HorizontalOptions="Fill"
         Stroke="{StaticResource MbdConditionCardBorder}"
+        StrokeThickness="1"
         Background="White"
         VerticalOptions="Fill">
     <Border.GestureRecognizers>
@@ -98,6 +99,7 @@
         Grid.Column="0"
         Grid.ColumnSpan="2"
         Stroke="{StaticResource MbdConditionCardBorder}"
+        StrokeThickness="1"
         Background="White">
     <Border.GestureRecognizers>
         <TapGestureRecognizer Tapped="TapGestureRecognizer_HealingMbdConditionTap"
