@@ -25,8 +25,8 @@
     <Color x:Key="MbdConditionTextColor">#00606E</Color>
     <Color x:Key="MbdConditionCardBackground">#FFFFFF</Color>
     <Color x:Key="MbdConditionCardBorder">#6A7D95</Color>
-    <Color x:Key="MbdConditionDetailCardBackground">#00606E</Color>
-    <Color x:Key="MbdConditionDetailCardText">#FFFFFF</Color>
+    <Color x:Key="MbdConditionDetailCardBackground">#FFFFFF</Color>
+    <Color x:Key="MbdConditionDetailCardText">#000000</Color>
     <Color x:Key="MbdConditionDetailCardBorder">#73ABC9</Color>
     <Color x:Key="LightIconColor">black</Color>
     <Color x:Key="DarkIconColor">white</Color>
@@ -486,7 +486,7 @@
 
     <Style x:Key="SearchMbdConditionCard" TargetType="Border" BasedOn="{StaticResource CardStyle}">
         <Setter Property="Padding" Value="0"/>
-        <Setter Property="BackgroundColor" Value="White"/>
+        <Setter Property="Background" Value="White"/>
     </Style>
 
     <Style x:Key="SearchMbdConditionImage" TargetType="Image">
@@ -504,7 +504,7 @@
         <Setter Property="LineBreakMode" Value="TailTruncation"/>
         <Setter Property="MaxLines" Value="2"/>
         <Setter Property="Padding" Value="5"/>
-        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}"/>
+        <Setter Property="TextColor" Value="{StaticResource Gray900}"/>
     </Style>
 
     <Style x:Key="MbdConditionCardWithShadow" TargetType="Border">

@@ -14,6 +14,7 @@ namespace MindBodyDictionaryMobile.PageModels
 		private readonly ModalErrorHandler _errorHandler;
 		private readonly ILogger<MbdConditionHomePageModel> _logger; // Add this
 		private readonly SeedDataService _seedDataService;
+        private readonly Services.billing.IBillingService _billingService;
 
 			[ObservableProperty]
 			private string _title = "MindBody Dictionary";
@@ -47,12 +48,13 @@ namespace MindBodyDictionaryMobile.PageModels
 
 
 
-			public MbdConditionHomePageModel(MbdConditionRepository mbdConditionRepository, ModalErrorHandler errorHandler, ILogger<MbdConditionHomePageModel> logger, SeedDataService seedDataService) // Modify constructor
+			public MbdConditionHomePageModel(MbdConditionRepository mbdConditionRepository, ModalErrorHandler errorHandler, ILogger<MbdConditionHomePageModel> logger, SeedDataService seedDataService, Services.billing.IBillingService billingService) // Modify constructor
 			{
 				_mbdConditionRepository = mbdConditionRepository;
 				_errorHandler = errorHandler;
 				_logger = logger; // Assign injected logger
 				_seedDataService = seedDataService;
+                _billingService = billingService;
 				RandomConditionCollection = new ObservableCollection<MbdCondition>();
 				// Initialize with default values or from preferences/settings
 			}
@@ -76,12 +78,34 @@ namespace MindBodyDictionaryMobile.PageModels
 						allConditions = await _mbdConditionRepository.ListAsync();
 					}
 
+                    // Check subscription status for lock display
+                    bool isSubscribed = false;
+                    try {
+                        string productId = "MBDPremiumYr";
+#if ANDROID
+                        productId = "mbdpremiumyr";
+#endif
+                        isSubscribed = await _billingService.IsProductOwnedAsync(productId);
+                    } catch (Exception ex) {
+                        _logger.LogError(ex, "Error checking subscription status");
+                    }
+
 					// For now, just taking a few random ones, or all if less than 5
 					var random = new Random();
 					var conditionsToShow = allConditions.OrderBy(x => random.Next()).Take(5).ToList();
 					RandomConditionCollection.Clear();
 					foreach (var condition in conditionsToShow)
 					{
+                        condition.DisplayLock = condition.SubscriptionOnly && !isSubscribed;
+                        if (condition.Affirmations != null && condition.Affirmations.Count > 0)
+                        {
+                            var r = new Random();
+                            condition.DisplayedAffirmation = condition.Affirmations[r.Next(condition.Affirmations.Count)];
+                        }
+                        else
+                        {
+                            condition.DisplayedAffirmation = "No affirmation available";
+                        }
 						RandomConditionCollection.Add(condition);
 					}
 					IsInitialized = true;

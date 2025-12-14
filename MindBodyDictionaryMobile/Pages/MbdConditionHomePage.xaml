@@ -42,7 +42,7 @@
                                 <Border MinimumHeightRequest="120"
                                         MaximumHeightRequest="240"
                                         Stroke="{StaticResource MbdConditionCardBorder}"
-                                        BackgroundColor="{StaticResource MbdConditionCardBackground}"
+                                        Background="White"
                                         StrokeThickness="1"
                                         Padding="15">
                                     <Border.StrokeShape>
@@ -55,24 +55,36 @@
                                                 Offset="0,2"/>
                                     </Border.Shadow>
 
-                                    <Grid RowDefinitions="*,Auto">
-                                        <Label Grid.Row="0"
-                                               Text="{Binding FirstAffirmation}"
-                                               FontAttributes="Italic"
+                                    <Grid RowDefinitions="Auto,*" ColumnDefinitions="*,Auto">
+                                        <!-- Name -->
+                                        <Label Grid.Row="0" Grid.Column="0"
+                                               Text="{Binding Name}"
                                                FontSize="18"
+                                               FontAttributes="Bold"
+                                               HorizontalTextAlignment="Center"
+                                               VerticalTextAlignment="Center"
+                                               TextColor="{StaticResource MbdConditionTextColor}"
+                                               Margin="0,0,0,10"/>
+
+                                        <!-- Lock Icon -->
+                                        <Image Grid.Row="0" Grid.Column="1"
+                                               Source="locked_icon.png"
+                                               HeightRequest="24"
+                                               WidthRequest="24"
+                                               HorizontalOptions="End"
+                                               VerticalOptions="Start"
+                                               IsVisible="{Binding DisplayLock}" />
+
+                                        <!-- Affirmation -->
+                                        <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                                               Text="{Binding DisplayedAffirmation}"
+                                               FontAttributes="Italic"
+                                               FontSize="16"
                                                LineBreakMode="WordWrap"
                                                Style="{StaticResource ParagraphLabel}"
                                                TextColor="Black"
                                                MaxLines="4"
                                                VerticalOptions="Fill"/>
-
-                                        <Label Grid.Row="1"
-                                               Text="{Binding Name}"
-                                               FontSize="15"
-                                               FontAttributes="Bold"
-                                               HorizontalTextAlignment="Center"
-                                               TextColor="{StaticResource MbdConditionTextColor}"
-                                               Margin="0,10,0,0"/>
                                     </Grid>
                                 </Border>
                             </DataTemplate>

@@ -93,7 +93,7 @@
 
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="model:MbdCondition">
-                        <Border Style="{StaticResource SearchMbdConditionCard}">
+                        <Border Style="{StaticResource SearchMbdConditionCard}" BackgroundColor="White">
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="TapGestureRecognizer_SearchMbdConditionTapped"
                                                     CommandParameter="{Binding Id}" />
