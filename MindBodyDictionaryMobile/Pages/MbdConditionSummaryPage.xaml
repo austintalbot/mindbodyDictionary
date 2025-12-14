@@ -5,57 +5,69 @@
              xmlns:vm="clr-namespace:MindBodyDictionaryMobile.PageModels"
              x:DataType="vm:MbdConditionSummaryPageModel"
              xmlns:local="clr-namespace:MindBodyDictionaryMobile"
-             xmlns:mi="http://www.aathifmahir.com/dotnet/2022/maui/icons"
+             xmlns:fonts="clr-namespace:Fonts;assembly=MindBodyDictionaryMobile"
              Title="{Binding Title}">
-    <Grid Style="{StaticResource MbdConditionSummaryGrid}" RowDefinitions="Auto,Auto,Auto,*,Auto" ColumnDefinitions="*,*,Auto">
-        <Border Grid.Column="0"
-                Grid.ColumnSpan="3"
-                Grid.Row="0"
-                Style="{StaticResource MbdConditionImageBorder}">
-            <Image x:Name="AilmentImage"
-                   Style="{StaticResource MbdConditionSummaryImage}"
-                   Source="{Binding CachedImageSource}" />
+    <Grid Style="{StaticResource MainPageGrid}">
+        <Border Style="{StaticResource MbdConditionCardWithShadow}"
+                Margin="20"
+                VerticalOptions="FillAndExpand">
+            <Grid RowDefinitions="Auto,Auto,Auto,*,Auto" ColumnDefinitions="*,*" RowSpacing="10">
+                <Border Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        Grid.Row="0"
+                        Style="{StaticResource MbdConditionImageBorder}">
+                    <Image x:Name="AilmentImage"
+                           Style="{StaticResource MbdConditionSummaryImage}"
+                           Source="{Binding CachedImageSource}" />
+                </Border>
+
+                <Label Grid.Row="1"
+                       Grid.Column="0"
+                       Grid.ColumnSpan="2"
+                       Style="{StaticResource MindsetLabel}"
+                       TextColor="{AppThemeBinding Light={StaticResource MbdConditionTextColor}, Dark={StaticResource White}}"
+                       Text="{Binding MindsetText}" />
+
+                <Label Grid.Row="2"
+                       Grid.ColumnSpan="2"
+                       Grid.Column="0"
+                       Style="{StaticResource MbdConditionNameLabel}"
+                       TextColor="{AppThemeBinding Light={StaticResource MbdConditionTextColor}, Dark={StaticResource White}}"
+                       Text="{Binding InternalCondition.Name}" />
+
+                <ScrollView x:Name="SummaryLabelScroll"
+                            Grid.Row="3"
+                            Grid.ColumnSpan="2"
+                            Grid.Column="0"
+                            Style="{StaticResource SummaryScrollView}">
+                    <VerticalStackLayout Padding="0,10,0,20">
+                        <Label Style="{StaticResource SummaryLabel}"
+                               TextColor="{AppThemeBinding Light=Black, Dark=White}"
+                               Text="{Binding Summary}" />
+                    </VerticalStackLayout>
+                </ScrollView>
+
+                <Grid Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0"
+                           Style="{StaticResource CopyrightLabel}"
+                           TextColor="{StaticResource Gray500}"
+                           Text="© Mind Body Dictionary, LLC" />
+
+                    <HorizontalStackLayout Grid.Column="1" HorizontalOptions="End" VerticalOptions="Center">
+                        <HorizontalStackLayout.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ShareConditionSummaryCommand}" />
+                        </HorizontalStackLayout.GestureRecognizers>
+                        <Label Text="Share" 
+                               VerticalOptions="Center" 
+                               Margin="0,0,5,0" 
+                               TextColor="{AppThemeBinding Light={StaticResource MbdConditionTextColor}, Dark={StaticResource White}}"/>
+                        <Image Source="{FontImageSource FontFamily={x:Static fonts:FluentUI.FontFamily}, Glyph={x:Static fonts:FluentUI.share_24_regular}, Size=24, Color={AppThemeBinding Light={StaticResource MbdConditionTextColor}, Dark={StaticResource White}} }" 
+                               HeightRequest="24" 
+                               WidthRequest="24" 
+                               VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+                </Grid>
+            </Grid>
         </Border>
-
-        <Label Grid.Row="1"
-               Grid.Column="0"
-               Grid.ColumnSpan="3"
-               Style="{StaticResource MindsetLabel}"
-               Text="{Binding MindsetText}" />
-
-        <Label Grid.Row="2"
-               Grid.ColumnSpan="3"
-               Grid.Column="0"
-               Style="{StaticResource MbdConditionNameLabel}"
-               Text="{Binding InternalCondition.Name}" />
-
-        <ScrollView x:Name="SummaryLabelScroll"
-                    Grid.Row="3"
-                    Grid.ColumnSpan="3"
-                    Grid.Column="0"
-                    Style="{StaticResource SummaryScrollView}">
-            <VerticalStackLayout>
-                <Label Style="{StaticResource SummaryLabel}"
-                       Text="{Binding Summary}" />
-            </VerticalStackLayout>
-        </ScrollView>
-
-        <Label Grid.Column="0"
-               Grid.ColumnSpan="3"
-               Grid.Row="4"
-               Style="{StaticResource CopyrightLabel}"
-               Text="{x:Static local:App.CopyrightText}" />
-
-        <Image x:Name="ShareButton"
-               Grid.Column="2"
-               Grid.Row="4"
-               Style="{StaticResource ShareButton}"
-               Source="{mi:Material Icon=Share }">
-            <Image.GestureRecognizers>
-                <TapGestureRecognizer
-                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MbdConditionSummaryPageModel}}, Path=shareMbdConditionSummaryCommand}"
-                    NumberOfTapsRequired="1" />
-            </Image.GestureRecognizers>
-        </Image>
     </Grid>
 </ContentPage>
