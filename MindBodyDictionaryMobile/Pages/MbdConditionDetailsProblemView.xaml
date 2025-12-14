@@ -49,11 +49,12 @@
         Background="White"
         VerticalOptions="Fill">
     <Border.GestureRecognizers>
-        <TapGestureRecognizer Tapped="TapGestureRecognizer_NegativeMbdConditionTap"
-                              CommandParameter="{Binding Condition.Id}"></TapGestureRecognizer>
+        <TapGestureRecognizer Command="{Binding NavigateToSummaryCommand}"
+                              CommandParameter="Negative"></TapGestureRecognizer>
     </Border.GestureRecognizers>
     <Grid HorizontalOptions="Fill"
-            VerticalOptions="Fill">
+            VerticalOptions="Fill"
+            Background="White">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
@@ -102,11 +103,12 @@
         StrokeThickness="1"
         Background="White">
     <Border.GestureRecognizers>
-        <TapGestureRecognizer Tapped="TapGestureRecognizer_HealingMbdConditionTap"
-                              CommandParameter="{Binding Condition.Id}"></TapGestureRecognizer>
+        <TapGestureRecognizer Command="{Binding NavigateToSummaryCommand}"
+                              CommandParameter="Positive"></TapGestureRecognizer>
     </Border.GestureRecognizers>
     <Grid HorizontalOptions="Fill"
-            VerticalOptions="Fill">
+            VerticalOptions="Fill"
+            Background="White">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />

@@ -87,13 +87,13 @@
                     <GridItemsLayout x:Name="CollectionViewGridItemLayout"
                                    Orientation="Vertical"
                                    Span="3"
-                                   VerticalItemSpacing="8"
-                                   HorizontalItemSpacing="8" />
+                                   VerticalItemSpacing="12"
+                                   HorizontalItemSpacing="12" />
                 </CollectionView.ItemsLayout>
 
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="model:MbdCondition">
-                        <Border Style="{StaticResource SearchMbdConditionCard}" BackgroundColor="White">
+                        <Border Style="{StaticResource SearchMbdConditionCard}">
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="TapGestureRecognizer_SearchMbdConditionTapped"
                                                     CommandParameter="{Binding Id}" />

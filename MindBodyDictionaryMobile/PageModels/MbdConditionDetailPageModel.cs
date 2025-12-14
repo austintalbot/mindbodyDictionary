@@ -574,15 +574,7 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
 
             {
 
-                if (CurrentView is MbdConditionDetailsProblemView problemView)
-
-                {
-
-                    problemView.MbdCondition = Condition;
-
-                }
-
-                else if (CurrentView is MbdConditionDetailsAffirmationsView affirmationsView)
+                if (CurrentView is MbdConditionDetailsAffirmationsView affirmationsView)
 
                 {
 
@@ -939,5 +931,14 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
             Text = affirmation,
             Title = "Share Affirmation"
         });
+    }
+
+    [RelayCommand]
+    private async Task NavigateToSummary(string type)
+    {
+        if (Condition == null || string.IsNullOrEmpty(Condition.Id))
+            return;
+
+        await Shell.Current.GoToAsync($"{nameof(MbdConditionSummaryPage)}?{type}={Condition.Id}");
     }
 }

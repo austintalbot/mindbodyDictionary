@@ -484,9 +484,14 @@
         <Setter Property="Text" Value="Try adjusting your search terms"/>
     </Style>
 
-    <Style x:Key="SearchMbdConditionCard" TargetType="Border" BasedOn="{StaticResource CardStyle}">
-        <Setter Property="Padding" Value="0"/>
+    <Style x:Key="SearchMbdConditionCard" TargetType="Border">
+        <Setter Property="StrokeShape" Value="RoundRectangle 12"/>
+        <Setter Property="StrokeThickness" Value="1"/>
+        <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}"/>
         <Setter Property="Background" Value="White"/>
+        <Setter Property="Padding" Value="6"/>
+        <Setter Property="HeightRequest" Value="140"/>
+        <Setter Property="Margin" Value="4"/>
     </Style>
 
     <Style x:Key="SearchMbdConditionImage" TargetType="Image">
@@ -511,7 +516,7 @@
         <Setter Property="StrokeShape" Value="RoundRectangle 12"/>
         <Setter Property="StrokeThickness" Value="1"/>
         <Setter Property="Padding" Value="15"/>
-        <Setter Property="BackgroundColor" Value="White"/>
+        <Setter Property="Background" Value="{AppThemeBinding Light={StaticResource WhiteBrush}, Dark={StaticResource Gray900Brush}}"/>
         <Setter Property="Stroke" Value="{StaticResource MbdConditionCardBorder}"/>
         <Setter Property="Shadow">
             <Setter.Value>
@@ -521,6 +526,73 @@
                         Offset="0,2"/>
             </Setter.Value>
         </Setter>
+    </Style>
+
+    <!-- MbdCondition Summary Page Styles -->
+    <Style x:Key="MbdConditionSummaryGrid" TargetType="Grid">
+        <Setter Property="Padding" Value="20"/>
+        <Setter Property="RowSpacing" Value="10"/>
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource DarkBackground}}"/>
+    </Style>
+
+    <Style x:Key="MbdConditionImageBorder" TargetType="Border">
+        <Setter Property="StrokeShape" Value="RoundRectangle 12"/>
+        <Setter Property="StrokeThickness" Value="1"/>
+        <Setter Property="Stroke" Value="{StaticResource MbdConditionCardBorder}"/>
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="BackgroundColor" Value="White"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Margin" Value="0,20,0,10"/>
+    </Style>
+
+    <Style x:Key="MbdConditionSummaryImage" TargetType="Image">
+        <Setter Property="Aspect" Value="AspectFit"/>
+        <Setter Property="HeightRequest" Value="200"/>
+        <Setter Property="WidthRequest" Value="200"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+    </Style>
+
+    <Style x:Key="MindsetLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource MbdConditionTextColor}, Dark={StaticResource White}}"/>
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="FontAttributes" Value="Italic"/>
+    </Style>
+
+    <Style x:Key="MbdConditionNameLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource MbdConditionTextColor}, Dark={StaticResource White}}"/>
+        <Setter Property="FontSize" Value="28"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="Padding" Value="0,0,0,10"/>
+    </Style>
+
+    <Style x:Key="SummaryScrollView" TargetType="ScrollView">
+        <Setter Property="VerticalScrollBarVisibility" Value="Default"/>
+    </Style>
+
+    <Style x:Key="SummaryLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="LineHeight" Value="1.5"/>
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
+    </Style>
+
+    <Style x:Key="CopyrightLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="TextColor" Value="{StaticResource Gray500}"/>
+        <Setter Property="HorizontalOptions" Value="Start"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+    </Style>
+
+    <Style x:Key="ShareButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource Primary}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="HeightRequest" Value="40"/>
+        <Setter Property="Padding" Value="10,0"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="HorizontalOptions" Value="End"/>
     </Style>
 
 </ResourceDictionary>
