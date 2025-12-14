@@ -6,22 +6,21 @@ using MindBodyDictionaryMobile.Models;
 
 public class DataLabelValueConverter : IValueConverter
 {
-	public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
-	{
-		if (value is CategoryChartData categoryChartData)
-		{
-			switch (parameter?.ToString())
-			{
-				case "Title":
-					return categoryChartData.Title;
+  public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture) {
+    if (value is CategoryChartData categoryChartData)
+    {
+      switch (parameter?.ToString())
+      {
+        case "Title":
+          return categoryChartData.Title;
 
-				case "Count":
-					return categoryChartData.Count;
-			}
-		}
+        case "Count":
+          return categoryChartData.Count;
+      }
+    }
 
-		return value;
-	}
+    return value;
+  }
 
-	public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) => value;
+  public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) => value;
 }

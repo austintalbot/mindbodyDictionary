@@ -7,7 +7,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 /// </summary>
 public partial class FlyoutHeaderPageModel : ObservableObject
 {
-	public FlyoutHeaderPageModel()
-	{
-	}
+  public FlyoutHeaderPageModel() {
+  }
 }

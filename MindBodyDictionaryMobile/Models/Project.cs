@@ -7,26 +7,26 @@ using System.Text.Json.Serialization;
 /// </summary>
 public class Project
 {
-	public int ID { get; set; }
-	public string Name { get; set; } = string.Empty;
-	public string Description { get; set; } = string.Empty;
-	public string Icon { get; set; } = string.Empty;
+  public int ID { get; set; }
+  public string Name { get; set; } = string.Empty;
+  public string Description { get; set; } = string.Empty;
+  public string Icon { get; set; } = string.Empty;
 
-	[JsonIgnore]
-	public int CategoryID { get; set; }
+  [JsonIgnore]
+  public int CategoryID { get; set; }
 
-	public Category? Category { get; set; }
+  public Category? Category { get; set; }
 
-	public List<ProjectTask> Tasks { get; set; } = [];
+  public List<ProjectTask> Tasks { get; set; } = [];
 
-	public List<Tag> Tags { get; set; } = [];
+  public List<Tag> Tags { get; set; } = [];
 
-	/// <summary>
-	/// Gets accessibility description combining name and description.
-	/// </summary>
-	public string AccessibilityDescription => $"{Name} Project. {Description}";
+  /// <summary>
+  /// Gets accessibility description combining name and description.
+  /// </summary>
+  public string AccessibilityDescription => $"{Name} Project. {Description}";
 
-	public override string ToString() => Name;
+  public override string ToString() => Name;
 }
 
 /// <summary>
@@ -34,6 +34,6 @@ public class Project
 /// </summary>
 public class ProjectsJson
 {
-	public List<Project> Projects { get; set; } = [];
-	public List<MbdCondition> MbdConditions { get; set; } = [];
+  public List<Project> Projects { get; set; } = [];
+  public List<MbdCondition> MbdConditions { get; set; } = [];
 }

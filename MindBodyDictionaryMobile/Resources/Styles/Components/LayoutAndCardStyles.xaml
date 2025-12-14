@@ -239,6 +239,11 @@
         <Setter Property="Padding" Value="10" />
     </Style>
 
+    <!-- ImageCacheStatusLabel Styles -->
+    <Style x:Key="ImageCacheStatusLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource Gray100}}" />
+    </Style>
 
     <!-- New ImageCacheStatusBorder Style -->
     <Style x:Key="ImageCacheStatusBorder" TargetType="Border">

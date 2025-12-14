@@ -7,13 +7,12 @@ using MindBodyDictionaryMobile.PageModels;
 public partial class MbdConditionDetailPage : ContentPage
 {
 
-	private readonly MbdConditionDetailPageModel _mbdConditionDetailPageModel;
-	public MbdConditionDetailPage(MbdConditionDetailPageModel mbdConditionDetailPageModel)
-	{
-		InitializeComponent();
-		BindingContext = mbdConditionDetailPageModel;
-		_mbdConditionDetailPageModel = mbdConditionDetailPageModel;
-	}
+  private readonly MbdConditionDetailPageModel _mbdConditionDetailPageModel;
+  public MbdConditionDetailPage(MbdConditionDetailPageModel mbdConditionDetailPageModel) {
+    InitializeComponent();
+    BindingContext = mbdConditionDetailPageModel;
+    _mbdConditionDetailPageModel = mbdConditionDetailPageModel;
+  }
 
 
 }

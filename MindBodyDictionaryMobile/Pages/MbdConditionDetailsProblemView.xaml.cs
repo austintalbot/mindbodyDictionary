@@ -6,8 +6,7 @@ using MindBodyDictionaryMobile.Models;
 
 public partial class MbdConditionDetailsProblemView : ContentView
 {
-	public MbdConditionDetailsProblemView()
-	{
-		InitializeComponent();
-	}
+  public MbdConditionDetailsProblemView() {
+    InitializeComponent();
+  }
 }

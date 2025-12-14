@@ -15,53 +15,51 @@ public class AppDataPreloaderService(
     SeedDataService seedDataService,
     MbdConditionApiService mbdConditionApiService)
 {
-    private readonly MbdConditionRepository _mbdConditionRepository = mbdConditionRepository;
-    private readonly SeedDataService _seedDataService = seedDataService;
-    private readonly MbdConditionApiService _mbdConditionApiService = mbdConditionApiService;
-    private static bool _isPreloadStarted = false;
+  private readonly MbdConditionRepository _mbdConditionRepository = mbdConditionRepository;
+  private readonly SeedDataService _seedDataService = seedDataService;
+  private readonly MbdConditionApiService _mbdConditionApiService = mbdConditionApiService;
+  private static bool _isPreloadStarted = false;
 
-    /// <summary>
-    /// Kicks off the data preloading and synchronization process.
-    /// This method is designed to be called once at application startup.
-    /// </summary>
-    public void PreloadData()
+  /// <summary>
+  /// Kicks off the data preloading and synchronization process.
+  /// This method is designed to be called once at application startup.
+  /// </summary>
+  public void PreloadData() {
+    if (_isPreloadStarted)
     {
-        if (_isPreloadStarted)
-        {
-            return;
-        }
-        _isPreloadStarted = true;
-
-        _ = Task.Run(async () =>
-        {
-            try
-            {
-                // 1. Check for local data and seed if necessary
-                var localCount = await _mbdConditionRepository.CountAsync();
-                if (localCount == 0)
-                {
-                    System.Diagnostics.Debug.WriteLine("[AppDataPreloader] No local data found. Seeding...");
-                    await _seedDataService.SeedConditionsAsync();
-                }
-
-                // 2. Sync with remote server
-                System.Diagnostics.Debug.WriteLine("[AppDataPreloader] Starting remote sync...");
-                var remoteConditions = await _mbdConditionApiService.GetMbdConditionsAsync();
-                if (remoteConditions.Count > 0)
-                {
-                    System.Diagnostics.Debug.WriteLine($"[AppDataPreloader] Sync complete. Fetched {remoteConditions.Count} conditions.");
-                    // Notify any active listeners that the data has been updated.
-                    WeakReferenceMessenger.Default.Send(new ConditionsUpdatedMessage());
-                }
-                else
-                {
-                    System.Diagnostics.Debug.WriteLine("[AppDataPreloader] Remote sync returned no new data.");
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"[AppDataPreloader] Error during data preload: {ex.Message}");
-            }
-        });
+      return;
     }
+    _isPreloadStarted = true;
+
+    _ = Task.Run(async () => {
+      try
+      {
+        // 1. Check for local data and seed if necessary
+        var localCount = await _mbdConditionRepository.CountAsync();
+        if (localCount == 0)
+        {
+          System.Diagnostics.Debug.WriteLine("[AppDataPreloader] No local data found. Seeding...");
+          await _seedDataService.SeedConditionsAsync();
+        }
+
+        // 2. Sync with remote server
+        System.Diagnostics.Debug.WriteLine("[AppDataPreloader] Starting remote sync...");
+        var remoteConditions = await _mbdConditionApiService.GetMbdConditionsAsync();
+        if (remoteConditions.Count > 0)
+        {
+          System.Diagnostics.Debug.WriteLine($"[AppDataPreloader] Sync complete. Fetched {remoteConditions.Count} conditions.");
+          // Notify any active listeners that the data has been updated.
+          WeakReferenceMessenger.Default.Send(new ConditionsUpdatedMessage());
+        }
+        else
+        {
+          System.Diagnostics.Debug.WriteLine("[AppDataPreloader] Remote sync returned no new data.");
+        }
+      }
+      catch (Exception ex)
+      {
+        System.Diagnostics.Debug.WriteLine($"[AppDataPreloader] Error during data preload: {ex.Message}");
+      }
+    });
+  }
 }
