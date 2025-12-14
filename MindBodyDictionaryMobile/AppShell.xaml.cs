@@ -65,7 +65,7 @@ public partial class AppShell : Shell
 			// Show exit confirmation
 			Dispatcher.Dispatch(async () =>
 			{
-				bool answer = await DisplayAlert("Exit App", "Do you want to close the app?", "Yes", "No");
+				bool answer = await DisplayAlertAsync("Exit App", "Do you want to close the app?", "Yes", "No");
 				if (answer)
 				{
 #if ANDROID

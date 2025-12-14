@@ -24,17 +24,20 @@
 
                     <CollectionView x:Name="ConditionsList"
                                     ItemsSource="{Binding RandomConditionCollection}"
-                                    SelectionMode="Single"
-                                    SelectedItem="{Binding SelectedCondition, Mode=TwoWay}"
+                                    SelectionMode="None"
                                     ItemSizingStrategy="MeasureAllItems"
                                     IsVisible="{Binding IsInitialized}">
                         <CollectionView.ItemsLayout>
                             <LinearItemsLayout Orientation="Vertical"
-                                               ItemSpacing="10"/>
+                                               ItemSpacing="5"/>
                         </CollectionView.ItemsLayout>
                         <CollectionView.ItemTemplate>
                             <DataTemplate x:DataType="model:MbdCondition">
-                                <Border Style="{StaticResource MbdHomePageConditionCard}">
+                                <Frame Style="{StaticResource MbdHomePageConditionCard}">
+                                    <Frame.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding ShowConditionDetailsCommand}"
+                                                              CommandParameter="{Binding .}" />
+                                    </Frame.GestureRecognizers>
                                     <Grid RowDefinitions="Auto,*" ColumnDefinitions="*,Auto">
                                         <!-- Name -->
                                         <Label Grid.Row="0" Grid.Column="0"
@@ -51,7 +54,7 @@
                                                Text="{Binding DisplayedAffirmation}"
                                                Style="{StaticResource HomePageAffirmationLabel}"/>
                                     </Grid>
-                                </Border>
+                                </Frame>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
                         <CollectionView.EmptyView>

@@ -287,6 +287,7 @@
                             <Setter Property="LineBreakMode" Value="WordWrap" />
                             <Setter Property="TextColor" Value="Black" />
                             <Setter Property="MaxLines" Value="4" />
+                            <Setter Property="HorizontalTextAlignment" Value="Center" />
                             <Setter Property="VerticalOptions" Value="Fill" />
                         </Style>
 
@@ -466,11 +467,4 @@
         <Setter Property="HorizontalOptions" Value="Center" />
     </Style>
 
-    <Style x:Key="ImageCacheStatusBorder" TargetType="Border">
-        <Setter Property="StrokeThickness" Value="1" />
-        <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}" />
-        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}" />
-        <Setter Property="Padding" Value="15" />
-        <Setter Property="StrokeShape" Value="RoundRectangle 10" />
-    </Style>
 </ResourceDictionary>

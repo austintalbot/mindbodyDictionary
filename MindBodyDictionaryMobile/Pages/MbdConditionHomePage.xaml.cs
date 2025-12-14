@@ -58,6 +58,7 @@ public partial class MbdConditionHomePage : ContentPage
 
 	private static void RegisterDeviceWithAzureNotificationHub(Page page)
 	{
+
 		// TODO: Update register Device With Azure Notifications
 		string handle = Preferences.Get("NotificationHandle", "") ?? "";
 	}
