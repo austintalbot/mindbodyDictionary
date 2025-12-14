@@ -20,7 +20,7 @@
                            Style="{StaticResource VersionLabel}" />
                     <SearchBar x:Name="MbdConditionSearchBar"
                                SearchButtonPressed="MbdConditionHomePage_SearchButtonPressed"
-                               Style="{StaticResource AilmentSearchBar}" />
+                               Style="{StaticResource MbdConditionSearchBar}" />
 
                     <Button Text="Refresh Conditions"
                             Style="{StaticResource RandomMbdConditionButton}"

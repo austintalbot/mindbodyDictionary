@@ -87,6 +87,9 @@ public class MbdCondition
 	[System.Text.Json.Serialization.JsonIgnore]
 	public List<Tag> MobileTags { get; set; } = [];
 
+	[System.Text.Json.Serialization.JsonIgnore]
+	public bool DisplayLock { get; set; }
+
 	/// <summary>
 	/// Gets accessibility description combining name and summaryPositive.
 	/// </summary>

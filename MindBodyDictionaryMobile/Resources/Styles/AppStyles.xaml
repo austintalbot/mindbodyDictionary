@@ -20,7 +20,7 @@
     <Color x:Key="GoColor">#4F794E</Color>
     <Color x:Key="BarColor">#00606E</Color>
     <Color x:Key="BarSelectedColor">#73ABC9</Color>
-    <Color x:Key="AilmentCardColor">#B4B1AF</Color>
+    <Color x:Key="MbdConditionCardColor">#B4B1AF</Color>
     <Color x:Key="ButtonColor">#00606E</Color>
     <Color x:Key="MbdConditionTextColor">#00606E</Color>
     <Color x:Key="MbdConditionCardBackground">#FFFFFF</Color>
@@ -342,7 +342,7 @@
         <Setter Property="ProgressColor" Value="{StaticResource Primary}"/>
     </Style>
 
-    <Style x:Key="AilmentSearchBar" TargetType="SearchBar">
+    <Style x:Key="MbdConditionSearchBar" TargetType="SearchBar">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
         <Setter Property="PlaceholderColor" Value="{StaticResource Gray500}" />
         <Setter Property="CancelButtonColor" Value="{StaticResource Gray500}" />
@@ -486,7 +486,7 @@
 
     <Style x:Key="SearchMbdConditionCard" TargetType="Border" BasedOn="{StaticResource CardStyle}">
         <Setter Property="Padding" Value="0"/>
-        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource DarkSecondaryBackground}}"/>
+        <Setter Property="BackgroundColor" Value="White"/>
     </Style>
 
     <Style x:Key="SearchMbdConditionImage" TargetType="Image">
@@ -511,7 +511,7 @@
         <Setter Property="StrokeShape" Value="RoundRectangle 12"/>
         <Setter Property="StrokeThickness" Value="1"/>
         <Setter Property="Padding" Value="15"/>
-        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource MbdConditionCardBackground}, Dark={StaticResource MbdConditionCardBackground}}"/>
+        <Setter Property="BackgroundColor" Value="White"/>
         <Setter Property="Stroke" Value="{StaticResource MbdConditionCardBorder}"/>
         <Setter Property="Shadow">
             <Setter.Value>

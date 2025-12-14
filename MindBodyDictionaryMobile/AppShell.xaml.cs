@@ -56,4 +56,30 @@ public partial class AppShell : Shell
 	}
 
 	private void SfSegmentedControl_SelectionChanged(object sender, Syncfusion.Maui.Toolkit.SegmentedControl.SelectionChangedEventArgs e) => Application.Current!.UserAppTheme = e.NewIndex == 0 ? AppTheme.Light : AppTheme.Dark;
+
+	protected override bool OnBackButtonPressed()
+	{
+		// Only check on root level (no navigation stack)
+		if (Navigation.NavigationStack.Count == 1 || Navigation.NavigationStack.Count == 0)
+		{
+			// Show exit confirmation
+			Dispatcher.Dispatch(async () =>
+			{
+				bool answer = await DisplayAlert("Exit App", "Do you want to close the app?", "Yes", "No");
+				if (answer)
+				{
+#if ANDROID
+					Android.OS.Process.KillProcess(Android.OS.Process.MyPid());
+#else
+					Application.Current!.Quit();
+#endif
+				}
+			});
+			// Return true to prevent default behavior (exit)
+			return true;
+		}
+
+		// Let default behavior handle popping pages
+		return base.OnBackButtonPressed();
+	}
 }

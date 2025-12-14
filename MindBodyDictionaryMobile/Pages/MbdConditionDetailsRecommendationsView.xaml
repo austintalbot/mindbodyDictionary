@@ -29,8 +29,7 @@
                        Text="{Binding Condition.Name}" />
             </VerticalStackLayout>
 
-            <Border Style="{StaticResource ConditionCardWithShadow}"
-                    Margin="0,10,0,0">
+                                    <Border Style="{StaticResource MbdConditionCardWithShadow}"                    Margin="0,10,0,0">
                 <VerticalStackLayout>
                     <!-- Inner Tab Headers -->
                     <HorizontalStackLayout HorizontalOptions="Fill" BackgroundColor="{StaticResource BarColor}">
