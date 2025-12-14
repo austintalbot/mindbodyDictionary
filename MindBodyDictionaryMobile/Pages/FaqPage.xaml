@@ -10,29 +10,14 @@
     <CollectionView ItemsSource="{Binding FaqItems}" SelectionMode="Single">
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="pm:FaqItem">
-                <VerticalStackLayout Padding="15" Spacing="10">
-                    <Frame
-                        CornerRadius="12"
-                        Padding="15"
-                        BorderColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray700}}"
-                        HasShadow="False">
-
-                        <VerticalStackLayout Spacing="10">
+                <VerticalStackLayout Style="{StaticResource FaqItemVerticalStackLayout}">
+                    <Frame Style="{StaticResource FaqItemFrameStyle}">
+                        <VerticalStackLayout Style="{StaticResource FaqItemContentVerticalStackLayout}">
                             <!-- Question Header -->
-                            <Label
-                                Text="{Binding Question}"
-                                FontSize="16"
-                                FontAttributes="Bold"
-                                TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}"
-                                LineBreakMode="WordWrap"/>
+                            <Label Text="{Binding Question}" Style="{StaticResource FaqQuestionLabelStyle}"/>
 
                             <!-- Answer (Expandable) -->
-                            <Label
-                                Text="{Binding Answer}"
-                                FontSize="14"
-                                TextColor="{AppThemeBinding Light={StaticResource Gray700}, Dark={StaticResource Gray200}}"
-                                LineHeight="1.5"
-                                LineBreakMode="WordWrap"/>
+                            <Label Text="{Binding Answer}" Style="{StaticResource FaqAnswerLabelStyle}"/>
                         </VerticalStackLayout>
                     </Frame>
                 </VerticalStackLayout>

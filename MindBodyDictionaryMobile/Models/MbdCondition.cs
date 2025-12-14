@@ -1,9 +1,9 @@
+namespace MindBodyDictionaryMobile.Models;
+
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using Microsoft.Maui.Controls; // Add this
 using Newtonsoft.Json;
-
-namespace MindBodyDictionaryMobile.Models;
 
 /// <summary>
 /// Represents a mind-body condition with associated tags, recommendations, and metadata.
@@ -11,94 +11,94 @@ namespace MindBodyDictionaryMobile.Models;
 /// </summary>
 public class MbdCondition
 {
-	[JsonPropertyName("id")]
-	[JsonProperty("id")]
-	public string? Id { get; set; }
+  [JsonPropertyName("id")]
+  [JsonProperty("id")]
+  public string? Id { get; set; }
 
-	[JsonPropertyName("name")]
-	[JsonProperty("name")]
-	public string? Name { get; set; }
+  [JsonPropertyName("name")]
+  [JsonProperty("name")]
+  public string? Name { get; set; }
 
-	[JsonPropertyName("imageNegative")]
-	[JsonProperty("imageNegative")]
-	public string? ImageNegative { get; set; }
+  [JsonPropertyName("imageNegative")]
+  [JsonProperty("imageNegative")]
+  public string? ImageNegative { get; set; }
 
-	[JsonPropertyName("imagePositive")]
-	[JsonProperty("imagePositive")]
-	public string? ImagePositive { get; set; }
+  [JsonPropertyName("imagePositive")]
+  [JsonProperty("imagePositive")]
+  public string? ImagePositive { get; set; }
 
-	// Add these properties
-	[System.Text.Json.Serialization.JsonIgnore]
-	public ImageSource? CachedImageOneSource { get; set; }
+  // Add these properties
+  [System.Text.Json.Serialization.JsonIgnore]
+  public ImageSource? CachedImageOneSource { get; set; }
 
-	[System.Text.Json.Serialization.JsonIgnore]
-	public ImageSource? CachedImageTwoSource { get; set; }
+  [System.Text.Json.Serialization.JsonIgnore]
+  public ImageSource? CachedImageTwoSource { get; set; }
 
 
 
-	[JsonPropertyName("summaryNegative")]
-	[JsonProperty("summaryNegative")]
-	public string? SummaryNegative { get; set; }
+  [JsonPropertyName("summaryNegative")]
+  [JsonProperty("summaryNegative")]
+  public string? SummaryNegative { get; set; }
 
-	[JsonPropertyName("summaryPositive")]
-	[JsonProperty("summaryPositive")]
-	public string? SummaryPositive { get; set; }
+  [JsonPropertyName("summaryPositive")]
+  [JsonProperty("summaryPositive")]
+  public string? SummaryPositive { get; set; }
 
-	[JsonPropertyName("affirmations")]
-	[JsonProperty("affirmations")]
-	public List<string>? Affirmations { get; set; }
+  [JsonPropertyName("affirmations")]
+  [JsonProperty("affirmations")]
+  public List<string>? Affirmations { get; set; }
 
-	[JsonPropertyName("physicalConnections")]
-	[JsonProperty("physicalConnections")]
-	public List<string>? PhysicalConnections { get; set; }
+  [JsonPropertyName("physicalConnections")]
+  [JsonProperty("physicalConnections")]
+  public List<string>? PhysicalConnections { get; set; }
 
-	[JsonPropertyName("searchTags")]
-	[JsonProperty("searchTags")]
-	public List<string>? SearchTags { get; set; }
+  [JsonPropertyName("searchTags")]
+  [JsonProperty("searchTags")]
+  public List<string>? SearchTags { get; set; }
 
-	[JsonPropertyName("tags")]
-	[JsonProperty("tags")]
-	public List<string>? Tags { get; set; }
+  [JsonPropertyName("tags")]
+  [JsonProperty("tags")]
+  public List<string>? Tags { get; set; }
 
-	[JsonPropertyName("recommendations")]
-	[JsonProperty("recommendations")]
-	public List<Recommendation>? Recommendations { get; set; }
+  [JsonPropertyName("recommendations")]
+  [JsonProperty("recommendations")]
+  public List<Recommendation>? Recommendations { get; set; }
 
-	[JsonPropertyName("subscriptionOnly")]
-	[JsonProperty("subscriptionOnly")]
-	public bool SubscriptionOnly { get; set; }
+  [JsonPropertyName("subscriptionOnly")]
+  [JsonProperty("subscriptionOnly")]
+  public bool SubscriptionOnly { get; set; }
 
-	// Local database fields (not part of backend API schema)
-	[System.Text.Json.Serialization.JsonIgnore]
-	public string Description { get; set; } = string.Empty;
+  // Local database fields (not part of backend API schema)
+  [System.Text.Json.Serialization.JsonIgnore]
+  public string Description { get; set; } = string.Empty;
 
-	[System.Text.Json.Serialization.JsonIgnore]
-	public string Icon { get; set; } = string.Empty;
+  [System.Text.Json.Serialization.JsonIgnore]
+  public string Icon { get; set; } = string.Empty;
 
-	[System.Text.Json.Serialization.JsonIgnore]
-	public int CategoryID { get; set; }
+  [System.Text.Json.Serialization.JsonIgnore]
+  public int CategoryID { get; set; }
 
-	[System.Text.Json.Serialization.JsonIgnore]
-	public Category? Category { get; set; }
+  [System.Text.Json.Serialization.JsonIgnore]
+  public Category? Category { get; set; }
 
-	[System.Text.Json.Serialization.JsonIgnore]
-	public List<ProjectTask> Tasks { get; set; } = [];
+  [System.Text.Json.Serialization.JsonIgnore]
+  public List<ProjectTask> Tasks { get; set; } = [];
 
-	[System.Text.Json.Serialization.JsonIgnore]
-	public List<Tag> MobileTags { get; set; } = [];
+  [System.Text.Json.Serialization.JsonIgnore]
+  public List<Tag> MobileTags { get; set; } = [];
 
-	[System.Text.Json.Serialization.JsonIgnore]
-	public bool DisplayLock { get; set; }
+  [System.Text.Json.Serialization.JsonIgnore]
+  public bool DisplayLock { get; set; }
 
-    [System.Text.Json.Serialization.JsonIgnore]
-    public string DisplayedAffirmation { get; set; } = string.Empty;
+  [System.Text.Json.Serialization.JsonIgnore]
+  public string DisplayedAffirmation { get; set; } = string.Empty;
 
-	/// <summary>
-	/// Gets accessibility description combining name and summaryPositive.
-	/// </summary>
-	public string AccessibilityDescription => $"{Name} MbdCondition. {SummaryPositive}";
+  /// <summary>
+  /// Gets accessibility description combining name and summaryPositive.
+  /// </summary>
+  public string AccessibilityDescription => $"{Name} MbdCondition. {SummaryPositive}";
 
-	public override string ToString() => Name ?? "Unknown Condition";
+  public override string ToString() => Name ?? "Unknown Condition";
 }
 
 /// <summary>
@@ -107,17 +107,17 @@ public class MbdCondition
 /// </summary>
 public class Recommendation
 {
-	[JsonPropertyName("name")]
-	[JsonProperty("name")]
-	public string? Name { get; set; }
+  [JsonPropertyName("name")]
+  [JsonProperty("name")]
+  public string? Name { get; set; }
 
-	[JsonPropertyName("url")]
-	[JsonProperty("url")]
-	public string? Url { get; set; }
+  [JsonPropertyName("url")]
+  [JsonProperty("url")]
+  public string? Url { get; set; }
 
-	[JsonPropertyName("recommendationType")]
-	[JsonProperty("recommendationType")]
-	public int RecommendationType { get; set; }
+  [JsonPropertyName("recommendationType")]
+  [JsonProperty("recommendationType")]
+  public int RecommendationType { get; set; }
 }
 
 /// <summary>
@@ -125,5 +125,5 @@ public class Recommendation
 /// </summary>
 public class MbdConditionsJson
 {
-	public List<MbdCondition> Conditions { get; set; } = [];
+  public List<MbdCondition> Conditions { get; set; } = [];
 }

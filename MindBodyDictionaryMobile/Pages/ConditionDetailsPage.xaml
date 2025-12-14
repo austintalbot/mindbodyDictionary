@@ -10,16 +10,12 @@
              Title="{Binding Title}">
 
     <ContentPage.Resources>
-        <ResourceDictionary>
-            <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
-            <converter:SelectedTabColorConverter x:Key="SelectedTabColorConverter" />
-            <converter:SelectedTabBackgroundColorConverter x:Key="SelectedTabBackgroundColorConverter" />
-        </ResourceDictionary>
+
     </ContentPage.Resources>
 
     <Grid RowDefinitions="Auto,*" Style="{StaticResource MainPageGrid}">
         <!-- Tab Headers -->
-        <HorizontalStackLayout Grid.Row="0" HorizontalOptions="Fill" BackgroundColor="{StaticResource BarColor}">
+        <HorizontalStackLayout Grid.Row="0" Style="{StaticResource TabHeaderHorizontalStackLayout}">
             <Button Text="Mindsets"
                     Command="{Binding SelectTabCommand}"
                     CommandParameter="Problem"

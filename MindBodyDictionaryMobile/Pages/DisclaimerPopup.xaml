@@ -12,23 +12,12 @@
         </Style>
     </toolkit:Popup.Resources>
 
-    <VerticalStackLayout
-        VerticalOptions="Fill"
-        HorizontalOptions="Fill"
-        WidthRequest="300"
-        >
+    <VerticalStackLayout Style="{StaticResource DisclaimerPopupVerticalStackLayout}">
         <Label Text="I understand that the Mind Body Dictionary is for informational purposes only. Mind Body Dictionary does not diagnose, treat, prevent, or cure any illness. If you have any questions concerning your health please consult with your Doctor."
-           FontSize="16"
-           TextColor="Black"
-           Padding="10"
-           VerticalOptions="Fill"
-           HorizontalOptions="Fill"
-           LineBreakMode="WordWrap" />
+           Style="{StaticResource DisclaimerPopupMessageLabel}" />
         <Button Text="I Understand"
             Clicked="OnYesButtonClicked"
-            BackgroundColor="{StaticResource ButtonColor}"
-            Margin="10"
-            Padding="10"/>
+            Style="{StaticResource DisclaimerPopupButton}"/>
     </VerticalStackLayout>
 
 </toolkit:Popup>

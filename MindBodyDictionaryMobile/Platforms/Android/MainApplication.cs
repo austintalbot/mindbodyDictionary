@@ -1,19 +1,18 @@
-﻿using Android.App;
-using Android.Runtime;
-
 namespace MindBodyDictionaryMobile;
+
+using Android.App;
+using Android.Runtime;
 
 [Application]
 public class MainApplication(IntPtr handle, JniHandleOwnership ownership) : MauiApplication(handle, ownership)
 {
-	protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
+  protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
 
-	public override void OnCreate()
-	{
-		base.OnCreate();
+  public override void OnCreate() {
+    base.OnCreate();
 
-		// Initialize Firebase
-		Firebase.FirebaseApp.InitializeApp(this);
-		Android.Util.Log.Info("Firebase", "Firebase initialized");
-	}
+    // Initialize Firebase
+    Firebase.FirebaseApp.InitializeApp(this);
+    Android.Util.Log.Info("Firebase", "Firebase initialized");
+  }
 }

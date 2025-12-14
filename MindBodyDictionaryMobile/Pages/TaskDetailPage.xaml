@@ -29,7 +29,7 @@
 
                 <sf:SfTextInputLayout Hint="Completed">
                     <CheckBox
-                        HorizontalOptions="End"
+                        Style="{StaticResource TaskDetailCheckBoxStyle}"
                         IsChecked="{Binding IsCompleted}"
                         SemanticProperties.Description="Completed"
                         SemanticProperties.Hint="Indicates if this task is completed" />
@@ -49,10 +49,7 @@
                         SemanticProperties.Hint="Which project this task belongs to"/>
                 </sf:SfTextInputLayout>
 
-                <Button
-                    MinimumHeightRequest="{OnIdiom 44, Desktop=60}"
-                    Text="Save"
-                    Command="{Binding SaveCommand}"/>
+                <Button Command="{Binding SaveCommand}" Style="{StaticResource TaskDetailSaveButton}"/>
             </VerticalStackLayout>
         </ScrollView>
     </Grid>

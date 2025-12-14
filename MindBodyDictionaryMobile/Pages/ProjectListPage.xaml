@@ -23,11 +23,11 @@
             BindableLayout.ItemsSource="{Binding Projects}"
             Margin="{StaticResource LayoutPadding}"
             Spacing="{StaticResource LayoutSpacing}">
-            <BindableLayout.ItemTemplate>
+            <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="models:Project">
                     <Border SemanticProperties.Description="{Binding Name, StringFormat='{0} Project'}">
-                        <VerticalStackLayout Padding="10">
-                            <Label Text="{Binding Name}" FontSize="24" />
+                        <VerticalStackLayout Style="{StaticResource ProjectListItemVerticalStackLayout}">
+                            <Label Text="{Binding Name}" Style="{StaticResource ProjectListItemNameLabel}" />
                             <Label Text="{Binding Description}" />
                         </VerticalStackLayout>
                         <Border.GestureRecognizers>
@@ -35,7 +35,7 @@
                         </Border.GestureRecognizers>
                     </Border>
                 </DataTemplate>
-            </BindableLayout.ItemTemplate>
+            </CollectionView.ItemTemplate>
         </VerticalStackLayout>
       </ScrollView>
 

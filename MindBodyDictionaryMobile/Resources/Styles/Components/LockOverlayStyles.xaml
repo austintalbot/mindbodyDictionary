@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<?xaml-comp compile="true" ?>
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <Style x:Key="LockOverlayGrid" TargetType="Grid">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}" />
+        <Setter Property="ZIndex" Value="10" />
+    </Style>
+
+    <Style x:Key="LockOverlayVerticalStackLayout" TargetType="VerticalStackLayout">
+        <Setter Property="VerticalOptions" Value="Center" />
+        <Setter Property="HorizontalOptions" Value="Center" />
+        <Setter Property="Spacing" Value="20" />
+    </Style>
+
+    <Style x:Key="LockOverlayImage" TargetType="Image">
+        <Setter Property="Source" Value="locked_icon.png" />
+        <Setter Property="HeightRequest" Value="100" />
+        <Setter Property="WidthRequest" Value="100" />
+    </Style>
+
+    <Style x:Key="LockOverlayPremiumContentLabel" TargetType="Label" BasedOn="{StaticResource Headline}">
+        <Setter Property="Text" Value="Premium Content" />
+        <Setter Property="HorizontalOptions" Value="Center" />
+    </Style>
+
+    <Style x:Key="LockOverlayUpgradeLabel" TargetType="Label">
+        <Setter Property="Text" Value="Upgrade to unlock this condition and more." />
+        <Setter Property="HorizontalOptions" Value="Center" />
+        <Setter Property="HorizontalTextAlignment" Value="Center" />
+    </Style>
+
+    <Style x:Key="LockOverlayUpgradeButton" TargetType="Button">
+        <Setter Property="Text" Value="Upgrade Now" />
+        <Setter Property="Command" Value="{Binding GoToSubscriptionCommand}" />
+    </Style>
+
+</ResourceDictionary>

@@ -2,36 +2,21 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MindBodyDictionaryMobile.Pages.SubscribeTodayPage">
-        <VerticalStackLayout
-            BackgroundColor="LightGray"
-
-            Opacity=".93"
-            InputTransparent="False"
-            VerticalOptions="Fill"
-            >
+        <VerticalStackLayout Style="{StaticResource SubscribeTodayPageContainerStyle}">
             <VerticalStackLayout.GestureRecognizers>
                    <TapGestureRecognizer
                         NumberOfTapsRequired="1"
                         Tapped="TapGestureRecognizer_Tapped"
                          />
             </VerticalStackLayout.GestureRecognizers>
-            <Image
-                HeightRequest="100"
-                Margin="20"
-                Source="locked_icon.png"
-                VerticalOptions="Fill"
-                WidthRequest="100" />
-            <Label
-                FontAttributes="Italic"
-                FontSize="20"
-                Style="{StaticResource ParagraphLabel}"
-                Text="Subscribe to remove ads and gain access to this and more content!"
-                VerticalOptions="Fill" />
+            <Image Style="{StaticResource SubscribeTodayPageLockImage}" />
+            <Label Style="{StaticResource SubscribeTodayPageMessageLabel}"
+                Text="Subscribe to remove ads and gain access to this and more content!" />
 
             <Button
                 x:Name="SubscribeButton"
                 Clicked="SubscribeButton_Clicked"
-                Style="{StaticResource SubmitButton}"
+                Style="{StaticResource SubscribeTodayPageSubscribeButton}"
                 Text="Subscribe!" />
         </VerticalStackLayout>
 </ContentView>

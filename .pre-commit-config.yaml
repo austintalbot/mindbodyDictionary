@@ -112,6 +112,17 @@ repos:
             dist/
           )
 
+  # C# formatting
+  - repo: local
+    hooks:
+      - id: dotnet-format
+        name: dotnet format
+        entry: dotnet format --include
+        language: system
+        types: [file]
+        files: \.(cs|csproj)$
+        description: "Formats C# code using dotnet format"
+
 # Exclude patterns
 exclude: |
   (?x)^(

@@ -18,45 +18,40 @@
     </ContentPage.Behaviors>
     <VerticalStackLayout>
             <!-- Debug: Show all condition names -->
-            <Label Text="{Binding ConditionNamesDebug}" TextColor="Red" FontSize="Small" Margin="10,0,10,0" />
-        <Frame
-            Margin="10"
-            Padding="10"
-            BorderColor="{DynamicResource Primary}"
-            BackgroundColor="{DynamicResource Surface}"
-            CornerRadius="8">
+            <Label Text="{Binding ConditionNamesDebug}" Style="{StaticResource MbdConditionListDebugLabel}" />
+        <Frame Style="{StaticResource MbdConditionListDebugFrame}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <ScrollView Grid.Row="0" HeightRequest="200">
+                <ScrollView Grid.Row="0" Style="{StaticResource MbdConditionListDebugScrollView}">
                     <StackLayout>
-                        <Label Text="Debug Info" FontAttributes="Bold" FontSize="Medium" TextColor="{DynamicResource Primary}" />
-                        <Label Text="{Binding ConditionCount, StringFormat='Condition Count: {0}'}" TextColor="{DynamicResource OnSurface}" />
-                        <Label Text="{Binding LastSyncTime, StringFormat='Last Sync Time: {0}'}" TextColor="{DynamicResource OnSurface}" />
-                        <Label Text="{Binding SyncStatus, StringFormat='Sync Status: {0}'}" TextColor="{DynamicResource OnSurface}" />
-                        <Label Text="{Binding ConditionSource, StringFormat='Source: {0}'}" TextColor="{DynamicResource OnSurface}" />
-                        <Label Text="{Binding LoadFromApiCommandDetails}" FontSize="Small" TextColor="Gray" Margin="0,5,0,5" />
-                        <Label Text="{Binding LastApiResponse}" FontSize="Small" TextColor="{DynamicResource OnSurface}" LineBreakMode="WordWrap" Margin="0,5,0,5" />
+                        <Label Text="Debug Info" Style="{StaticResource MbdConditionListDebugInfoTitleLabel}" />
+                        <Label Text="{Binding ConditionCount, StringFormat='Condition Count: {0}'}" Style="{StaticResource MbdConditionListDebugStatLabel}" />
+                        <Label Text="{Binding LastSyncTime, StringFormat='Last Sync Time: {0}'}" Style="{StaticResource MbdConditionListDebugStatLabel}" />
+                        <Label Text="{Binding SyncStatus, StringFormat='Sync Status: {0}'}" Style="{StaticResource MbdConditionListDebugStatLabel}" />
+                        <Label Text="{Binding ConditionSource, StringFormat='Source: {0}'}" Style="{StaticResource MbdConditionListDebugStatLabel}" />
+                        <Label Text="{Binding LoadFromApiCommandDetails}" Style="{StaticResource MbdConditionListDebugDetailsLabel}" />
+                        <Label Text="{Binding LastApiResponse}" Style="{StaticResource MbdConditionListDebugApiResponseLabel}" />
                         <!-- Load from API button moved below for always-present access -->
                     </StackLayout>
                 </ScrollView>
-                <Button Grid.Row="1" Text="Copy" Command="{Binding CopyDebugInfoCommand}" Margin="0,10,0,0" />
+                <Button Grid.Row="1" Command="{Binding CopyDebugInfoCommand}" Style="{StaticResource MbdConditionListDebugCopyButton}" />
             </Grid>
         </Frame>
         <CollectionView ItemsSource="{Binding MbdConditions}"
                        Margin="{StaticResource LayoutPadding}">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="models:MbdCondition">
-                    <VerticalStackLayout Padding="10">
-                        <Label Text="{Binding Name}" FontSize="24" />
-                        <Label Text="{Binding Description}" />
+                    <VerticalStackLayout Style="{StaticResource MbdConditionListItemVerticalStackLayout}">
+                        <Label Text="{Binding Name}" Style="{StaticResource MbdConditionListItemNameLabel}" />
+                        <Label Text="{Binding Description}" Style="{StaticResource MbdConditionListItemDescriptionLabel}" />
                     </VerticalStackLayout>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
-        <Button Text="Load from API (Debug)" Command="{Binding LoadFromApiCommand}" Margin="10,10,10,0" />
+        <Button Command="{Binding LoadFromApiCommand}" Style="{StaticResource MbdConditionListLoadFromApiButton}" />
         <controls:AddButton
             Command="{Binding AddmbdConditionCommand}"
             SemanticProperties.Description="Add mbdCondition" />

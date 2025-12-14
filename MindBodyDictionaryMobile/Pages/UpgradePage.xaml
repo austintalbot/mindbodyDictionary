@@ -12,71 +12,34 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <StackLayout>
-            <Label
-                x:Name="DescriptionLabel"
-                FontSize="18"
-                HorizontalTextAlignment="Center"
-                Style="{StaticResource ParagraphLabel}"
-                VerticalOptions="Center"
-                VerticalTextAlignment="Start" />
-            <VerticalStackLayout
-                Margin="5"
-                VerticalOptions="Fill">
-                <Image
-                     Source="mbd_logo.png"
-                     HeightRequest="150"
-                     HorizontalOptions="Center"
-                     VerticalOptions="Center"
-                     Aspect="AspectFit"
-                     x:Name="MindBodyDictionaryLogo"
-                     SemanticProperties.Description="Mind Body Dictionary Logo" />
+            <Label x:Name="DescriptionLabel" Style="{StaticResource UpgradePageDescriptionLabel}" />
+            <VerticalStackLayout Margin="5" VerticalOptions="Fill">
+                <Image Style="{StaticResource UpgradePremiumPageLogoImage}"
+                     x:Name="MindBodyDictionaryLogo" />
 
-
-
-                <Button Margin="5"
-                        Text="Privacy Policy"
-                        Style="{StaticResource SubmitButton}"
+                <Button Text="Privacy Policy"
+                        Style="{StaticResource UpgradePremiumLegalButton}"
                         Command="{Binding PrivacyCommand}"
                 />
-                <Button Margin="5"
-                        Text="Terms of Use"
-                        Style="{StaticResource SubmitButton}"
+                <Button Text="Terms of Use"
+                        Style="{StaticResource UpgradePremiumLegalButton}"
                         Command="{Binding TermsCommand}"
                         CommandParameter="https://www.mindbodydictionary.com/termsandconditions"/>
-
-
             </VerticalStackLayout>
-            <VerticalStackLayout
-                VerticalOptions="Fill">
-
-                <Label
-                    Text="Enjoy an ad free experience while helping support development."
-                    IsVisible="{Binding NotSubscribed}"
-                    HorizontalOptions="Fill"
-                    HorizontalTextAlignment="Center"
-                    FontSize="20"
-                    />
-                <Label
-                    Text="No trial period, and the subscription will be renewed automatically on the subscription date, unless canceled before the renewal date."
-                    IsVisible="{Binding NotSubscribed}"
-                    HorizontalOptions="Fill"
-                    HorizontalTextAlignment="Center"
-
-                    FontSize="16"
-                    />
-            <Button
-                x:Name="SubscribeButton"
-                Margin="5"
+            <VerticalStackLayout VerticalOptions="Fill">
+                <Label Style="{StaticResource UpgradePremiumDescriptionLabel}"
+                    IsVisible="{Binding NotSubscribed}" />
+                <Label Style="{StaticResource UpgradePremiumTermsLabel}"
+                    IsVisible="{Binding NotSubscribed}" />
+            <Button x:Name="SubscribeButton"
                 IsVisible="{Binding NotSubscribed}"
-                Style="{StaticResource SubmitButton}"
+                Style="{StaticResource UpgradePremiumPrimaryButton}"
                 Command="{Binding PurchaseCommand}"
                 Text="Subscribe for $9.99/year" />
-            <Button
-                x:Name="RestoreButton"
-                Margin="5"
+            <Button x:Name="RestoreButton"
                 IsVisible="{Binding NotSubscribed}"
                 Command="{Binding RestoreCommand}"
-                Style="{StaticResource SubmitButton}"
+                Style="{StaticResource UpgradePremiumRestoreButton}"
                 Text="Restore Subscription" />
             </VerticalStackLayout>
 

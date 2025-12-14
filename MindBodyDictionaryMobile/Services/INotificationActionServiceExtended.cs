@@ -1,8 +1,8 @@
-using MindBodyDictionaryMobile.Models;
-
 namespace MindBodyDictionaryMobile.Services;
+
+using MindBodyDictionaryMobile.Models;
 
 public interface INotificationActionServiceExtended : INotificationActionService
 {
-	event EventHandler<NotificationAction> ActionTriggered;
+  event EventHandler<NotificationAction> ActionTriggered;
 }
