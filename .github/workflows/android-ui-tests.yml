@@ -11,6 +11,9 @@ jobs:
     timeout-minutes: 45
     env:
       DOTNET_CLI_TELEMETRY_OPTOUT: 1
+      IOS_PLATFORM_VERSION: 26.1
+      ANDROID_HOME: /usr/local/lib/android/sdk
+      ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
 
     steps:
       - name: Checkout
@@ -37,3 +40,10 @@ jobs:
           arch: x86_64
           script: |
             dotnet test MindBodyDictionaryMobile.UITests/MindBodyDictionaryMobile.UITests.csproj -c Release
+      
+      - name: Upload Screenshots
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-screenshots
+          path: MindBodyDictionaryMobile.UITests/TestResults/Screenshots

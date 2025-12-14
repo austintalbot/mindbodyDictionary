@@ -41,27 +41,31 @@ mindbodyDictionary/
 ### Required Software
 
 1. **.NET SDK 10.0+**
+
    ```bash
    dotnet --version
    ```
 
 2. **Node.js and npm** (for Appium)
+
    ```bash
    node --version
    npm --version
    ```
 
 3. **Appium Server**
+
    ```bash
    npm install -g appium
    appium --version
    ```
 
 4. **Appium Drivers**
+
    ```bash
    # For Android
    appium driver install uiautomator2
-   
+
    # For iOS (macOS only)
    appium driver install xcuitest
    ```
@@ -111,6 +115,7 @@ Keep this terminal window open while running tests.
 ### 3. Prepare Your Device/Emulator
 
 **For Android:**
+
 ```bash
 # Start emulator (if using emulator)
 emulator -avd Pixel_5_API_33
@@ -123,6 +128,7 @@ adb install path/to/MindBodyDictionaryMobile.apk
 ```
 
 **For iOS:**
+
 ```bash
 # List available simulators
 xcrun simctl list devices
@@ -161,11 +167,13 @@ dotnet test --logger "console;verbosity=detailed"
 #### 1. Install Android SDK
 
 **Option A: Android Studio** (Recommended)
+
 - Download from [developer.android.com](https://developer.android.com/studio)
 - Install Android SDK through SDK Manager
 - Note the SDK location (e.g., `~/Android/Sdk`)
 
 **Option B: Command Line Tools**
+
 ```bash
 # Download command line tools
 # Extract to desired location
@@ -307,11 +315,11 @@ public void MyTest_Scenario_ExpectedResult(Platform platform)
     // Arrange - Setup driver and navigate
     InitializeDriver(platform);
     Driver!.Navigate().GoToUrl("mindbodydictionary://mypage");
-    
+
     // Act - Perform actions
     var element = Driver.FindElement(By.Id("MyElementAutomationId"));
     element.Click();
-    
+
     // Assert - Verify results
     Assert.NotNull(element);
     Assert.True(element.Displayed);
@@ -321,21 +329,24 @@ public void MyTest_Scenario_ExpectedResult(Platform platform)
 ### Best Practices
 
 1. **Use AutomationId for element location**
+
    ```csharp
    // Good ✅
    var button = Driver.FindElement(By.Id("SubscribeButton"));
-   
+
    // Avoid ❌
    var button = Driver.FindElement(By.XPath("//button[1]"));
    ```
 
 2. **Add explicit waits when needed**
+
    ```csharp
    var wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(10));
    var element = wait.Until(d => d.FindElement(By.Id("ElementId")));
    ```
 
 3. **Test cross-platform**
+
    ```csharp
    [Theory]
    [InlineData(Platform.Android)]
@@ -344,15 +355,17 @@ public void MyTest_Scenario_ExpectedResult(Platform platform)
    ```
 
 4. **Keep tests independent**
+
    - Each test should set up its own state
    - Don't rely on test execution order
    - Clean up after tests
 
 5. **Use descriptive test names**
+
    ```csharp
    // Good ✅
    public void SearchPage_SearchBar_CanEnterText()
-   
+
    // Avoid ❌
    public void Test1()
    ```
@@ -429,20 +442,23 @@ xcrun simctl boot "iPhone 14"
 ### Getting Help
 
 1. **Check logs**
+
    ```bash
    # Appium logs
    appium --log-level debug
-   
+
    # Test logs
    dotnet test -v d
    ```
 
 2. **Use Appium Inspector**
+
    - Download from [Appium Inspector Releases](https://github.com/appium/appium-inspector/releases)
    - Connect to your Appium server
    - Inspect element properties
 
 3. **Documentation**
+
    - [Appium Documentation](https://appium.io/docs/en/latest/)
    - [.NET MAUI UI Testing Guide](https://devblogs.microsoft.com/dotnet/dotnet-maui-ui-testing-appium/)
    - [xUnit Documentation](https://xunit.net/)
