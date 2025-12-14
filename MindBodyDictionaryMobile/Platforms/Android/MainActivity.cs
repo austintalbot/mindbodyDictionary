@@ -15,6 +15,9 @@ public class MainActivity : MauiAppCompatActivity
 	{
 		base.OnCreate(savedInstanceState);
 
+        // Register BackPressedCallback
+        OnBackPressedDispatcher.AddCallback(this, new Platforms.Android.BackPressedCallback(this));
+
 		CreateNotificationChannel();
 		RequestNotificationPermission();
 		RequestFirebaseToken();
