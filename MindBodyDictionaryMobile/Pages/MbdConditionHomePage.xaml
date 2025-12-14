@@ -16,16 +16,11 @@
                 <VerticalStackLayout Style="{StaticResource MainContentStack}">
 
                     <Image Style="{StaticResource AppLogoImage}" />
-                    <Label Text="{Binding Version}"
-                           Style="{StaticResource VersionLabel}" />
                     <SearchBar x:Name="MbdConditionSearchBar"
                                SearchButtonPressed="MbdConditionHomePage_SearchButtonPressed"
                                Style="{StaticResource MbdConditionSearchBar}" />
 
-                    <Button Text="Refresh Conditions"
-                            Style="{StaticResource RandomMbdConditionButton}"
-                            IsEnabled="{Binding IsInitialized}"
-                            Command="{Binding GetConditionListCommand}"/>
+
 
                     <CollectionView x:Name="ConditionsList"
                                     ItemsSource="{Binding RandomConditionCollection}"
@@ -68,7 +63,10 @@
                             </VerticalStackLayout>
                         </CollectionView.EmptyView>
                     </CollectionView>
-
+      <Button Text="Refresh Conditions"
+                            Style="{StaticResource RandomMbdConditionButton}"
+                            IsEnabled="{Binding IsInitialized}"
+                            Command="{Binding GetConditionListCommand}"/>
 
                 </VerticalStackLayout>
             </ScrollView>
