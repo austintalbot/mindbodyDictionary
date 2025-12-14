@@ -109,6 +109,8 @@ public static class MauiProgram
         builder.Services.AddTransient<RecommendationsPageModel>();
 
 		var app = builder.Build();
+		var logger = app.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Startup");
+		logger.LogInformation("App startup log test");
 		Services = app.Services;
 		return app;
 	}

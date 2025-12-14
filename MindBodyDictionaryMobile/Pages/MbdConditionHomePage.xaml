@@ -33,11 +33,12 @@
                         </CollectionView.ItemsLayout>
                         <CollectionView.ItemTemplate>
                             <DataTemplate x:DataType="model:MbdCondition">
-                                <Frame Style="{StaticResource MbdHomePageConditionCard}">
-                                    <Frame.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding ShowConditionDetailsCommand}"
-                                                              CommandParameter="{Binding .}" />
-                                    </Frame.GestureRecognizers>
+                                <Border Style="{StaticResource MbdHomePageConditionCard}">
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer
+    Command="{Binding BindingContext.ShowConditionDetailsCommand, Source={x:Reference ConditionsList}}"
+    CommandParameter="{Binding .}" />
+                                    </Border.GestureRecognizers>
                                     <Grid RowDefinitions="Auto,*" ColumnDefinitions="*,Auto">
                                         <!-- Name -->
                                         <Label Grid.Row="0" Grid.Column="0"
@@ -54,7 +55,7 @@
                                                Text="{Binding DisplayedAffirmation}"
                                                Style="{StaticResource HomePageAffirmationLabel}"/>
                                     </Grid>
-                                </Frame>
+                                </Border>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
                         <CollectionView.EmptyView>

@@ -42,7 +42,7 @@ namespace MindBodyDictionaryMobile.PageModels
 				_logger = logger; // Assign injected logger
 				_seedDataService = seedDataService;
                 _billingService = billingService;
-				RandomConditionCollection = new ObservableCollection<MbdCondition>();
+				RandomConditionCollection = [];
 				// Initialize with default values or from preferences/settings
 			}
 
@@ -123,12 +123,17 @@ namespace MindBodyDictionaryMobile.PageModels
 		[RelayCommand]
 		public async Task ShowConditionDetails(MbdCondition condition)
 		{
+			_logger.LogInformation($"ShowConditionDetails called. Parameter: {{condition?.Id}} / {{condition?.Name}}");
 			await AppShell.DisplaySnackbarAsync($"Navigating to: condtion");
 			if (condition == null)
+			{
+				_logger.LogWarning("ShowConditionDetails called with null condition.");
 				return;
+			}
 
 			try
 			{
+				_logger.LogInformation($"Navigating to: {condition.Name} (ID: {condition.Id})");
 				await AppShell.DisplaySnackbarAsync($"Navigating to: {condition.Name} (ID: {condition.Id})");
 				await Shell.Current.GoToAsync($"mbdcondition?id={condition.Id}");
 			}

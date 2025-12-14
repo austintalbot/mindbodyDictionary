@@ -21,7 +21,7 @@ public partial class MbdConditionHomePage : ContentPage
 
 		InitializeComponent();
 		BindingContext = mbdConditionHomePageModel;
-		this._mbdConditionHomePageModel = mbdConditionHomePageModel;
+		_mbdConditionHomePageModel = mbdConditionHomePageModel;
 		_logger = logger; // Assign injected logger
 		_serviceProvider = serviceProvider; // Assign injected serviceProvider
 	}
@@ -60,7 +60,7 @@ public partial class MbdConditionHomePage : ContentPage
 	{
 
 		// TODO: Update register Device With Azure Notifications
-		string handle = Preferences.Get("NotificationHandle", "") ?? "";
+		//string handle = Preferences.Get("NotificationHandle", "") ?? "";
 	}
 
 
