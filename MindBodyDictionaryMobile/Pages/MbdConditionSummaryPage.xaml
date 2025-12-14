@@ -62,11 +62,10 @@
                                VerticalOptions="Center" 
                                Margin="0,0,5,0" 
                                TextColor="{AppThemeBinding Light={StaticResource MbdConditionTextColor}, Dark={StaticResource White}}"/>
-                        <Image Source="{FontImageSource FontFamily={x:Static fonts:FluentUI.FontFamily}, Glyph={x:Static fonts:FluentUI.share_24_regular}, Size=24, Color={AppThemeBinding Light={StaticResource MbdConditionTextColor}, Dark={StaticResource White}} }" 
-                               HeightRequest="24" 
-                               WidthRequest="24" 
-                               VerticalOptions="Center"/>
-                    </HorizontalStackLayout>
+                                                <Image Source="{StaticResource IconShare}"
+                                                       HeightRequest="24"
+                                                       WidthRequest="24"
+                                                       VerticalOptions="Center"/>                    </HorizontalStackLayout>
                 </Grid>
             </Grid>
         </Border>

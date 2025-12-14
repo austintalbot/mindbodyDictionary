@@ -3,17 +3,9 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Class="MindBodyDictionaryMobile.Pages.FlyoutHeaderView"
-    HeightRequest="180">
+    Style="{StaticResource FlyoutHeaderViewStyle}">
 
-    <Grid
-        BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}">
-        <Image
-            Source="mbd_logo.png"
-            HeightRequest="140"
-            HorizontalOptions="Center"
-            VerticalOptions="Center"
-            Margin="30"
-            Aspect="AspectFit"
-            SemanticProperties.Description="Mind Body Dictionary Logo"/>
+    <Grid Style="{StaticResource FlyoutHeaderGridStyle}">
+        <Image Style="{StaticResource FlyoutHeaderLogoImage}"/>
     </Grid>
 </ContentView>

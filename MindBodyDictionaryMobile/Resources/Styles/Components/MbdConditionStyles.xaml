@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<?xaml-comp compile="true" ?>
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <Style x:Key="MbdConditionCardWithShadow" TargetType="Border">
+        <Setter Property="StrokeShape" Value="RoundRectangle 12"/>
+        <Setter Property="StrokeThickness" Value="1"/>
+        <Setter Property="Padding" Value="15"/>
+        <Setter Property="Background" Value="{AppThemeBinding Light={StaticResource WhiteBrush}, Dark={StaticResource Gray900Brush}}"/>
+        <Setter Property="Stroke" Value="{StaticResource MbdConditionCardBorder}"/>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="Black"
+                        Opacity="0.1"
+                        Radius="10"
+                        Offset="0,2"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- MbdCondition Summary Page Styles -->
+    <Style x:Key="MbdConditionSummaryGrid" TargetType="Grid">
+        <Setter Property="Padding" Value="20"/>
+        <Setter Property="RowSpacing" Value="10"/>
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource DarkBackground}}"/>
+    </Style>
+
+    <Style x:Key="MbdConditionImageBorder" TargetType="Border">
+        <Setter Property="StrokeShape" Value="RoundRectangle 12"/>
+        <Setter Property="StrokeThickness" Value="1"/>
+        <Setter Property="Stroke" Value="{StaticResource MbdConditionCardBorder}"/>
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="BackgroundColor" Value="White"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Margin" Value="0,20,0,10"/>
+    </Style>
+
+    <Style x:Key="MbdConditionSummaryImage" TargetType="Image">
+        <Setter Property="Aspect" Value="AspectFit"/>
+        <Setter Property="HeightRequest" Value="200"/>
+        <Setter Property="WidthRequest" Value="200"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+    </Style>
+
+    <Style x:Key="MindsetLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource MbdConditionTextColor}, Dark={StaticResource White}}"/>
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="FontAttributes" Value="Italic"/>
+    </Style>
+
+    <Style x:Key="MbdConditionNameLabel" TargetType="Label">
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource MbdConditionTextColor}, Dark={StaticResource White}}"/>
+        <Setter Property="FontSize" Value="28"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="Padding" Value="0,0,0,10"/>
+    </Style>
+
+    <Style x:Key="SummaryScrollView" TargetType="ScrollView">
+        <Setter Property="VerticalScrollBarVisibility" Value="Default"/>
+    </Style>
+
+    <Style x:Key="SummaryLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="LineHeight" Value="1.5"/>
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
+    </Style>
+
+    <Style x:Key="CopyrightLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="TextColor" Value="{StaticResource Gray500}"/>
+        <Setter Property="HorizontalOptions" Value="Start"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+    </Style>
+
+    <Style x:Key="ShareButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource Primary}"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="HeightRequest" Value="40"/>
+        <Setter Property="Padding" Value="10,0"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="HorizontalOptions" Value="End"/>
+    </Style>
+
+    <!-- New Card and Border Styles from App.xaml -->
+    <Style x:Key="MbdConditionCard" TargetType="Border">
+        <Setter Property="StrokeShape" Value="RoundRectangle,12" />
+        <Setter Property="Stroke" Value="{StaticResource MbdConditionCardBorder}" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="BackgroundColor" Value="{StaticResource MbdConditionCardBackground}" />
+        <Setter Property="Padding" Value="15" />
+        <Setter Property="Margin" Value="10" />
+    </Style>
+
+    <Style x:Key="AppMbdConditionCardWithShadow" TargetType="Border" BasedOn="{StaticResource MbdConditionCard}">
+        <Setter Property="Shadow">
+            <Shadow Brush="Black" Opacity="0.1" Radius="10" Offset="0,2"/>
+        </Setter>
+    </Style>
+
+    <Style x:Key="RecommendationBorder" TargetType="Border">
+        <Setter Property="Margin" Value="10" />
+        <Setter Property="Padding" Value="10" />
+        <Setter Property="BackgroundColor" Value="{StaticResource MbdConditionDetailCardBackground}" />
+        <Setter Property="Stroke" Value="{StaticResource MbdConditionDetailCardBorder}" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+    </Style>
+
+    <Style x:Key="InfoCardBorder" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="LightGray" />
+        <Setter Property="Stroke" Value="Gray" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="Padding" Value="15" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 5" />
+        <Setter Property="Shadow">
+            <Shadow Brush="Black" Opacity="0.1" Radius="5" Offset="0,2"/>
+        </Setter>
+    </Style>
+
+    <Style x:Key="HighlightCardBorder" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="LightBlue" />
+        <Setter Property="Stroke" Value="Blue" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="Padding" Value="15" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 5" />
+        <Setter Property="Shadow">
+            <Shadow Brush="Black" Opacity="0.1" Radius="5" Offset="0,2"/>
+        </Setter>
+    </Style>
+    <Style x:Key="HighlightCardBorder" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="LightBlue" />
+        <Setter Property="Stroke" Value="Blue" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="Padding" Value="15" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 5" />
+        <Setter Property="Shadow">
+            <Shadow Brush="Black" Opacity="0.1" Radius="5" Offset="0,2"/>
+        </Setter>
+    </Style>
+
+    <!-- New Recommendation Styles from App.xaml -->
+    <Style x:Key="RecommendationNameLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="24" />
+        <Setter Property="HorizontalOptions" Value="Center" />
+        <Setter Property="HorizontalTextAlignment" Value="Center" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="TextColor" Value="{StaticResource MbdConditionDetailCardText}" />
+        <Setter Property="VerticalOptions" Value="Start" />
+        <Setter Property="VerticalTextAlignment" Value="Center" />
+        <Setter Property="Text" Value="{Binding Name}" />
+        <Setter Property="FontFamily" Value="OpenSansRegular" />
+    </Style>
+
+    <Style x:Key="RecommendationDescriptionLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="Margin" Value="30,0" />
+        <Setter Property="HorizontalOptions" Value="Center" />
+        <Setter Property="HorizontalTextAlignment" Value="Center" />
+        <Setter Property="TextColor" Value="{StaticResource MbdConditionDetailCardText}" />
+        <Setter Property="VerticalOptions" Value="Center" />
+        <Setter Property="VerticalTextAlignment" Value="Center" />
+        <Setter Property="FontFamily" Value="OpenSansRegular" />
+    </Style>
+
+    <Style x:Key="RecommendationBookProductDescriptionLabel" TargetType="Label" BasedOn="{StaticResource RecommendationDescriptionLabel}">
+        <Setter Property="Text" Value="Click to learn more about the health benefits of this product" />
+    </Style>
+
+    <Style x:Key="RecommendationClickLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="15" />
+        <Setter Property="TextColor" Value="{StaticResource White}" />
+        <Setter Property="VerticalOptions" Value="End" />
+        <Setter Property="HorizontalOptions" Value="Center" />
+        <Setter Property="Text" Value="Tap to Learn More" />
+        <Setter Property="FontAttributes" Value="Italic" />
+        <Setter Property="MaxLines" Value="1" />
+        <Setter Property="LineBreakMode" Value="TailTruncation" />
+        <Setter Property="FontFamily" Value="OpenSansRegular" />
+    </Style>
+
+    <Style x:Key="RecommendationBookProductClickLabel" TargetType="Label" BasedOn="{StaticResource RecommendationClickLabel}">
+        <Setter Property="Text" Value="We applaud quality products" />
+    </Style>
+
+    <Style x:Key="RecommendationBoxView" TargetType="BoxView">
+        <Setter Property="BackgroundColor" Value="{StaticResource ActionColor}" />
+        <Setter Property="HeightRequest" Value="2" />
+        <Setter Property="HorizontalOptions" Value="Fill" />
+        <Setter Property="VerticalOptions" Value="Start" />
+    </Style>
+
+    <!-- New Food Item Styles from App.xaml -->
+    <Style x:Key="FoodItemBorder" TargetType="Border">
+        <Setter Property="Padding" Value="5" />
+        <Setter Property="Margin" Value="2" />
+        <Setter Property="BackgroundColor" Value="{StaticResource ActionColor}" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+        <Setter Property="VerticalOptions" Value="Fill" />
+        <Setter Property="HorizontalOptions" Value="Fill" />
+        <Setter Property="StrokeThickness" Value="0" />
+    </Style>
+
+    <Style x:Key="FoodItemLabel" TargetType="Label">
+        <Setter Property="BackgroundColor" Value="{StaticResource ActionColor}" />
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="HorizontalOptions" Value="Start" />
+        <Setter Property="TextColor" Value="White" />
+        <Setter Property="FontFamily" Value="OpenSansRegular" />
+        <Setter Property="VerticalTextAlignment" Value="Center" />
+    </Style>
+
+    <!-- New Ailment Summary Page Styles from App.xaml -->
+    <Style x:Key="MbdConditionSummaryGrid" TargetType="Grid">
+        <Setter Property="Margin" Value="10,15" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="RowDefinitions" Value="Auto,Auto,*,4*,*,*" />
+        <Setter Property="ColumnDefinitions" Value="50,*,50" />
+    </Style>
+
+    <Style x:Key="MbdConditionImageBorderApp" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource MbdConditionCardBackground}" />
+        <Setter Property="Stroke" Value="{StaticResource MbdConditionCardBorder}" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+        <Setter Property="HorizontalOptions" Value="Center" />
+        <Setter Property="Padding" Value="10" />
+    </Style>
+
+    <Style x:Key="MbdConditionSummaryImageApp" TargetType="Image">
+        <Setter Property="HeightRequest" Value="175" />
+        <Setter Property="WidthRequest" Value="175" />
+        <Setter Property="Aspect" Value="AspectFit" />
+        <Setter Property="HorizontalOptions" Value="Center" />
+    </Style>
+
+    <Style x:Key="MindsetLabelApp" TargetType="Label">
+        <Setter Property="HorizontalTextAlignment" Value="Center" />
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="TextColor" Value="{StaticResource MbdConditionTextColor}" />
+        <Setter Property="FontFamily" Value="OpenSansRegular" />
+        <Setter Property="FontAttributes" Value="Italic" />
+        <Setter Property="Margin" Value="0,10,0,5" />
+    </Style>
+
+    <Style x:Key="MbdConditionNameLabelApp" TargetType="Label">
+        <Setter Property="HorizontalTextAlignment" Value="Center" />
+        <Setter Property="FontSize" Value="24" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="TextColor" Value="{StaticResource MbdConditionTextColor}" />
+        <Setter Property="FontFamily" Value="OpenSansRegular" />
+        <Setter Property="Padding" Value="0,0,0,10" />
+    </Style>
+
+    <Style x:Key="SummaryScrollViewApp" TargetType="ScrollView">
+        <Setter Property="VerticalScrollBarVisibility" Value="Always" />
+        <Setter Property="VerticalOptions" Value="Start" />
+        <Setter Property="HorizontalOptions" Value="Fill" />
+    </Style>
+
+    <Style x:Key="SummaryLabelApp" TargetType="Label">
+        <Setter Property="FontSize" Value="20" />
+        <Setter Property="LineHeight" Value="1.2" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
+        <Setter Property="FontFamily" Value="OpenSansRegular" />
+    </Style>
+
+    <Style x:Key="CopyrightLabelApp" TargetType="Label">
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="HorizontalTextAlignment" Value="Center" />
+        <Setter Property="VerticalTextAlignment" Value="Center" />
+        <Setter Property="TextColor" Value="{StaticResource Gray400}" />
+        <Setter Property="FontFamily" Value="OpenSansRegular" />
+    </Style>
+
+    <Style x:Key="ShareButtonApp" TargetType="Image">
+        <Setter Property="Aspect" Value="AspectFit" />
+        <Setter Property="HeightRequest" Value="36" />
+        <Setter Property="WidthRequest" Value="36" />
+        <Setter Property="HorizontalOptions" Value="End" />
+        <Setter Property="VerticalOptions" Value="Center" />
+    </Style>
+
+    <!-- New MbdHomePageConditionCard Style -->
+    <Style x:Key="MbdHomePageConditionCard" TargetType="Border">
+        <Setter Property="MinimumHeightRequest" Value="120" />
+        <Setter Property="MaximumHeightRequest" Value="240" />
+        <Setter Property="Stroke" Value="{StaticResource MbdConditionCardBorder}" />
+        <Setter Property="Background" Value="White" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="Padding" Value="15" />
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="12"/>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="Black"
+                        Opacity="0.1"
+                        Radius="10"
+                        Offset="0,2"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- New AffirmationFrameStyle -->
+    <Style x:Key="AffirmationFrameStyle" TargetType="Frame">
+        <Setter Property="Padding" Value="10" />
+        <Setter Property="Margin" Value="2" />
+        <Setter Property="HeightRequest" Value="260" />
+        <Setter Property="CornerRadius" Value="12" />
+        <Setter Property="BorderColor" Value="{StaticResource MbdConditionDetailCardBorder}" />
+        <Setter Property="BackgroundColor" Value="{StaticResource MbdConditionDetailCardBackground}" />
+    </Style>
+</ResourceDictionary>

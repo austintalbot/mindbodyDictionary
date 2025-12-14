@@ -13,38 +13,20 @@
 
     <ContentPage.Resources>
         <DataTemplate x:Key="NormalTagTemplate" x:DataType="models:Tag">
-                <Border StrokeShape="RoundRectangle 22"
-                        HeightRequest="44"
-                        StrokeThickness="0"
-                        Background="{AppThemeBinding Light={StaticResource LightSecondaryBackground},Dark={StaticResource DarkSecondaryBackground}}"
-                        Padding="{OnPlatform '18,0,18,8',Android='18,0,18,0'}"
-                        SemanticProperties.Description="{Binding Title}">
+                <Border Style="{StaticResource NormalTagBorderStyle}">
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding ToggleTagCommand, Source={RelativeSource AncestorType={x:Type pageModels:ProjectDetailPageModel}}, x:DataType=pageModels:ProjectDetailPageModel}" CommandParameter="{Binding .}"/>
                         </Border.GestureRecognizers>
-                        <Label Text="{Binding Title}"
-                            TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground},Dark={StaticResource LightOnDarkBackground}}"
-                            FontSize="{OnIdiom 16,Desktop=18}"
-                            VerticalOptions="Center"
-                            VerticalTextAlignment="Center"/>
+                        <Label Text="{Binding Title}" Style="{StaticResource NormalTagLabelStyle}"/>
                 </Border>
         </DataTemplate>
 
         <DataTemplate x:Key="SelectedTagTemplate" x:DataType="models:Tag">
-            <Border StrokeShape="RoundRectangle 22"
-                        HeightRequest="44"
-                        StrokeThickness="0"
-                        Background="{Binding DisplayColor}"
-                        Padding="{OnPlatform '18,0,18,8',Android='18,0,18,0'}"
-                        SemanticProperties.Description="{Binding Title}">
+            <Border Style="{StaticResource SelectedTagBorderStyle}" Background="{Binding DisplayColor}">
                 <Border.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding ToggleTagCommand, Source={RelativeSource AncestorType={x:Type pageModels:ProjectDetailPageModel}}, x:DataType=pageModels:ProjectDetailPageModel}" CommandParameter="{Binding .}"/>
                 </Border.GestureRecognizers>
-                <Label Text="{Binding Title}"
-                    TextColor="{AppThemeBinding Light={StaticResource LightBackground},Dark={StaticResource DarkBackground}}"
-                    FontSize="{OnIdiom 16,Desktop=18}"
-                    VerticalOptions="Center"
-                    VerticalTextAlignment="Center"/>
+                <Label Text="{Binding Title}" Style="{StaticResource SelectedTagLabelStyle}"/>
             </Border>
         </DataTemplate>
 
@@ -94,14 +76,13 @@
                     Text="Icon"
                     Style="{StaticResource Title2}"/>
                 <CollectionView
-                    HeightRequest="44" Margin="0,0,0,15"
-                    SelectionMode="Single"
+                    Style="{StaticResource ProjectDetailIconCollectionView}"
                     x:Name="IconsCollectionView"
                     SelectedItem="{Binding Icon}"
                     ItemsSource="{Binding Icons}">
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="models:IconData">
-                                <Grid RowDefinitions="Auto,4" RowSpacing="{StaticResource size60}"
+                                <Grid Style="{StaticResource ProjectDetailIconGrid}"
                                  SemanticProperties.Description="{Binding Description}"
                                  SemanticProperties.Hint="Icon representing the type of task . Tap to select">
                                 <VisualStateManager.VisualStateGroups>
@@ -122,15 +103,8 @@
                                     </VisualStateGroup>
                                 </VisualStateManager.VisualStateGroups>
 
-                                <Label
-                                    Text="{Binding Icon}"
-                                    x:Name="IconImage"
-                                    FontFamily="{x:Static fonts:FluentUI.FontFamily}"
-                                    FontSize="24"
-                                    VerticalOptions="Center"
-                                    HorizontalOptions="Center"
-                                    TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground},Dark={StaticResource LightOnDarkBackground}}"/>
-                                <BoxView x:Name="SelectedIndicator" Color="{StaticResource Primary}" HeightRequest="4" HorizontalOptions="Fill" Grid.Row="1"/>
+                                <Label Text="{Binding Icon}" Style="{StaticResource ProjectDetailIconLabel}"/>
+                                <BoxView x:Name="SelectedIndicator" Grid.Row="1" Style="{StaticResource ProjectDetailSelectedIconIndicator}"/>
                             </Grid>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
@@ -143,31 +117,23 @@
                 <Label
                     Text="Tags"
                     Style="{StaticResource Title2}"/>
-                <ScrollView Orientation="Horizontal">
+                <ScrollView Orientation="Horizontal" Style="{StaticResource ProjectDetailTagsScrollView}">
                     <HorizontalStackLayout
                         Spacing="{StaticResource LayoutSpacing}"
-                        HeightRequest="44"
-                        Margin="0,0,0,15"
                         BindableLayout.ItemsSource="{Binding AllTags}"
                         BindableLayout.ItemTemplateSelector="{StaticResource ChipDataTemplateSelector}"/>
                 </ScrollView>
 
-                <Button Text="Save"
-                    MinimumHeightRequest="{OnIdiom 44, Desktop=60}"
-                    Command="{Binding SaveCommand}" />
+                <Button Command="{Binding SaveCommand}" Style="{StaticResource ProjectDetailSaveButton}" />
 
-                <Grid HeightRequest="44">
+                <Grid Style="{StaticResource ProjectDetailTasksHeaderGrid}">
                     <Label
                         Text="Tasks"
                         Style="{StaticResource Title2}"
                         VerticalOptions="Center"/>
                     <ImageButton
                         Source="{StaticResource IconClean}"
-                        HorizontalOptions="End"
-                        VerticalOptions="Center"
-                        Aspect="Center"
-                        HeightRequest="44"
-                        WidthRequest="44"
+                        Style="{StaticResource CleanTasksImageButton}"
                         IsVisible="{Binding HasCompletedTasks}"
                         Command="{Binding CleanTasksCommand}"
                         SemanticProperties.Description="Clean up"

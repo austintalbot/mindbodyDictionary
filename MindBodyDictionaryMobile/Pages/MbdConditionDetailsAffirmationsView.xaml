@@ -23,22 +23,11 @@
                          VerticalOptions="Fill">
                          <Image
                                  x:Name="AffirmationsMindBodyLogo"
-                                 Source="mbd_icon.png"
-                                 HeightRequest="100"
+                                 Style="{StaticResource MbdIconImage}"
                                  HorizontalOptions="Fill">
                          </Image>
-                         <Label
-                             Text="Affirmations for"
-                             FontSize="18"
-                             TextColor="{StaticResource MbdConditionTextColor}"
-                             HorizontalOptions="Center"/>
-                         <Label
-                             Text="{Binding Condition.Name}"
-                             HorizontalOptions="Center"
-                             TextColor="{StaticResource MbdConditionTextColor}"
-                             FontSize="24"
-                             Padding="0,0,0,10"
-                             FontAttributes="Bold"/>
+                         <Label Text="Affirmations for" Style="{StaticResource AffirmationsForLabelStyle}" />
+                         <Label Text="{Binding Condition.Name}" Style="{StaticResource AffirmationConditionNameLabelStyle}" />
                      </VerticalStackLayout>
                  <CarouselView
                          x:Name="AffirmationCarouselView"
@@ -59,38 +48,13 @@
                                          <RowDefinition Height="auto"/>
 
                                      </Grid.RowDefinitions>
-                                     <Frame
-                                     Grid.Row="0"
-                                     Padding="10"
-                                     Margin="2"
-                                     HeightRequest="260"
-                                     CornerRadius="12"
-                                     BorderColor="{StaticResource MbdConditionDetailCardBorder}"
-                                     BackgroundColor="{StaticResource MbdConditionDetailCardBackground}">
+                                     <Frame Style="{StaticResource AffirmationFrameStyle}">
                                          <VerticalStackLayout>
-                                             <Label
-                                             x:Name="AffirmationLabel"
-                                             FontAttributes="Bold,Italic"
-                                             FontSize="18"
-                                             HorizontalOptions="Center"
-                                             HorizontalTextAlignment="Start"
-                                             Text="{x:Binding .}"
-                                             x:DataType="{x:Type x:String}"
-                                             Padding="10"
-                                             Margin="10"
-                                             TextColor="{StaticResource MbdConditionDetailCardText}"
-                                             VerticalOptions="Center"
-                                             VerticalTextAlignment="Center">
-                                             </Label>
-                                             <Label
-                                             x:Name="CopyrightLabel"
-                                             FontSize="Small"
-                                             HorizontalOptions="Center"
-                                             HorizontalTextAlignment="Center"
-                                             Text="{x:Static local:App.CopyrightText}"
-                                             TextColor="{StaticResource MbdConditionDetailCardText}"
-                                             VerticalOptions="End"
-                                             VerticalTextAlignment="End" />
+                                             <Label x:Name="AffirmationLabel" Style="{StaticResource AffirmationCarouselLabelStyle}"
+                                                    Text="{x:Binding .}"
+                                                    x:DataType="{x:Type x:String}" />
+                                             <Label x:Name="CopyrightLabel" Style="{StaticResource AffirmationCopyrightLabelStyle}"
+                                                    Text="{x:Static local:App.CopyrightText}" />
                                          </VerticalStackLayout>
                                      </Frame>
                                  </Grid>
@@ -112,34 +76,14 @@
                      HorizontalOptions="CenterAndExpand"
                      VerticalOptions="CenterAndExpand">
 
-
-
-
-
-
                          <HorizontalStackLayout>
                          <HorizontalStackLayout.GestureRecognizers>
                              <TapGestureRecognizer
                              Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MbdConditionDetailPageModel}}, Path=ShareCarouselConditionCommand}"
                              CommandParameter="{Binding CurrentAffirmation}"/>
                          </HorizontalStackLayout.GestureRecognizers>
-                             <Label
-
-                             x:Name="ShareAffirmationLabel"
-                             HorizontalOptions="EndAndExpand"
-                             HorizontalTextAlignment="End"
-                             VerticalOptions="Center"
-                             Margin="10,0,0,0"
-                             Text="Share"
-                             />
-                         <Image
-                                 x:Name="ShareAffirmationImageButton"
-                                 Aspect="AspectFit"
-                                 BackgroundColor="Transparent"
-                                 HeightRequest="32"
-                                 Source="{FontImageSource FontFamily={x:Static fonts:FluentUI.FontFamily}, Glyph={x:Static fonts:FluentUI.share_24_regular}, Size=24, Color=Black }"
-                                 WidthRequest="32" >
-                         </Image>
+                             <Label Style="{StaticResource ShareAffirmationLabelStyle}" />
+                         <Image x:Name="ShareAffirmationImageButton" Style="{StaticResource ShareAffirmationImageButtonStyle}" />
                      </HorizontalStackLayout>
 
 

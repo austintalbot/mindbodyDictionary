@@ -10,45 +10,26 @@
         <VerticalStackLayout Padding="20" Spacing="20">
 
             <!-- Header -->
-            <Label Text="Push Notifications"
-                   FontSize="24"
-                   FontAttributes="Bold"
-                   HorizontalOptions="Center" />
+            <Label Style="{StaticResource NotificationHeaderLabel}" />
 
             <!-- Support Status -->
-            <Border StrokeThickness="1"
-                    Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}"
-                    BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}"
-                    Padding="15"
-                    StrokeShape="RoundRectangle 10">
+            <Border Style="{StaticResource NotificationInfoBorder}">
                 <VerticalStackLayout Spacing="10">
-                    <Label Text="Device Status"
-                           FontSize="16"
-                           FontAttributes="Bold" />
-                    <Label Text="{Binding StatusMessage}"
-                           FontSize="14" />
+                    <Label Text="Device Status" Style="{StaticResource NotificationInfoTitleLabel}" />
+                    <Label Text="{Binding StatusMessage}" Style="{StaticResource NotificationInfoMessageLabel}" />
                     <Label Text="{Binding LastActionReceived, StringFormat='Last Action: {0}'}"
-                           FontSize="12"
                            IsVisible="{Binding LastActionReceived, Converter={StaticResource IsNotNullOrEmptyConverter}}"
-                           TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                           Style="{StaticResource NotificationInfoLastActionLabel}" />
                 </VerticalStackLayout>
             </Border>
 
             <!-- Registration Status -->
-            <Border StrokeThickness="1"
-                    Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}"
-                    BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}"
-                    Padding="15"
-                    StrokeShape="RoundRectangle 10">
-                <HorizontalStackLayout Spacing="10">
-                    <Label Text="Registration Status:"
-                           FontSize="14"
-                           VerticalOptions="Center" />
+            <Border Style="{StaticResource NotificationInfoBorder}">
+                <HorizontalStackLayout Style="{StaticResource NotificationRegistrationStatusLayout}">
+                    <Label Text="Registration Status:" Style="{StaticResource NotificationRegistrationStatusTitleLabel}" />
                     <Label Text="{Binding IsRegistered, Converter={StaticResource BoolToRegisteredTextConverter}}"
-                           FontSize="14"
-                           FontAttributes="Bold"
                            TextColor="{Binding IsRegistered, Converter={StaticResource BoolToColorConverter}}"
-                           VerticalOptions="Center" />
+                           Style="{StaticResource NotificationRegistrationStatusValueLabel}" />
                 </HorizontalStackLayout>
             </Border>
 
@@ -58,31 +39,20 @@
                         Command="{Binding RegisterDeviceCommand}"
                         IsEnabled="{Binding NotificationsSupported}"
                         BackgroundColor="{StaticResource Primary}"
-                        TextColor="White"
-                        HeightRequest="50"
-                        CornerRadius="10" />
+                        Style="{StaticResource NotificationActionButton}" />
 
                 <Button Text="Deregister from Notifications"
                         Command="{Binding DeregisterDeviceCommand}"
                         IsEnabled="{Binding IsRegistered}"
                         BackgroundColor="{StaticResource Secondary}"
-                        TextColor="White"
-                        HeightRequest="50"
-                        CornerRadius="10" />
+                        Style="{StaticResource NotificationActionButton}" />
             </VerticalStackLayout>
 
             <!-- Information -->
-            <Border StrokeThickness="1"
-                    Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}"
-                    BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}"
-                    Padding="15"
-                    StrokeShape="RoundRectangle 10">
+            <Border Style="{StaticResource NotificationInfoBorder}">
                 <VerticalStackLayout Spacing="10">
-                    <Label Text="About Push Notifications"
-                           FontSize="16"
-                           FontAttributes="Bold" />
-                    <Label FontSize="12"
-                           LineBreakMode="WordWrap">
+                    <Label Text="About Push Notifications" Style="{StaticResource NotificationInfoTitleLabel}" />
+                    <Label Style="{StaticResource NotificationInfoTextLabel}">
                         <Label.FormattedText>
                             <FormattedString>
                                 <Span Text="• Receive updates about your projects and tasks" />
@@ -100,8 +70,7 @@
             <!-- Loading Indicator -->
             <ActivityIndicator IsRunning="{Binding IsRegistering}"
                               IsVisible="{Binding IsRegistering}"
-                              Color="{StaticResource Primary}"
-                              HeightRequest="40" />
+                              Style="{StaticResource ImageCacheLoadingIndicator}" />
 
         </VerticalStackLayout>
     </ScrollView>

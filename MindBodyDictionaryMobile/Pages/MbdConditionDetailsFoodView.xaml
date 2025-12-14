@@ -24,15 +24,8 @@
                                Grid.Column="0"
                                x:DataType="{x:Type model:Recommendation}" />
                         <Image x:Name="CheckMarkImage"
-                               HeightRequest="25"
-                               Grid.Column="1"
-                               WidthRequest="25">
-                            <Image.Source>
-                                <FontImageSource Glyph="{x:Static f:FluentUI.checkmark_24_regular}"
-                                                 FontFamily="{x:Static f:FluentUI.FontFamily}"
-                                                 Color="White" />
-                            </Image.Source>
-                        </Image>
+                               Style="{StaticResource FoodCheckmarkImageStyle}"
+                               Grid.Column="1" />
                     </Grid>
                 </Border>
             </DataTemplate>

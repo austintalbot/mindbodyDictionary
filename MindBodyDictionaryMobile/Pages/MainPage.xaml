@@ -44,7 +44,7 @@
                         <Label Text="Projects" Style="{StaticResource Title2}" SemanticProperties.HeadingLevel="Level1"/>
                         <ScrollView Orientation="Horizontal" Margin="-30,0">
                             <HorizontalStackLayout
-                                Spacing="15" Padding="30,0"
+                                Style="{StaticResource ProjectsHorizontalStackLayout}"
                                 BindableLayout.ItemsSource="{Binding Projects}">
                                 <BindableLayout.ItemTemplate>
                                     <DataTemplate x:DataType="models:Project">
@@ -57,15 +57,11 @@
                                 </BindableLayout.ItemTemplate>
                             </HorizontalStackLayout>
                         </ScrollView>
-                        <Grid MinimumHeightRequest="44">
+                        <Grid Style="{StaticResource TasksHeaderGrid}">
                             <Label Text="Tasks" Style="{StaticResource Title2}" VerticalOptions="Center" SemanticProperties.HeadingLevel="Level1"/>
                             <ImageButton
                                 Source="{StaticResource IconClean}"
-                                HorizontalOptions="End"
-                                VerticalOptions="Center"
-                                Aspect="Center"
-                                HeightRequest="44"
-                                WidthRequest="44"
+                                Style="{StaticResource CleanTasksImageButton}"
                                 IsVisible="{Binding HasCompletedTasks}"
                                 Command="{Binding CleanTasksCommand}"
                                 SemanticProperties.Description="Clean tasks" />

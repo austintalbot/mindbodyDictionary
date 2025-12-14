@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<?xaml-comp compile="true" ?>
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <!-- Subscribe/Lock Overlay Styles -->
+    <Style x:Key="LockOverlayStack" TargetType="VerticalStackLayout">
+        <Setter Property="BackgroundColor" Value="LightGray" />
+        <Setter Property="Opacity" Value="0.93" />
+        <Setter Property="InputTransparent" Value="False" />
+        <Setter Property="VerticalOptions" Value="Fill" />
+    </Style>
+
+    <Style x:Key="LockIcon" TargetType="Image">
+        <Setter Property="HeightRequest" Value="100" />
+        <Setter Property="WidthRequest" Value="100" />
+        <Setter Property="Margin" Value="20" />
+        <Setter Property="Source" Value="locked_icon.png" />
+        <Setter Property="VerticalOptions" Value="Center" />
+    </Style>
+
+    <Style x:Key="LockMessageLabel" TargetType="Label">
+        <Setter Property="FontAttributes" Value="Italic" />
+        <Setter Property="FontSize" Value="20" />
+        <Setter Property="HorizontalOptions" Value="Center" />
+        <Setter Property="VerticalOptions" Value="Center" />
+        <Setter Property="FontFamily" Value="OpenSansRegular" />
+        <Setter Property="Margin" Value="10,8" />
+        <Setter Property="HorizontalTextAlignment" Value="Center" />
+        <Setter Property="TextColor" Value="{StaticResource MbdConditionTextColor}" />
+        <Setter Property="Text" Value="Subscribe to remove ads and gain access to this and more content!" />
+        <Setter Property="VerticalOptions" Value="Center" />
+    </Style>
+</ResourceDictionary>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<?xaml-comp compile="true" ?>
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <Style x:Key="BaseSfTabItem" TargetType="tabView:SfTabItem">
+        <Setter Property="TextColor" Value="White" />
+    </Style>
+
+    <Style x:Key="RecommendationsSubTabItem" TargetType="tabView:SfTabItem" BasedOn="{StaticResource BaseSfTabItem}">
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="FontSize" Value="16" />
+    </Style>
+
+</ResourceDictionary>

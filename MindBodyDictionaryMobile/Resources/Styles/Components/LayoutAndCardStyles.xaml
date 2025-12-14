@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<?xaml-comp compile="true" ?>
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <Style x:Key="HeaderSection" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="5"/>
+        <Setter Property="Padding" Value="0,10,0,10"/>
+        <Setter Property="HorizontalOptions" Value="Fill"/>
+    </Style>
+
+    <Style TargetType="Border">
+        <Setter Property="StrokeShape" Value="RoundRectangle 20"/>
+        <Setter Property="Background" Value="{AppThemeBinding Light={StaticResource LightSecondaryBackground},Dark={StaticResource DarkSecondaryBackground}}"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="Padding" Value="{OnIdiom 15, Desktop=20}"/>
+    </Style>
+
+    <Style TargetType="Border" x:Key="CardStyle">
+        <Setter Property="StrokeShape" Value="RoundRectangle 20"/>
+        <Setter Property="Background" Value="{AppThemeBinding Light={StaticResource LightSecondaryBackground},Dark={StaticResource DarkSecondaryBackground}}"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="Padding" Value="{OnIdiom 15, Desktop=20}"/>
+    </Style>
+
+    <Style x:Key="ContentPageGrid" TargetType="Grid">
+        <Setter Property="RowDefinitions" Value="*,Auto" />
+    </Style>
+
+    <!-- New Layout Container Styles from App.xaml -->
+    <Style x:Key="HeaderSectionApp" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="8" />
+        <Setter Property="HorizontalOptions" Value="Center" />
+        <Setter Property="Margin" Value="0,0,0,10" />
+    </Style>
+
+    <Style x:Key="ContentSection" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="15" />
+        <Setter Property="Margin" Value="10" />
+    </Style>
+
+    <Style x:Key="ButtonSection" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="15" />
+        <Setter Property="Margin" Value="5" />
+        <Setter Property="VerticalOptions" Value="Start" />
+    </Style>
+
+    <!-- New Grid Styles from App.xaml -->
+    <Style x:Key="ContentGrid" TargetType="Grid">
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="VerticalOptions" Value="Fill" />
+        <Setter Property="HorizontalOptions" Value="Fill" />
+    </Style>
+
+    <Style x:Key="TabContentGrid" TargetType="Grid" BasedOn="{StaticResource ContentGrid}">
+        <Setter Property="RowDefinitions" Value="*" />
+        <Setter Property="Margin" Value="10" />
+    </Style>
+
+    <!-- New ProjectsHorizontalStackLayout Style -->
+    <Style x:Key="ProjectsHorizontalStackLayout" TargetType="HorizontalStackLayout">
+        <Setter Property="Spacing" Value="15" />
+        <Setter Property="Padding" Value="30,0" />
+    </Style>
+
+    <!-- New TasksHeaderGrid Style -->
+    <Style x:Key="TasksHeaderGrid" TargetType="Grid">
+        <Setter Property="MinimumHeightRequest" Value="44" />
+    </Style>
+
+    <!-- New Border Styles from UpgradePremiumPage.xaml -->
+    <Style x:Key="UpgradePremiumActiveBorder" TargetType="Border">
+        <Setter Property="Padding" Value="15" />
+        <Setter Property="StrokeThickness" Value="2" />
+        <Setter Property="Stroke" Value="{StaticResource Primary}" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource LightSecondaryBackground}, Dark={StaticResource DarkSecondaryBackground}}" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+    </Style>
+
+    <Style x:Key="UpgradePremiumDebugBorder" TargetType="Border">
+        <Setter Property="Padding" Value="12" />
+        <Setter Property="StrokeThickness" Value="2" />
+        <Setter Property="Stroke" Value="{StaticResource Primary}" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource LightSecondaryBackground}, Dark={StaticResource DarkSecondaryBackground}}" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+    </Style>
+
+    <!-- New TabHeaderHorizontalStackLayout Style -->
+    <Style x:Key="TabHeaderHorizontalStackLayout" TargetType="HorizontalStackLayout">
+        <Setter Property="HorizontalOptions" Value="Fill" />
+        <Setter Property="BackgroundColor" Value="{StaticResource BarColor}" />
+    </Style>
+
+    <!-- New DisclaimerPopupVerticalStackLayout Style -->
+    <Style x:Key="DisclaimerPopupVerticalStackLayout" TargetType="VerticalStackLayout">
+        <Setter Property="VerticalOptions" Value="Fill" />
+        <Setter Property="HorizontalOptions" Value="Fill" />
+        <Setter Property="WidthRequest" Value="300" />
+    </Style>
+
+    <!-- New ProjectCardTagsLayout Style -->
+    <Style x:Key="ProjectCardTagsLayout" TargetType="HorizontalStackLayout">
+        <Setter Property="Spacing" Value="15" />
+    </Style>
+
+    <!-- New TaskViewBorderStyle -->
+    <Style x:Key="TaskViewBorderStyle" TargetType="Border">
+        <Setter Property="StrokeShape" Value="RoundRectangle 20" />
+        <Setter Property="Background" Value="{AppThemeBinding Light={StaticResource LightSecondaryBackground}, Dark={StaticResource DarkSecondaryBackground}}" />
+    </Style>
+
+    <!-- New ShimmerTaskViewGrid Style -->
+    <Style x:Key="ShimmerTaskViewGrid" TargetType="Grid">
+        <Setter Property="ColumnDefinitions" Value="Auto,*" />
+        <Setter Property="Padding" Value="{OnIdiom 15, Desktop=20}" />
+    </Style>
+
+    <!-- New TaskViewGrid Style -->
+    <Style x:Key="TaskViewGrid" TargetType="Grid">
+        <Setter Property="ColumnDefinitions" Value="Auto,*" />
+        <Setter Property="ColumnSpacing" Value="15" />
+        <Setter Property="Padding" Value="{OnIdiom 15, Desktop=20}" />
+    </Style>
+
+    <!-- New FaqItemVerticalStackLayout Style -->
+    <Style x:Key="FaqItemVerticalStackLayout" TargetType="VerticalStackLayout">
+        <Setter Property="Padding" Value="15" />
+        <Setter Property="Spacing" Value="10" />
+    </Style>
+
+    <!-- New FaqItemFrameStyle -->
+    <Style x:Key="FaqItemFrameStyle" TargetType="Frame">
+        <Setter Property="CornerRadius" Value="12" />
+        <Setter Property="Padding" Value="15" />
+        <Setter Property="BorderColor" Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray700}}" />
+        <Setter Property="HasShadow" Value="False" />
+    </Style>
+
+    <!-- New FaqItemContentVerticalStackLayout Style -->
+    <Style x:Key="FaqItemContentVerticalStackLayout" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="10" />
+    </Style>
+
+    <!-- New FlyoutHeaderViewStyle -->
+    <Style x:Key="FlyoutHeaderViewStyle" TargetType="ContentView">
+        <Setter Property="HeightRequest" Value="180" />
+    </Style>
+
+    <!-- New FlyoutHeaderGridStyle -->
+    <Style x:Key="FaqItemContentVerticalStackLayout" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="10" />
+    </Style>
+
+    <!-- New Layout and Card Styles from ImageCachePage.xaml -->
+    <Style x:Key="ImageCacheStatusBorder" TargetType="Border">
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}" />
+        <Setter Property="Padding" Value="15" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+    </Style>
+
+    <Style x:Key="ImageCacheDebugStatsLayout" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="4" />
+        <Setter Property="BackgroundColor" Value="Yellow" />
+        <Setter Property="Padding" Value="10" />
+    </Style>
+
+    <Style x:Key="ImageCacheListItemBorder" TargetType="Border">
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Gray50}, Dark={StaticResource Gray800}}" />
+        <Setter Property="Padding" Value="12" />
+        <Setter Property="Margin" Value="0,5" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+    </Style>
+
+    <Style x:Key="ImageCacheDebugInfoBorder" TargetType="Border">
+        <Setter Property="StrokeThickness" Value="2" />
+        <Setter Property="Stroke" Value="Red" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#FFE6E6, Dark=#331111}" />
+        <Setter Property="Padding" Value="15" />
+        <Setter Property="Margin" Value="0,20,0,0" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+    </Style>
+    <Style x:Key="FlyoutHeaderGridStyle" TargetType="Grid">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}" />
+    </Style>
+
+    <!-- New Layout Styles from MbdConditionListPage.xaml -->
+    <Style x:Key="MbdConditionListDebugFrame" TargetType="Frame">
+        <Setter Property="Margin" Value="10" />
+        <Setter Property="Padding" Value="10" />
+        <Setter Property="BorderColor" Value="{DynamicResource Primary}" />
+        <Setter Property="BackgroundColor" Value="{DynamicResource Surface}" />
+        <Setter Property="CornerRadius" Value="8" />
+    </Style>
+
+    <Style x:Key="MbdConditionListItemVerticalStackLayout" TargetType="VerticalStackLayout">
+        <Setter Property="Padding" Value="10" />
+    </Style>
+    <!-- New Layout Styles from NotificationSettingsPage.xaml -->
+    <Style x:Key="NotificationInfoBorder" TargetType="Border">
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}" />
+        <Setter Property="Padding" Value="15" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+    </Style>
+
+    <Style x:Key="NotificationRegistrationStatusLayout" TargetType="HorizontalStackLayout">
+        <Setter Property="Spacing" Value="10" />
+    </Style>
+
+    <!-- New NotificationTestPageContainerStyle -->
+    <Style x:Key="NotificationTestPageContainerStyle" TargetType="VerticalStackLayout">
+        <Setter Property="Padding" Value="20" />
+        <Setter Property="Spacing" Value="10" />
+    </Style>
+
+    <!-- New NotificationTestInstructionsFrame Style -->
+    <Style x:Key="NotificationTestInstructionsFrame" TargetType="Frame">
+        <Setter Property="BorderColor" Value="Orange" />
+        <Setter Property="Padding" Value="10" />
+        <Setter Property="Margin" Value="0,20,0,0" />
+    </Style>
+
+    <!-- New NotificationTestInstructionsLayout Style -->
+    <Style x:Key="NotificationTestInstructionsLayout" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="5" />
+    </Style>
+
+    <!-- New NormalTagBorderStyle -->
+    <Style x:Key="NormalTagBorderStyle" TargetType="Border">
+        <Setter Property="StrokeShape" Value="RoundRectangle 22" />
+        <Setter Property="HeightRequest" Value="44" />
+        <Setter Property="StrokeThickness" Value="0" />
+        <Setter Property="Background" Value="{AppThemeBinding Light={StaticResource LightSecondaryBackground},Dark={StaticResource DarkSecondaryBackground}}" />
+        <Setter Property="Padding" Value="{OnPlatform '18,0,18,8',Android='18,0,18,0'}" />
+    </Style>
+
+    <!-- New Layout Styles for ProjectDetailPage.xaml -->
+    <Style x:Key="SelectedTagBorderStyle" TargetType="Border">
+        <Setter Property="StrokeShape" Value="RoundRectangle 22" />
+        <Setter Property="HeightRequest" Value="44" />
+        <Setter Property="StrokeThickness" Value="0" />
+        <Setter Property="Padding" Value="{OnPlatform '18,0,18,8',Android='18,0,18,0'}" />
+    </Style>
+
+    <Style x:Key="ProjectDetailIconGrid" TargetType="Grid">
+        <Setter Property="RowDefinitions" Value="Auto,4" />
+        <Setter Property="RowSpacing" Value="{StaticResource size60}" />
+    </Style>
+
+    <Style x:Key="ProjectDetailTagsScrollView" TargetType="ScrollView">
+        <Setter Property="HeightRequest" Value="44" />
+        <Setter Property="Margin" Value="0,0,0,15" />
+    </Style>
+
+    <Style x:Key="ProjectDetailTasksHeaderGrid" TargetType="Grid">
+        <Setter Property="HeightRequest" Value="44" />
+    </Style>
+
+    <!-- New ProjectListItemVerticalStackLayout Style -->
+    <Style x:Key="ProjectListItemVerticalStackLayout" TargetType="VerticalStackLayout">
+        <Setter Property="Padding" Value="10" />
+    </Style>
+</ResourceDictionary>
