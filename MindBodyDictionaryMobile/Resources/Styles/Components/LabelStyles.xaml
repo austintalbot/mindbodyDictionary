@@ -457,4 +457,20 @@
     <Style x:Key="ProjectListItemNameLabel" TargetType="Label">
         <Setter Property="FontSize" Value="24" />
     </Style>
+
+    <!-- New ImageCacheHeaderLabel Style -->
+    <Style x:Key="ImageCacheHeaderLabel" TargetType="Label">
+        <Setter Property="Text" Value="Image Cache Debug" />
+        <Setter Property="FontSize" Value="24" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="HorizontalOptions" Value="Center" />
+    </Style>
+
+    <Style x:Key="ImageCacheStatusBorder" TargetType="Border">
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}" />
+        <Setter Property="Padding" Value="15" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+    </Style>
 </ResourceDictionary>
