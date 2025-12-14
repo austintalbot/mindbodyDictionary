@@ -69,6 +69,13 @@
         <Setter Property="MinimumHeightRequest" Value="44" />
     </Style>
 
+    <!-- New MetaActionGridStyle -->
+    <Style x:Key="MetaActionGridStyle" TargetType="Grid">
+        <Setter Property="ColumnSpacing" Value="{StaticResource LayoutSpacing}" />
+        <Setter Property="ColumnDefinitions" Value="*,Auto" />
+        <Setter Property="Margin" Value="0,10" />
+    </Style>
+
     <!-- New Border Styles from UpgradePremiumPage.xaml -->
     <Style x:Key="UpgradePremiumActiveBorder" TargetType="Border">
         <Setter Property="Padding" Value="15" />

@@ -14,8 +14,12 @@
                 BindingContext="{Binding Path=BindingContext, Source={x:Reference MetaPage}, x:DataType=ContentPage}"
                 EventName="Appearing"
                 Command="{Binding AppearingCommand}" />
-    </ContentPage.Behaviors>
-
+        </ContentPage.Behaviors>
+        <ContentPage.Resources>
+            <Style x:Key="InvalidEntryStyle" TargetType="Entry">
+                <Setter Property="TextColor" Value="Red" />
+            </Style>
+        </ContentPage.Resources>
 
 
     <ContentPage.ToolbarItems>

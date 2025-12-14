@@ -31,6 +31,15 @@
         <Setter Property="SemanticProperties.Description" Value="Mind Body Dictionary Logo" />
     </Style>
 
+    <Style x:Key="AboutPageLogoImage" TargetType="Image">
+        <Setter Property="Source" Value="mbd_logo.png" />
+        <Setter Property="HeightRequest" Value="120" />
+        <Setter Property="HorizontalOptions" Value="Center" />
+        <Setter Property="Aspect" Value="AspectFit" />
+        <Setter Property="SemanticProperties.Description" Value="Mind Body Dictionary Logo" />
+    </Style>
+
+
     <Style x:Key="MbdIconImage" TargetType="Image">
         <Setter Property="Source" Value="mbd_icon.png" />
         <Setter Property="MaximumHeightRequest" Value="100" />
