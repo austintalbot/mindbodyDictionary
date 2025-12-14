@@ -133,16 +133,6 @@
             <Shadow Brush="Black" Opacity="0.1" Radius="5" Offset="0,2"/>
         </Setter>
     </Style>
-    <Style x:Key="HighlightCardBorder" TargetType="Border">
-        <Setter Property="BackgroundColor" Value="LightBlue" />
-        <Setter Property="Stroke" Value="Blue" />
-        <Setter Property="StrokeThickness" Value="1" />
-        <Setter Property="Padding" Value="15" />
-        <Setter Property="StrokeShape" Value="RoundRectangle 5" />
-        <Setter Property="Shadow">
-            <Shadow Brush="Black" Opacity="0.1" Radius="5" Offset="0,2"/>
-        </Setter>
-    </Style>
 
     <!-- New Recommendation Styles from App.xaml -->
     <Style x:Key="RecommendationNameLabel" TargetType="Label">
@@ -216,7 +206,7 @@
     </Style>
 
     <!-- New Ailment Summary Page Styles from App.xaml -->
-    <Style x:Key="MbdConditionSummaryGrid" TargetType="Grid">
+    <Style x:Key="MbdConditionSummaryGridApp" TargetType="Grid">
         <Setter Property="Margin" Value="10,15" />
         <Setter Property="Padding" Value="0" />
         <Setter Property="RowDefinitions" Value="Auto,Auto,*,4*,*,*" />

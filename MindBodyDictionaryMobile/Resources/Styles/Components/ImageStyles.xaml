@@ -81,8 +81,6 @@
     <Style x:Key="ProjectCardIconImage" TargetType="Image">
         <Setter Property="HorizontalOptions" Value="Start" />
         <Setter Property="Aspect" Value="Center" />
-        <Setter Property="Color" Value="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}" />
-        <Setter Property="Size" Value="{StaticResource IconSize}" />
     </Style>
     <Style x:Key="UpgradePremiumPageLogoImage" TargetType="Image">
         <Setter Property="Source" Value="mbd_logo.png" />

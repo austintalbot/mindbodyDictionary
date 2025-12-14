@@ -3,7 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:pageModels="clr-namespace:MindBodyDictionaryMobile.PageModels"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             x:DataType="pageModels:UpgradePremiumPageModel">
+             x:Class="MindBodyDictionaryMobile.Pages.UpgradePremiumPage"
+             x:DataType="pageModels:UpgradePremiumPageModel"
+             Title="{Binding Title}"
+             BackgroundColor="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource DarkBackground}}">
 
     <ContentPage.Behaviors>
         <toolkit:EventToCommandBehavior
@@ -19,13 +22,33 @@
                                  VerticalOptions="Fill">
 
                 <!-- Logo -->
-                <Image Style="{StaticResource UpgradePremiumPageLogoImage}" />
+                <Image Source="mbd_logo.png"
+                       HeightRequest="150"
+                       HorizontalOptions="Center"
+                       Aspect="AspectFit"
+                       SemanticProperties.Description="Mind Body Dictionary Logo"
+                       Margin="0,20,0,20" />
 
                 <!-- Description -->
-                <Label IsVisible="{Binding IsSubscribed, StringFormat='!{0}'}" Style="{StaticResource UpgradePremiumDescriptionLabel}" />
+                <Label Text="Enjoy an ad free experience while helping support development."
+                       IsVisible="{Binding IsSubscribed, StringFormat='!{0}'}"
+                       HorizontalOptions="Fill"
+                       HorizontalTextAlignment="Center"
+                       FontSize="18"
+                       FontAttributes="Bold"
+                       TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"
+                       LineBreakMode="WordWrap"
+                       Margin="0,10,0,5" />
 
                 <!-- Terms -->
-                <Label IsVisible="{Binding IsSubscribed, StringFormat='!{0}'}" Style="{StaticResource UpgradePremiumTermsLabel}" />
+                <Label Text="No trial period, and the subscription will be renewed automatically on the subscription date, unless canceled before the renewal date."
+                       IsVisible="{Binding IsSubscribed, StringFormat='!{0}'}"
+                       HorizontalOptions="Fill"
+                       HorizontalTextAlignment="Center"
+                       FontSize="14"
+                       TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray400}}"
+                       LineBreakMode="WordWrap"
+                       Margin="0,0,0,20" />
 
                 <!-- Subscription Buttons -->
                 <VerticalStackLayout Spacing="{StaticResource LayoutSpacing}"
@@ -34,56 +57,103 @@
                     <Button Text="{Binding IsBusy, Converter={StaticResource BoolToTextConverter}, ConverterParameter='Loading...|Subscribe for $9.99/year'}"
                             Command="{Binding PurchaseCommand}"
                             IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
-                            Style="{StaticResource UpgradePremiumPrimaryButton}" />
+                            Padding="15,12" />
 
                     <Button Text="{Binding IsBusy, Converter={StaticResource BoolToTextConverter}, ConverterParameter='Restoring...|Restore Subscription'}"
                             Command="{Binding RestoreCommand}"
                             IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
-                            Style="{StaticResource UpgradePremiumRestoreButton}" />
+                            Padding="15,12"
+                            BackgroundColor="Transparent"
+                            TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Primary}}"
+                            BorderColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Primary}}"
+                            BorderWidth="2"
+                            FontAttributes="Bold" />
                 </VerticalStackLayout>
 
                 <!-- Subscription Active Message -->
-                <Border IsVisible="{Binding IsSubscribed}" Style="{StaticResource UpgradePremiumActiveBorder}">
-                    <Label Style="{StaticResource UpgradePremiumActiveLabel}" />
+                <Border IsVisible="{Binding IsSubscribed}"
+                        Padding="15"
+                        StrokeThickness="2"
+                        Stroke="{StaticResource Primary}"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource LightSecondaryBackground}, Dark={StaticResource DarkSecondaryBackground}}"
+                        StrokeShape="RoundRectangle 8">
+                    <Label Text="✓ Premium Active"
+                           HorizontalOptions="Fill"
+                           HorizontalTextAlignment="Center"
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource Primary}" />
                 </Border>
 
                 <!-- Legal Links -->
                 <VerticalStackLayout Spacing="10" Padding="0,30,0,0">
                     <Button Text="Privacy Policy"
                             Command="{Binding PrivacyCommand}"
-                            Style="{StaticResource UpgradePremiumLegalButton}" />
+                            BackgroundColor="Transparent"
+                            TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Primary}}"
+                            FontSize="16"
+                            Padding="10,8" />
 
                     <Button Text="Terms of Use"
                             Command="{Binding TermsCommand}"
                             CommandParameter="https://www.mindbodydictionary.com/termsandconditions"
-                            Style="{StaticResource UpgradePremiumLegalButton}" />
+                            BackgroundColor="Transparent"
+                            TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Primary}}"
+                            FontSize="16"
+                            Padding="10,8" />
                 </VerticalStackLayout>
 
                 <!-- Debug Billing Information -->
-                <BoxView Style="{StaticResource UpgradePremiumDebugDivider}"
+                <BoxView BackgroundColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray800}}"
+                         HeightRequest="1"
+                         Margin="0,20,0,0"
                          IsVisible="{Binding IsDebug}" />
 
-                <Label IsVisible="{Binding IsDebug}" Style="{StaticResource UpgradePremiumDebugInfoLabel}" />
+                <Label Text="🐛 DEBUG BILLING INFO"
+                       FontSize="14"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource Primary}"
+                       Margin="0,15,0,10"
+                       IsVisible="{Binding IsDebug}" />
 
-                <Border IsVisible="{Binding IsDebug}" Style="{StaticResource UpgradePremiumDebugBorder}">
+                <Border IsVisible="{Binding IsDebug}"
+                        Padding="12"
+                        StrokeThickness="2"
+                        Stroke="{StaticResource Primary}"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource LightSecondaryBackground}, Dark={StaticResource DarkSecondaryBackground}}"
+                        StrokeShape="RoundRectangle 8">
                     <VerticalStackLayout Spacing="10">
                         <Editor x:Name="DebugInfoEditor"
                                 Text="{Binding DebugInfo}"
-                                Style="{StaticResource UpgradePremiumDebugEditor}" />
+                                IsReadOnly="True"
+                                HeightRequest="200"
+                                FontSize="11"
+                                FontFamily="Courier"
+                                BackgroundColor="Transparent"
+                                TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}" />
 
                         <HorizontalStackLayout Spacing="10">
                             <Button Text="📋 Copy"
                                     Command="{Binding CopyDebugInfoCommand}"
                                     HorizontalOptions="Fill"
-                                    Style="{StaticResource UpgradePremiumDebugCopyButton}" />
+                                    Padding="10,8"
+                                    FontSize="12" />
 
                             <Button Text="🗑️ Clear"
                                     Command="{Binding ClearDebugInfoCommand}"
                                     HorizontalOptions="Fill"
-                                    Style="{StaticResource UpgradePremiumDebugClearButton}" />
+                                    Padding="10,8"
+                                    FontSize="12"
+                                    BackgroundColor="Transparent"
+                                    TextColor="{StaticResource Primary}"
+                                    BorderColor="{StaticResource Primary}"
+                                    BorderWidth="1" />
                         </HorizontalStackLayout>
 
-                        <Label Style="{StaticResource UpgradePremiumDebugMessageLabel}" />
+                        <Label Text="This debug section only appears in DEBUG builds. Use Copy to share billing logs."
+                               FontSize="11"
+                               TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray400}}"
+                               Opacity="0.7" />
                     </VerticalStackLayout>
                 </Border>
             </VerticalStackLayout>
