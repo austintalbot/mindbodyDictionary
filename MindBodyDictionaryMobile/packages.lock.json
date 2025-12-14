@@ -107,6 +107,15 @@
           "SQLitePCLRaw.provider.e_sqlite3": "2.1.11"
         }
       },
+      "Syncfusion.Maui.TabView": {
+        "type": "Direct",
+        "requested": "[31.2.18, )",
+        "resolved": "31.2.18",
+        "contentHash": "itbBBO9B+BBIRAd9YYvkkFcngQTuu6lnshsAm0uDhurWGZ9MlXh8boDCBeUEnsxHdh6sGe29Ti9HLaPfijpf2g==",
+        "dependencies": {
+          "Syncfusion.Maui.Core": "31.2.18"
+        }
+      },
       "Syncfusion.Maui.Toolkit": {
         "type": "Direct",
         "requested": "[1.0.8, )",
@@ -488,6 +497,19 @@
         "contentHash": "Phx5MOs1ZSACwlbKjlYDm1sHSCwe360cW1t/1TqUBI9281B3OOBiPnXfSyzczm885I/uLIHqzDBEe5KQk7KghA==",
         "dependencies": {
           "Xamarin.Kotlin.StdLib": "2.2.0.1"
+        }
+      },
+      "Syncfusion.Licensing": {
+        "type": "Transitive",
+        "resolved": "31.2.18",
+        "contentHash": "0F8xDPiebSe4y6AYYRJXihH1Ba3PH0pfMyl/FfdbYIr9qev4wEBgEguO4xxkVRgQJhvV8B+StQXOeNSDyByI/A=="
+      },
+      "Syncfusion.Maui.Core": {
+        "type": "Transitive",
+        "resolved": "31.2.18",
+        "contentHash": "BIi8m80CBgZ5FPV0+Iul7AFo8VHBGHCQbgTChhlw2gouqMNB/XBT0Zdy78sGX6HngJL8YNvrVg+twAODQgYGvQ==",
+        "dependencies": {
+          "Syncfusion.Licensing": "31.2.18"
         }
       },
       "System.CodeDom": {
@@ -2175,6 +2197,15 @@
           "System.Runtime.InteropServices.NFloat.Internal": "6.0.1"
         }
       },
+      "Syncfusion.Maui.TabView": {
+        "type": "Direct",
+        "requested": "[31.2.18, )",
+        "resolved": "31.2.18",
+        "contentHash": "itbBBO9B+BBIRAd9YYvkkFcngQTuu6lnshsAm0uDhurWGZ9MlXh8boDCBeUEnsxHdh6sGe29Ti9HLaPfijpf2g==",
+        "dependencies": {
+          "Syncfusion.Maui.Core": "31.2.18"
+        }
+      },
       "Syncfusion.Maui.Toolkit": {
         "type": "Direct",
         "requested": "[1.0.8, )",
@@ -2453,6 +2484,19 @@
         "contentHash": "tsTSoMsBaFXdL3EOU8TsUQ+hrGTKhFREQ9kcrutL6Ex8+hlJLlxYHHatMGrbiy9ToboiQB/yHz0lHnFcVrvJBA==",
         "dependencies": {
           "SQLitePCLRaw.core": "2.1.11"
+        }
+      },
+      "Syncfusion.Licensing": {
+        "type": "Transitive",
+        "resolved": "31.2.18",
+        "contentHash": "0F8xDPiebSe4y6AYYRJXihH1Ba3PH0pfMyl/FfdbYIr9qev4wEBgEguO4xxkVRgQJhvV8B+StQXOeNSDyByI/A=="
+      },
+      "Syncfusion.Maui.Core": {
+        "type": "Transitive",
+        "resolved": "31.2.18",
+        "contentHash": "BIi8m80CBgZ5FPV0+Iul7AFo8VHBGHCQbgTChhlw2gouqMNB/XBT0Zdy78sGX6HngJL8YNvrVg+twAODQgYGvQ==",
+        "dependencies": {
+          "Syncfusion.Licensing": "31.2.18"
         }
       },
       "System.CodeDom": {

@@ -1,8 +1,9 @@
-﻿using CommunityToolkit.Maui;
+using CommunityToolkit.Maui;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using MindBodyDictionaryMobile.Services.billing;
 using Syncfusion.Maui.Toolkit.Hosting;
+using Syncfusion.Maui.Core.Hosting;
 
 namespace MindBodyDictionaryMobile;
 
@@ -12,11 +13,13 @@ public static class MauiProgram
 
 	public static MauiApp CreateMauiApp()
 	{
+		Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1JFaF1cXGtCf1FpRmJGdld5fUVHYVZUTXxaS00DNHVRdkdmWH1fc3ZURmJeVER+WERWYEg=");
 		var builder = MauiApp.CreateBuilder();
 		builder
 			.UseMauiApp<App>()
 			.UseMauiCommunityToolkit()
 			.ConfigureSyncfusionToolkit()
+			.ConfigureSyncfusionCore()
             .ConfigureMauiHandlers(handlers =>
             {
                 // Removed AdMob handler registration

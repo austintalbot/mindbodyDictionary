@@ -5,6 +5,7 @@
              xmlns:models="clr-namespace:MindBodyDictionaryMobile.Models"
              xmlns:pages="clr-namespace:MindBodyDictionaryMobile.Pages"
              xmlns:sf="clr-namespace:Syncfusion.Maui.Toolkit.TextInputLayout;assembly=Syncfusion.Maui.Toolkit"
+             xmlns:tabView="clr-namespace:Syncfusion.Maui.TabView;assembly=Syncfusion.Maui.TabView"
              xmlns:controls="clr-namespace:MindBodyDictionaryMobile.Pages.Controls"
              xmlns:fonts="clr-namespace:Fonts"
              xmlns:converters="clr-namespace:MindBodyDictionaryMobile.Converter"
@@ -14,46 +15,6 @@
 
     <ContentPage.Resources>
         <converters:InverseBoolConverter x:Key="InverseBoolConverter" />
-        <DataTemplate x:Key="NormalTagTemplate" x:DataType="models:Tag">
-                <Border StrokeShape="RoundRectangle 22"
-                        HeightRequest="44"
-                        StrokeThickness="0"
-                        Background="{AppThemeBinding Light={StaticResource LightSecondaryBackground},Dark={StaticResource DarkSecondaryBackground}}"
-                        Padding="{OnPlatform '18,0,18,8',Android='18,0,18,0'}"
-                        SemanticProperties.Description="{Binding Title}">
-                        <Border.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding ToggleTagCommand, Source={RelativeSource AncestorType={x:Type pageModels:MbdConditionDetailPageModel}}, x:DataType=pageModels:MbdConditionDetailPageModel}" CommandParameter="{Binding .}"/>
-                        </Border.GestureRecognizers>
-                        <Label Text="{Binding Title}"
-                            TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground},Dark={StaticResource LightOnDarkBackground}}"
-                            FontSize="{OnIdiom 16,Desktop=18}"
-                            VerticalOptions="Center"
-                            VerticalTextAlignment="Center"/>
-                </Border>
-        </DataTemplate>
-
-        <DataTemplate x:Key="SelectedTagTemplate" x:DataType="models:Tag">
-            <Border StrokeShape="RoundRectangle 22"
-                        HeightRequest="44"
-                        StrokeThickness="0"
-                        Background="{Binding DisplayColor}"
-                        Padding="{OnPlatform '18,0,18,8',Android='18,0,18,0'}"
-                        SemanticProperties.Description="{Binding Title}">
-                <Border.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding ToggleTagCommand, Source={RelativeSource AncestorType={x:Type pageModels:MbdConditionDetailPageModel}}, x:DataType=pageModels:MbdConditionDetailPageModel}" CommandParameter="{Binding .}"/>
-                </Border.GestureRecognizers>
-                <Label Text="{Binding Title}"
-                    TextColor="{AppThemeBinding Light={StaticResource LightBackground},Dark={StaticResource DarkBackground}}"
-                    FontSize="{OnIdiom 16,Desktop=18}"
-                    VerticalOptions="Center"
-                    VerticalTextAlignment="Center"/>
-            </Border>
-        </DataTemplate>
-
-        <controls:ChipDataTemplateSelector
-            x:Key="ChipDataTemplateSelector"
-            NormalTagTemplate="{StaticResource NormalTagTemplate}"
-            SelectedTagTemplate="{StaticResource SelectedTagTemplate}"/>
     </ContentPage.Resources>
 
     <ContentPage.ToolbarItems>
@@ -66,77 +27,232 @@
             SemanticProperties.Description="Delete Condition" />
     </ContentPage.ToolbarItems>
 
-    <Grid>
-        <ScrollView IsVisible="{Binding Condition.DisplayLock, Converter={StaticResource InverseBoolConverter}}">
-            <VerticalStackLayout Padding="{StaticResource LayoutPadding}" Spacing="20">
+    <Grid Style="{StaticResource MainPageGrid}">
+        <tabView:SfTabView
+            Grid.Row="0"
+            x:Name="AilmentDetailsTabview"
+            TabBarBackground="{StaticResource BarColor}"
+            TabBarPlacement="Bottom"
+            IndicatorPlacement="Fill"
+            IndicatorBackground="{StaticResource BarSelectedColor}"
+            TabBarHeight="60">
 
-                <!-- Condition Name as Title -->
-                <Label
-                    Text="{Binding Name}"
-                    Style="{StaticResource Headline}"
-                    HorizontalOptions="Center"
-                    SemanticProperties.HeadingLevel="Level1" />
+            <!-- Problem Tab -->
+            <tabView:SfTabItem
+                TextColor="White"
+                Header="Problem">
+                <tabView:SfTabItem.ImageSource>
+                    <FontImageSource Glyph="{x:Static fonts:FluentUI.warning_24_regular}" FontFamily="{x:Static fonts:FluentUI.FontFamily}" Color="White" />
+                </tabView:SfTabItem.ImageSource>
+                <tabView:SfTabItem.Content>
+                    <Grid Style="{StaticResource ContentGrid}">
+                        <pages:MbdConditionDetailsProblemView
+                            x:Name="DetailsProblemView"
+                            MbdCondition="{Binding Condition}"
+                            Grid.Row="0"
+                            Grid.Column="0" />
+                         
+                        <!-- Lock Overlay for Problem Tab -->
+                        <Grid IsVisible="{Binding Condition.DisplayLock}" BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}" ZIndex="10" Grid.Row="0" Grid.Column="0">
+                             <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="20">
+                                 <Image Source="locked_icon.png" HeightRequest="100" WidthRequest="100" />
+                                 <Label Text="Premium Content" Style="{StaticResource Headline}" HorizontalOptions="Center" />
+                                 <Label Text="Upgrade to unlock this condition and more." HorizontalOptions="Center" HorizontalTextAlignment="Center" />
+                                 <Button Text="Upgrade Now" Command="{Binding GoToSubscriptionCommand}" />
+                             </VerticalStackLayout>
+                        </Grid>
+                    </Grid>
+                </tabView:SfTabItem.Content>
+            </tabView:SfTabItem>
 
-                <!-- Problem View (Mindsets) -->
-                <pages:MbdConditionDetailsProblemView MbdCondition="{Binding Condition}" />
+            <!-- Affirmations Tab -->
+            <tabView:SfTabItem
+                TextColor="White"
+                Header="Affirmations">
+                <tabView:SfTabItem.ImageSource>
+                    <FontImageSource Glyph="{x:Static fonts:FluentUI.lightbulb_24_regular}" FontFamily="{x:Static fonts:FluentUI.FontFamily}" Color="White" />
+                </tabView:SfTabItem.ImageSource>
+                <tabView:SfTabItem.Content>
+                    <Grid RowDefinitions="*">
+                        <pages:MbdConditionDetailsAffirmationsView
+                            Grid.Row="0"
+                            MbdCondition="{Binding Condition}" />
+                        
+                        <!-- Lock Overlay for Affirmations Tab -->
+                        <Grid IsVisible="{Binding Condition.DisplayLock}" BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}" ZIndex="10" Grid.Row="0">
+                             <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="20">
+                                 <Image Source="locked_icon.png" HeightRequest="100" WidthRequest="100" />
+                                 <Label Text="Premium Content" Style="{StaticResource Headline}" HorizontalOptions="Center" />
+                                 <Label Text="Upgrade to unlock this condition and more." HorizontalOptions="Center" HorizontalTextAlignment="Center" />
+                                 <Button Text="Upgrade Now" Command="{Binding GoToSubscriptionCommand}" />
+                             </VerticalStackLayout>
+                        </Grid>
+                    </Grid>
+                </tabView:SfTabItem.Content>
+            </tabView:SfTabItem>
 
-                <!-- Affirmations View -->
-                <pages:MbdConditionDetailsAffirmationsView MbdCondition="{Binding Condition}" />
+            <!-- Recommendations Tab -->
+            <tabView:SfTabItem
+                TextColor="White"
+                Header="Recommendations">
+                <tabView:SfTabItem.ImageSource>
+                    <FontImageSource Glyph="{x:Static fonts:FluentUI.star_24_regular}" FontFamily="{x:Static fonts:FluentUI.FontFamily}" Color="White" />
+                </tabView:SfTabItem.ImageSource>
+                <tabView:SfTabItem.Content>
+                    <ScrollView Style="{StaticResource ContentScrollView}">
+                        <VerticalStackLayout Style="{StaticResource MainContentStack}">
+                            
+                            <VerticalStackLayout Style="{StaticResource HeaderSection}">
+                                <Label Style="{StaticResource SubtitleLabel}"
+                                       Text="Recommendations for" />
+                                
+                                <Label Style="{StaticResource SectionTitleLabel}"
+                                       Text="{Binding Condition.Name}" />
+                            </VerticalStackLayout>
+                            
+                            <Border Style="{StaticResource MbdConditionCardWithShadow}"
+                                    Margin="0,10,0,0">
+                                <tabView:SfTabView
+                                    x:Name="RecommendationsTab"
+                                    TabBarPlacement="Top"
+                                    TabBarBackground="{StaticResource BarColor}"
+                                    IndicatorBackground="{StaticResource BarSelectedColor}"
+                                    TabBarHeight="50"
+                                    IndicatorPlacement="Fill">
 
-                <!-- Food Section -->
-                <Label Text="Foods" Style="{StaticResource SubHeadline}" />
-                <pages:MbdConditionDetailsFoodView />
+                                    <!-- Foods Tab -->
+                                    <tabView:SfTabItem
+                                        Header="Foods"
+                                        TextColor="White"
+                                        FontAttributes="Bold"
+                                        FontSize="16">
+                                        <tabView:SfTabItem.Content>
+                                            <ScrollView Padding="0">
+                                                <Grid Style="{StaticResource TabContentGrid}">
+                                                    <pages:MbdConditionDetailsFoodView
+                                                        Grid.Row="0"
+                                                        MbdCondition="{Binding Condition}"
+                                                        IsVisible="{Binding Condition.DisplayLock, Converter={StaticResource InverseBoolConverter}}"
+                                                        InputTransparent="False" />
 
-                <!-- Products Section -->
-                <Label Text="Products" Style="{StaticResource SubHeadline}" />
-                <pages:MbdConditionDetailsProductsView />
+                                                    <!-- Lock Overlay for Foods -->
+                                                    <Grid IsVisible="{Binding Condition.DisplayLock}" BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}" ZIndex="10" Grid.Row="0">
+                                                         <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="20">
+                                                             <Image Source="locked_icon.png" HeightRequest="100" WidthRequest="100" />
+                                                             <Label Text="Premium Content" Style="{StaticResource Headline}" HorizontalOptions="Center" />
+                                                             <Button Text="Upgrade Now" Command="{Binding GoToSubscriptionCommand}" />
+                                                         </VerticalStackLayout>
+                                                    </Grid>
+                                                </Grid>
+                                            </ScrollView>
+                                        </tabView:SfTabItem.Content>
+                                    </tabView:SfTabItem>
 
-                <!-- Resources Section -->
-                <Label Text="Resources" Style="{StaticResource SubHeadline}" />
-                <pages:MbdConditionDetailsResourcesView />
+                                    <!-- Products Tab -->
+                                    <tabView:SfTabItem
+                                        Header="Products"
+                                        TextColor="White"
+                                        FontAttributes="Bold"
+                                        FontSize="16">
+                                        <tabView:SfTabItem.Content>
+                                            <Grid Style="{StaticResource TabContentGrid}">
+                                                <pages:MbdConditionDetailsProductsView
+                                                    Grid.Row="0"
+                                                    MbdCondition="{Binding Condition}"
+                                                    IsVisible="{Binding Condition.DisplayLock, Converter={StaticResource InverseBoolConverter}}"
+                                                    InputTransparent="False"/>
+                                               
+                                                <!-- Lock Overlay for Products -->
+                                                <Grid IsVisible="{Binding Condition.DisplayLock}" BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}" ZIndex="10" Grid.Row="0">
+                                                     <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="20">
+                                                         <Image Source="locked_icon.png" HeightRequest="100" WidthRequest="100" />
+                                                         <Label Text="Premium Content" Style="{StaticResource Headline}" HorizontalOptions="Center" />
+                                                         <Button Text="Upgrade Now" Command="{Binding GoToSubscriptionCommand}" />
+                                                     </VerticalStackLayout>
+                                                </Grid>
+                                            </Grid>
+                                        </tabView:SfTabItem.Content>
+                                    </tabView:SfTabItem>
 
-                <!-- Existing Tasks Section -->
-                <Grid HeightRequest="44">
-                    <Label
-                        Text="Tasks"
-                        Style="{StaticResource SubHeadline}"
-                        VerticalOptions="Center"/>
-                    <ImageButton
-                        Source="{StaticResource IconClean}"
-                        HorizontalOptions="End"
-                        VerticalOptions="Center"
-                        Aspect="Center"
-                        HeightRequest="44"
-                        WidthRequest="44"
-                        IsVisible="{Binding HasCompletedTasks}"
-                        Command="{Binding CleanTasksCommand}"
-                        SemanticProperties.Description="Clean up"
-                        />
-                </Grid>
-                <VerticalStackLayout
-                    Spacing="{StaticResource LayoutSpacing}"
-                    BindableLayout.ItemsSource="{Binding Tasks}">
-                    <BindableLayout.ItemTemplate>
-                        <DataTemplate>
-                            <controls:TaskView TaskCompletedCommand="{Binding TaskCompletedCommand, Source={RelativeSource AncestorType={x:Type pageModels:MbdConditionDetailPageModel}}, x:DataType=pageModels:MbdConditionDetailPageModel}" />
-                        </DataTemplate>
-                    </BindableLayout.ItemTemplate>
-                </VerticalStackLayout>
-            </VerticalStackLayout>
-        </ScrollView>
+                                    <!-- Book Resources Tab -->
+                                    <tabView:SfTabItem
+                                        Header="Resources"
+                                        TextColor="White"
+                                        FontAttributes="Bold"
+                                        FontSize="16">
+                                        <tabView:SfTabItem.Content>
+                                            <Grid Style="{StaticResource TabContentGrid}">
+                                                <pages:MbdConditionDetailsResourcesView
+                                                    Grid.Row="0"
+                                                    MbdCondition="{Binding Condition}"
+                                                    IsVisible="{Binding Condition.DisplayLock, Converter={StaticResource InverseBoolConverter}}"
+                                                    InputTransparent="False"/>
 
+                                                <!-- Lock Overlay for Resources -->
+                                                <Grid IsVisible="{Binding Condition.DisplayLock}" BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}" ZIndex="10" Grid.Row="0">
+                                                     <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="20">
+                                                         <Image Source="locked_icon.png" HeightRequest="100" WidthRequest="100" />
+                                                         <Label Text="Premium Content" Style="{StaticResource Headline}" HorizontalOptions="Center" />
+                                                         <Button Text="Upgrade Now" Command="{Binding GoToSubscriptionCommand}" />
+                                                     </VerticalStackLayout>
+                                                </Grid>
+                                            </Grid>
+                                        </tabView:SfTabItem.Content>
+                                    </tabView:SfTabItem>
+                                </tabView:SfTabView>
+                            </Border>
+                        </VerticalStackLayout>
+                    </ScrollView>
+                </tabView:SfTabItem.Content>
+            </tabView:SfTabItem>
+
+            <!-- Tasks Tab -->
+            <tabView:SfTabItem
+                TextColor="White"
+                Header="Tasks">
+                <tabView:SfTabItem.ImageSource>
+                    <FontImageSource Glyph="{x:Static fonts:FluentUI.clipboard_task_24_regular}" FontFamily="{x:Static fonts:FluentUI.FontFamily}" Color="White" />
+                </tabView:SfTabItem.ImageSource>
+                <tabView:SfTabItem.Content>
+                    <ScrollView Style="{StaticResource ContentScrollView}">
+                         <VerticalStackLayout Style="{StaticResource MainContentStack}">
+                            <Grid HeightRequest="44">
+                                <Label
+                                    Text="Tasks"
+                                    Style="{StaticResource SubHeadline}"
+                                    VerticalOptions="Center"/>
+                                <ImageButton
+                                    Source="{StaticResource IconClean}"
+                                    HorizontalOptions="End"
+                                    VerticalOptions="Center"
+                                    Aspect="Center"
+                                    HeightRequest="44"
+                                    WidthRequest="44"
+                                    IsVisible="{Binding HasCompletedTasks}"
+                                    Command="{Binding CleanTasksCommand}"
+                                    SemanticProperties.Description="Clean up"
+                                    />
+                            </Grid>
+                            <VerticalStackLayout
+                                Spacing="{StaticResource LayoutSpacing}"
+                                BindableLayout.ItemsSource="{Binding Tasks}">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate>
+                                        <controls:TaskView TaskCompletedCommand="{Binding TaskCompletedCommand, Source={RelativeSource AncestorType={x:Type pageModels:MbdConditionDetailPageModel}}, x:DataType=pageModels:MbdConditionDetailPageModel}" />
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+                    </ScrollView>
+                </tabView:SfTabItem.Content>
+            </tabView:SfTabItem>
+        </tabView:SfTabView>
+        
         <controls:AddButton Command="{Binding AddTaskCommand}"
-                            SemanticProperties.Description="Add task" 
-                            IsVisible="{Binding Condition.DisplayLock, Converter={StaticResource InverseBoolConverter}}" />
-
-        <!-- Lock Overlay -->
-        <Grid IsVisible="{Binding Condition.DisplayLock}" BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}" ZIndex="10">
-             <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="20">
-                 <Image Source="locked_icon.png" HeightRequest="100" WidthRequest="100" />
-                 <Label Text="Premium Content" Style="{StaticResource Headline}" HorizontalOptions="Center" />
-                 <Label Text="Upgrade to unlock this condition and more." HorizontalOptions="Center" HorizontalTextAlignment="Center" />
-                 <Button Text="Upgrade Now" Command="{Binding GoToSubscriptionCommand}" />
-             </VerticalStackLayout>
-        </Grid>
+                            SemanticProperties.Description="Add task"
+                            ZIndex="100"
+                            Margin="20"
+                            VerticalOptions="End"
+                            HorizontalOptions="End"/>
     </Grid>
 </ContentPage>
