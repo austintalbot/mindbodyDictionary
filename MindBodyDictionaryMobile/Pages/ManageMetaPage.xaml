@@ -16,7 +16,7 @@
                 Command="{Binding AppearingCommand}" />
     </ContentPage.Behaviors>
 
-    
+
 
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Reset App" Command="{Binding ResetCommand}" />

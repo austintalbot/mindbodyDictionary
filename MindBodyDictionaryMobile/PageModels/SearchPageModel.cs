@@ -53,7 +53,7 @@ public partial class SearchPageModel : ObservableObject
         try
         {
             IsBusy = true;
-            
+
             // Check subscription status
             var purchasedProducts = await _billingService.GetPurchasedProductsAsync();
             var hasSubscription = purchasedProducts.Contains("mbdpremiumyr") || purchasedProducts.Contains("MBDPremiumYr");
@@ -66,7 +66,7 @@ public partial class SearchPageModel : ObservableObject
                 {
                     c.CachedImageOneSource = await _imageCacheService.GetImageAsync(c.ImageNegative);
                 }
-                
+
                 // Set lock display based on subscription
                 c.DisplayLock = c.SubscriptionOnly && !hasSubscription;
             }

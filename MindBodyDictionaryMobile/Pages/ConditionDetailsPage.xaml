@@ -10,7 +10,7 @@
              Title="{Binding Title}">
 
     <ContentPage.Resources>
-        
+
     </ContentPage.Resources>
 
     <Grid RowDefinitions="Auto,*" Style="{StaticResource MainPageGrid}">

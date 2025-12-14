@@ -207,13 +207,13 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
 
 
 	public MbdConditionDetailPageModel(
-        MbdConditionRepository mbdConditionRepository, 
-        TaskRepository taskRepository, 
-        CategoryRepository categoryRepository, 
-        TagRepository tagRepository, 
-        ModalErrorHandler errorHandler, 
-        ILogger<MbdConditionDetailPageModel> logger, 
-        ImageCacheService imageCacheService, 
+        MbdConditionRepository mbdConditionRepository,
+        TaskRepository taskRepository,
+        CategoryRepository categoryRepository,
+        TagRepository tagRepository,
+        ModalErrorHandler errorHandler,
+        ILogger<MbdConditionDetailPageModel> logger,
+        ImageCacheService imageCacheService,
         IBillingService billingService,
         MbdConditionDetailsProblemView problemView,
         MbdConditionDetailsAffirmationsView affirmationsView,
@@ -234,7 +234,7 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
 		_logger = logger; // Assign injected logger
 
 		_imageCacheService = imageCacheService; // Assign injected service
-		
+
 		_billingService = billingService;
 
         _problemView = problemView;

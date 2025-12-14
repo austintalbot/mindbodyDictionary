@@ -8,7 +8,7 @@
              x:DataType="vm:ImageCachePageModel"
              Title="Image Cache (Debug)">
 
-    
+
 
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="20">

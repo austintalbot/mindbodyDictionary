@@ -28,6 +28,8 @@
             </VisualStateGroupList>
         </Setter>
     </Style>
+
+
     <Style x:Key="Caption2"
            TargetType="Label">
         <Setter Property="FontSize"
@@ -150,20 +152,35 @@
             <Setter Property="FontAttributes"
                     Value="{OnPlatform WinUI=None, Default=Bold}" />
         </Style>
-    
+
+    <Style TargetType="Label" x:Key="SubHeadline">
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource MidnightBlue}, Dark={StaticResource White}}" />
+        <Setter Property="FontSize" Value="24" />
+        <Setter Property="HorizontalOptions" Value="Center" />
+        <Setter Property="HorizontalTextAlignment" Value="Center" />
+    </Style>
+
+
+
+    <Style x:Key="ParagraphLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="LineBreakMode" Value="WordWrap"/>
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
+    </Style>
+
         <Style x:Key="SubtitleLabel" TargetType="Label">
             <Setter Property="FontSize" Value="18"/>
             <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"/>
             <Setter Property="HorizontalOptions" Value="Center"/>
         </Style>
-    
+
         <Style x:Key="SectionTitleLabel" TargetType="Label">
             <Setter Property="FontSize" Value="24"/>
             <Setter Property="FontAttributes" Value="Bold"/>
             <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"/>
             <Setter Property="HorizontalOptions" Value="Center"/>
         </Style>
-    
+
         <!-- New Label Styles from App.xaml -->
         <Style x:Key="PageTitleLabel" TargetType="Label">
             <Setter Property="FontSize" Value="30" />
@@ -174,21 +191,21 @@
             <Setter Property="Margin" Value="10,0,10,5" />
             <Setter Property="FontFamily" Value="OpenSansRegular" />
         </Style>
-    
+
         <Style x:Key="BodyTextLabel" TargetType="Label">
             <Setter Property="FontSize" Value="16" />
             <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
             <Setter Property="FontFamily" Value="OpenSansRegular" />
             <Setter Property="LineBreakMode" Value="WordWrap" />
         </Style>
-    
+
         <Style x:Key="AboutParagraphLabel" TargetType="Label" BasedOn="{StaticResource ParagraphLabel}">
             <Setter Property="HorizontalOptions" Value="Center" />
             <Setter Property="VerticalOptions" Value="Center" />
             <Setter Property="FontSize" Value="18" />
             <Setter Property="TextColor" Value="{StaticResource ActionColor}" />
         </Style>
-    
+
         <Style x:Key="AboutTitleLabel" TargetType="Label">
             <Setter Property="FontSize" Value="22" />
             <Setter Property="FontAttributes" Value="Bold" />
@@ -198,7 +215,7 @@
             <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
             <Setter Property="FontFamily" Value="OpenSansRegular" />
         </Style>
-    
+
             <Style x:Key="AboutBodyLabel" TargetType="Label">
                 <Setter Property="FontSize" Value="16" />
                 <Setter Property="Padding" Value="15" />
@@ -207,24 +224,24 @@
                 <Setter Property="LineBreakMode" Value="WordWrap" />
                 <Setter Property="HorizontalTextAlignment" Value="Start" />
             </Style>
-        
+
             <!-- New Label Styles from MbdConditionDetailsProblemView.xaml -->
             <Style x:Key="MindsetsForLabelStyle" TargetType="Label">
                 <Setter Property="TextColor" Value="{StaticResource MbdConditionTextColor}" />
                 <Setter Property="HorizontalOptions" Value="Center" />
                 <Setter Property="FontSize" Value="16" />
             </Style>
-        
+
                 <Style x:Key="ConditionNameLabelStyle" TargetType="Label" BasedOn="{StaticResource SubHeadline}">
                     <Setter Property="TextColor" Value="{StaticResource MbdConditionTextColor}" />
                     <Setter Property="HorizontalOptions" Value="Center" />
                     <Setter Property="Padding" Value="0,0,0,10" />
-                </Style>        
+                </Style>
             <Style x:Key="MindsetTroubledLabelStyle" TargetType="Label">
                 <Setter Property="FontSize" Value="12" />
                 <Setter Property="TextColor" Value="{StaticResource MbdConditionTextColor}" />
             </Style>
-        
+
             <Style x:Key="ProblemSummaryLabelStyle" TargetType="Label">
                 <Setter Property="Margin" Value="5" />
                 <Setter Property="FontSize" Value="18" />
@@ -235,12 +252,12 @@
                 <Setter Property="MaxLines" Value="6" />
                 <Setter Property="LineBreakMode" Value="TailTruncation" />
             </Style>
-        
+
             <Style x:Key="MindsetHealingLabelStyle" TargetType="Label">
                 <Setter Property="FontSize" Value="12" />
                 <Setter Property="TextColor" Value="{StaticResource MbdConditionTextColor}" />
             </Style>
-        
+
                     <Style x:Key="PositiveSummaryLabelStyle" TargetType="Label">
                         <Setter Property="Margin" Value="5" />
                         <Setter Property="FontSize" Value="18" />
@@ -251,14 +268,9 @@
                         <Setter Property="MaxLines" Value="6" />
                         <Setter Property="LineBreakMode" Value="TailTruncation" />
                     </Style>
-                
-                    <Style TargetType="Label" x:Key="SubHeadline">
-                        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource MidnightBlue}, Dark={StaticResource White}}" />
-                        <Setter Property="FontSize" Value="24" />
-                        <Setter Property="HorizontalOptions" Value="Center" />
-                        <Setter Property="HorizontalTextAlignment" Value="Center" />
-                    </Style>
-                
+
+
+
                     <!-- New Label Styles for MbdConditionHomePage.xaml -->
                     <Style x:Key="HomePageConditionNameLabel" TargetType="Label">
                         <Setter Property="FontSize" Value="18" />
@@ -268,7 +280,7 @@
                         <Setter Property="TextColor" Value="{StaticResource MbdConditionTextColor}" />
                         <Setter Property="Margin" Value="0,0,0,10" />
                     </Style>
-                
+
                         <Style x:Key="HomePageAffirmationLabel" TargetType="Label" BasedOn="{StaticResource ParagraphLabel}">
                             <Setter Property="FontAttributes" Value="Italic" />
                             <Setter Property="FontSize" Value="16" />
@@ -277,14 +289,14 @@
                             <Setter Property="MaxLines" Value="4" />
                             <Setter Property="VerticalOptions" Value="Fill" />
                         </Style>
-                    
+
                         <!-- New Label Styles from MbdConditionDetailsAffirmationsView.xaml -->
                         <Style x:Key="AffirmationsForLabelStyle" TargetType="Label">
                             <Setter Property="FontSize" Value="18" />
                             <Setter Property="TextColor" Value="{StaticResource MbdConditionTextColor}" />
                             <Setter Property="HorizontalOptions" Value="Center" />
                         </Style>
-                    
+
                         <Style x:Key="AffirmationConditionNameLabelStyle" TargetType="Label">
                             <Setter Property="HorizontalOptions" Value="Center" />
                             <Setter Property="TextColor" Value="{StaticResource MbdConditionTextColor}" />
@@ -292,7 +304,7 @@
                             <Setter Property="Padding" Value="0,0,0,10" />
                             <Setter Property="FontAttributes" Value="Bold" />
                         </Style>
-                    
+
                         <Style x:Key="AffirmationCarouselLabelStyle" TargetType="Label">
                             <Setter Property="FontAttributes" Value="Bold,Italic" />
                             <Setter Property="FontSize" Value="18" />
@@ -304,7 +316,7 @@
                             <Setter Property="VerticalOptions" Value="Center" />
                             <Setter Property="VerticalTextAlignment" Value="Center" />
                         </Style>
-                    
+
                         <Style x:Key="AffirmationCopyrightLabelStyle" TargetType="Label">
                             <Setter Property="FontSize" Value="Small" />
                             <Setter Property="HorizontalOptions" Value="Center" />
@@ -313,7 +325,7 @@
                             <Setter Property="VerticalOptions" Value="End" />
                             <Setter Property="VerticalTextAlignment" Value="End" />
                         </Style>
-                    
+
                             <Style x:Key="ShareAffirmationLabelStyle" TargetType="Label">
                                 <Setter Property="HorizontalOptions" Value="EndAndExpand" />
                                 <Setter Property="HorizontalTextAlignment" Value="End" />
@@ -321,7 +333,7 @@
                                 <Setter Property="Margin" Value="10,0,0,0" />
                                 <Setter Property="Text" Value="Share" />
                             </Style>
-                        
+
                             <!-- New Label Styles from AboutPage.xaml -->
                             <Style x:Key="AboutAppNameLabel" TargetType="Label">
                                 <Setter Property="FontSize" Value="24" />
@@ -329,27 +341,27 @@
                                 <Setter Property="HorizontalTextAlignment" Value="Center" />
                                 <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
                             </Style>
-                        
+
                             <Style x:Key="AboutAppVersionLabel" TargetType="Label">
                                 <Setter Property="FontSize" Value="14" />
                                 <Setter Property="HorizontalTextAlignment" Value="Center" />
                                 <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}" />
                             </Style>
-                        
+
                             <Style x:Key="AboutDescriptionLabel" TargetType="Label">
                                 <Setter Property="FontSize" Value="14" />
                                 <Setter Property="LineHeight" Value="1.5" />
                                 <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray200}}" />
                                 <Setter Property="HorizontalTextAlignment" Value="Center" />
                             </Style>
-                        
+
                                 <Style x:Key="AboutPageCopyrightLabel" TargetType="Label">
                                     <Setter Property="FontSize" Value="12" />
                                     <Setter Property="HorizontalTextAlignment" Value="Center" />
                                     <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}" />
                                     <Setter Property="Margin" Value="0,20,0,0" />
                                 </Style>
-                            
+
                                 <!-- New Label Styles from UpgradePremiumPage.xaml -->
                                 <Style x:Key="UpgradePremiumDescriptionLabel" TargetType="Label">
                                     <Setter Property="HorizontalOptions" Value="Fill" />
@@ -360,7 +372,7 @@
                                     <Setter Property="LineBreakMode" Value="WordWrap" />
                                     <Setter Property="Margin" Value="0,10,0,5" />
                                 </Style>
-                            
+
                                 <Style x:Key="UpgradePremiumTermsLabel" TargetType="Label">
                                     <Setter Property="HorizontalOptions" Value="Fill" />
                                     <Setter Property="HorizontalTextAlignment" Value="Center" />
@@ -369,7 +381,7 @@
                                     <Setter Property="LineBreakMode" Value="WordWrap" />
                                     <Setter Property="Margin" Value="0,0,0,20" />
                                 </Style>
-                            
+
                                 <Style x:Key="UpgradePremiumActiveLabel" TargetType="Label">
                                     <Setter Property="Text" Value="✓ Premium Active" />
                                     <Setter Property="HorizontalOptions" Value="Fill" />
@@ -378,7 +390,7 @@
                                     <Setter Property="FontAttributes" Value="Bold" />
                                     <Setter Property="TextColor" Value="{StaticResource Primary}" />
                                 </Style>
-                            
+
                                 <Style x:Key="UpgradePremiumDebugInfoLabel" TargetType="Label">
                                     <Setter Property="Text" Value="🐛 DEBUG BILLING INFO" />
                                     <Setter Property="FontSize" Value="14" />
@@ -386,7 +398,7 @@
                                     <Setter Property="TextColor" Value="{StaticResource Primary}" />
                                     <Setter Property="Margin" Value="0,15,0,10" />
                                 </Style>
-                            
+
     <Style x:Key="UpgradePremiumDebugMessageLabel" TargetType="Label">
         <Setter Property="Text" Value="This debug section only appears in DEBUG builds. Use Copy to share billing logs." />
         <Setter Property="FontSize" Value="11" />
