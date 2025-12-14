@@ -41,9 +41,7 @@
             <tabView:SfTabItem
                 Style="{StaticResource BaseSfTabItem}"
                 Header="Problem">
-                <tabView:SfTabItem.ImageSource>
-                    <StaticResource ResourceKey="IconWarning" />
-                </tabView:SfTabItem.ImageSource>
+                <tabView:SfTabItem.ImageSource ResourceKey="IconWarning" />
                 <tabView:SfTabItem.Content>
                     <Grid Style="{StaticResource ContentGrid}">
                         <pages:MbdConditionDetailsProblemView
@@ -69,9 +67,7 @@
             <tabView:SfTabItem
                 Style="{StaticResource BaseSfTabItem}"
                 Header="Affirmations">
-                <tabView:SfTabItem.ImageSource>
-                    <StaticResource ResourceKey="IconLightbulb" />
-                </tabView:SfTabItem.ImageSource>
+                <tabView:SfTabItem.ImageSource ResourceKey="IconLightbulb" />
                 <tabView:SfTabItem.Content>
                     <Grid RowDefinitions="*">
                         <pages:MbdConditionDetailsAffirmationsView
@@ -96,9 +92,7 @@
             <tabView:SfTabItem
                 Style="{StaticResource BaseSfTabItem}"
                 Header="Recommendations">
-                <tabView:SfTabItem.ImageSource>
-                    <StaticResource ResourceKey="IconStar" />
-                </tabView:SfTabItem.ImageSource>
+                <tabView:SfTabItem.ImageSource ResourceKey="IconStar" />
                 <tabView:SfTabItem.Content>
                     <ScrollView Style="{StaticResource ContentScrollView}">
                         <VerticalStackLayout Style="{StaticResource MainContentStack}">
@@ -208,9 +202,7 @@
             <tabView:SfTabItem
                 Style="{StaticResource BaseSfTabItem}"
                 Header="Tasks">
-                <tabView:SfTabItem.ImageSource>
-                    <StaticResource ResourceKey="IconClipboardTask" />
-                </tabView:SfTabItem.ImageSource>
+                <tabView:SfTabItem.ImageSource ResourceKey="IconClipboardTask" />
                 <tabView:SfTabItem.Content>
                     <ScrollView Style="{StaticResource ContentScrollView}">
                          <VerticalStackLayout Style="{StaticResource MainContentStack}">
