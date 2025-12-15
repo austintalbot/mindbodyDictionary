@@ -24,8 +24,8 @@ const AilmentsTab: React.FC = () => {
     setError(null);
     try {
       const response = await fetchMbdConditionsTable(); // Changed to fetchMbdConditionsTable
-      if (response && Array.isArray(response.data)) { // Check if response.data exists and is an array
-        setAilments(response.data);
+      if (response && Array.isArray(response)) { // Check if response.data exists and is an array
+        setAilments(response);
       } else {
         throw new Error('API response data is not an array or is missing.');
       }
