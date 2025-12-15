@@ -90,7 +90,7 @@
                             HeightRequest="24"
                             Source="{StaticResource IconShare}"
                             VerticalOptions="Center"
-                            WidthRequest="24" />                    
+                            WidthRequest="24" />
                     </HorizontalStackLayout>
                 </Grid>
             </Grid>

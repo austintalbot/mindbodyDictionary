@@ -23,11 +23,11 @@
     <Color x:Key="DarkOnDarkBackground">Black</Color>
 
     <Color x:Key="LightBackground">White</Color>
-    <Color x:Key="DarkBackground">#1f1f1f</Color> 
+    <Color x:Key="DarkBackground">#1f1f1f</Color>
     <!--  Using OffBlack for DarkBackground  -->
 
     <Color x:Key="LightSecondaryBackground">White</Color>
-    <Color x:Key="DarkSecondaryBackground">#212121</Color> 
+    <Color x:Key="DarkSecondaryBackground">#212121</Color>
     <!--  Using Gray900 for DarkSecondaryBackground  -->
 
     <Color x:Key="Gray50">#F8F8F8</Color>
