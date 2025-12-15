@@ -35,7 +35,7 @@ dotnet test
 # Android only
 dotnet test --filter "Platform=Android"
 
-# iOS only  
+# iOS only
 dotnet test --filter "Platform=iOS"
 ```
 
@@ -92,10 +92,10 @@ public class MyPageTests : BaseTest
     {
         // Arrange
         InitializeDriver(platform);
-        
+
         // Act
         var button = Driver!.FindElement(By.Id("MyButton"));
-        
+
         // Assert
         Assert.NotNull(button);
         Assert.True(button.Displayed);

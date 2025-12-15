@@ -3,7 +3,7 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Class="MindBodyDictionaryMobile.Pages.Controls.TagView"
-    xmlns:models="clr-namespace:MindBodyDictionary.Shared.Entities"
+    xmlns:models="clr-namespace:MindBodyDictionaryMobile.Models"
     Style="{StaticResource TagViewBorderStyle}"
     Background="{Binding DisplayColor}"
     x:DataType="models:Tag"

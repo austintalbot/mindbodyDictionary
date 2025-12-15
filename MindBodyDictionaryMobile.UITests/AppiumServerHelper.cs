@@ -6,7 +6,7 @@ namespace MindBodyDictionaryMobile.UITests;
 public static class AppiumServerHelper
 {
     public const string DefaultAppiumServerUrl = "http://127.0.0.1:4723";
-    
+
     public static Uri GetAppiumServerUri()
     {
         var appiumServerUrl = Environment.GetEnvironmentVariable("APPIUM_SERVER_URL") ?? DefaultAppiumServerUrl;
