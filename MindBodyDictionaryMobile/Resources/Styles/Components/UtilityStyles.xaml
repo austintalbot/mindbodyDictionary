@@ -1,31 +1,31 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+﻿<?xml version="1.0" encoding="UTF-8" ?>
 <?xaml-comp compile="true" ?>
 <ResourceDictionary
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:pullToRefresh="clr-namespace:Syncfusion.Maui.Toolkit.PullToRefresh;assembly=Syncfusion.Maui.Toolkit"
     xmlns:chart="clr-namespace:Syncfusion.Maui.Toolkit.Charts;assembly=Syncfusion.Maui.Toolkit"
-    xmlns:effectsView="clr-namespace:Syncfusion.Maui.Toolkit.EffectsView;assembly=Syncfusion.Maui.Toolkit">
+    xmlns:effectsView="clr-namespace:Syncfusion.Maui.Toolkit.EffectsView;assembly=Syncfusion.Maui.Toolkit"
+    xmlns:pullToRefresh="clr-namespace:Syncfusion.Maui.Toolkit.PullToRefresh;assembly=Syncfusion.Maui.Toolkit">
 
-    <Style TargetType="BoxView" x:Key="ShimmerCustomViewStyle">
+    <Style x:Key="ShimmerCustomViewStyle" TargetType="BoxView">
         <Setter Property="BackgroundColor" Value="Gray" />
         <Setter Property="HorizontalOptions" Value="Fill" />
         <Setter Property="VerticalOptions" Value="Fill" />
     </Style>
 
     <Style TargetType="pullToRefresh:SfPullToRefresh">
-        <Setter Property="TransitionMode" Value="SlideOnTop"/>
-        <Setter Property="PullingThreshold" Value="100"/>
-        <Setter Property="ProgressColor" Value="{StaticResource Primary}"/>
+        <Setter Property="TransitionMode" Value="SlideOnTop" />
+        <Setter Property="PullingThreshold" Value="100" />
+        <Setter Property="ProgressColor" Value="{StaticResource Primary}" />
     </Style>
 
-    <!-- New DividerBoxView Style -->
+    <!--  New DividerBoxView Style  -->
     <Style x:Key="DividerBoxView" TargetType="BoxView">
         <Setter Property="HeightRequest" Value="1" />
         <Setter Property="Color" Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}" />
     </Style>
 
-    <!-- New UpgradePremiumDebugDivider Style -->
+    <!--  New UpgradePremiumDebugDivider Style  -->
     <Style x:Key="UpgradePremiumDebugDivider" TargetType="BoxView">
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray800}}" />
         <Setter Property="HeightRequest" Value="1" />
@@ -38,25 +38,25 @@
         <Setter Property="VerticalOptions" Value="Fill" />
     </Style>
 
-    <!-- New ChartConnectorLineStyle -->
+    <!--  New ChartConnectorLineStyle  -->
     <Style x:Key="ChartConnectorLineStyle" TargetType="chart:ConnectorLineStyle">
         <Setter Property="ConnectorType" Value="Line" />
         <Setter Property="StrokeWidth" Value="3" />
     </Style>
 
-    <!-- New TaskViewEffectsViewStyle -->
+    <!--  New TaskViewEffectsViewStyle  -->
     <Style x:Key="TaskViewEffectsViewStyle" TargetType="effectsView:SfEffectsView">
         <Setter Property="TouchDownEffects" Value="Highlight" />
         <Setter Property="HighlightBackground" Value="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}" />
     </Style>
 
-    <!-- New ImageCacheLoadingIndicator Style -->
+    <!--  New ImageCacheLoadingIndicator Style  -->
     <Style x:Key="ImageCacheLoadingIndicator" TargetType="ActivityIndicator">
         <Setter Property="HeightRequest" Value="40" />
         <Setter Property="Color" Value="{StaticResource Primary}" />
     </Style>
 
-    <!-- New ProjectDetailSelectedIconIndicator Style -->
+    <!--  New ProjectDetailSelectedIconIndicator Style  -->
     <Style x:Key="ProjectDetailSelectedIconIndicator" TargetType="BoxView">
         <Setter Property="Color" Value="{StaticResource Primary}" />
         <Setter Property="HeightRequest" Value="4" />

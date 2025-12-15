@@ -1,10 +1,11 @@
-<?xml version = "1.0" encoding = "UTF-8" ?>
-<Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:f="clr-namespace:Fonts"
-             xmlns:converters="clr-namespace:MindBodyDictionaryMobile.Converter"
-             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             x:Class="MindBodyDictionaryMobile.App">
+<?xml version="1.0" encoding="UTF-8" ?>
+<Application
+    x:Class="MindBodyDictionaryMobile.App"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:converters="clr-namespace:MindBodyDictionaryMobile.Converter"
+    xmlns:f="clr-namespace:Fonts"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -21,6 +22,7 @@
                 <ResourceDictionary Source="Resources/Styles/Components/PageLayoutStyles.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Components/SearchPageStyles.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Components/MbdConditionStyles.xaml" />
+                <ResourceDictionary Source="Resources/Styles/Components/NotificationStyles.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Components/ImageStyles.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Components/CollectionStyles.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Components/ShimmerStyles.xaml" />
@@ -38,7 +40,7 @@
             <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
             <converters:SelectedTabColorConverter x:Key="SelectedTabColorConverter" />
             <converters:SelectedTabBackgroundColorConverter x:Key="SelectedTabBackgroundColorConverter" />
-            <converters:DataLabelValueConverter x:Key="DataLabelValueConverter"/>
+            <converters:DataLabelValueConverter x:Key="DataLabelValueConverter" />
             <converters:BytesToFormattedSizeConverter x:Key="BytesToFormattedSizeConverter" />
         </ResourceDictionary>
     </Application.Resources>

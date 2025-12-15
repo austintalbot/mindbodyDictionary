@@ -1,93 +1,92 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+﻿<?xml version="1.0" encoding="UTF-8" ?>
 <?xaml-comp compile="true" ?>
-<ResourceDictionary
-    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
     <Style x:Key="MbdConditionCardWithShadow" TargetType="Border">
-        <Setter Property="StrokeShape" Value="RoundRectangle 12"/>
-        <Setter Property="StrokeThickness" Value="1"/>
-        <Setter Property="Padding" Value="15"/>
-        <Setter Property="Background" Value="{AppThemeBinding Light={StaticResource WhiteBrush}, Dark={StaticResource Gray900Brush}}"/>
-        <Setter Property="Stroke" Value="{StaticResource MbdConditionCardBorder}"/>
+        <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="Padding" Value="15" />
+        <Setter Property="Background" Value="{AppThemeBinding Light={StaticResource WhiteBrush}, Dark={StaticResource Gray900Brush}}" />
+        <Setter Property="Stroke" Value="{StaticResource MbdConditionCardBorder}" />
         <Setter Property="Shadow">
             <Setter.Value>
-                <Shadow Brush="Black"
-                        Opacity="0.1"
-                        Radius="10"
-                        Offset="0,2"/>
+                <Shadow
+                    Brush="Black"
+                    Opacity="0.1"
+                    Radius="10"
+                    Offset="0,2" />
             </Setter.Value>
         </Setter>
     </Style>
 
-    <!-- MbdCondition Summary Page Styles -->
+    <!--  MbdCondition Summary Page Styles  -->
     <Style x:Key="MbdConditionSummaryGrid" TargetType="Grid">
-        <Setter Property="Padding" Value="20"/>
-        <Setter Property="RowSpacing" Value="10"/>
-        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource DarkBackground}}"/>
+        <Setter Property="Padding" Value="20" />
+        <Setter Property="RowSpacing" Value="10" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource DarkBackground}}" />
     </Style>
 
     <Style x:Key="MbdConditionImageBorder" TargetType="Border">
-        <Setter Property="StrokeShape" Value="RoundRectangle 12"/>
-        <Setter Property="StrokeThickness" Value="1"/>
-        <Setter Property="Stroke" Value="{StaticResource MbdConditionCardBorder}"/>
-        <Setter Property="Background" Value="White"/>
-        <Setter Property="BackgroundColor" Value="White"/>
-        <Setter Property="HorizontalOptions" Value="Center"/>
-        <Setter Property="Padding" Value="0"/>
-        <Setter Property="Margin" Value="0,20,0,10"/>
+        <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="Stroke" Value="{StaticResource MbdConditionCardBorder}" />
+        <Setter Property="Background" Value="White" />
+        <Setter Property="BackgroundColor" Value="White" />
+        <Setter Property="HorizontalOptions" Value="Center" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Margin" Value="0,20,0,10" />
     </Style>
 
     <Style x:Key="MbdConditionSummaryImage" TargetType="Image">
-        <Setter Property="Aspect" Value="AspectFit"/>
-        <Setter Property="HeightRequest" Value="200"/>
-        <Setter Property="WidthRequest" Value="200"/>
-        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="Aspect" Value="AspectFit" />
+        <Setter Property="HeightRequest" Value="200" />
+        <Setter Property="WidthRequest" Value="200" />
+        <Setter Property="HorizontalOptions" Value="Center" />
     </Style>
 
     <Style x:Key="MindsetLabel" TargetType="Label">
-        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource MbdConditionTextColor}, Dark={StaticResource White}}"/>
-        <Setter Property="FontSize" Value="18"/>
-        <Setter Property="HorizontalOptions" Value="Center"/>
-        <Setter Property="FontAttributes" Value="Italic"/>
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource MbdConditionTextColor}, Dark={StaticResource White}}" />
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="HorizontalOptions" Value="Center" />
+        <Setter Property="FontAttributes" Value="Italic" />
     </Style>
 
     <Style x:Key="MbdConditionNameLabel" TargetType="Label">
-        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource MbdConditionTextColor}, Dark={StaticResource White}}"/>
-        <Setter Property="FontSize" Value="28"/>
-        <Setter Property="FontAttributes" Value="Bold"/>
-        <Setter Property="HorizontalOptions" Value="Center"/>
-        <Setter Property="Padding" Value="0,0,0,10"/>
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource MbdConditionTextColor}, Dark={StaticResource White}}" />
+        <Setter Property="FontSize" Value="28" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="HorizontalOptions" Value="Center" />
+        <Setter Property="Padding" Value="0,0,0,10" />
     </Style>
 
     <Style x:Key="SummaryScrollView" TargetType="ScrollView">
-        <Setter Property="VerticalScrollBarVisibility" Value="Default"/>
+        <Setter Property="VerticalScrollBarVisibility" Value="Default" />
     </Style>
 
     <Style x:Key="SummaryLabel" TargetType="Label">
-        <Setter Property="FontSize" Value="18"/>
-        <Setter Property="LineHeight" Value="1.5"/>
-        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="LineHeight" Value="1.5" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
     </Style>
 
     <Style x:Key="CopyrightLabel" TargetType="Label">
-        <Setter Property="FontSize" Value="12"/>
-        <Setter Property="TextColor" Value="{StaticResource Gray500}"/>
-        <Setter Property="HorizontalOptions" Value="Start"/>
-        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="TextColor" Value="{StaticResource Gray500}" />
+        <Setter Property="HorizontalOptions" Value="Start" />
+        <Setter Property="VerticalOptions" Value="Center" />
     </Style>
 
     <Style x:Key="ShareButton" TargetType="Button">
-        <Setter Property="BackgroundColor" Value="{StaticResource Primary}"/>
-        <Setter Property="TextColor" Value="White"/>
-        <Setter Property="CornerRadius" Value="8"/>
-        <Setter Property="HeightRequest" Value="40"/>
-        <Setter Property="Padding" Value="10,0"/>
-        <Setter Property="VerticalOptions" Value="Center"/>
-        <Setter Property="HorizontalOptions" Value="End"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+        <Setter Property="TextColor" Value="White" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="HeightRequest" Value="40" />
+        <Setter Property="Padding" Value="10,0" />
+        <Setter Property="VerticalOptions" Value="Center" />
+        <Setter Property="HorizontalOptions" Value="End" />
     </Style>
 
-    <!-- New Card and Border Styles from App.xaml -->
+    <!--  New Card and Border Styles from App.xaml  -->
     <Style x:Key="MbdConditionCard" TargetType="Border">
         <Setter Property="StrokeShape" Value="RoundRectangle,12" />
         <Setter Property="Stroke" Value="{StaticResource MbdConditionCardBorder}" />
@@ -97,9 +96,16 @@
         <Setter Property="Margin" Value="10" />
     </Style>
 
-    <Style x:Key="AppMbdConditionCardWithShadow" TargetType="Border" BasedOn="{StaticResource MbdConditionCard}">
+    <Style
+        x:Key="AppMbdConditionCardWithShadow"
+        BasedOn="{StaticResource MbdConditionCard}"
+        TargetType="Border">
         <Setter Property="Shadow">
-            <Shadow Brush="Black" Opacity="0.1" Radius="10" Offset="0,2"/>
+            <Shadow
+                Brush="Black"
+                Opacity="0.1"
+                Radius="10"
+                Offset="0,2" />
         </Setter>
     </Style>
 
@@ -119,7 +125,11 @@
         <Setter Property="Padding" Value="15" />
         <Setter Property="StrokeShape" Value="RoundRectangle 5" />
         <Setter Property="Shadow">
-            <Shadow Brush="Black" Opacity="0.1" Radius="5" Offset="0,2"/>
+            <Shadow
+                Brush="Black"
+                Opacity="0.1"
+                Radius="5"
+                Offset="0,2" />
         </Setter>
     </Style>
 
@@ -130,11 +140,15 @@
         <Setter Property="Padding" Value="15" />
         <Setter Property="StrokeShape" Value="RoundRectangle 5" />
         <Setter Property="Shadow">
-            <Shadow Brush="Black" Opacity="0.1" Radius="5" Offset="0,2"/>
+            <Shadow
+                Brush="Black"
+                Opacity="0.1"
+                Radius="5"
+                Offset="0,2" />
         </Setter>
     </Style>
 
-    <!-- New Recommendation Styles from App.xaml -->
+    <!--  New Recommendation Styles from App.xaml  -->
     <Style x:Key="RecommendationNameLabel" TargetType="Label">
         <Setter Property="FontSize" Value="24" />
         <Setter Property="HorizontalOptions" Value="Center" />
@@ -158,7 +172,10 @@
         <Setter Property="FontFamily" Value="OpenSansRegular" />
     </Style>
 
-    <Style x:Key="RecommendationBookProductDescriptionLabel" TargetType="Label" BasedOn="{StaticResource RecommendationDescriptionLabel}">
+    <Style
+        x:Key="RecommendationBookProductDescriptionLabel"
+        BasedOn="{StaticResource RecommendationDescriptionLabel}"
+        TargetType="Label">
         <Setter Property="Text" Value="Click to learn more about the health benefits of this product" />
     </Style>
 
@@ -174,7 +191,10 @@
         <Setter Property="FontFamily" Value="OpenSansRegular" />
     </Style>
 
-    <Style x:Key="RecommendationBookProductClickLabel" TargetType="Label" BasedOn="{StaticResource RecommendationClickLabel}">
+    <Style
+        x:Key="RecommendationBookProductClickLabel"
+        BasedOn="{StaticResource RecommendationClickLabel}"
+        TargetType="Label">
         <Setter Property="Text" Value="We applaud quality products" />
     </Style>
 
@@ -185,7 +205,7 @@
         <Setter Property="VerticalOptions" Value="Start" />
     </Style>
 
-    <!-- New Food Item Styles from App.xaml -->
+    <!--  New Food Item Styles from App.xaml  -->
     <Style x:Key="FoodItemBorder" TargetType="Border">
         <Setter Property="Padding" Value="5" />
         <Setter Property="Margin" Value="2" />
@@ -205,7 +225,7 @@
         <Setter Property="VerticalTextAlignment" Value="Center" />
     </Style>
 
-    <!-- New Ailment Summary Page Styles from App.xaml -->
+    <!--  New Ailment Summary Page Styles from App.xaml  -->
     <Style x:Key="MbdConditionSummaryGridApp" TargetType="Grid">
         <Setter Property="Margin" Value="10,15" />
         <Setter Property="Padding" Value="0" />
@@ -276,7 +296,7 @@
         <Setter Property="VerticalOptions" Value="Center" />
     </Style>
 
-    <!-- New MbdHomePageConditionCard Style -->
+    <!--  New MbdHomePageConditionCard Style  -->
     <Style x:Key="MbdHomePageConditionCard" TargetType="Border">
         <Setter Property="MinimumHeightRequest" Value="120" />
         <Setter Property="MaximumHeightRequest" Value="240" />
@@ -286,20 +306,21 @@
         <Setter Property="Padding" Value="15" />
         <Setter Property="StrokeShape">
             <Setter.Value>
-                <RoundRectangle CornerRadius="12"/>
+                <RoundRectangle CornerRadius="12" />
             </Setter.Value>
         </Setter>
         <Setter Property="Shadow">
             <Setter.Value>
-                <Shadow Brush="Black"
-                        Opacity="0.1"
-                        Radius="10"
-                        Offset="0,2"/>
+                <Shadow
+                    Brush="Black"
+                    Opacity="0.1"
+                    Radius="10"
+                    Offset="0,2" />
             </Setter.Value>
         </Setter>
     </Style>
 
-    <!-- New AffirmationFrameStyle -->
+    <!--  New AffirmationFrameStyle  -->
     <Style x:Key="AffirmationFrameStyle" TargetType="Frame">
         <Setter Property="Padding" Value="10" />
         <Setter Property="Margin" Value="2" />

@@ -1,8 +1,6 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+﻿<?xml version="1.0" encoding="UTF-8" ?>
 <?xaml-comp compile="true" ?>
-<ResourceDictionary
-    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
     <Style x:Key="MbdConditionSearchBar" TargetType="SearchBar">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
@@ -11,8 +9,8 @@
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource LightSecondaryBackground}, Dark={StaticResource DarkSecondaryBackground}}" />
         <Setter Property="FontFamily" Value="OpenSansRegular" />
         <Setter Property="FontSize" Value="14" />
-        <Setter Property="MinimumHeightRequest" Value="44"/>
-        <Setter Property="MinimumWidthRequest" Value="44"/>
+        <Setter Property="MinimumHeightRequest" Value="44" />
+        <Setter Property="MinimumWidthRequest" Value="44" />
         <Setter Property="Placeholder" Value="Search conditions..." />
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
@@ -29,7 +27,7 @@
         </Setter>
     </Style>
 
-    <!-- New SearchBar Style from App.xaml -->
+    <!--  New SearchBar Style from App.xaml  -->
     <Style x:Key="AppSearchBar" TargetType="SearchBar">
         <Setter Property="Placeholder" Value="Search conditions..." />
         <Setter Property="CancelButtonColor" Value="{StaticResource PrimaryColor}" />

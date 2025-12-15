@@ -1,71 +1,97 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="MindBodyDictionaryMobile.Pages.MbdConditionSummaryPage"
-             xmlns:vm="clr-namespace:MindBodyDictionaryMobile.PageModels"
-             x:DataType="vm:MbdConditionSummaryPageModel"
-             xmlns:local="clr-namespace:MindBodyDictionaryMobile"
-             xmlns:fonts="clr-namespace:Fonts;assembly=MindBodyDictionaryMobile"
-             Title="{Binding Title}">
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="MindBodyDictionaryMobile.Pages.MbdConditionSummaryPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:fonts="clr-namespace:Fonts;assembly=MindBodyDictionaryMobile"
+    xmlns:local="clr-namespace:MindBodyDictionaryMobile"
+    xmlns:vm="clr-namespace:MindBodyDictionaryMobile.PageModels"
+    Title="{Binding Title}"
+    x:DataType="vm:MbdConditionSummaryPageModel">
     <Grid Style="{StaticResource MainPageGrid}">
-        <Border Style="{StaticResource MbdConditionCardWithShadow}"
-                Margin="20"
-                VerticalOptions="FillAndExpand">
-            <Grid RowDefinitions="Auto,Auto,Auto,*,Auto" ColumnDefinitions="*,*" RowSpacing="10">
-                <Border Grid.Column="0"
-                        Grid.ColumnSpan="2"
-                        Grid.Row="0"
-                        Background="White"
-                        Style="{StaticResource MbdConditionImageBorder}">
-                    <Image x:Name="AilmentImage"
-                           Style="{StaticResource MbdConditionSummaryImage}"
-                           Source="{Binding CachedImageSource}" />
+        <Border
+            Margin="20"
+            Style="{StaticResource MbdConditionCardWithShadow}"
+            VerticalOptions="FillAndExpand">
+            <Grid
+                ColumnDefinitions="*,*"
+                RowDefinitions="Auto,Auto,Auto,*,Auto"
+                RowSpacing="10">
+                <Border
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    Background="White"
+                    Style="{StaticResource MbdConditionImageBorder}">
+                    <Image
+                        x:Name="AilmentImage"
+                        Source="{Binding CachedImageSource}"
+                        Style="{StaticResource MbdConditionSummaryImage}" />
                 </Border>
 
-                <Label Grid.Row="1"
-                       Grid.Column="0"
-                       Grid.ColumnSpan="2"
-                       Style="{StaticResource MindsetLabel}"
-                       TextColor="{AppThemeBinding Light={StaticResource MbdConditionTextColor}, Dark={StaticResource White}}"
-                       Text="{Binding MindsetText}" />
+                <Label
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    Style="{StaticResource MindsetLabel}"
+                    Text="{Binding MindsetText}"
+                    TextColor="{AppThemeBinding Light={StaticResource MbdConditionTextColor},
+                                                Dark={StaticResource White}}" />
 
-                <Label Grid.Row="2"
-                       Grid.ColumnSpan="2"
-                       Grid.Column="0"
-                       Style="{StaticResource MbdConditionNameLabel}"
-                       TextColor="{AppThemeBinding Light={StaticResource MbdConditionTextColor}, Dark={StaticResource White}}"
-                       Text="{Binding InternalCondition.Name}" />
+                <Label
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    Style="{StaticResource MbdConditionNameLabel}"
+                    Text="{Binding InternalCondition.Name}"
+                    TextColor="{AppThemeBinding Light={StaticResource MbdConditionTextColor},
+                                                Dark={StaticResource White}}" />
 
-                <ScrollView x:Name="SummaryLabelScroll"
-                            Grid.Row="3"
-                            Grid.ColumnSpan="2"
-                            Grid.Column="0"
-                            Style="{StaticResource SummaryScrollView}">
+                <ScrollView
+                    x:Name="SummaryLabelScroll"
+                    Grid.Row="3"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    Style="{StaticResource SummaryScrollView}">
                     <VerticalStackLayout Padding="0,10,0,20">
-                        <Label Style="{StaticResource SummaryLabel}"
-                               TextColor="{AppThemeBinding Light=Black, Dark=White}"
-                               Text="{Binding Summary}" />
+                        <Label
+                            Style="{StaticResource SummaryLabel}"
+                            Text="{Binding Summary}"
+                            TextColor="{AppThemeBinding Light=Black,
+                                                        Dark=White}" />
                     </VerticalStackLayout>
                 </ScrollView>
 
-                <Grid Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" ColumnDefinitions="*,Auto">
-                    <Label Grid.Column="0"
-                           Style="{StaticResource CopyrightLabel}"
-                           TextColor="{StaticResource Gray500}"
-                           Text="© Mind Body Dictionary, LLC" />
+                <Grid
+                    Grid.Row="4"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    ColumnDefinitions="*,Auto">
+                    <Label
+                        Grid.Column="0"
+                        Style="{StaticResource CopyrightLabel}"
+                        Text="© Mind Body Dictionary, LLC"
+                        TextColor="{StaticResource Gray500}" />
 
-                    <HorizontalStackLayout Grid.Column="1" HorizontalOptions="End" VerticalOptions="Center">
+                    <HorizontalStackLayout
+                        Grid.Column="1"
+                        HorizontalOptions="End"
+                        VerticalOptions="Center">
                         <HorizontalStackLayout.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding ShareConditionSummaryCommand}" />
                         </HorizontalStackLayout.GestureRecognizers>
-                        <Label Text="Share"
-                               VerticalOptions="Center"
-                               Margin="0,0,5,0"
-                               TextColor="{AppThemeBinding Light={StaticResource MbdConditionTextColor}, Dark={StaticResource White}}"/>
-                                                <Image Source="{StaticResource IconShare}"
-                                                       HeightRequest="24"
-                                                       WidthRequest="24"
-                                                       VerticalOptions="Center"/>                    </HorizontalStackLayout>
+                        <Label
+                            Margin="0,0,5,0"
+                            Text="Share"
+                            TextColor="{AppThemeBinding Light={StaticResource MbdConditionTextColor},
+                                                        Dark={StaticResource White}}"
+                            VerticalOptions="Center" />
+                        <Image
+                            HeightRequest="24"
+                            Source="{StaticResource IconShare}"
+                            VerticalOptions="Center"
+                            WidthRequest="24" />
+                    </HorizontalStackLayout>
                 </Grid>
             </Grid>
         </Border>

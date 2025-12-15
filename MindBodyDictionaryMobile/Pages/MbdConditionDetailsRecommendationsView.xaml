@@ -1,11 +1,12 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:pages="clr-namespace:MindBodyDictionaryMobile.Pages"
-             xmlns:vm="clr-namespace:MindBodyDictionaryMobile.PageModels"
-             xmlns:converter="clr-namespace:MindBodyDictionaryMobile.Converter"
-             xmlns:fonts="clr-namespace:Fonts;assembly=MindBodyDictionaryMobile"
-             x:Class="MindBodyDictionaryMobile.Pages.MbdConditionDetailsRecommendationsView">
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="MindBodyDictionaryMobile.Pages.MbdConditionDetailsRecommendationsView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:converter="clr-namespace:MindBodyDictionaryMobile.Converter"
+    xmlns:fonts="clr-namespace:Fonts;assembly=MindBodyDictionaryMobile"
+    xmlns:pages="clr-namespace:MindBodyDictionaryMobile.Pages"
+    xmlns:vm="clr-namespace:MindBodyDictionaryMobile.PageModels">
 
     <ContentView.Resources>
         <ResourceDictionary>
@@ -16,45 +17,49 @@
 
     <ScrollView Style="{StaticResource ContentScrollView}">
         <VerticalStackLayout Style="{StaticResource MainContentStack}">
-            <Image Style="{StaticResource AppIconImage}"
-                   x:Name="FoodAffirmationsMindBodyLogo" />
+            <Image x:Name="FoodAffirmationsMindBodyLogo" Style="{StaticResource AppIconImage}" />
 
             <VerticalStackLayout Style="{StaticResource HeaderSection}">
-                <Label x:Name="RecommendationTitleLabel"
-                       Style="{StaticResource SubtitleLabel}"
-                       Text="Recommendations for" />
+                <Label
+                    x:Name="RecommendationTitleLabel"
+                    Style="{StaticResource SubtitleLabel}"
+                    Text="Recommendations for" />
 
-                <Label x:Name="RecommendationConditionLabel"
-                       Style="{StaticResource SectionTitleLabel}"
-                       Text="{Binding Condition.Name}" />
+                <Label
+                    x:Name="RecommendationConditionLabel"
+                    Style="{StaticResource SectionTitleLabel}"
+                    Text="{Binding Condition.Name}" />
             </VerticalStackLayout>
 
-                                    <Border Style="{StaticResource MbdConditionCardWithShadow}"                    Margin="0,10,0,0">
+            <Border Margin="0,10,0,0" Style="{StaticResource MbdConditionCardWithShadow}">
                 <VerticalStackLayout>
-                    <!-- Inner Tab Headers -->
-                    <HorizontalStackLayout HorizontalOptions="Fill" BackgroundColor="{StaticResource BarColor}">
-                        <Button Text="Foods"
-                                Command="{Binding SelectInnerTabCommand}"
-                                CommandParameter="Foods"
-                                Style="{StaticResource TabButton}"
-                                TextColor="{Binding SelectedInnerTab, ConverterParameter=Foods, Converter={StaticResource SelectedTabColorConverter}}"
-                                BackgroundColor="{Binding SelectedInnerTab, ConverterParameter=Foods, Converter={StaticResource SelectedTabBackgroundColorConverter}}"/>
+                    <!--  Inner Tab Headers  -->
+                    <HorizontalStackLayout BackgroundColor="{StaticResource BarColor}" HorizontalOptions="Fill">
+                        <Button
+                            BackgroundColor="{Binding SelectedInnerTab, ConverterParameter=Foods, Converter={StaticResource SelectedTabBackgroundColorConverter}}"
+                            Command="{Binding SelectInnerTabCommand}"
+                            CommandParameter="Foods"
+                            Style="{StaticResource TabButton}"
+                            Text="Foods"
+                            TextColor="{Binding SelectedInnerTab, ConverterParameter=Foods, Converter={StaticResource SelectedTabColorConverter}}" />
 
-                        <Button Text="Resources"
-          Command="{Binding SelectInnerTabCommand}"
-          CommandParameter="Resources"
-          Style="{StaticResource TabButton}"
-          TextColor="{Binding SelectedInnerTab, ConverterParameter=Resources, Converter={StaticResource SelectedTabColorConverter}}"
-          BackgroundColor="{Binding SelectedInnerTab, ConverterParameter=Resources, Converter={StaticResource SelectedTabBackgroundColorConverter}}"/>
-                        <Button Text="Products"
-                                Command="{Binding SelectInnerTabCommand}"
-                                CommandParameter="Products"
-                                Style="{StaticResource TabButton}"
-                                TextColor="{Binding SelectedInnerTab, ConverterParameter=Products, Converter={StaticResource SelectedTabColorConverter}}"
-                                BackgroundColor="{Binding SelectedInnerTab, ConverterParameter=Products, Converter={StaticResource SelectedTabBackgroundColorConverter}}"/>
-                                          </HorizontalStackLayout>
+                        <Button
+                            BackgroundColor="{Binding SelectedInnerTab, ConverterParameter=Resources, Converter={StaticResource SelectedTabBackgroundColorConverter}}"
+                            Command="{Binding SelectInnerTabCommand}"
+                            CommandParameter="Resources"
+                            Style="{StaticResource TabButton}"
+                            Text="Resources"
+                            TextColor="{Binding SelectedInnerTab, ConverterParameter=Resources, Converter={StaticResource SelectedTabColorConverter}}" />
+                        <Button
+                            BackgroundColor="{Binding SelectedInnerTab, ConverterParameter=Products, Converter={StaticResource SelectedTabBackgroundColorConverter}}"
+                            Command="{Binding SelectInnerTabCommand}"
+                            CommandParameter="Products"
+                            Style="{StaticResource TabButton}"
+                            Text="Products"
+                            TextColor="{Binding SelectedInnerTab, ConverterParameter=Products, Converter={StaticResource SelectedTabColorConverter}}" />
+                    </HorizontalStackLayout>
 
-                    <!-- Inner Tab Content -->
+                    <!--  Inner Tab Content  -->
                     <ContentView Content="{Binding CurrentInnerView}" />
                 </VerticalStackLayout>
             </Border>

@@ -1,46 +1,45 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:pageModels="clr-namespace:MindBodyDictionaryMobile.PageModels"
-             xmlns:models="clr-namespace:MindBodyDictionaryMobile.Models"
-             xmlns:controls="clr-namespace:MindBodyDictionaryMobile.Pages.Controls"
-             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             x:Class="MindBodyDictionaryMobile.Pages.ProjectListPage"
-             x:Name="ProjectList"
-             x:DataType="pageModels:ProjectListPageModel"
-             Title="Projects">
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="MindBodyDictionaryMobile.Pages.ProjectListPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:MindBodyDictionaryMobile.Pages.Controls"
+    xmlns:models="clr-namespace:MindBodyDictionaryMobile.Models"
+    xmlns:pageModels="clr-namespace:MindBodyDictionaryMobile.PageModels"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    x:Name="ProjectList"
+    Title="Projects"
+    x:DataType="pageModels:ProjectListPageModel">
 
 
     <ContentPage.Behaviors>
         <toolkit:EventToCommandBehavior
-            EventName="Appearing"
             BindingContext="{Binding Path=BindingContext, Source={x:Reference ProjectList}, x:DataType=ContentPage}"
-            Command="{Binding AppearingCommand}"/>
+            Command="{Binding AppearingCommand}"
+            EventName="Appearing" />
     </ContentPage.Behaviors>
     <Grid>
-      <ScrollView>
-        <VerticalStackLayout
-            BindableLayout.ItemsSource="{Binding Projects}"
-            Margin="{StaticResource LayoutPadding}"
-            Spacing="{StaticResource LayoutSpacing}">
-            <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="models:Project">
-                    <Border SemanticProperties.Description="{Binding Name, StringFormat='{0} Project'}">
-                        <VerticalStackLayout Style="{StaticResource ProjectListItemVerticalStackLayout}">
-                            <Label Text="{Binding Name}" Style="{StaticResource ProjectListItemNameLabel}" />
-                            <Label Text="{Binding Description}" />
-                        </VerticalStackLayout>
-                        <Border.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding NavigateToProjectCommand, Source={RelativeSource AncestorType={x:Type pageModels:ProjectListPageModel}}, x:DataType=pageModels:ProjectListPageModel}" CommandParameter="{Binding .}"/>
-                        </Border.GestureRecognizers>
-                    </Border>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </VerticalStackLayout>
-      </ScrollView>
+        <ScrollView>
+            <VerticalStackLayout
+                Margin="{StaticResource LayoutPadding}"
+                BindableLayout.ItemsSource="{Binding Projects}"
+                Spacing="{StaticResource LayoutSpacing}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:Project">
+                        <Border SemanticProperties.Description="{Binding Name, StringFormat='{0} Project'}">
+                            <VerticalStackLayout Style="{StaticResource ProjectListItemVerticalStackLayout}">
+                                <Label Style="{StaticResource ProjectListItemNameLabel}" Text="{Binding Name}" />
+                                <Label Text="{Binding Description}" />
+                            </VerticalStackLayout>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding NavigateToProjectCommand, Source={RelativeSource AncestorType={x:Type pageModels:ProjectListPageModel}}, x:DataType=pageModels:ProjectListPageModel}" CommandParameter="{Binding .}" />
+                            </Border.GestureRecognizers>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </VerticalStackLayout>
+        </ScrollView>
 
-        <controls:AddButton
-            Command="{Binding AddProjectCommand}"
-            SemanticProperties.Description="Add project" />
+        <controls:AddButton Command="{Binding AddProjectCommand}" SemanticProperties.Description="Add project" />
     </Grid>
 </ContentPage>

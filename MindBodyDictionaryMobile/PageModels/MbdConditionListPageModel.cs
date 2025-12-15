@@ -3,86 +3,94 @@ namespace MindBodyDictionaryMobile.PageModels;
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.Logging;
+using MindBodyDictionaryMobile.Data;
 using MindBodyDictionaryMobile.Models;
 
 public partial class MbdConditionListPageModel : ObservableObject
 {
-    private readonly MbdConditionRepository _repository;
-    private readonly SeedDataService _seedDataService;
+  private readonly MbdConditionRepository _mbdConditionRepository;
+  private readonly ILogger<MbdConditionListPageModel> _logger;
 
-    [ObservableProperty]
-    private ObservableCollection<MbdCondition> _mbdConditions = new();
+  [ObservableProperty]
+  private string _conditionNamesDebug = string.Empty;
 
-    [ObservableProperty]
-    private string _conditionNamesDebug = string.Empty;
+  [ObservableProperty]
+  private int _conditionCount;
 
-    [ObservableProperty]
-    private int _conditionCount;
+  [ObservableProperty]
+  private string _lastSyncTime = "Never";
 
-    [ObservableProperty]
-    private string _lastSyncTime = "Never";
+  [ObservableProperty]
+  private string _syncStatus = "Unknown";
 
-    [ObservableProperty]
-    private string _syncStatus = "Idle";
+  [ObservableProperty]
+  private string _conditionSource = "Local DB";
 
-    [ObservableProperty]
-    private string _conditionSource = "Unknown";
+  [ObservableProperty]
+  private string _loadFromApiCommandDetails = "Tap to load from API";
 
-    [ObservableProperty]
-    private string _loadFromApiCommandDetails = string.Empty;
+  [ObservableProperty]
+  private string _lastApiResponse = "None";
 
-    [ObservableProperty]
-    private string _lastApiResponse = string.Empty;
+  [ObservableProperty]
+  private ObservableCollection<MbdCondition> _mbdConditions = [];
 
-    public MbdConditionListPageModel(MbdConditionRepository repository, SeedDataService seedDataService)
+  public MbdConditionListPageModel(MbdConditionRepository mbdConditionRepository, ILogger<MbdConditionListPageModel> logger) {
+    _mbdConditionRepository = mbdConditionRepository;
+    _logger = logger;
+  }
+
+  [RelayCommand]
+  private async Task Appearing() {
+    await LoadConditions();
+  }
+
+  [RelayCommand]
+  private async Task LoadFromApi() {
+    LoadFromApiCommandDetails = "Loading...";
+    try
     {
-        _repository = repository;
-        _seedDataService = seedDataService;
+      // Placeholder for API load logic
+      await Task.Delay(1000);
+      LoadFromApiCommandDetails = "Load from API";
+      LastApiResponse = "Simulated Success";
+      await LoadConditions();
     }
-
-    [RelayCommand]
-    private async Task Appearing()
+    catch (Exception ex)
     {
-        await LoadDataAsync();
+      _logger.LogError(ex, "Error loading from API");
+      LastApiResponse = $"Error: {ex.Message}";
+      LoadFromApiCommandDetails = "Retry Load";
     }
+  }
 
-    [RelayCommand]
-    private async Task LoadFromApi()
-    {
-        SyncStatus = "Loading from API...";
-        try
-        {
-            await _seedDataService.SeedConditionsAsync(true);
-            SyncStatus = "Success";
-            LastSyncTime = DateTime.Now.ToString("g");
-            await LoadDataAsync();
-        }
-        catch (Exception ex)
-        {
-            SyncStatus = $"Error: {ex.Message}";
-            LastApiResponse = ex.ToString();
-        }
-    }
+  [RelayCommand]
+  private async Task AddmbdCondition() {
+    // Placeholder for adding condition
+    await AppShell.DisplaySnackbarAsync("Add Condition clicked (Not implemented)");
+  }
 
-    [RelayCommand]
-    private Task CopyDebugInfo()
-    {
-        var debugInfo = $"Count: {ConditionCount}\nSync: {SyncStatus}\nTime: {LastSyncTime}\nResponse: {LastApiResponse}";
-        return Microsoft.Maui.ApplicationModel.DataTransfer.Clipboard.Default.SetTextAsync(debugInfo);
-    }
+  [RelayCommand]
+  private async Task CopyDebugInfo() {
+    var debugInfo = $"Count: {ConditionCount}, Sync: {SyncStatus}, Last: {LastSyncTime}";
+    await Clipboard.SetTextAsync(debugInfo);
+    await AppShell.DisplaySnackbarAsync("Debug info copied to clipboard");
+  }
 
-    [RelayCommand]
-    private Task AddmbdCondition()
+  private async Task LoadConditions() {
+    try
     {
-        // Placeholder for add logic
-        return Task.CompletedTask;
+      var conditions = await _mbdConditionRepository.ListAsync();
+      MbdConditions = new ObservableCollection<MbdCondition>(conditions);
+      ConditionCount = MbdConditions.Count;
+      ConditionNamesDebug = string.Join(", ", conditions.Select(c => c.Name));
+      ConditionSource = "Database";
     }
-
-    private async Task LoadDataAsync()
+    catch (Exception ex)
     {
-        var items = await _repository.ListAsync();
-        MbdConditions = new ObservableCollection<MbdCondition>(items);
-        ConditionCount = items.Count;
-        ConditionNamesDebug = string.Join(", ", items.Select(c => c.Name));
+      _logger.LogError(ex, "Error loading conditions");
+      SyncStatus = "Error loading";
     }
+  }
 }

@@ -1,39 +1,58 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8" ?>
 <ContentPage
+    x:Class="MindBodyDictionaryMobile.Pages.AboutPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:pm="clr-namespace:MindBodyDictionaryMobile.PageModels"
-    x:DataType="pm:AboutPageModel"
-    x:Class="MindBodyDictionaryMobile.Pages.AboutPage"
-    Title="About">
+    Title="About"
+    x:DataType="pm:AboutPageModel">
 
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="20">
 
-            <!-- Logo -->
-            <Image Style="{StaticResource AboutPageLogoImage}"/>
+            <!--  Logo  -->
+            <Image AutomationId="AboutPageLogo" Style="{StaticResource AboutPageLogoImage}" />
 
-            <!-- App Name and Version -->
+            <!--  App Name and Version  -->
             <VerticalStackLayout HorizontalOptions="Center" Spacing="5">
-                <Label Text="{Binding AppName}" Style="{StaticResource AboutAppNameLabel}"/>
+                <Label
+                    AutomationId="AppNameLabel"
+                    Style="{StaticResource AboutAppNameLabel}"
+                    Text="{Binding AppName}" />
 
-                <Label Text="{Binding AppVersion}" Style="{StaticResource AboutAppVersionLabel}"/>
+                <Label
+                    AutomationId="AppVersionLabel"
+                    Style="{StaticResource AboutAppVersionLabel}"
+                    Text="{Binding AppVersion}" />
             </VerticalStackLayout>
 
-            <!-- Divider -->
-            <BoxView Style="{StaticResource DividerBoxView}"/>
+            <!--  Divider  -->
+            <BoxView Style="{StaticResource DividerBoxView}" />
 
-            <!-- About Description -->
-            <Label Text="Discover the mind-body connection and explore how physical symptoms relate to emotional and psychological states." Style="{StaticResource AboutDescriptionLabel}"/>
+            <!--  About Description  -->
+            <Label
+                AutomationId="AboutDescriptionLabel"
+                Style="{StaticResource AboutDescriptionLabel}"
+                Text="Discover the mind-body connection and explore how physical symptoms relate to emotional and psychological states." />
 
-            <!-- Website Button -->
-            <Button Text="Visit Website" Command="{Binding VisitWebsiteCommand}" Style="{StaticResource AboutPageActionButton}" BackgroundColor="{StaticResource Primary}"/>
+            <!--  Website Button  -->
+            <Button
+                AutomationId="VisitWebsiteButton"
+                BackgroundColor="{StaticResource Primary}"
+                Command="{Binding VisitWebsiteCommand}"
+                Style="{StaticResource AboutPageActionButton}"
+                Text="Visit Website" />
 
-            <!-- Email Button -->
-            <Button Text="Send Feedback" Command="{Binding SendEmailCommand}" Style="{StaticResource AboutPageActionButton}" BackgroundColor="{StaticResource Secondary}"/>
+            <!--  Email Button  -->
+            <Button
+                AutomationId="SendFeedbackButton"
+                BackgroundColor="{StaticResource Secondary}"
+                Command="{Binding SendEmailCommand}"
+                Style="{StaticResource AboutPageActionButton}"
+                Text="Send Feedback" />
 
-            <!-- Copyright -->
-            <Label Text="© 2025 Mind Body Dictionary, LLC. All rights reserved." Style="{StaticResource AboutPageCopyrightLabel}"/>
+            <!--  Copyright  -->
+            <Label Style="{StaticResource AboutPageCopyrightLabel}" Text="© 2025 Mind Body Dictionary, LLC. All rights reserved." />
 
         </VerticalStackLayout>
     </ScrollView>
