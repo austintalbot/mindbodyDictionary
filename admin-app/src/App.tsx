@@ -1,13 +1,23 @@
 import { useState } from 'react';
 import './App.css';
+import AilmentsTab from './components/AilmentsTab';
 
 function AppContent() {
   const [activeTab, setActiveTab] = useState('ailments');
 
+  const renderContent = () => {
+    switch (activeTab) {
+      case 'ailments':
+        return <AilmentsTab />;
+      default:
+        return <p>Tab content for {activeTab} not yet implemented</p>;
+    }
+  };
+
   return (
-    <div style={{ padding: '20px', fontFamily: 'sans-serif' }}>
+    <div style={{ minHeight: '100vh', padding: '20px', backgroundColor: '#f5f5f5' }}>
       <h1>MBD Admin Portal</h1>
-      <p>Manage your Mind-Body Dictionary content</p>
+      <p>Active tab: {activeTab}</p>
       
       <div style={{ marginTop: '20px', display: 'flex', gap: '10px' }}>
         {['ailments', 'images', 'contacts', 'notifications', 'database'].map((tab) => (
@@ -28,8 +38,8 @@ function AppContent() {
         ))}
       </div>
 
-      <div style={{ marginTop: '20px', padding: '20px', border: '1px solid #ccc', borderRadius: '4px' }}>
-        <p>Selected: {activeTab}</p>
+      <div style={{ marginTop: '20px', padding: '20px', backgroundColor: '#fff', borderRadius: '4px', border: '1px solid #ddd' }}>
+        {renderContent()}
       </div>
     </div>
   );
