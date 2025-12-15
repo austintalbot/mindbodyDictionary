@@ -11,6 +11,7 @@ public class ImageCacheService(ImageCacheRepository imageCacheRepository, ILogge
   private readonly ImageCacheRepository _imageCacheRepository = imageCacheRepository;
   private readonly ILogger<ImageCacheService> _logger = logger;
   private const string ImagesResourcePath = "images";
+  private const string RemoteImageBaseUrl = "https://mbdstoragesa.blob.core.windows.net/mbd-images/";
 
   /// <summary>
   /// Loads all images from Resources/Raw/images into the local cache database.
@@ -49,7 +50,7 @@ public class ImageCacheService(ImageCacheRepository imageCacheRepository, ILogge
         return ImageSource.FromStream(() => new MemoryStream(cachedImage.ImageData));
       }
 
-      // If not in cache, load from resources and cache it
+      // If not in cache, try resources first, then remote
       var imagePath = $"{ImagesResourcePath}/{fileName}";
       try
       {
@@ -59,22 +60,36 @@ public class ImageCacheService(ImageCacheRepository imageCacheRepository, ILogge
         var imageData = memoryStream.ToArray();
 
         // Cache the image in the database
-        var imageCache = new ImageCache
-        {
-          FileName = fileName,
-          ImageData = imageData,
-          CachedAt = DateTime.UtcNow,
-          ContentType = GetContentType(fileName)
-        };
-
-        await _imageCacheRepository.SaveItemAsync(imageCache);
+        await SaveToCacheAsync(fileName, imageData);
         _logger.LogDebug("Cached image from resources: {FileName}", fileName);
 
         return ImageSource.FromStream(() => new MemoryStream(imageData));
       }
-      catch (Exception e)
+      catch (Exception)
       {
-        _logger.LogWarning(e, "Image not found in resources: {FileName}", fileName);
+        _logger.LogWarning("Image not found in resources: {FileName}, trying remote...", fileName);
+
+        try
+        {
+          using var httpClient = new HttpClient();
+          // Handle spaces in URL
+          var url = $"{RemoteImageBaseUrl}{Uri.EscapeDataString(fileName)}";
+          _logger.LogInformation("Downloading image from: {Url}", url);
+
+          var imageData = await httpClient.GetByteArrayAsync(url);
+
+          if (imageData.Length > 0)
+          {
+            await SaveToCacheAsync(fileName, imageData);
+            _logger.LogInformation("Successfully downloaded and cached: {FileName}", fileName);
+            return ImageSource.FromStream(() => new MemoryStream(imageData));
+          }
+        }
+        catch (Exception ex)
+        {
+          _logger.LogError(ex, "Failed to download image from remote: {FileName}", fileName);
+        }
+
         return null;
       }
     }
@@ -83,6 +98,18 @@ public class ImageCacheService(ImageCacheRepository imageCacheRepository, ILogge
       _logger.LogError(e, "Error retrieving image: {FileName}", fileName);
       return null;
     }
+  }
+
+  private async Task SaveToCacheAsync(string fileName, byte[] imageData) {
+    var imageCache = new ImageCache
+    {
+      FileName = fileName,
+      ImageData = imageData,
+      CachedAt = DateTime.UtcNow,
+      ContentType = GetContentType(fileName)
+    };
+
+    await _imageCacheRepository.SaveItemAsync(imageCache);
   }
 
   /// <summary>

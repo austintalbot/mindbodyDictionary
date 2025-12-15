@@ -153,17 +153,20 @@ public class SeedDataService(ProjectRepository projectRepository, TaskRepository
   /// Seeds conditions from the Azure function API into the SQLite database.
   /// Falls back to local seed file if the API is unavailable.
   /// </summary>
-  public async Task SeedConditionsAsync() {
+  public async Task SeedConditionsAsync(bool forceUpdate = false) {
     try
     {
-      _logger.LogInformation("Starting to seed conditions");
+      _logger.LogInformation("Starting to seed conditions (Force: {Force})", forceUpdate);
 
-      // Only seed if DB is empty
-      var existingConditions = await _mbdConditionRepository.ListAsync();
-      if (existingConditions != null && existingConditions.Count > 0)
+      // Only seed if DB is empty, unless forced
+      if (!forceUpdate)
       {
-        _logger.LogInformation($"Database already has {existingConditions.Count} conditions. Skipping seeding.");
-        return;
+        var existingConditions = await _mbdConditionRepository.ListAsync();
+        if (existingConditions != null && existingConditions.Count > 0)
+        {
+          _logger.LogInformation($"Database already has {existingConditions.Count} conditions. Skipping seeding.");
+          return;
+        }
       }
 
       // Try API first
@@ -178,7 +181,7 @@ public class SeedDataService(ProjectRepository projectRepository, TaskRepository
         _logger.LogError(ex, "API call failed, will try local seed file");
       }
 
-      if (!conditionsLoaded)
+      if (!conditionsLoaded && !forceUpdate)
       {
         _logger.LogInformation("API failed, attempting to load conditions from local seed file");
         try
@@ -217,9 +220,10 @@ public class SeedDataService(ProjectRepository projectRepository, TaskRepository
       // Try multiple possible endpoints
       var apiUrls = new[]
       {
-                "http://127.0.0.1:7071/api/GetMbdConditionsTable",  // Direct localhost
-				"http://localhost:7071/api/GetMbdConditionsTable",  // Named localhost
-			};
+        "https://mbd-admin-api-staging.azurewebsites.net/api/GetMbdConditionsTable?code=QdxCTyJyLD418FuUxNkGK8-ECvMI7oekYqCQIMaIm2f1AzFuFvu1Dw==",
+        "http://127.0.0.1:7071/api/GetMbdConditionsTable",  // Direct localhost
+        "http://localhost:7071/api/GetMbdConditionsTable",  // Named localhost
+      };
 
 #if DEBUG
       // In debug mode, also try to get the actual host IP from environment
@@ -370,7 +374,7 @@ public class SeedDataService(ProjectRepository projectRepository, TaskRepository
   /// Saves a list of conditions to the database.
   /// Handles both API responses and local seed file formats.
   /// </summary>
-  private async Task SaveConditionsToDatabase(List<MbdCondition> conditions) {
+  public async Task SaveConditionsToDatabase(List<MbdCondition> conditions) {
     try
     {
       _logger.LogInformation($"Processing {conditions.Count} conditions for database save");
