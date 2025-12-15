@@ -5,6 +5,7 @@ using OpenQA.Selenium;
 using System;
 using System.IO;
 using Xunit.Abstractions;
+using System.Linq;
 
 namespace MindBodyDictionaryMobile.UITests;
 
@@ -41,6 +42,56 @@ public abstract class BaseTest : IDisposable
 
         // Set implicit wait for element finding
         Driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
+
+        HandlePopups();
+    }
+
+    private void HandlePopups()
+    {
+        try
+        {
+            // 1. Handle OS Notification Permission "Allow"
+            // Common ID for Android 10+ permission controller
+            var allowButtons = Driver.FindElements(By.Id("com.android.permissioncontroller:id/permission_allow_button"));
+            if (allowButtons.Count > 0)
+            {
+                Output.WriteLine("Popup: Found Notification Permission 'Allow' button. Clicking...");
+                allowButtons[0].Click();
+            }
+            else 
+            {
+                 // Fallback: Try finding by text "Allow" if ID fails (less reliable but useful)
+                 var allowTextButtons = Driver.FindElements(By.XPath("//*[@text='Allow']"));
+                 if (allowTextButtons.Count > 0)
+                 {
+                     Output.WriteLine("Popup: Found 'Allow' button by text. Clicking...");
+                     allowTextButtons[0].Click();
+                 }
+            }
+
+            // 2. Handle Disclaimer Popup
+            var disclaimerButtons = Driver.FindElements(MobileBy.AccessibilityId("DisclaimerUnderstandButton"));
+            if (disclaimerButtons.Count > 0)
+            {
+                Output.WriteLine("Popup: Found Disclaimer 'I Understand' button by ID. Clicking...");
+                disclaimerButtons[0].Click();
+            }
+            else
+            {
+                // Fallback: Try finding by text "I Understand"
+                var disclaimerTextButtons = Driver.FindElements(By.XPath("//*[@text='I Understand']"));
+                if (disclaimerTextButtons.Count > 0)
+                {
+                    Output.WriteLine("Popup: Found Disclaimer 'I Understand' button by text. Clicking...");
+                    disclaimerTextButtons[0].Click();
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Output.WriteLine($"Warning: Error handling popups: {ex.Message}");
+            // Don't fail the test if popup handling fails, just log it.
+        }
     }
 
     private AppiumOptions GetAndroidOptions()
@@ -49,13 +100,14 @@ public abstract class BaseTest : IDisposable
         {
             AutomationName = "UiAutomator2",
             PlatformName = "Android",
-            PlatformVersion = Environment.GetEnvironmentVariable("ANDROID_PLATFORM_VERSION") ?? "13",
-            DeviceName = Environment.GetEnvironmentVariable("ANDROID_DEVICE_NAME") ?? "emulator-5554"
+            PlatformVersion = Environment.GetEnvironmentVariable("ANDROID_PLATFORM_VERSION") ?? "16",
+            DeviceName = Environment.GetEnvironmentVariable("ANDROID_DEVICE_NAME") ?? "R5CWC4JL3EY"
         };
 
         // App package and activity
         options.AddAdditionalAppiumOption("appPackage", "com.mbd.mindbodydictionarymobile");
-        options.AddAdditionalAppiumOption("appActivity", "crc6452ffdc5b34af3a0f.MainActivity");
+        options.AddAdditionalAppiumOption("appActivity", "crc64c9c9d1c5de39233b.MainActivity");
+        options.AddAdditionalAppiumOption("noReset", true);
 
         // Optional: Path to APK if needed
         var apkPath = Environment.GetEnvironmentVariable("ANDROID_APK_PATH");

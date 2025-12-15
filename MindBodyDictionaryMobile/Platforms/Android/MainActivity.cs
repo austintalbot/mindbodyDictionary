@@ -6,6 +6,9 @@ using Android.OS;
 using Firebase.Messaging;
 
 [Activity(Theme = "@style/Maui.SplashTheme", MainLauncher = true, LaunchMode = LaunchMode.SingleTop, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize | ConfigChanges.Density)]
+[IntentFilter(new[] { Android.Content.Intent.ActionView },
+    Categories = new[] { Android.Content.Intent.CategoryDefault, Android.Content.Intent.CategoryBrowsable },
+    DataScheme = "mindbodydictionary")]
 public class MainActivity : MauiAppCompatActivity
 {
   public const string CHANNEL_ID = "mindbody_notifications";

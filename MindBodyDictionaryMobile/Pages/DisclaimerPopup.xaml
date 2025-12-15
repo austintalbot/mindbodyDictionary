@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <toolkit:Popup
     x:Class="MindBodyDictionaryMobile.Pages.DisclaimerPopup"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
@@ -16,6 +16,7 @@
     <VerticalStackLayout Style="{StaticResource DisclaimerPopupVerticalStackLayout}">
         <Label Style="{StaticResource DisclaimerPopupMessageLabel}" Text="I understand that the Mind Body Dictionary is for informational purposes only. Mind Body Dictionary does not diagnose, treat, prevent, or cure any illness. If you have any questions concerning your health please consult with your Doctor." />
         <Button
+            AutomationId="DisclaimerUnderstandButton"
             Clicked="OnYesButtonClicked"
             Style="{StaticResource DisclaimerPopupButton}"
             Text="I Understand" />
