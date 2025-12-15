@@ -107,7 +107,8 @@ public abstract class BaseTest : IDisposable
         // App package and activity
         options.AddAdditionalAppiumOption("appPackage", "com.mbd.mindbodydictionarymobile");
         options.AddAdditionalAppiumOption("appActivity", "crc64c9c9d1c5de39233b.MainActivity");
-        options.AddAdditionalAppiumOption("noReset", true);
+        options.AddAdditionalAppiumOption("noReset", false);
+        options.AddAdditionalAppiumOption("autoGrantPermissions", true);
 
         // Optional: Path to APK if needed
         var apkPath = Environment.GetEnvironmentVariable("ANDROID_APK_PATH");

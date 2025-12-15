@@ -208,6 +208,6 @@ The app now has a robust UI testing infrastructure that can be extended as new f
 
 ---
 
-**Implementation Date**: December 2024  
-**Branch**: copilot/add-appium-xunit-tests  
+**Implementation Date**: December 2024
+**Branch**: copilot/add-appium-xunit-tests
 **Status**: ✅ Complete and Ready for Review

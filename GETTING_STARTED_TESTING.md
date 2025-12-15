@@ -150,8 +150,8 @@ cd MindBodyDictionaryMobile.UITests
 dotnet test
 
 # Run tests for specific platform
-dotnet test --filter "Platform=Android"
-dotnet test --filter "Platform=iOS"
+dotnet test --filter "Displayname~Android"
+dotnet test --filter "Displayname~iOS"
 
 # Run specific test class
 dotnet test --filter "FullyQualifiedName~HomePageTests"

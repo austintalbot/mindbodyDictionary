@@ -23,6 +23,7 @@ We follow these naming conventions for AutomationId values:
 4. **Unique**: Each AutomationId should be unique within the app
 
 Examples:
+
 - ✅ Good: `"MbdConditionSearchBar"`, `"RefreshConditionsButton"`, `"ConditionsList"`
 - ❌ Bad: `"searchbar"`, `"btn1"`, `"list"`
 
@@ -30,117 +31,117 @@ Examples:
 
 ### AppShell.xaml (Navigation)
 
-| Element | AutomationId | Description |
-|---------|--------------|-------------|
-| Home Shell Content | `HomeShellContent` | Main navigation to Home page |
-| Search Shell Content | `SearchShellContent` | Main navigation to Search page |
-| Manage Meta Shell Content | `ManageMetaShellContent` | Main navigation to Manage Meta page |
-| Notifications Shell Content | `NotificationsShellContent` | Main navigation to Notifications page |
-| Premium Shell Content | `PremiumShellContent` | Main navigation to Premium/Upgrade page |
-| About Shell Content | `AboutShellContent` | Main navigation to About page |
-| FAQ Shell Content | `FaqShellContent` | Main navigation to FAQ page |
-| Image Cache Shell Content | `ImageCacheShellContent` | Debug navigation to Image Cache page |
+| Element                         | AutomationId                   | Description                                |
+| ------------------------------- | ------------------------------ | ------------------------------------------ |
+| Home Shell Content              | `HomeShellContent`             | Main navigation to Home page               |
+| Search Shell Content            | `SearchShellContent`           | Main navigation to Search page             |
+| Manage Meta Shell Content       | `ManageMetaShellContent`       | Main navigation to Manage Meta page        |
+| Notifications Shell Content     | `NotificationsShellContent`    | Main navigation to Notifications page      |
+| Premium Shell Content           | `PremiumShellContent`          | Main navigation to Premium/Upgrade page    |
+| About Shell Content             | `AboutShellContent`            | Main navigation to About page              |
+| FAQ Shell Content               | `FaqShellContent`              | Main navigation to FAQ page                |
+| Image Cache Shell Content       | `ImageCacheShellContent`       | Debug navigation to Image Cache page       |
 | Notification Test Shell Content | `NotificationTestShellContent` | Debug navigation to Notification Test page |
-| Theme Segmented Control | `ThemeSegmentedControl` | Theme selection control (Light/Dark) |
+| Theme Segmented Control         | `ThemeSegmentedControl`        | Theme selection control (Light/Dark)       |
 
 ### MbdConditionHomePage.xaml
 
-| Element | AutomationId | Description |
-|---------|--------------|-------------|
-| App Logo | `AppLogo` | Main app logo image |
-| Search Bar | `MbdConditionSearchBar` | Search bar for conditions |
-| Conditions List | `ConditionsList` | Collection view displaying random conditions |
-| Refresh Button | `RefreshConditionsButton` | Button to refresh the conditions list |
+| Element         | AutomationId              | Description                                  |
+| --------------- | ------------------------- | -------------------------------------------- |
+| App Logo        | `AppLogo`                 | Main app logo image                          |
+| Search Bar      | `MbdConditionSearchBar`   | Search bar for conditions                    |
+| Conditions List | `ConditionsList`          | Collection view displaying random conditions |
+| Refresh Button  | `RefreshConditionsButton` | Button to refresh the conditions list        |
 
 ### SearchPage.xaml
 
-| Element | AutomationId | Description |
-|---------|--------------|-------------|
-| Search Bar | `MbdConditionSearchBar` | Search bar for filtering conditions |
-| Condition Collection View | `ConditionCollectionView` | Grid of condition cards |
+| Element                   | AutomationId              | Description                         |
+| ------------------------- | ------------------------- | ----------------------------------- |
+| Search Bar                | `MbdConditionSearchBar`   | Search bar for filtering conditions |
+| Condition Collection View | `ConditionCollectionView` | Grid of condition cards             |
 
 ### NotificationSettingsPage.xaml
 
-| Element | AutomationId | Description |
-|---------|--------------|-------------|
-| Status Message Label | `StatusMessageLabel` | Label showing device notification status |
-| Register Button | `RegisterNotificationsButton` | Button to register for notifications |
-| Deregister Button | `DeregisterNotificationsButton` | Button to deregister from notifications |
+| Element              | AutomationId                    | Description                              |
+| -------------------- | ------------------------------- | ---------------------------------------- |
+| Status Message Label | `StatusMessageLabel`            | Label showing device notification status |
+| Register Button      | `RegisterNotificationsButton`   | Button to register for notifications     |
+| Deregister Button    | `DeregisterNotificationsButton` | Button to deregister from notifications  |
 
 ### UpgradePage.xaml (Premium)
 
-| Element | AutomationId | Description |
-|---------|--------------|-------------|
-| Logo | `MindBodyDictionaryLogo` | App logo on upgrade page |
-| Privacy Policy Button | `PrivacyPolicyButton` | Button to view privacy policy |
-| Terms Button | `TermsButton` | Button to view terms of use |
-| Subscribe Button | `SubscribeButton` | Button to purchase subscription |
-| Restore Button | `RestoreButton` | Button to restore previous subscription |
+| Element               | AutomationId             | Description                             |
+| --------------------- | ------------------------ | --------------------------------------- |
+| Logo                  | `MindBodyDictionaryLogo` | App logo on upgrade page                |
+| Privacy Policy Button | `PrivacyPolicyButton`    | Button to view privacy policy           |
+| Terms Button          | `TermsButton`            | Button to view terms of use             |
+| Subscribe Button      | `SubscribeButton`        | Button to purchase subscription         |
+| Restore Button        | `RestoreButton`          | Button to restore previous subscription |
 
 ### MbdConditionDetailPage.xaml
 
-| Element | AutomationId | Description |
-|---------|--------------|-------------|
-| Delete Toolbar Item | `DeleteToolbarItem` | Toolbar button to delete condition |
-| Ailment Details TabView | `AilmentDetailsTabview` | Main tab view container |
-| Problem Tab | `ProblemTab` | Tab for problem/mindset content |
-| Affirmations Tab | `AffirmationsTab` | Tab for affirmations content |
-| Recommendations Tab | `RecommendationsTab` | Tab for recommendations |
-| Recommendations TabView | `RecommendationsTabView` | Sub-tab view for recommendations |
+| Element                 | AutomationId             | Description                        |
+| ----------------------- | ------------------------ | ---------------------------------- |
+| Delete Toolbar Item     | `DeleteToolbarItem`      | Toolbar button to delete condition |
+| Ailment Details TabView | `AilmentDetailsTabview`  | Main tab view container            |
+| Problem Tab             | `ProblemTab`             | Tab for problem/mindset content    |
+| Affirmations Tab        | `AffirmationsTab`        | Tab for affirmations content       |
+| Recommendations Tab     | `RecommendationsTab`     | Tab for recommendations            |
+| Recommendations TabView | `RecommendationsTabView` | Sub-tab view for recommendations   |
 
 ### MbdConditionListPage.xaml
 
-| Element | AutomationId | Description |
-|---------|--------------|-------------|
-| Conditions Collection View | `MbdConditionsCollectionView` | List of all conditions |
-| Load from API Button | `LoadFromApiButton` | Button to load conditions from API |
-| Add Condition Button | `AddConditionButton` | Button to add new condition |
+| Element                    | AutomationId                  | Description                        |
+| -------------------------- | ----------------------------- | ---------------------------------- |
+| Conditions Collection View | `MbdConditionsCollectionView` | List of all conditions             |
+| Load from API Button       | `LoadFromApiButton`           | Button to load conditions from API |
+| Add Condition Button       | `AddConditionButton`          | Button to add new condition        |
 
 ### AboutPage.xaml
 
-| Element | AutomationId | Description |
-|---------|--------------|-------------|
-| About Page Logo | `AboutPageLogo` | Logo image on about page |
-| App Name Label | `AppNameLabel` | Label displaying app name |
-| App Version Label | `AppVersionLabel` | Label displaying app version |
-| About Description Label | `AboutDescriptionLabel` | Description text |
-| Visit Website Button | `VisitWebsiteButton` | Button to visit website |
-| Send Feedback Button | `SendFeedbackButton` | Button to send feedback email |
+| Element                 | AutomationId            | Description                   |
+| ----------------------- | ----------------------- | ----------------------------- |
+| About Page Logo         | `AboutPageLogo`         | Logo image on about page      |
+| App Name Label          | `AppNameLabel`          | Label displaying app name     |
+| App Version Label       | `AppVersionLabel`       | Label displaying app version  |
+| About Description Label | `AboutDescriptionLabel` | Description text              |
+| Visit Website Button    | `VisitWebsiteButton`    | Button to visit website       |
+| Send Feedback Button    | `SendFeedbackButton`    | Button to send feedback email |
 
 ### FaqPage.xaml
 
-| Element | AutomationId | Description |
-|---------|--------------|-------------|
+| Element             | AutomationId        | Description                  |
+| ------------------- | ------------------- | ---------------------------- |
 | FAQ Collection View | `FaqCollectionView` | Collection view of FAQ items |
 
 ### ManageMetaPage.xaml
 
-| Element | AutomationId | Description |
-|---------|--------------|-------------|
-| Reset App Toolbar Item | `ResetAppToolbarItem` | Toolbar button to reset app |
+| Element                | AutomationId           | Description                     |
+| ---------------------- | ---------------------- | ------------------------------- |
+| Reset App Toolbar Item | `ResetAppToolbarItem`  | Toolbar button to reset app     |
 | Save Categories Button | `SaveCategoriesButton` | Button to save category changes |
-| Add Category Button | `AddCategoryButton` | Button to add new category |
-| Save Tags Button | `SaveTagsButton` | Button to save tag changes |
-| Add Tag Button | `AddTagButton` | Button to add new tag |
+| Add Category Button    | `AddCategoryButton`    | Button to add new category      |
+| Save Tags Button       | `SaveTagsButton`       | Button to save tag changes      |
+| Add Tag Button         | `AddTagButton`         | Button to add new tag           |
 
 ### ImageCachePage.xaml
 
-| Element | AutomationId | Description |
-|---------|--------------|-------------|
-| Refresh Cache Button | `RefreshCacheButton` | Button to refresh image cache |
-| Clear Cache Button | `ClearCacheButton` | Button to clear image cache |
-| Reload Stats Button | `ReloadStatsButton` | Button to reload cache statistics |
+| Element              | AutomationId         | Description                       |
+| -------------------- | -------------------- | --------------------------------- |
+| Refresh Cache Button | `RefreshCacheButton` | Button to refresh image cache     |
+| Clear Cache Button   | `ClearCacheButton`   | Button to clear image cache       |
+| Reload Stats Button  | `ReloadStatsButton`  | Button to reload cache statistics |
 
 ### NotificationTestPage.xaml
 
-| Element | AutomationId | Description |
-|---------|--------------|-------------|
+| Element                        | AutomationId                  | Description                        |
+| ------------------------------ | ----------------------------- | ---------------------------------- |
 | Test Local Notification Button | `TestLocalNotificationButton` | Button to test local notifications |
 
 ### MbdConditionDetailsAffirmationsView.xaml
 
-| Element | AutomationId | Description |
-|---------|--------------|-------------|
+| Element                   | AutomationId              | Description                    |
+| ------------------------- | ------------------------- | ------------------------------ |
 | Affirmation Carousel View | `AffirmationCarouselView` | Carousel view for affirmations |
 
 ## How to Add AutomationId to New Elements
@@ -150,6 +151,7 @@ When adding new UI elements or creating new pages, follow these steps:
 ### 1. Identify Testable Elements
 
 Add AutomationId to elements that:
+
 - Users interact with (buttons, text fields, switches)
 - Display important information (labels with dynamic content)
 - Represent collections or lists
@@ -187,6 +189,7 @@ Add AutomationId to elements that:
 ### 3. Document the AutomationId
 
 Update this document with:
+
 - Page name
 - Element type
 - AutomationId value
@@ -204,11 +207,11 @@ public void MyPage_MyButton_IsClickable(Platform platform)
 {
     // Arrange
     InitializeDriver(platform);
-    
+
     // Act
     var button = Driver!.FindElement(By.Id("MyActionButton"));
     button.Click();
-    
+
     // Assert
     // Add assertions here
 }
@@ -274,17 +277,19 @@ Assert.True(button.Enabled);
 ```csharp
 // Wait for element to be visible
 var wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(10));
-var element = wait.Until(driver => 
+var element = wait.Until(driver =>
     driver.FindElement(By.Id("ConditionsList")));
 ```
 
 ## Platform Differences
 
 ### Android
+
 - AutomationId maps to `content-desc` attribute
 - Access via `By.Id()` in Appium
 
 ### iOS
+
 - AutomationId maps to `accessibilityIdentifier`
 - Access via `By.Id()` in Appium
 
@@ -316,6 +321,7 @@ Both platforms work the same way from the test perspective when using Automation
 ## Updates
 
 This document should be updated whenever:
+
 - New pages are added
 - New testable elements are added
 - AutomationIds are changed or removed
