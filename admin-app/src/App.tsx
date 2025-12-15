@@ -1,78 +1,42 @@
 import { useState } from 'react';
 import './App.css';
-import AilmentsTab from './components/AilmentsTab';
-import ImagesTab from './components/ImagesTab';
-import ContactsTab from './components/ContactsTab';
-import NotificationsTab from './components/NotificationsTab';
-import DatabaseTab from './components/DatabaseTab';
 
-function App() {
-  const [activeTab, setActiveTab] = useState('ailments'); // 'ailments', 'images', 'contacts', 'notifications', 'database'
-
-  const renderContent = () => {
-    switch (activeTab) {
-      case 'ailments':
-        return <AilmentsTab />;
-      case 'images':
-        return <ImagesTab />;
-      case 'contacts':
-        return <ContactsTab />;
-      case 'notifications':
-        return <NotificationsTab />;
-      case 'database':
-        return <DatabaseTab />;
-      default:
-        return <div>Select a tab</div>;
-    }
-  };
+function AppContent() {
+  const [activeTab, setActiveTab] = useState('ailments');
 
   return (
-    <div className="container">
-      <div><h1 className="text-center">MBD Admin Portal</h1></div>
-      <nav className="mt-3 mb-3">
-        <div className="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
-          <a
-            className={`nav-item nav-link ${activeTab === 'ailments' ? 'active' : ''}`}
-            onClick={() => setActiveTab('ailments')}
-            href="#"
+    <div style={{ padding: '20px', fontFamily: 'sans-serif' }}>
+      <h1>MBD Admin Portal</h1>
+      <p>Manage your Mind-Body Dictionary content</p>
+      
+      <div style={{ marginTop: '20px', display: 'flex', gap: '10px' }}>
+        {['ailments', 'images', 'contacts', 'notifications', 'database'].map((tab) => (
+          <button
+            key={tab}
+            onClick={() => setActiveTab(tab)}
+            style={{
+              padding: '10px 15px',
+              backgroundColor: activeTab === tab ? '#007bff' : '#f0f0f0',
+              color: activeTab === tab ? 'white' : 'black',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+            }}
           >
-            Ailments
-          </a>
-          <a
-            className={`nav-item nav-link ${activeTab === 'images' ? 'active' : ''}`}
-            onClick={() => setActiveTab('images')}
-            href="#"
-          >
-            Images
-          </a>
-          <a
-            className={`nav-item nav-link ${activeTab === 'contacts' ? 'active' : ''}`}
-            onClick={() => setActiveTab('contacts')}
-            href="#"
-          >
-            Contacts
-          </a>
-          <a
-            className={`nav-item nav-link ${activeTab === 'notifications' ? 'active' : ''}`}
-            onClick={() => setActiveTab('notifications')}
-            href="#"
-          >
-            Notifications
-          </a>
-          <a
-            className={`nav-item nav-link ${activeTab === 'database' ? 'active' : ''}`}
-            onClick={() => setActiveTab('database')}
-            href="#"
-          >
-            Database
-          </a>
-        </div>
-      </nav>
-      <div className="tab-content" id="nav-tabContent">
-        {renderContent()}
+            {tab}
+          </button>
+        ))}
+      </div>
+
+      <div style={{ marginTop: '20px', padding: '20px', border: '1px solid #ccc', borderRadius: '4px' }}>
+        <p>Selected: {activeTab}</p>
       </div>
     </div>
   );
+}
+
+function App() {
+  return <AppContent />;
 }
 
 export default App;

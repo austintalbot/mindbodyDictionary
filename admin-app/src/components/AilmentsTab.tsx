@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { fetchMbdConditionsTable, upsertAilment, deleteAilment, fetchMbdCondition } from '../services/apiService';
 import { MbdCondition, Recommendation } from '../types';
 import { getImageBaseUrl } from '../constants'; // Import directly from constants
+import { Tabs, TabsContent, TabsList, TabsTrigger } from './components/ui/tabs';
 
 // Interface for what Ailment data looks like, extends MbdCondition for additional properties if any
 interface Ailment extends MbdCondition {}
@@ -15,7 +16,7 @@ const AilmentsTab: React.FC = () => {
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
   const [showDetailModal, setShowDetailModal] = useState<boolean>(false);
   const [selectedAilmentForModal, setSelectedAilmentForModal] = useState<Ailment | null>(null);
-  const [activeModalTab, setActiveModalTab] = useState<string>('basicInfo');
+
 
   useEffect(() => {
     loadAilments();
@@ -32,8 +33,8 @@ const AilmentsTab: React.FC = () => {
       } else {
         throw new Error('API response data is not an array or is missing.');
       }
-    } catch (err: any) {
-      setError(err.message || 'Failed to fetch ailments');
+    } catch (err) {
+      setError((err as Error).message || 'Failed to fetch ailments');
     } finally {
       setLoading(false);
     }
@@ -46,8 +47,8 @@ const AilmentsTab: React.FC = () => {
       const data = await fetchMbdCondition(id, name);
       setSelectedAilmentForModal(data);
       setShowDetailModal(true);
-    } catch (err: any) {
-      setError(err.message || 'Failed to fetch ailment details');
+    } catch (err) {
+      setError((err as Error).message || 'Failed to fetch ailment details');
     }
   };
 
@@ -96,8 +97,8 @@ const AilmentsTab: React.FC = () => {
       setSelectedAilmentForModal(savedAilment);
       setAlertMessage('Saved!');
       loadAilments(); // Reload table after save
-    } catch (err: any) {
-      setError(err.message || 'Failed to save ailment');
+    } catch (err) {
+      setError((err as Error).message || 'Failed to save ailment');
     }
   };
 
@@ -107,8 +108,8 @@ const AilmentsTab: React.FC = () => {
         await deleteAilment(id, name);
         loadAilments(); // Reload table after deletion
         addAilment(); // Reset form
-      } catch (err: any) {
-        setError(err.message || 'Failed to delete ailment');
+      } catch (err) {
+        setError((err as Error).message || 'Failed to delete ailment');
       }
     }
   };
@@ -282,125 +283,82 @@ const AilmentsTab: React.FC = () => {
                 </button>
               </div>
               <div className="modal-body">
-                <ul className="nav nav-tabs" id="myTab" role="tablist">
-                  <li className="nav-item">
-                    <a
-                      className={`nav-link ${activeModalTab === 'basicInfo' ? 'active' : ''}`}
-                      onClick={() => setActiveModalTab('basicInfo')}
-                      role="tab"
-                    >
-                      Basic Info
-                    </a>
-                  </li>
-                  <li className="nav-item">
-                    <a
-                      className={`nav-link ${activeModalTab === 'affirmations' ? 'active' : ''}`}
-                      onClick={() => setActiveModalTab('affirmations')}
-                      role="tab"
-                    >
-                      Affirmations
-                    </a>
-                  </li>
-                  <li className="nav-item">
-                    <a
-                      className={`nav-link ${activeModalTab === 'physicalConnections' ? 'active' : ''}`}
-                      onClick={() => setActiveModalTab('physicalConnections')}
-                      role="tab"
-                    >
-                      Physical Connections
-                    </a>
-                  </li>
-                  <li className="nav-item">
-                    <a
-                      className={`nav-link ${activeModalTab === 'tags' ? 'active' : ''}`}
-                      onClick={() => setActiveModalTab('tags')}
-                      role="tab"
-                    >
-                      Tags
-                    </a>
-                  </li>
-                  <li className="nav-item">
-                    <a
-                      className={`nav-link ${activeModalTab === 'recommendations' ? 'active' : ''}`}
-                      onClick={() => setActiveModalTab('recommendations')}
-                      role="tab"
-                    >
-                      Recommendations
-                    </a>
-                  </li>
-                </ul>
+                <Tabs defaultValue="basicInfo" className="w-full">
+                  <TabsList className="grid w-full grid-cols-5">
+                    <TabsTrigger value="basicInfo">Basic Info</TabsTrigger>
+                    <TabsTrigger value="affirmations">Affirmations</TabsTrigger>
+                    <TabsTrigger value="physicalConnections">Physical Connections</TabsTrigger>
+                    <TabsTrigger value="tags">Tags</TabsTrigger>
+                    <TabsTrigger value="recommendations">Recommendations</TabsTrigger>
+                  </TabsList>
 
-                <div className="tab-content mt-3">
-                  {/* Basic Info Tab Pane */}
-                  {activeModalTab === 'basicInfo' && (
-                    <div className="tab-pane fade show active" role="tabpanel">
-                      <h5 className="card-title">Basic Info</h5>
-                      <div className="row">
-                        <div className="col-sm-6">
+                  <TabsContent value="basicInfo">
+                    <div className="p-4">
+                      <h5 className="text-lg font-semibold mb-3">Basic Info</h5>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
                           <div id="ailmentInfo" className="mb-3">
-                            <div className="form-group">
-                              <label htmlFor="id">Id:</label>
+                            <div className="mb-3">
+                              <label htmlFor="id" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Id:</label>
                               <input
                                 type="text"
-                                className="form-control"
+                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                                 id="id"
                                 value={selectedAilmentForModal.id || ''}
                                 disabled
                               />
                             </div>
-                            <div className="form-group">
-                              <label htmlFor="name">Name:</label>
-                              <div className="input-group">
+                            <div className="mb-3">
+                              <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Name:</label>
+                              <div className="flex">
                                 <input
                                   type="text"
-                                  className="form-control"
+                                  className="mt-1 block w-full rounded-l-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                                   id="name"
                                   value={selectedAilmentForModal.name || ''}
                                   onChange={handleAilmentChange}
                                   disabled={!!selectedAilmentForModal.id}
                                   placeholder={selectedAilmentForModal.id ? '' : 'Input Ailment Name'}
                                 />
-                                <div className="input-group-append">
-                                  <button className="btn btn-outline-warning" onClick={duplicateAilment} type="button">
-                                    Duplicate Ailment
-                                  </button>
-                                </div>
+                                <button className="inline-flex items-center px-4 py-2 border border-l-0 border-gray-300 rounded-r-md bg-yellow-500 text-white shadow-sm hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 dark:bg-yellow-600 dark:hover:bg-yellow-700" onClick={duplicateAilment} type="button">
+                                  Duplicate
+                                </button>
                               </div>
                             </div>
                           </div>
                         </div>
-                        <div id="ailmentImages" className="col-sm-6 text-center">
-                          <i>Negative</i>
-                          <img id="negativeImage" style={{ maxWidth: '120px' }} src={getImageUrl('negative')} alt="Negative Ailment" />
-                          <i>Positive</i>
-                          <img id="positiveImage" style={{ maxWidth: '120px' }} src={getImageUrl('positive')} alt="Positive Ailment" />
+                        <div id="ailmentImages" className="text-center">
+                          <i className="block text-sm font-medium text-gray-700 dark:text-gray-300">Negative</i>
+                          <img id="negativeImage" className="max-w-[120px] mx-auto my-2" src={getImageUrl('negative')} alt="Negative Ailment" />
+                          <i className="block text-sm font-medium text-gray-700 dark:text-gray-300">Positive</i>
+                          <img id="positiveImage" className="max-w-[120px] mx-auto my-2" src={getImageUrl('positive')} alt="Positive Ailment" />
                         </div>
                       </div>
-                      <div id="ailmentEdit">
-                        <div className="form-check">
+                      <div id="ailmentEdit" className="mt-4">
+                        <div className="flex items-center mb-3">
                           <input
                             type="checkbox"
-                            className="form-check-input"
+                            className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded dark:bg-gray-700 dark:border-gray-600"
                             id="subscriptionOnly"
                             checked={selectedAilmentForModal.subscriptionOnly}
                             onChange={handleAilmentChange}
                           />
-                          <label htmlFor="subscriptionOnly">Subscription Only</label>
+                          <label htmlFor="subscriptionOnly" className="ml-2 block text-sm text-gray-900 dark:text-gray-100">Subscription Only</label>
                         </div>
-                        <div className="form-group">
-                          <label htmlFor="summaryNegative">Summary Negative:</label>
+                        <div className="mb-3">
+                          <label htmlFor="summaryNegative" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Summary Negative:</label>
                           <textarea
-                            className="form-control"
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                             rows={5}
                             id="summaryNegative"
                             value={selectedAilmentForModal.summaryNegative || ''}
                             onChange={handleAilmentChange}
                           ></textarea>
                         </div>
-                        <div className="form-group">
-                          <label htmlFor="summaryPositive">Summary Positive:</label>
+                        <div className="mb-3">
+                          <label htmlFor="summaryPositive" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Summary Positive:</label>
                           <textarea
-                            className="form-control"
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                             rows={5}
                             id="summaryPositive"
                             value={selectedAilmentForModal.summaryPositive || ''}
@@ -409,173 +367,145 @@ const AilmentsTab: React.FC = () => {
                         </div>
                       </div>
                     </div>
-                  )}
+                  </TabsContent>
 
-                  {/* Affirmations Tab Pane */}
-                  {activeModalTab === 'affirmations' && (
-                    <div className="tab-pane fade show active" role="tabpanel">
-                      <div className="row">
-                        <h5 className="col">Affirmations</h5>
-                        <div className="col">
-                          <button type="button" className="btn btn-sm btn-outline-primary" onClick={() => addToArray('affirmations')}>
-                            Add
-                          </button>
-                        </div>
+                  <TabsContent value="affirmations">
+                    <div className="p-4">
+                      <h5 className="text-lg font-semibold mb-3">Affirmations</h5>
+                      <div className="flex justify-between items-center mb-3">
+                        <i className="block text-sm font-medium text-gray-700 dark:text-gray-300">Statements of Affirmation</i>
+                        <button type="button" className="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" onClick={() => addToArray('affirmations')}>
+                          Add
+                        </button>
                       </div>
-                      <i style={{ display: 'block' }}>Statements of Affirmation</i>
-                      <hr />
-                      <table style={{ width: '100%' }}>
-                        <tbody>
-                          {(selectedAilmentForModal.affirmations || []).map((affirmation, index) => (
-                            <tr key={index}>
-                              <td>
-                                <textarea
-                                  rows={2}
-                                  className="sol-sm-12 form-control"
-                                  value={affirmation}
-                                  onChange={(e) => handleArrayChange(index, e.target.value, 'affirmations')}
-                                ></textarea>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
+                      <div className="space-y-2">
+                        {(selectedAilmentForModal.affirmations || []).map((affirmation, index) => (
+                          <textarea
+                            key={index}
+                            rows={2}
+                            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                            value={affirmation}
+                            onChange={(e) => handleArrayChange(index, e.target.value, 'affirmations')}
+                          ></textarea>
+                        ))}
+                      </div>
                     </div>
-                  )}
+                  </TabsContent>
 
-                  {/* Physical Connections Tab Pane */}
-                  {activeModalTab === 'physicalConnections' && (
-                    <div className="tab-pane fade show active" role="tabpanel">
-                      <div className="row">
-                        <h5 className="col">Physical Connections</h5>
-                        <div className="col">
-                          <button type="button" className="btn btn-sm btn-outline-primary" onClick={() => addToArray('physicalConnections')}>
-                            Add
-                          </button>
-                        </div>
+                  <TabsContent value="physicalConnections">
+                    <div className="p-4">
+                      <h5 className="text-lg font-semibold mb-3">Physical Connections</h5>
+                      <div className="flex justify-between items-center mb-3">
+                        <i className="block text-sm font-medium text-gray-700 dark:text-gray-300">Locations on the body that can be referenced by this Ailment i.e Adrenal Problems linked to Kidney</i>
+                        <button type="button" className="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" onClick={() => addToArray('physicalConnections')}>
+                          Add
+                        </button>
                       </div>
-                      <i style={{ display: 'block' }}>Locations on the body that can be referenced by this Ailment i.e Adrenal Problems linked to Kidney</i>
-                      <hr />
-                      <table style={{ width: '100%' }}>
-                        <tbody>
-                          {(selectedAilmentForModal.physicalConnections || []).map((connection, index) => (
-                            <tr key={index}>
-                              <td>
-                                <input
-                                  type="text"
-                                  className="sol-sm-12 form-control"
-                                  value={connection}
-                                  onChange={(e) => handleArrayChange(index, e.target.value, 'physicalConnections')}
-                                />
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
+                      <div className="space-y-2">
+                        {(selectedAilmentForModal.physicalConnections || []).map((connection, index) => (
+                          <input
+                            key={index}
+                            type="text"
+                            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                            value={connection}
+                            onChange={(e) => handleArrayChange(index, e.target.value, 'physicalConnections')}
+                          />
+                        ))}
+                      </div>
                     </div>
-                  )}
+                  </TabsContent>
 
-                  {/* Tags Tab Pane */}
-                  {activeModalTab === 'tags' && (
-                    <div className="tab-pane fade show active" role="tabpanel">
-                      <div className="row">
-                        <h5 className="col">Tags</h5>
-                        <div className="col">
-                          <button type="button" className="btn btn-sm btn-outline-primary" onClick={() => addToArray('tags')}>
-                            Add
-                          </button>
-                        </div>
+                  <TabsContent value="tags">
+                    <div className="p-4">
+                      <h5 className="text-lg font-semibold mb-3">Tags</h5>
+                      <div className="flex justify-between items-center mb-3">
+                        <i className="block text-sm font-medium text-gray-700 dark:text-gray-300">Single words used for matching Ailment to search parameters</i>
+                        <button type="button" className="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" onClick={() => addToArray('tags')}>
+                          Add
+                        </button>
                       </div>
-                      <i style={{ display: 'block' }}>Single words used for matching Ailment to search parameters</i>
-                      <hr />
-                      <table style={{ width: '100%' }}>
-                        <tbody>
-                          {(selectedAilmentForModal.tags || []).map((tag, index) => (
-                            <tr key={index}>
-                              <td>
-                                <input
-                                  type="text"
-                                  className="sol-sm-12 form-control"
-                                  value={tag}
-                                  onChange={(e) => handleArrayChange(index, e.target.value, 'tags')}
-                                />
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
+                      <div className="space-y-2">
+                        {(selectedAilmentForModal.tags || []).map((tag, index) => (
+                          <input
+                            key={index}
+                            type="text"
+                            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                            value={tag}
+                            onChange={(e) => handleArrayChange(index, e.target.value, 'tags')}
+                          />
+                        ))}
+                      </div>
                     </div>
-                  )}
+                  </TabsContent>
 
-                  {/* Recommendations Tab Pane */}
-                  {activeModalTab === 'recommendations' && (
-                    <div className="tab-pane fade show active" role="tabpanel">
-                      <div className="row">
-                        <h5 className="col">Recommendations</h5>
-                        <div className="col">
-                          <button type="button" className="btn btn-sm btn-outline-primary" onClick={addRecommendation}>
-                            Add
-                          </button>
-                        </div>
+                  <TabsContent value="recommendations">
+                    <div className="p-4">
+                      <h5 className="text-lg font-semibold mb-3">Recommendations</h5>
+                      <div className="flex justify-between items-center mb-3">
+                        <button type="button" className="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" onClick={addRecommendation}>
+                          Add
+                        </button>
                       </div>
-                      <table style={{ width: '100%' }}>
-                        <thead>
-                          <tr>
-                            <th>Name</th>
-                            <th>URL</th>
-                            <th>Type</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {(selectedAilmentForModal.recommendations || []).map((rec, index) => (
-                            <tr key={index}>
-                              <td>
-                                <input
-                                  type="text"
-                                  className="sol-sm-12 form-control rName"
-                                  value={rec.name || ''}
-                                  onChange={(e) => handleRecommendationChange(index, 'name', e.target.value)}
-                                />
-                              </td>
-                              <td>
-                                <input
-                                  type="text"
-                                  className="sol-sm-12 form-control rUrl"
-                                  value={rec.url || ''}
-                                  onChange={(e) => handleRecommendationChange(index, 'url', e.target.value)}
-                                />
-                              </td>
-                              <td>
-                                <select
-                                  className="form-control rType"
-                                  value={rec.recommendationType}
-                                  onChange={(e) => handleRecommendationChange(index, 'recommendationType', e.target.value)}
-                                >
-                                  <option value={0}>Product</option>
-                                  <option value={1}>Practitioner</option>
-                                  <option value={2}>Book</option>
-                                  <option value={3}>Food</option>
-                                </select>
-                              </td>
+                      <div className="overflow-x-auto">
+                        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                          <thead className="bg-gray-50 dark:bg-gray-800">
+                            <tr>
+                              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400">Name</th>
+                              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400">URL</th>
+                              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400">Type</th>
                             </tr>
-                          ))}
-                        </tbody>
-                      </table>
+                          </thead>
+                          <tbody className="bg-white divide-y divide-gray-200 dark:bg-gray-900 dark:divide-gray-700">
+                            {(selectedAilmentForModal.recommendations || []).map((rec, index) => (
+                              <tr key={index}>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">
+                                  <input
+                                    type="text"
+                                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                    value={rec.name || ''}
+                                    onChange={(e) => handleRecommendationChange(index, 'name', e.target.value)}
+                                  />
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                  <input
+                                    type="text"
+                                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                    value={rec.url || ''}
+                                    onChange={(e) => handleRecommendationChange(index, 'url', e.target.value)}
+                                  />
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                  <select
+                                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                    value={rec.recommendationType}
+                                    onChange={(e) => handleRecommendationChange(index, 'recommendationType', e.target.value)}
+                                  >
+                                    <option value={0}>Product</option>
+                                    <option value={1}>Practitioner</option>
+                                    <option value={2}>Book</option>
+                                    <option value={3}>Food</option>
+                                  </select>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
                     </div>
-                  )}
-                </div>
+                  </TabsContent>
+                </Tabs>
 
                 {alertMessage && (
-                  <div className="alert alert-success mt-3" role="alert">
+                  <div className="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
                     {alertMessage}
                   </div>
                 )}
                 {error && (
-                  <div className="alert alert-danger mt-3" role="alert">
+                  <div className="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
                     Error: {error}
                   </div>
                 )}
-                <button className="btn btn-primary btn-lg btn-block btn-success mt-3" onClick={saveAilment}>
+                <button className="w-full inline-flex items-center justify-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mt-4" onClick={saveAilment}>
                   Save
                 </button>
               </div>
