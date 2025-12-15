@@ -20,6 +20,7 @@ declare -a FUNCTIONS=(
     "CreateBackup"
     "RestoreDatabase"
     "GetMbdConditionsTable" # Added new function
+    "GetMbdConditions" # Added for fetching single MBD condition
 )
 
 echo "Generating $ENV_FILE for staging Azure Function App: $FUNCTION_APP_NAME (Slot: $SLOT_NAME)"

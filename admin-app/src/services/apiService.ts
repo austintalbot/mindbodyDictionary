@@ -125,5 +125,3 @@ export const restoreDatabase = async (file: File): Promise<void> => {
   return makeApiRequest<void>(`RestoreDatabase?code=${RESTORE_DATABASE_CODE}`, 'POST', formData);
 };
 
-// Expose image base URL for direct use in image src attributes
-// export const getImageBaseUrl = (): string => IMAGE_BASE_URL; // Moved to constants.ts

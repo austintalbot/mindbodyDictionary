@@ -9,6 +9,7 @@ interface Ailment extends MbdCondition {}
 
 const AilmentsTab: React.FC = () => {
   const [ailments, setAilments] = useState<Ailment[]>([]);
+  const [searchTerm, setSearchTerm] = useState<string>('');
   const [currentAilment, setCurrentAilment] = useState<Ailment | null>(null);
   const [showAilmentDiv, setShowAilmentDiv] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -24,8 +25,9 @@ const AilmentsTab: React.FC = () => {
     setError(null);
     try {
       const response = await fetchMbdConditionsTable(); // Changed to fetchMbdConditionsTable
-      if (response && Array.isArray(response)) { // Check if response.data exists and is an array
-        setAilments(response);
+      if (response && Array.isArray(response)) {
+        const sortedAilments = response.sort((a, b) => a.name!.localeCompare(b.name!));
+        setAilments(sortedAilments);
       } else {
         throw new Error('API response data is not an array or is missing.');
       }
@@ -159,11 +161,42 @@ const AilmentsTab: React.FC = () => {
   const getImageUrl = (type: 'negative' | 'positive') => {
     if (!currentAilment) return '';
     const baseUrl = getImageBaseUrl();
-    const ailmentName = currentAilment.name;
-    if (!ailmentName) return '';
-    return `${baseUrl}/${ailmentName}${type === 'negative' ? '1' : '2'}.png`;
+
+    let imageFileName = '';
+    // Prioritize imageNegative/imagePositive from API response
+    if (type === 'negative' && currentAilment.imageNegative) {
+      imageFileName = currentAilment.imageNegative;
+    } else if (type === 'positive' && currentAilment.imagePositive) {
+      imageFileName = currentAilment.imagePositive;
+    } else {
+      // Fallback: Construct name from ailment.name
+      const ailmentName = currentAilment.name;
+      if (!ailmentName) return '';
+      imageFileName = `${ailmentName}${type === 'negative' ? '1' : '2'}`;
+    }
+
+    // Ensure .png extension is present, but avoid double extensions
+    const finalImageName = (imageFileName && !/\.(png|jpg|jpeg)$/i.test(imageFileName))
+      ? `${imageFileName}.png`
+      : imageFileName;
+
+    // This constructs the final URL
+    return `${baseUrl}/${finalImageName}`;
   };
 
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const filteredAilments = ailments.filter((ailment) => {
+    const lowerCaseSearchTerm = searchTerm.toLowerCase();
+    return (
+      (ailment.name?.toLowerCase().includes(lowerCaseSearchTerm)) ||
+      (ailment.physicalConnections?.some((conn) => conn.toLowerCase().includes(lowerCaseSearchTerm))) ||
+      (ailment.tags?.some((tag) => tag.toLowerCase().includes(lowerCaseSearchTerm)))
+    );
+  });
 
   if (loading) return <div>Loading Ailments...</div>;
   if (error) return <div className="alert alert-danger">Error: {error}</div>;
@@ -173,6 +206,15 @@ const AilmentsTab: React.FC = () => {
       <div className="card">
         <div className="card-body">
           <h5 className="card-title">Ailments</h5>
+          <div className="mb-3">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Search by Name, Physical Connections, or Tags"
+              value={searchTerm}
+              onChange={handleSearchChange}
+            />
+          </div>
           <table className="display" style={{ width: '100%' }}>
             <thead>
               <tr>
@@ -184,7 +226,7 @@ const AilmentsTab: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {ailments.map((ailment) => (
+              {filteredAilments.map((ailment) => (
                 <tr key={ailment.id}>
                   <td>
                     <button
