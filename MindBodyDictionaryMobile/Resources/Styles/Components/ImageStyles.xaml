@@ -1,10 +1,8 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+﻿<?xml version="1.0" encoding="UTF-8" ?>
 <?xaml-comp compile="true" ?>
-<ResourceDictionary
-    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
-    <!-- Logo and Image Styles -->
+    <!--  Logo and Image Styles  -->
     <Style x:Key="AppLogoImage" TargetType="Image">
         <Setter Property="Source" Value="mbd_logo.png" />
         <Setter Property="HeightRequest" Value="180" />
@@ -45,7 +43,7 @@
         <Setter Property="MaximumHeightRequest" Value="100" />
     </Style>
 
-    <!-- New HomePageLockImage Style -->
+    <!--  New HomePageLockImage Style  -->
     <Style x:Key="HomePageLockImage" TargetType="Image">
         <Setter Property="Source" Value="{StaticResource IconLock}" />
         <Setter Property="HeightRequest" Value="24" />
@@ -54,7 +52,7 @@
         <Setter Property="VerticalOptions" Value="Start" />
     </Style>
 
-    <!-- New CleanTasksImageButton Style -->
+    <!--  New CleanTasksImageButton Style  -->
     <Style x:Key="CleanTasksImageButton" TargetType="ImageButton">
         <Setter Property="HeightRequest" Value="44" />
         <Setter Property="WidthRequest" Value="44" />
@@ -70,14 +68,14 @@
         <Setter Property="WidthRequest" Value="32" />
     </Style>
 
-    <!-- New FoodCheckmarkImageStyle -->
+    <!--  New FoodCheckmarkImageStyle  -->
     <Style x:Key="FoodCheckmarkImageStyle" TargetType="Image">
         <Setter Property="HeightRequest" Value="25" />
         <Setter Property="WidthRequest" Value="25" />
         <Setter Property="Source" Value="{StaticResource IconCheckmark}" />
     </Style>
 
-    <!-- New SubscribeTodayPageLockImage Style -->
+    <!--  New SubscribeTodayPageLockImage Style  -->
     <Style x:Key="SubscribeTodayPageLockImage" TargetType="Image">
         <Setter Property="HeightRequest" Value="100" />
         <Setter Property="Margin" Value="20" />
@@ -86,7 +84,7 @@
         <Setter Property="WidthRequest" Value="100" />
     </Style>
 
-    <!-- New ProjectCardIconImage Style -->
+    <!--  New ProjectCardIconImage Style  -->
     <Style x:Key="ProjectCardIconImage" TargetType="Image">
         <Setter Property="HorizontalOptions" Value="Start" />
         <Setter Property="Aspect" Value="Center" />
@@ -100,7 +98,7 @@
         <Setter Property="Margin" Value="0,20,0,20" />
     </Style>
 
-    <!-- New FlyoutHeaderLogoImage Style -->
+    <!--  New FlyoutHeaderLogoImage Style  -->
     <Style x:Key="FlyoutHeaderLogoImage" TargetType="Image">
         <Setter Property="Source" Value="mbd_logo.png" />
         <Setter Property="HeightRequest" Value="140" />

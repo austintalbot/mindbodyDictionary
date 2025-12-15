@@ -1,93 +1,93 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-                          xmlns:vm="clr-namespace:MindBodyDictionaryMobile.PageModels"
-                          xmlns:fonts="clr-namespace:Fonts;assembly=MindBodyDictionaryMobile"
-                          xmlns:local="clr-namespace:MindBodyDictionaryMobile"
-                          x:DataType="vm:MbdConditionDetailPageModel"
-                          x:Name="this"
-                          x:Class="MindBodyDictionaryMobile.Pages.MbdConditionDetailsAffirmationsView">
-                <Grid
-                         HorizontalOptions="CenterAndExpand"
-                         VerticalOptions="StartAndExpand">
-                     <Grid.RowDefinitions>
-                         <RowDefinition Height="auto"/>
-                         <RowDefinition Height="auto"/>
-                         <RowDefinition Height="auto"/>
-                         <RowDefinition Height="auto"/>
-                     </Grid.RowDefinitions>
-                     <!-- Affirmations Header -->
-                     <VerticalStackLayout
-                         Grid.Row="0"
-                         HorizontalOptions="Fill"
-                         VerticalOptions="Fill">
-                         <Image
-                                 x:Name="AffirmationsMindBodyLogo"
-                                 Style="{StaticResource MbdIconImage}"
-                                 HorizontalOptions="Fill">
-                         </Image>
-                         <Label Text="Affirmations for" Style="{StaticResource AffirmationsForLabelStyle}" />
-                         <Label Text="{Binding Condition.Name}" Style="{StaticResource AffirmationConditionNameLabelStyle}" />
-                     </VerticalStackLayout>
-                 <CarouselView
-                         x:Name="AffirmationCarouselView"
-                         ItemsSource="{Binding Condition.Affirmations}"
-                         CurrentItem="{Binding CurrentAffirmation}"
-                         Grid.Row="1"
-                         IndicatorView="AffirmationIndicatorView"
-                         HeightRequest="280"
-                         IsBounceEnabled="True"
-                         HorizontalOptions="CenterAndExpand"
-                         VerticalOptions="CenterAndExpand">
-                     <CarouselView.ItemTemplate>
-                         <DataTemplate>
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="MindBodyDictionaryMobile.Pages.MbdConditionDetailsAffirmationsView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:fonts="clr-namespace:Fonts;assembly=MindBodyDictionaryMobile"
+    xmlns:local="clr-namespace:MindBodyDictionaryMobile"
+    xmlns:vm="clr-namespace:MindBodyDictionaryMobile.PageModels"
+    x:Name="this"
+    x:DataType="vm:MbdConditionDetailPageModel">
+    <Grid HorizontalOptions="CenterAndExpand" VerticalOptions="StartAndExpand">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+        <!--  Affirmations Header  -->
+        <VerticalStackLayout
+            Grid.Row="0"
+            HorizontalOptions="Fill"
+            VerticalOptions="Fill">
+            <Image
+                x:Name="AffirmationsMindBodyLogo"
+                HorizontalOptions="Fill"
+                Style="{StaticResource MbdIconImage}" />
+            <Label Style="{StaticResource AffirmationsForLabelStyle}" Text="Affirmations for" />
+            <Label Style="{StaticResource AffirmationConditionNameLabelStyle}" Text="{Binding Condition.Name}" />
+        </VerticalStackLayout>
+        <CarouselView
+            x:Name="AffirmationCarouselView"
+            Grid.Row="1"
+            CurrentItem="{Binding CurrentAffirmation}"
+            HeightRequest="280"
+            HorizontalOptions="CenterAndExpand"
+            IndicatorView="AffirmationIndicatorView"
+            IsBounceEnabled="True"
+            ItemsSource="{Binding Condition.Affirmations}"
+            VerticalOptions="CenterAndExpand">
+            <CarouselView.ItemTemplate>
+                <DataTemplate>
 
-                                 <Grid Padding="10">
-                                     <Grid.RowDefinitions>
-                                         <RowDefinition Height="auto"/>
-                                         <RowDefinition Height="auto"/>
+                    <Grid Padding="10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
 
-                                     </Grid.RowDefinitions>
-                                     <Frame Style="{StaticResource AffirmationFrameStyle}">
-                                         <VerticalStackLayout>
-                                             <Label x:Name="AffirmationLabel" Style="{StaticResource AffirmationCarouselLabelStyle}"
-                                                    Text="{x:Binding .}"
-                                                    x:DataType="{x:Type x:String}" />
-                                             <Label x:Name="CopyrightLabel" Style="{StaticResource AffirmationCopyrightLabelStyle}"
-                                                    Text="{x:Static local:App.CopyrightText}" />
-                                         </VerticalStackLayout>
-                                     </Frame>
-                                 </Grid>
-                         </DataTemplate>
-                     </CarouselView.ItemTemplate>
-                 </CarouselView>
-                 <IndicatorView
-                         x:Name="AffirmationIndicatorView"
-                         Grid.Row="2"
-                         HorizontalOptions="Center"
-                         IndicatorColor="LightGray"
-                         IndicatorsShape="Square"
-                         IsVisible="{Binding IsAndroid}"
-                         SelectedIndicatorColor="DarkGray" />
-                 <HorizontalStackLayout
-                     Grid.Row="3"
-                     Padding="20"
-                     Margin="10"
-                     HorizontalOptions="CenterAndExpand"
-                     VerticalOptions="CenterAndExpand">
+                        </Grid.RowDefinitions>
+                        <Frame Style="{StaticResource AffirmationFrameStyle}">
+                            <VerticalStackLayout>
+                                <Label
+                                    x:Name="AffirmationLabel"
+                                    x:DataType="{x:Type x:String}"
+                                    Style="{StaticResource AffirmationCarouselLabelStyle}"
+                                    Text="{x:Binding .}" />
+                                <Label
+                                    x:Name="CopyrightLabel"
+                                    Style="{StaticResource AffirmationCopyrightLabelStyle}"
+                                    Text="{x:Static local:App.CopyrightText}" />
+                            </VerticalStackLayout>
+                        </Frame>
+                    </Grid>
+                </DataTemplate>
+            </CarouselView.ItemTemplate>
+        </CarouselView>
+        <IndicatorView
+            x:Name="AffirmationIndicatorView"
+            Grid.Row="2"
+            HorizontalOptions="Center"
+            IndicatorColor="LightGray"
+            IndicatorsShape="Square"
+            IsVisible="{Binding IsAndroid}"
+            SelectedIndicatorColor="DarkGray" />
+        <HorizontalStackLayout
+            Grid.Row="3"
+            Margin="10"
+            Padding="20"
+            HorizontalOptions="CenterAndExpand"
+            VerticalOptions="CenterAndExpand">
 
-                         <HorizontalStackLayout>
-                         <HorizontalStackLayout.GestureRecognizers>
-                             <TapGestureRecognizer
-                             Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MbdConditionDetailPageModel}}, Path=ShareCarouselConditionCommand}"
-                             CommandParameter="{Binding CurrentAffirmation}"/>
-                         </HorizontalStackLayout.GestureRecognizers>
-                             <Label Style="{StaticResource ShareAffirmationLabelStyle}" />
-                         <Image x:Name="ShareAffirmationImageButton" Style="{StaticResource ShareAffirmationImageButtonStyle}" />
-                     </HorizontalStackLayout>
+            <HorizontalStackLayout>
+                <HorizontalStackLayout.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MbdConditionDetailPageModel}}, Path=ShareCarouselConditionCommand}" CommandParameter="{Binding CurrentAffirmation}" />
+                </HorizontalStackLayout.GestureRecognizers>
+                <Label Style="{StaticResource ShareAffirmationLabelStyle}" />
+                <Image x:Name="ShareAffirmationImageButton" Style="{StaticResource ShareAffirmationImageButtonStyle}" />
+            </HorizontalStackLayout>
 
 
-                 </HorizontalStackLayout>
-                 </Grid>
+        </HorizontalStackLayout>
+    </Grid>
 
-             </ContentView>
+</ContentView>

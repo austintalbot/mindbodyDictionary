@@ -1,22 +1,25 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="MindBodyDictionaryMobile.Pages.NotificationTestPage"
-             Title="Notification Test">
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="MindBodyDictionaryMobile.Pages.NotificationTestPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Notification Test">
     <VerticalStackLayout Style="{StaticResource NotificationTestPageContainerStyle}">
-        <Label Style="{StaticResource NotificationTestHeaderLabel}"/>
+        <Label Style="{StaticResource NotificationTestHeaderLabel}" />
 
-        <Button x:Name="TestLocalNotificationBtn"
-                Clicked="OnTestLocalNotificationClicked"
-                Style="{StaticResource NotificationTestLocalButton}"/>
+        <Button
+            x:Name="TestLocalNotificationBtn"
+            AutomationId="TestLocalNotificationButton"
+            Clicked="OnTestLocalNotificationClicked"
+            Style="{StaticResource NotificationTestLocalButton}" />
 
         <Frame Style="{StaticResource NotificationTestInstructionsFrame}">
             <VerticalStackLayout Style="{StaticResource NotificationTestInstructionsLayout}">
-                <Label Style="{StaticResource NotificationTestInstructionsTitleLabel}"/>
-                <Label Text="1. Click 'Send Test Local Notification'" Style="{StaticResource NotificationTestInstructionsStepLabel}"/>
-                <Label Text="2. Wait 5 seconds for notification to appear" Style="{StaticResource NotificationTestInstructionsStepLabel}"/>
-                <Label Text="3. Check Xcode console for debug output" Style="{StaticResource NotificationTestInstructionsStepLabel}"/>
-                <Label Text="4. For remote APNS testing, use: xcrun simctl push booted com.minbodydictionary.mindbodydictionarymobile payload.apns" Style="{StaticResource NotificationTestInstructionsStepLabel}"/>
+                <Label Style="{StaticResource NotificationTestInstructionsTitleLabel}" />
+                <Label Style="{StaticResource NotificationTestInstructionsStepLabel}" Text="1. Click 'Send Test Local Notification'" />
+                <Label Style="{StaticResource NotificationTestInstructionsStepLabel}" Text="2. Wait 5 seconds for notification to appear" />
+                <Label Style="{StaticResource NotificationTestInstructionsStepLabel}" Text="3. Check Xcode console for debug output" />
+                <Label Style="{StaticResource NotificationTestInstructionsStepLabel}" Text="4. For remote APNS testing, use: xcrun simctl push booted com.minbodydictionary.mindbodydictionarymobile payload.apns" />
             </VerticalStackLayout>
         </Frame>
     </VerticalStackLayout>

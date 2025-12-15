@@ -6,122 +6,130 @@ default_language_version:
   dotnet: "10.0"
 
 repos:
-  # EditorConfig validation
-  - repo: https://github.com/editorconfig-checker/editorconfig-checker.python
-    rev: 2.7.2
-    hooks:
-      - id: editorconfig-checker
-        name: editorconfig-checker
-        description: "Check EditorConfig compliance"
-        exclude: |
-          (?x)^(
-            \.git/|
-            bin/|
-            obj/|
-            packages/|
-            \.vs/|
-            \.vscode/|
-            MindBodyDictionaryMobile/|
-            backend/|
-            mbd/|
-            tofu/|
-            cosmosDb/|
-            README\.md|
-            ARCHITECTURE_ANALYSIS\.md
-          )
 
-  # JSON, YAML, XML validation
-  - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0
-    hooks:
-      - id: check-json
-        name: Check JSON
-        description: "Validate JSON files"
+# C# formatting
+- repo: local
+  hooks:
+  - id: dotnet-format
+    name: dotnet format
+    entry: dotnet format --include
+    language: system
+    types: [ file ]
+    files: \.(cs|csproj)$
+    description: "Formats C# code using dotnet format"
+  - id: xamlstyler
+    name: XamlStyler
+    entry: bash -c 'for file in "$@"; do dotnet xstyler -f "$file"; done' --
+    language: system
+    types: [ file ]
+    files: \.(xaml)$
+    description: "Formats XAML code using XamlStyler"
 
-      - id: check-yaml
-        name: Check YAML
-        description: "Validate YAML files"
-        args: ['--unsafe']
+# EditorConfig validation
+- repo: https://github.com/editorconfig-checker/editorconfig-checker.python
+  rev: 2.7.2
+  hooks:
+  - id: editorconfig-checker
+    name: editorconfig-checker
+    description: "Check EditorConfig compliance"
+    exclude: |
+      (?x)^(
+        \.git/|
+        bin/|
+        obj/|
+        packages/|
+        \.vs/|
+        \.vscode/|
+        MindBodyDictionaryMobile/|
+        backend/|
+        mbd/|
+        tofu/|
+        cosmosDb/|
+        README\.md|
+        ARCHITECTURE_ANALYSIS\.md
+      )
 
-      - id: check-xml
-        name: Check XML
-        description: "Validate XML files"
+# JSON, YAML, XML validation
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v4.5.0
+  hooks:
+  - id: check-json
+    name: Check JSON
+    description: "Validate JSON files"
 
-      - id: end-of-file-fixer
-        name: Fix end of file
-        description: "Ensure files end with newline"
-        exclude: |
-          (?x)^(
-            \.git/|
-            bin/|
-            obj/|
-            build/|
-            dist/
-          )
+  - id: check-yaml
+    name: Check YAML
+    description: "Validate YAML files"
+    args: [ '--unsafe' ]
 
-      - id: trailing-whitespace
-        name: Trim trailing whitespace
-        description: "Remove trailing whitespace"
-        exclude: |
-          (?x)^(
-            \.git/|
-            bin/|
-            obj/|
-            build/|
-            dist/
-          )
+  - id: check-xml
+    name: Check XML
+    description: "Validate XML files"
 
-      - id: check-merge-conflict
-        name: Check merge conflicts
-        description: "Check for merge conflict markers"
+  - id: end-of-file-fixer
+    name: Fix end of file
+    description: "Ensure files end with newline"
+    exclude: |
+      (?x)^(
+        \.git/|
+        bin/|
+        obj/|
+        build/|
+        dist/
+      )
 
-      - id: check-case-conflict
-        name: Check case conflicts
-        description: "Check for files with case conflicts"
+  - id: trailing-whitespace
+    name: Trim trailing whitespace
+    description: "Remove trailing whitespace"
+    exclude: |
+      (?x)^(
+        \.git/|
+        bin/|
+        obj/|
+        build/|
+        dist/
+      )
 
-  # File size check
-  - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0
-    hooks:
-      - id: check-added-large-files
-        name: Check for large files
-        description: "Prevent large files from being committed"
-        args: ['--maxkb=5000']
-        exclude: |
-          (?x)^(
-            \.git/|
-            bin/|
-            obj/|
-            build/|
-            dist/
-          )
+  - id: check-merge-conflict
+    name: Check merge conflicts
+    description: "Check for merge conflict markers"
 
-  # Shell script linting (for build scripts)
-  - repo: https://github.com/shellcheck-py/shellcheck-py
-    rev: v0.9.0.5
-    hooks:
-      - id: shellcheck
-        name: ShellCheck
-        description: "Lint shell scripts"
-        exclude: |
-          (?x)^(
-            \.git/|
-            bin/|
-            obj/|
-            build/|
-            dist/
-          )
+  - id: check-case-conflict
+    name: Check case conflicts
+    description: "Check for files with case conflicts"
 
-  # C# formatting
-  - repo: local
-    hooks:
-      - id: dotnet-format
-        name: dotnet format
-        entry: dotnet format --include
-        language: system
-        types: [file]
-        files: \.(cs|csproj)$
-        description: "Formats C# code using dotnet format"
+# File size check
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v4.5.0
+  hooks:
+  - id: check-added-large-files
+    name: Check for large files
+    description: "Prevent large files from being committed"
+    args: [ '--maxkb=5000' ]
+    exclude: |
+      (?x)^(
+        \.git/|
+        bin/|
+        obj/|
+        build/|
+        dist/
+      )
+
+# Shell script linting (for build scripts)
+- repo: https://github.com/shellcheck-py/shellcheck-py
+  rev: v0.9.0.5
+  hooks:
+  - id: shellcheck
+    name: ShellCheck
+    description: "Lint shell scripts"
+    exclude: |
+      (?x)^(
+        \.git/|
+        bin/|
+        obj/|
+        build/|
+        dist/
+      )
 
 # Exclude patterns
 exclude: |
@@ -141,5 +149,5 @@ exclude: |
   )
 
 # Configuration per file type
-default_stages: [commit, push]
+default_stages: [ commit, push ]
 fail_fast: false

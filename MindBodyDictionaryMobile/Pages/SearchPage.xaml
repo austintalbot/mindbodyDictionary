@@ -1,30 +1,32 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:model="clr-namespace:MindBodyDictionaryMobile.Models"
-             xmlns:vm="clr-namespace:MindBodyDictionaryMobile.PageModels"
-             xmlns:android="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific;assembly=Microsoft.Maui.Controls"
-             x:DataType="vm:SearchPageModel"
-             x:Class="MindBodyDictionaryMobile.Pages.SearchPage"
-             Title="{Binding Title}">
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="MindBodyDictionaryMobile.Pages.SearchPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:android="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific;assembly=Microsoft.Maui.Controls"
+    xmlns:model="clr-namespace:MindBodyDictionaryMobile.Models"
+    xmlns:vm="clr-namespace:MindBodyDictionaryMobile.PageModels"
+    Title="{Binding Title}"
+    x:DataType="vm:SearchPageModel">
 
-    <Grid Style="{StaticResource MainPageGrid}" RowDefinitions="Auto,*">
-        <!-- Search Bar -->
-        <SearchBar x:Name="MbdConditionSearchBar"
-                  Grid.Row="0"
-                  android:Entry.ImeOptions="Done"
-                  Text="{Binding SearchParam}"
-                  TextChanged="MbdConditionSearchBar_TextChanged"
-                  IsTextPredictionEnabled="False"
-                  Style="{StaticResource MbdConditionSearchBar}"
-                  SearchCommand="{Binding OnSearchButtonPressedCommand}"
-                  SearchCommandParameter="{Binding Text, Source={x:Reference MbdConditionSearchBar}}" />
+    <Grid RowDefinitions="Auto,*" Style="{StaticResource MainPageGrid}">
+        <!--  Search Bar  -->
+        <SearchBar
+            x:Name="MbdConditionSearchBar"
+            Grid.Row="0"
+            android:Entry.ImeOptions="Done"
+            AutomationId="MbdConditionSearchBar"
+            IsTextPredictionEnabled="False"
+            SearchCommand="{Binding OnSearchButtonPressedCommand}"
+            SearchCommandParameter="{Binding Text, Source={x:Reference MbdConditionSearchBar}}"
+            Style="{StaticResource MbdConditionSearchBar}"
+            Text="{Binding SearchParam}"
+            TextChanged="MbdConditionSearchBar_TextChanged" />
 
-        <!-- Collection View with optimized layout -->
+        <!--  Collection View with optimized layout  -->
         <Grid Grid.Row="1">
-            <!-- Shimmer loading grid when busy -->
-            <CollectionView IsVisible="{Binding IsBusy}"
-                           Style="{StaticResource SearchGridCollectionView}">
+            <!--  Shimmer loading grid when busy  -->
+            <CollectionView IsVisible="{Binding IsBusy}" Style="{StaticResource SearchGridCollectionView}">
                 <CollectionView.ItemsSource>
                     <x:Array Type="{x:Type x:String}">
                         <x:String>1</x:String>
@@ -42,81 +44,92 @@
                     </x:Array>
                 </CollectionView.ItemsSource>
                 <CollectionView.ItemsLayout>
-                    <GridItemsLayout Orientation="Vertical"
-                                   Span="3"
-                                   VerticalItemSpacing="8"
-                                   HorizontalItemSpacing="8" />
+                    <GridItemsLayout
+                        HorizontalItemSpacing="8"
+                        Orientation="Vertical"
+                        Span="3"
+                        VerticalItemSpacing="8" />
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Border Style="{StaticResource SearchMbdConditionCard}">
                             <VerticalStackLayout Spacing="8" VerticalOptions="Center">
-                                <!-- Image placeholder -->
-                                <Border Style="{StaticResource ShimmerPlaceholderBorder}"
-                                       HeightRequest="50"
-                                       WidthRequest="50"
-                                       HorizontalOptions="Center">
+                                <!--  Image placeholder  -->
+                                <Border
+                                    HeightRequest="50"
+                                    HorizontalOptions="Center"
+                                    Style="{StaticResource ShimmerPlaceholderBorder}"
+                                    WidthRequest="50">
                                     <Border.StrokeShape>
                                         <RoundRectangle CornerRadius="8" />
                                     </Border.StrokeShape>
                                 </Border>
 
-                                <!-- Text placeholder -->
-                                <Border Style="{StaticResource ShimmerPlaceholderBorder}"
-                                       HeightRequest="12"
-                                       WidthRequest="60"
-                                       HorizontalOptions="Center" />
+                                <!--  Text placeholder  -->
+                                <Border
+                                    HeightRequest="12"
+                                    HorizontalOptions="Center"
+                                    Style="{StaticResource ShimmerPlaceholderBorder}"
+                                    WidthRequest="60" />
                             </VerticalStackLayout>
                         </Border>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
 
-            <CollectionView x:Name="ConditionCollectionView"
-                          ItemsSource="{Binding FilteredConditionCollection}"
-                          SelectionMode="None"
-                          IsVisible="{Binding IsInitialized}">
+            <CollectionView
+                x:Name="ConditionCollectionView"
+                AutomationId="ConditionCollectionView"
+                IsVisible="{Binding IsInitialized}"
+                ItemsSource="{Binding FilteredConditionCollection}"
+                SelectionMode="None">
                 <CollectionView.EmptyView>
-                    <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="10">
+                    <VerticalStackLayout
+                        HorizontalOptions="Center"
+                        Spacing="10"
+                        VerticalOptions="Center">
                         <Label Style="{StaticResource EmptyViewTitleLabel}" />
                         <Label Style="{StaticResource EmptyViewSubtitleLabel}" />
                     </VerticalStackLayout>
                 </CollectionView.EmptyView>
 
                 <CollectionView.ItemsLayout>
-                    <GridItemsLayout x:Name="CollectionViewGridItemLayout"
-                                   Orientation="Vertical"
-                                   Span="3"
-                                   VerticalItemSpacing="12"
-                                   HorizontalItemSpacing="12" />
+                    <GridItemsLayout
+                        x:Name="CollectionViewGridItemLayout"
+                        HorizontalItemSpacing="12"
+                        Orientation="Vertical"
+                        Span="3"
+                        VerticalItemSpacing="12" />
                 </CollectionView.ItemsLayout>
 
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="model:MbdCondition">
                         <Border Style="{StaticResource SearchMbdConditionCard}">
                             <Border.GestureRecognizers>
-                                <TapGestureRecognizer Tapped="TapGestureRecognizer_SearchMbdConditionTapped"
-                                                    CommandParameter="{Binding Id}" />
+                                <TapGestureRecognizer CommandParameter="{Binding Id}" Tapped="TapGestureRecognizer_SearchMbdConditionTapped" />
                             </Border.GestureRecognizers>
 
                             <Grid RowDefinitions="*,Auto">
-                                <!-- Lock overlay -->
-                                <Image Grid.Row="0"
-                                      Style="{StaticResource SearchMbdConditionImage}"
-                                      Opacity="1"
-                                      Source="locked_icon.png"
-                                      ZIndex="1"
-                                      IsVisible="{Binding DisplayLock}" />
+                                <!--  Lock overlay  -->
+                                <Image
+                                    Grid.Row="0"
+                                    IsVisible="{Binding DisplayLock}"
+                                    Opacity="1"
+                                    Source="locked_icon.png"
+                                    Style="{StaticResource SearchMbdConditionImage}"
+                                    ZIndex="1" />
 
-                                <!-- Condition image -->
-                                <Image Grid.Row="0"
-                                      Style="{StaticResource SearchMbdConditionImage}"
-                                      Source="{Binding CachedImageOneSource}" />
+                                <!--  Condition image  -->
+                                <Image
+                                    Grid.Row="0"
+                                    Source="{Binding CachedImageOneSource}"
+                                    Style="{StaticResource SearchMbdConditionImage}" />
 
-                                <!-- Condition name -->
-                                <Label Grid.Row="1"
-                                      Style="{StaticResource SearchMbdConditionLabel}"
-                                      Text="{Binding Name}" />
+                                <!--  Condition name  -->
+                                <Label
+                                    Grid.Row="1"
+                                    Style="{StaticResource SearchMbdConditionLabel}"
+                                    Text="{Binding Name}" />
                             </Grid>
                         </Border>
                     </DataTemplate>

@@ -1,37 +1,38 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<Border xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-        xmlns:controls="clr-namespace:MindBodyDictionaryMobile.Pages.Controls"
-        xmlns:models="clr-namespace:MindBodyDictionaryMobile.Models"
-        xmlns:fonts="clr-namespace:Fonts"
-        xmlns:pageModels="clr-namespace:MindBodyDictionaryMobile.PageModels"
-        xmlns:shimmer="clr-namespace:Syncfusion.Maui.Toolkit.Shimmer;assembly=Syncfusion.Maui.Toolkit"
-        x:Class="MindBodyDictionaryMobile.Pages.Controls.ProjectCardView"
-        SemanticProperties.Description="{Binding AccessibilityDescription}"
-        Style="{StaticResource CardStyle}"
-        x:DataType="models:Project">
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Border
+    x:Class="MindBodyDictionaryMobile.Pages.Controls.ProjectCardView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:MindBodyDictionaryMobile.Pages.Controls"
+    xmlns:fonts="clr-namespace:Fonts"
+    xmlns:models="clr-namespace:MindBodyDictionaryMobile.Models"
+    xmlns:pageModels="clr-namespace:MindBodyDictionaryMobile.PageModels"
+    xmlns:shimmer="clr-namespace:Syncfusion.Maui.Toolkit.Shimmer;assembly=Syncfusion.Maui.Toolkit"
+    x:DataType="models:Project"
+    SemanticProperties.Description="{Binding AccessibilityDescription}"
+    Style="{StaticResource CardStyle}">
     <shimmer:SfShimmer
         BackgroundColor="Transparent"
-        VerticalOptions="Fill"
-        IsActive="{Binding IsBusy, Source={RelativeSource AncestorType={x:Type pageModels:MainPageModel}}, x:DataType=pageModels:IProjectTaskPageModel}">
+        IsActive="{Binding IsBusy, Source={RelativeSource AncestorType={x:Type pageModels:MainPageModel}}, x:DataType=pageModels:IProjectTaskPageModel}"
+        VerticalOptions="Fill">
         <shimmer:SfShimmer.CustomView>
             <VerticalStackLayout Spacing="15">
-                <BoxView Style="{StaticResource ShimmerProjectCardIcon}"/>
-                <BoxView Style="{StaticResource ShimmerProjectCardTextLineShort}"/>
-                <BoxView Style="{StaticResource ShimmerProjectCardTextLineMedium}"/>
-                <BoxView Style="{StaticResource ShimmerProjectCardTextLineLong}"/>
+                <BoxView Style="{StaticResource ShimmerProjectCardIcon}" />
+                <BoxView Style="{StaticResource ShimmerProjectCardTextLineShort}" />
+                <BoxView Style="{StaticResource ShimmerProjectCardTextLineMedium}" />
+                <BoxView Style="{StaticResource ShimmerProjectCardTextLineLong}" />
             </VerticalStackLayout>
         </shimmer:SfShimmer.CustomView>
         <shimmer:SfShimmer.Content>
             <VerticalStackLayout Spacing="15">
                 <Image Style="{StaticResource ProjectCardIconImage}">
                     <Image.Source>
-                        <FontImageSource Glyph="{Binding Icon}" FontFamily="{x:Static fonts:FluentUI.FontFamily}"/>
+                        <FontImageSource FontFamily="{x:Static fonts:FluentUI.FontFamily}" Glyph="{Binding Icon}" />
                     </Image.Source>
                 </Image>
-                <Label Text="{Binding Name}" Style="{StaticResource ProjectCardNameLabel}"/>
-                <Label Text="{Binding Description}" Style="{StaticResource ProjectCardDescriptionLabel}"/>
-                <HorizontalStackLayout Style="{StaticResource ProjectCardTagsLayout}" BindableLayout.ItemsSource="{Binding Tags}">
+                <Label Style="{StaticResource ProjectCardNameLabel}" Text="{Binding Name}" />
+                <Label Style="{StaticResource ProjectCardDescriptionLabel}" Text="{Binding Description}" />
+                <HorizontalStackLayout BindableLayout.ItemsSource="{Binding Tags}" Style="{StaticResource ProjectCardTagsLayout}">
                     <BindableLayout.ItemTemplate>
                         <DataTemplate x:DataType="models:Tag">
                             <controls:TagView />

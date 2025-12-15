@@ -1,20 +1,28 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+﻿<?xml version="1.0" encoding="UTF-8" ?>
 <?xaml-comp compile="true" ?>
 <ResourceDictionary
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:sf="clr-namespace:Syncfusion.Maui.Toolkit.TextInputLayout;assembly=Syncfusion.Maui.Toolkit"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:sf="clr-namespace:Syncfusion.Maui.Toolkit.TextInputLayout;assembly=Syncfusion.Maui.Toolkit">
 
-    <sf:LabelStyle x:Key="lightThemeLabelStyle" TextColor="{StaticResource DarkOnLightBackground}" FontSize="{OnIdiom 18, Desktop=24}"/>
-    <sf:LabelStyle x:Key="darkThemeLabelStyle" TextColor="{StaticResource LightOnDarkBackground}" FontSize="{OnIdiom 18, Desktop=24}"/>
+    <sf:LabelStyle
+        x:Key="lightThemeLabelStyle"
+        FontSize="{OnIdiom 18,
+                           Desktop=24}"
+        TextColor="{StaticResource DarkOnLightBackground}" />
+    <sf:LabelStyle
+        x:Key="darkThemeLabelStyle"
+        FontSize="{OnIdiom 18,
+                           Desktop=24}"
+        TextColor="{StaticResource LightOnDarkBackground}" />
     <Style TargetType="sf:SfTextInputLayout">
-        <Setter Property="ContainerType" Value="Outlined"/>
-        <Setter Property="ContainerBackground" Value="Transparent"/>
-        <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"/>
-        <Setter Property="HintLabelStyle" Value="{AppThemeBinding Light={StaticResource lightThemeLabelStyle}, Dark={StaticResource darkThemeLabelStyle}}"/>
+        <Setter Property="ContainerType" Value="Outlined" />
+        <Setter Property="ContainerBackground" Value="Transparent" />
+        <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}" />
+        <Setter Property="HintLabelStyle" Value="{AppThemeBinding Light={StaticResource lightThemeLabelStyle}, Dark={StaticResource darkThemeLabelStyle}}" />
     </Style>
 
-    <!-- New UpgradePremiumDebugEditor Style -->
+    <!--  New UpgradePremiumDebugEditor Style  -->
     <Style x:Key="UpgradePremiumDebugEditor" TargetType="Editor">
         <Setter Property="IsReadOnly" Value="True" />
         <Setter Property="HeightRequest" Value="200" />
@@ -24,17 +32,17 @@
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}" />
     </Style>
 
-    <!-- New TaskViewCheckBoxStyle -->
+    <!--  New TaskViewCheckBoxStyle  -->
     <Style x:Key="TaskViewCheckBoxStyle" TargetType="CheckBox">
         <Setter Property="VerticalOptions" Value="Center" />
     </Style>
 
-    <!-- New InvalidEntryStyle -->
+    <!--  New InvalidEntryStyle  -->
     <Style x:Key="InvalidEntryStyle" TargetType="Entry">
         <Setter Property="TextColor" Value="Red" />
     </Style>
 
-    <!-- New TaskDetailCheckBoxStyle -->
+    <!--  New TaskDetailCheckBoxStyle  -->
     <Style x:Key="TaskDetailCheckBoxStyle" TargetType="CheckBox">
         <Setter Property="HorizontalOptions" Value="End" />
     </Style>

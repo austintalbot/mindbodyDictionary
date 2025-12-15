@@ -1,16 +1,14 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <Border
+    x:Class="MindBodyDictionaryMobile.Pages.Controls.TagView"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    x:Class="MindBodyDictionaryMobile.Pages.Controls.TagView"
-    xmlns:models="clr-namespace:MindBodyDictionary.Shared.Entities"
-    Style="{StaticResource TagViewBorderStyle}"
-    Background="{Binding DisplayColor}"
+    xmlns:models="clr-namespace:MindBodyDictionaryMobile.Models"
     x:DataType="models:Tag"
->
+    Background="{Binding DisplayColor}"
+    Style="{StaticResource TagViewBorderStyle}">
     <Label
-        Text="{Binding Title}"
         x:Name="TitleLabel"
         Style="{StaticResource TagViewLabelStyle}"
-    />
+        Text="{Binding Title}" />
 </Border>

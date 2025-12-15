@@ -1,24 +1,25 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:pageModels="clr-namespace:MindBodyDictionaryMobile.PageModels"
-             xmlns:models="clr-namespace:MindBodyDictionary.Shared.Entities"
-             xmlns:controls="clr-namespace:MindBodyDictionaryMobile.Pages.Controls"
-             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             x:Class="MindBodyDictionaryMobile.Pages.MbdConditionListPage"
-             x:Name="MbdConditionList"
-             x:DataType="pageModels:MbdConditionListPageModel"
-             Title="mbdConditions">
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="MindBodyDictionaryMobile.Pages.MbdConditionListPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:MindBodyDictionaryMobile.Pages.Controls"
+    xmlns:models="clr-namespace:MindBodyDictionaryMobile.Models"
+    xmlns:pageModels="clr-namespace:MindBodyDictionaryMobile.PageModels"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    x:Name="MbdConditionList"
+    Title="mbdConditions"
+    x:DataType="pageModels:MbdConditionListPageModel">
 
     <ContentPage.Behaviors>
         <toolkit:EventToCommandBehavior
-            EventName="Appearing"
             BindingContext="{Binding Path=BindingContext, Source={x:Reference MbdConditionList}, x:DataType=ContentPage}"
-            Command="{Binding AppearingCommand}"/>
+            Command="{Binding AppearingCommand}"
+            EventName="Appearing" />
     </ContentPage.Behaviors>
     <VerticalStackLayout>
-            <!-- Debug: Show all condition names -->
-            <Label Text="{Binding ConditionNamesDebug}" Style="{StaticResource MbdConditionListDebugLabel}" />
+        <!--  Debug: Show all condition names  -->
+        <Label Style="{StaticResource MbdConditionListDebugLabel}" Text="{Binding ConditionNamesDebug}" />
         <Frame Style="{StaticResource MbdConditionListDebugFrame}">
             <Grid>
                 <Grid.RowDefinitions>
@@ -27,32 +28,41 @@
                 </Grid.RowDefinitions>
                 <ScrollView Grid.Row="0" Style="{StaticResource MbdConditionListDebugScrollView}">
                     <StackLayout>
-                        <Label Text="Debug Info" Style="{StaticResource MbdConditionListDebugInfoTitleLabel}" />
-                        <Label Text="{Binding ConditionCount, StringFormat='Condition Count: {0}'}" Style="{StaticResource MbdConditionListDebugStatLabel}" />
-                        <Label Text="{Binding LastSyncTime, StringFormat='Last Sync Time: {0}'}" Style="{StaticResource MbdConditionListDebugStatLabel}" />
-                        <Label Text="{Binding SyncStatus, StringFormat='Sync Status: {0}'}" Style="{StaticResource MbdConditionListDebugStatLabel}" />
-                        <Label Text="{Binding ConditionSource, StringFormat='Source: {0}'}" Style="{StaticResource MbdConditionListDebugStatLabel}" />
-                        <Label Text="{Binding LoadFromApiCommandDetails}" Style="{StaticResource MbdConditionListDebugDetailsLabel}" />
-                        <Label Text="{Binding LastApiResponse}" Style="{StaticResource MbdConditionListDebugApiResponseLabel}" />
-                        <!-- Load from API button moved below for always-present access -->
+                        <Label Style="{StaticResource MbdConditionListDebugInfoTitleLabel}" Text="Debug Info" />
+                        <Label Style="{StaticResource MbdConditionListDebugStatLabel}" Text="{Binding ConditionCount, StringFormat='Condition Count: {0}'}" />
+                        <Label Style="{StaticResource MbdConditionListDebugStatLabel}" Text="{Binding LastSyncTime, StringFormat='Last Sync Time: {0}'}" />
+                        <Label Style="{StaticResource MbdConditionListDebugStatLabel}" Text="{Binding SyncStatus, StringFormat='Sync Status: {0}'}" />
+                        <Label Style="{StaticResource MbdConditionListDebugStatLabel}" Text="{Binding ConditionSource, StringFormat='Source: {0}'}" />
+                        <Label Style="{StaticResource MbdConditionListDebugDetailsLabel}" Text="{Binding LoadFromApiCommandDetails}" />
+                        <Label Style="{StaticResource MbdConditionListDebugApiResponseLabel}" Text="{Binding LastApiResponse}" />
+                        <!--  Load from API button moved below for always-present access  -->
                     </StackLayout>
                 </ScrollView>
-                <Button Grid.Row="1" Command="{Binding CopyDebugInfoCommand}" Style="{StaticResource MbdConditionListDebugCopyButton}" />
+                <Button
+                    Grid.Row="1"
+                    Command="{Binding CopyDebugInfoCommand}"
+                    Style="{StaticResource MbdConditionListDebugCopyButton}" />
             </Grid>
         </Frame>
-        <CollectionView ItemsSource="{Binding MbdConditions}"
-                       Margin="{StaticResource LayoutPadding}">
+        <CollectionView
+            Margin="{StaticResource LayoutPadding}"
+            AutomationId="MbdConditionsCollectionView"
+            ItemsSource="{Binding MbdConditions}">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="models:MbdCondition">
                     <VerticalStackLayout Style="{StaticResource MbdConditionListItemVerticalStackLayout}">
-                        <Label Text="{Binding Name}" Style="{StaticResource MbdConditionListItemNameLabel}" />
-                        <Label Text="{Binding Description}" Style="{StaticResource MbdConditionListItemDescriptionLabel}" />
+                        <Label Style="{StaticResource MbdConditionListItemNameLabel}" Text="{Binding Name}" />
+                        <Label Style="{StaticResource MbdConditionListItemDescriptionLabel}" Text="{Binding Description}" />
                     </VerticalStackLayout>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
-        <Button Command="{Binding LoadFromApiCommand}" Style="{StaticResource MbdConditionListLoadFromApiButton}" />
+        <Button
+            AutomationId="LoadFromApiButton"
+            Command="{Binding LoadFromApiCommand}"
+            Style="{StaticResource MbdConditionListLoadFromApiButton}" />
         <controls:AddButton
+            AutomationId="AddConditionButton"
             Command="{Binding AddmbdConditionCommand}"
             SemanticProperties.Description="Add mbdCondition" />
     </VerticalStackLayout>
