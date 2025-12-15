@@ -51,8 +51,8 @@ const ImagesTab: React.FC = () => {
   const loadAilmentOptions = async () => {
     try {
         const response = await fetchMbdConditionsTable(); // Changed to fetchMbdConditionsTable
-        if (response && Array.isArray(response.data)) {
-            setAilmentOptions(response.data.map((ailment: MbdCondition) => ({ id: ailment.id, name: ailment.name })));
+        if (response && Array.isArray(response)) {
+            setAilmentOptions(response.map((ailment: MbdCondition) => ({ id: ailment.id, name: ailment.name })));
         } else {
             throw new Error('API response data for MbdConditions is not an array or is missing.');
         }
@@ -125,7 +125,7 @@ const ImagesTab: React.FC = () => {
         // Need to get ailment name from id if imageAilment is an id, or use imageAilment directly if it's name
         const selectedAilment = ailmentOptions.find(opt => opt.id === imageAilment);
         const ailmentNameToUse = selectedAilment ? selectedAilment.name : imageAilment; // Fallback to id if name not found
-        
+
         await uploadImage(ailmentNameToUse!, imageType, imageFile);
         alert("Image uploaded successfully!");
         setShowAddImageDiv(false);

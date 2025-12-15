@@ -27,8 +27,11 @@ const NotificationsTab: React.FC = () => {
     setLoadingAilments(true);
     try {
         const response = await fetchMbdConditionsTable(); // Changed to fetchMbdConditionsTable
-        if (response && Array.isArray(response.data)) {
-            setAilmentOptions(response.data.map((ailment: MbdCondition) => ({ id: ailment.id, name: ailment.name })));
+        if (response && Array.isArray(response)) {
+            const sorted = response
+          .map((ailment: MbdCondition) => ({ id: ailment.id, name: ailment.name }))
+          .sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+            setAilmentOptions(sorted);
         } else {
             throw new Error('API response data for MbdConditions is not an array or is missing.');
         }
