@@ -467,4 +467,14 @@
         <Setter Property="HorizontalOptions" Value="Center" />
     </Style>
 
+    <!-- New DisclaimerPopupMessageLabel Style -->
+    <Style x:Key="DisclaimerPopupMessageLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="HorizontalTextAlignment" Value="Center" />
+        <Setter Property="VerticalTextAlignment" Value="Center" />
+        <Setter Property="LineBreakMode" Value="WordWrap" />
+        <Setter Property="Margin" Value="10" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+    </Style>
+
 </ResourceDictionary>
