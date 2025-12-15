@@ -1,25 +1,26 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8" ?>
 <ContentPage
+    x:Class="MindBodyDictionaryMobile.Pages.FaqPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:pm="clr-namespace:MindBodyDictionaryMobile.PageModels"
-    x:DataType="pm:FaqPageModel"
-    x:Class="MindBodyDictionaryMobile.Pages.FaqPage"
-    Title="FAQ">
+    Title="FAQ"
+    x:DataType="pm:FaqPageModel">
 
-    <CollectionView ItemsSource="{Binding FaqItems}"
-                    AutomationId="FaqCollectionView"
-                    SelectionMode="Single">
+    <CollectionView
+        AutomationId="FaqCollectionView"
+        ItemsSource="{Binding FaqItems}"
+        SelectionMode="Single">
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="pm:FaqItem">
                 <VerticalStackLayout Style="{StaticResource FaqItemVerticalStackLayout}">
                     <Frame Style="{StaticResource FaqItemFrameStyle}">
                         <VerticalStackLayout Style="{StaticResource FaqItemContentVerticalStackLayout}">
-                            <!-- Question Header -->
-                            <Label Text="{Binding Question}" Style="{StaticResource FaqQuestionLabelStyle}"/>
+                            <!--  Question Header  -->
+                            <Label Style="{StaticResource FaqQuestionLabelStyle}" Text="{Binding Question}" />
 
-                            <!-- Answer (Expandable) -->
-                            <Label Text="{Binding Answer}" Style="{StaticResource FaqAnswerLabelStyle}"/>
+                            <!--  Answer (Expandable)  -->
+                            <Label Style="{StaticResource FaqAnswerLabelStyle}" Text="{Binding Answer}" />
                         </VerticalStackLayout>
                     </Frame>
                 </VerticalStackLayout>

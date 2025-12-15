@@ -1,55 +1,54 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:sf="clr-namespace:Syncfusion.Maui.Toolkit.TextInputLayout;assembly=Syncfusion.Maui.Toolkit"
-             xmlns:pageModel="clr-namespace:MindBodyDictionaryMobile.PageModels"
-             xmlns:models="clr-namespace:MindBodyDictionaryMobile.Models"
-             x:DataType="pageModel:TaskDetailPageModel"
-             x:Class="MindBodyDictionaryMobile.Pages.TaskDetailPage"
-             Title="Task">
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="MindBodyDictionaryMobile.Pages.TaskDetailPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:models="clr-namespace:MindBodyDictionaryMobile.Models"
+    xmlns:pageModel="clr-namespace:MindBodyDictionaryMobile.PageModels"
+    xmlns:sf="clr-namespace:Syncfusion.Maui.Toolkit.TextInputLayout;assembly=Syncfusion.Maui.Toolkit"
+    Title="Task"
+    x:DataType="pageModel:TaskDetailPageModel">
 
     <ContentPage.ToolbarItems>
         <ToolbarItem
-            Text="Delete"
             Command="{Binding DeleteCommand}"
+            IconImageSource="{StaticResource IconDelete}"
             Order="Primary"
             Priority="0"
-            IconImageSource="{StaticResource IconDelete}"
-            SemanticProperties.Description="Delete Task" />
+            SemanticProperties.Description="Delete Task"
+            Text="Delete" />
     </ContentPage.ToolbarItems>
 
     <Grid>
         <ScrollView>
-            <VerticalStackLayout Spacing="{StaticResource LayoutSpacing}" Padding="{StaticResource LayoutPadding}">
+            <VerticalStackLayout Padding="{StaticResource LayoutPadding}" Spacing="{StaticResource LayoutSpacing}">
                 <sf:SfTextInputLayout Hint="Task">
-                    <Entry
-                        Text="{Binding Title}"
-                        SemanticProperties.Description="Task" />
+                    <Entry SemanticProperties.Description="Task" Text="{Binding Title}" />
                 </sf:SfTextInputLayout>
 
                 <sf:SfTextInputLayout Hint="Completed">
                     <CheckBox
-                        Style="{StaticResource TaskDetailCheckBoxStyle}"
                         IsChecked="{Binding IsCompleted}"
                         SemanticProperties.Description="Completed"
-                        SemanticProperties.Hint="Indicates if this task is completed" />
+                        SemanticProperties.Hint="Indicates if this task is completed"
+                        Style="{StaticResource TaskDetailCheckBoxStyle}" />
                 </sf:SfTextInputLayout>
 
                 <sf:SfTextInputLayout
+                    Hint="Project"
                     IsVisible="{Binding IsExistingProject}"
                     SemanticProperties.Description="ComboBox to select Project"
-                    SemanticProperties.Hint="State Collapsed"
-                    Hint="Project">
+                    SemanticProperties.Hint="State Collapsed">
                     <Picker
-                        ItemsSource="{Binding Projects}"
                         ItemDisplayBinding="{Binding Name, x:DataType=models:Project}"
-                        SelectedItem="{Binding Project}"
+                        ItemsSource="{Binding Projects}"
                         SelectedIndex="{Binding SelectedProjectIndex}"
+                        SelectedItem="{Binding Project}"
                         SemanticProperties.Description="Project State Expanded"
-                        SemanticProperties.Hint="Which project this task belongs to"/>
+                        SemanticProperties.Hint="Which project this task belongs to" />
                 </sf:SfTextInputLayout>
 
-                <Button Command="{Binding SaveCommand}" Style="{StaticResource TaskDetailSaveButton}"/>
+                <Button Command="{Binding SaveCommand}" Style="{StaticResource TaskDetailSaveButton}" />
             </VerticalStackLayout>
         </ScrollView>
     </Grid>

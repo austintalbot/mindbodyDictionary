@@ -1,12 +1,13 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:vm="clr-namespace:MindBodyDictionaryMobile.PageModels"
-             xmlns:fonts="clr-namespace:Fonts;assembly=MindBodyDictionaryMobile"
-             x:Class="MindBodyDictionaryMobile.Pages.UpgradePage"
-             x:DataType="vm:UpgradePremiumPageModel"
-             Title="{Binding Title}">
-    <Grid >
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="MindBodyDictionaryMobile.Pages.UpgradePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:fonts="clr-namespace:Fonts;assembly=MindBodyDictionaryMobile"
+    xmlns:vm="clr-namespace:MindBodyDictionaryMobile.PageModels"
+    Title="{Binding Title}"
+    x:DataType="vm:UpgradePremiumPageModel">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
@@ -14,38 +15,40 @@
         <StackLayout>
             <Label x:Name="DescriptionLabel" Style="{StaticResource UpgradePageDescriptionLabel}" />
             <VerticalStackLayout Margin="5" VerticalOptions="Fill">
-                <Image Style="{StaticResource UpgradePremiumPageLogoImage}"
-                     AutomationId="MindBodyDictionaryLogo"
-                     x:Name="MindBodyDictionaryLogo" />
+                <Image
+                    x:Name="MindBodyDictionaryLogo"
+                    AutomationId="MindBodyDictionaryLogo"
+                    Style="{StaticResource UpgradePremiumPageLogoImage}" />
 
-                <Button Text="Privacy Policy"
-                        AutomationId="PrivacyPolicyButton"
-                        Style="{StaticResource UpgradePremiumLegalButton}"
-                        Command="{Binding PrivacyCommand}"
-                />
-                <Button Text="Terms of Use"
-                        AutomationId="TermsButton"
-                        Style="{StaticResource UpgradePremiumLegalButton}"
-                        Command="{Binding TermsCommand}"
-                        CommandParameter="https://www.mindbodydictionary.com/termsandconditions"/>
+                <Button
+                    AutomationId="PrivacyPolicyButton"
+                    Command="{Binding PrivacyCommand}"
+                    Style="{StaticResource UpgradePremiumLegalButton}"
+                    Text="Privacy Policy" />
+                <Button
+                    AutomationId="TermsButton"
+                    Command="{Binding TermsCommand}"
+                    CommandParameter="https://www.mindbodydictionary.com/termsandconditions"
+                    Style="{StaticResource UpgradePremiumLegalButton}"
+                    Text="Terms of Use" />
             </VerticalStackLayout>
             <VerticalStackLayout VerticalOptions="Fill">
-                <Label Style="{StaticResource UpgradePremiumDescriptionLabel}"
-                    IsVisible="{Binding NotSubscribed}" />
-                <Label Style="{StaticResource UpgradePremiumTermsLabel}"
-                    IsVisible="{Binding NotSubscribed}" />
-            <Button x:Name="SubscribeButton"
-                AutomationId="SubscribeButton"
-                IsVisible="{Binding NotSubscribed}"
-                Style="{StaticResource UpgradePremiumPrimaryButton}"
-                Command="{Binding PurchaseCommand}"
-                Text="Subscribe for $9.99/year" />
-            <Button x:Name="RestoreButton"
-                AutomationId="RestoreButton"
-                IsVisible="{Binding NotSubscribed}"
-                Command="{Binding RestoreCommand}"
-                Style="{StaticResource UpgradePremiumRestoreButton}"
-                Text="Restore Subscription" />
+                <Label IsVisible="{Binding NotSubscribed}" Style="{StaticResource UpgradePremiumDescriptionLabel}" />
+                <Label IsVisible="{Binding NotSubscribed}" Style="{StaticResource UpgradePremiumTermsLabel}" />
+                <Button
+                    x:Name="SubscribeButton"
+                    AutomationId="SubscribeButton"
+                    Command="{Binding PurchaseCommand}"
+                    IsVisible="{Binding NotSubscribed}"
+                    Style="{StaticResource UpgradePremiumPrimaryButton}"
+                    Text="Subscribe for $9.99/year" />
+                <Button
+                    x:Name="RestoreButton"
+                    AutomationId="RestoreButton"
+                    Command="{Binding RestoreCommand}"
+                    IsVisible="{Binding NotSubscribed}"
+                    Style="{StaticResource UpgradePremiumRestoreButton}"
+                    Text="Restore Subscription" />
             </VerticalStackLayout>
 
         </StackLayout>

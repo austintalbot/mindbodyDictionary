@@ -1,8 +1,6 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+﻿<?xml version="1.0" encoding="UTF-8" ?>
 <?xaml-comp compile="true" ?>
-<ResourceDictionary
-    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
     <Style x:Key="StandardCollectionView" TargetType="CollectionView">
         <Setter Property="SelectionMode" Value="None" />
@@ -10,17 +8,23 @@
         <Setter Property="HorizontalOptions" Value="Fill" />
     </Style>
 
-    <Style x:Key="HorizontalCollectionView" TargetType="CollectionView" BasedOn="{StaticResource StandardCollectionView}">
+    <Style
+        x:Key="HorizontalCollectionView"
+        BasedOn="{StaticResource StandardCollectionView}"
+        TargetType="CollectionView">
         <Setter Property="ItemsLayout" Value="HorizontalList" />
         <Setter Property="HeightRequest" Value="300" />
     </Style>
 
-    <Style x:Key="VerticalCollectionView" TargetType="CollectionView" BasedOn="{StaticResource StandardCollectionView}">
+    <Style
+        x:Key="VerticalCollectionView"
+        BasedOn="{StaticResource StandardCollectionView}"
+        TargetType="CollectionView">
         <Setter Property="ItemsLayout" Value="VerticalList" />
         <Setter Property="Margin" Value="10" />
     </Style>
 
-    <!-- New ProjectDetailIconCollectionView Style -->
+    <!--  New ProjectDetailIconCollectionView Style  -->
     <Style x:Key="ProjectDetailIconCollectionView" TargetType="CollectionView">
         <Setter Property="HeightRequest" Value="44" />
         <Setter Property="Margin" Value="0,0,0,15" />

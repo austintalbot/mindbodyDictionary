@@ -1,38 +1,40 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:model="clr-namespace:MindBodyDictionaryMobile.Models"
-             xmlns:vm="clr-namespace:MindBodyDictionaryMobile.PageModels"
-             x:DataType="vm:MbdConditionHomePageModel"
-             x:Class="MindBodyDictionaryMobile.Pages.MbdConditionHomePage"
-             Title="{Binding Title}">
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="MindBodyDictionaryMobile.Pages.MbdConditionHomePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:model="clr-namespace:MindBodyDictionaryMobile.Models"
+    xmlns:vm="clr-namespace:MindBodyDictionaryMobile.PageModels"
+    Title="{Binding Title}"
+    x:DataType="vm:MbdConditionHomePageModel">
 
-    <Grid Style="{StaticResource MainPageGrid}" RowDefinitions="*">
-        <RefreshView Grid.Row="0"
-                     Command="{Binding GetConditionListCommand}"
-                     IsRefreshing="{Binding IsRefreshing}"
-                     RefreshColor="{StaticResource Primary}">
+    <Grid RowDefinitions="*" Style="{StaticResource MainPageGrid}">
+        <RefreshView
+            Grid.Row="0"
+            Command="{Binding GetConditionListCommand}"
+            IsRefreshing="{Binding IsRefreshing}"
+            RefreshColor="{StaticResource Primary}">
             <ScrollView Style="{StaticResource ContentScrollView}">
                 <VerticalStackLayout Style="{StaticResource MainContentStack}">
 
-                    <Image Style="{StaticResource AppLogoImage}"
-                           AutomationId="AppLogo" />
-                    <SearchBar x:Name="MbdConditionSearchBar"
-                               AutomationId="MbdConditionSearchBar"
-                               SearchButtonPressed="MbdConditionHomePage_SearchButtonPressed"
-                               Style="{StaticResource MbdConditionSearchBar}" />
+                    <Image AutomationId="AppLogo" Style="{StaticResource AppLogoImage}" />
+                    <SearchBar
+                        x:Name="MbdConditionSearchBar"
+                        AutomationId="MbdConditionSearchBar"
+                        SearchButtonPressed="MbdConditionHomePage_SearchButtonPressed"
+                        Style="{StaticResource MbdConditionSearchBar}" />
 
 
 
-                    <CollectionView x:Name="ConditionsList"
-                                    AutomationId="ConditionsList"
-                                    ItemsSource="{Binding RandomConditionCollection}"
-                                    SelectionMode="None"
-                                    ItemSizingStrategy="MeasureAllItems"
-                                    IsVisible="{Binding IsInitialized}">
+                    <CollectionView
+                        x:Name="ConditionsList"
+                        AutomationId="ConditionsList"
+                        IsVisible="{Binding IsInitialized}"
+                        ItemSizingStrategy="MeasureAllItems"
+                        ItemsSource="{Binding RandomConditionCollection}"
+                        SelectionMode="None">
                         <CollectionView.ItemsLayout>
-                            <LinearItemsLayout Orientation="Vertical"
-                                               ItemSpacing="5"/>
+                            <LinearItemsLayout ItemSpacing="5" Orientation="Vertical" />
                         </CollectionView.ItemsLayout>
                         <CollectionView.ItemTemplate>
                             <DataTemplate x:DataType="model:MbdCondition">
@@ -40,39 +42,48 @@
                                     <Border.GestureRecognizers>
                                         <TapGestureRecognizer Tapped="TapGestureRecognizer_HomeMbdConditionTapped" />
                                     </Border.GestureRecognizers>
-                                    <Grid RowDefinitions="Auto,*" ColumnDefinitions="*,Auto">
-                                        <!-- Name -->
-                                        <Label Grid.Row="0" Grid.Column="0"
-                                               Text="{Binding Name}"
-                                               Style="{StaticResource HomePageConditionNameLabel}"/>
+                                    <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,*">
+                                        <!--  Name  -->
+                                        <Label
+                                            Grid.Row="0"
+                                            Grid.Column="0"
+                                            Style="{StaticResource HomePageConditionNameLabel}"
+                                            Text="{Binding Name}" />
 
-                                        <!-- Lock Icon -->
-                                        <Image Grid.Row="0" Grid.Column="1"
-                                               Style="{StaticResource HomePageLockImage}"
-                                               IsVisible="{Binding DisplayLock}" />
+                                        <!--  Lock Icon  -->
+                                        <Image
+                                            Grid.Row="0"
+                                            Grid.Column="1"
+                                            IsVisible="{Binding DisplayLock}"
+                                            Style="{StaticResource HomePageLockImage}" />
 
-                                        <!-- Affirmation -->
-                                        <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
-                                               Text="{Binding DisplayedAffirmation}"
-                                               Style="{StaticResource HomePageAffirmationLabel}"/>
+                                        <!--  Affirmation  -->
+                                        <Label
+                                            Grid.Row="1"
+                                            Grid.Column="0"
+                                            Grid.ColumnSpan="2"
+                                            Style="{StaticResource HomePageAffirmationLabel}"
+                                            Text="{Binding DisplayedAffirmation}" />
                                     </Grid>
                                 </Border>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
                         <CollectionView.EmptyView>
-                            <VerticalStackLayout VerticalOptions="Center"
-                                                 HorizontalOptions="Center"
-                                                 Spacing="10">
+                            <VerticalStackLayout
+                                HorizontalOptions="Center"
+                                Spacing="10"
+                                VerticalOptions="Center">
                                 <Label Style="{StaticResource EmptyViewTitleLabel}" Text="No conditions available" />
                                 <Label Style="{StaticResource EmptyViewSubtitleLabel}" Text="Pull to refresh" />
                             </VerticalStackLayout>
                         </CollectionView.EmptyView>
                     </CollectionView>
-      <Button Text="Refresh Conditions"
-                            AutomationId="RefreshConditionsButton"
-                            Style="{StaticResource RandomMbdConditionButton}"
-                            IsEnabled="{Binding IsInitialized}"
-                            Command="{Binding GetConditionListCommand}"/>
+                    <Button
+                        AutomationId="RefreshConditionsButton"
+                        Command="{Binding GetConditionListCommand}"
+                        IsEnabled="{Binding IsInitialized}"
+                        Style="{StaticResource RandomMbdConditionButton}"
+                        Text="Refresh Conditions" />
 
                 </VerticalStackLayout>
             </ScrollView>

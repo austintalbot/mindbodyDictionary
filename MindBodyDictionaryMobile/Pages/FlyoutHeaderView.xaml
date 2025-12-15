@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8" ?>
 <ContentView
+    x:Class="MindBodyDictionaryMobile.Pages.FlyoutHeaderView"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    x:Class="MindBodyDictionaryMobile.Pages.FlyoutHeaderView"
     Style="{StaticResource FlyoutHeaderViewStyle}">
 
     <Grid Style="{StaticResource FlyoutHeaderGridStyle}">
-        <Image Style="{StaticResource FlyoutHeaderLogoImage}"/>
+        <Image Style="{StaticResource FlyoutHeaderLogoImage}" />
     </Grid>
 </ContentView>

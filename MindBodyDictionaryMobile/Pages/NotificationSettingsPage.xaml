@@ -1,61 +1,67 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:vm="clr-namespace:MindBodyDictionaryMobile.PageModels"
-             x:Class="MindBodyDictionaryMobile.Pages.NotificationSettingsPage"
-             x:DataType="vm:NotificationSettingsPageModel"
-             Title="Notification Settings">
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="MindBodyDictionaryMobile.Pages.NotificationSettingsPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:MindBodyDictionaryMobile.PageModels"
+    Title="Notification Settings"
+    x:DataType="vm:NotificationSettingsPageModel">
 
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="20">
 
-            <!-- Header -->
+            <!--  Header  -->
             <Label Style="{StaticResource NotificationHeaderLabel}" />
 
-            <!-- Support Status -->
+            <!--  Support Status  -->
             <Border Style="{StaticResource NotificationInfoBorder}">
                 <VerticalStackLayout Spacing="10">
-                    <Label Text="Device Status" Style="{StaticResource NotificationInfoTitleLabel}" />
-                    <Label Text="{Binding StatusMessage}"
-                           AutomationId="StatusMessageLabel"
-                           Style="{StaticResource NotificationInfoMessageLabel}" />
-                    <Label Text="{Binding LastActionReceived, StringFormat='Last Action: {0}'}"
-                           IsVisible="{Binding LastActionReceived, Converter={StaticResource IsNotNullOrEmptyConverter}}"
-                           Style="{StaticResource NotificationInfoLastActionLabel}" />
+                    <Label Style="{StaticResource NotificationInfoTitleLabel}" Text="Device Status" />
+                    <Label
+                        AutomationId="StatusMessageLabel"
+                        Style="{StaticResource NotificationInfoMessageLabel}"
+                        Text="{Binding StatusMessage}" />
+                    <Label
+                        IsVisible="{Binding LastActionReceived, Converter={StaticResource IsNotNullOrEmptyConverter}}"
+                        Style="{StaticResource NotificationInfoLastActionLabel}"
+                        Text="{Binding LastActionReceived, StringFormat='Last Action: {0}'}" />
                 </VerticalStackLayout>
             </Border>
 
-            <!-- Registration Status -->
+            <!--  Registration Status  -->
             <Border Style="{StaticResource NotificationInfoBorder}">
                 <HorizontalStackLayout Style="{StaticResource NotificationRegistrationStatusLayout}">
-                    <Label Text="Registration Status:" Style="{StaticResource NotificationRegistrationStatusTitleLabel}" />
-                    <Label Text="{Binding IsRegistered, Converter={StaticResource BoolToRegisteredTextConverter}}"
-                           TextColor="{Binding IsRegistered, Converter={StaticResource BoolToColorConverter}}"
-                           Style="{StaticResource NotificationRegistrationStatusValueLabel}" />
+                    <Label Style="{StaticResource NotificationRegistrationStatusTitleLabel}" Text="Registration Status:" />
+                    <Label
+                        Style="{StaticResource NotificationRegistrationStatusValueLabel}"
+                        Text="{Binding IsRegistered, Converter={StaticResource BoolToRegisteredTextConverter}}"
+                        TextColor="{Binding IsRegistered, Converter={StaticResource BoolToColorConverter}}" />
                 </HorizontalStackLayout>
             </Border>
 
-            <!-- Action Buttons -->
+            <!--  Action Buttons  -->
             <VerticalStackLayout Spacing="15">
-                <Button Text="Register for Notifications"
-                        AutomationId="RegisterNotificationsButton"
-                        Command="{Binding RegisterDeviceCommand}"
-                        IsEnabled="{Binding NotificationsSupported}"
-                        BackgroundColor="{StaticResource Primary}"
-                        Style="{StaticResource NotificationActionButton}" />
+                <Button
+                    AutomationId="RegisterNotificationsButton"
+                    BackgroundColor="{StaticResource Primary}"
+                    Command="{Binding RegisterDeviceCommand}"
+                    IsEnabled="{Binding NotificationsSupported}"
+                    Style="{StaticResource NotificationActionButton}"
+                    Text="Register for Notifications" />
 
-                <Button Text="Deregister from Notifications"
-                        AutomationId="DeregisterNotificationsButton"
-                        Command="{Binding DeregisterDeviceCommand}"
-                        IsEnabled="{Binding IsRegistered}"
-                        BackgroundColor="{StaticResource Secondary}"
-                        Style="{StaticResource NotificationActionButton}" />
+                <Button
+                    AutomationId="DeregisterNotificationsButton"
+                    BackgroundColor="{StaticResource Secondary}"
+                    Command="{Binding DeregisterDeviceCommand}"
+                    IsEnabled="{Binding IsRegistered}"
+                    Style="{StaticResource NotificationActionButton}"
+                    Text="Deregister from Notifications" />
             </VerticalStackLayout>
 
-            <!-- Information -->
+            <!--  Information  -->
             <Border Style="{StaticResource NotificationInfoBorder}">
                 <VerticalStackLayout Spacing="10">
-                    <Label Text="About Push Notifications" Style="{StaticResource NotificationInfoTitleLabel}" />
+                    <Label Style="{StaticResource NotificationInfoTitleLabel}" Text="About Push Notifications" />
                     <Label Style="{StaticResource NotificationInfoTextLabel}">
                         <Label.FormattedText>
                             <FormattedString>
@@ -63,7 +69,7 @@
                                 <Span Text="&#x0a;• Get reminders for important deadlines" />
                                 <Span Text="&#x0a;• Stay informed even when the app is closed" />
                                 <Span Text="&#x0a;&#x0a;" />
-                                <Span Text="Note: " FontAttributes="Bold" />
+                                <Span FontAttributes="Bold" Text="Note: " />
                                 <Span Text="You can manage notification permissions in your device settings." />
                             </FormattedString>
                         </Label.FormattedText>
@@ -71,10 +77,11 @@
                 </VerticalStackLayout>
             </Border>
 
-            <!-- Loading Indicator -->
-            <ActivityIndicator IsRunning="{Binding IsRegistering}"
-                              IsVisible="{Binding IsRegistering}"
-                              Style="{StaticResource ImageCacheLoadingIndicator}" />
+            <!--  Loading Indicator  -->
+            <ActivityIndicator
+                IsRunning="{Binding IsRegistering}"
+                IsVisible="{Binding IsRegistering}"
+                Style="{StaticResource ImageCacheLoadingIndicator}" />
 
         </VerticalStackLayout>
     </ScrollView>

@@ -1,17 +1,15 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+﻿<?xml version="1.0" encoding="UTF-8" ?>
 <?xaml-comp compile="true" ?>
-<ResourceDictionary
-    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
     <Style x:Key="AccentButton" TargetType="Button">
         <Setter Property="TextColor" Value="{StaticResource White}" />
-        <Setter Property="BackgroundColor" Value="{StaticResource ButtonColor}"/>
-        <Setter Property="FontFamily" Value="OpenSansSemibold"/>
-        <Setter Property="FontSize" Value="16"/>
-        <Setter Property="CornerRadius" Value="8"/>
-        <Setter Property="Padding" Value="14,10"/>
-        <Setter Property="MinimumHeightRequest" Value="44"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource ButtonColor}" />
+        <Setter Property="FontFamily" Value="OpenSansSemibold" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Padding" Value="14,10" />
+        <Setter Property="MinimumHeightRequest" Value="44" />
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
@@ -30,16 +28,16 @@
     <Style x:Key="TabButton" TargetType="Button">
         <Setter Property="TextColor" Value="{StaticResource White}" />
         <Setter Property="BackgroundColor" Value="Transparent" />
-        <Setter Property="FontFamily" Value="OpenSansSemibold"/>
-        <Setter Property="FontSize" Value="14"/>
-        <Setter Property="BorderWidth" Value="0"/>
-        <Setter Property="CornerRadius" Value="0"/>
-        <Setter Property="Padding" Value="10,10"/>
-        <Setter Property="HeightRequest" Value="50"/>
-        <Setter Property="HorizontalOptions" Value="Fill"/>
+        <Setter Property="FontFamily" Value="OpenSansSemibold" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="BorderWidth" Value="0" />
+        <Setter Property="CornerRadius" Value="0" />
+        <Setter Property="Padding" Value="10,10" />
+        <Setter Property="HeightRequest" Value="50" />
+        <Setter Property="HorizontalOptions" Value="Fill" />
     </Style>
 
-    <!-- New Button Styles from App.xaml -->
+    <!--  New Button Styles from App.xaml  -->
     <Style x:Key="PrimaryButton" TargetType="Button">
         <Setter Property="BackgroundColor" Value="{StaticResource ButtonColor}" />
         <Setter Property="TextColor" Value="White" />
@@ -52,21 +50,24 @@
         <Setter Property="FontFamily" Value="OpenSansRegular" />
     </Style>
 
-    <Style x:Key="SubmitButton" TargetType="Button" BasedOn="{StaticResource PrimaryButton}">
+    <Style
+        x:Key="SubmitButton"
+        BasedOn="{StaticResource PrimaryButton}"
+        TargetType="Button">
         <Setter Property="VerticalOptions" Value="End" />
     </Style>
 
     <Style x:Key="RandomMbdConditionButton" TargetType="Button">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource White}}" />
-        <Setter Property="BackgroundColor" Value="{StaticResource Primary}"/>
-        <Setter Property="FontFamily" Value="OpenSansRegular"/>
-        <Setter Property="FontSize" Value="18"/>
-        <Setter Property="BorderWidth" Value="0"/>
-        <Setter Property="CornerRadius" Value="8"/>
-        <Setter Property="Padding" Value="14,10"/>
-        <Setter Property="MinimumHeightRequest" Value="44"/>
-        <Setter Property="MinimumWidthRequest" Value="44"/>
-        <Setter Property="Margin" Value="0,10,0,10"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+        <Setter Property="FontFamily" Value="OpenSansRegular" />
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="BorderWidth" Value="0" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Padding" Value="14,10" />
+        <Setter Property="MinimumHeightRequest" Value="44" />
+        <Setter Property="MinimumWidthRequest" Value="44" />
+        <Setter Property="Margin" Value="0,10,0,10" />
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
@@ -83,14 +84,14 @@
         </Setter>
     </Style>
 
-    <!-- New AboutPageActionButton Style -->
+    <!--  New AboutPageActionButton Style  -->
     <Style x:Key="AboutPageActionButton" TargetType="Button">
         <Setter Property="TextColor" Value="White" />
         <Setter Property="Padding" Value="15" />
         <Setter Property="CornerRadius" Value="8" />
     </Style>
 
-    <!-- New Button Styles from UpgradePremiumPage.xaml -->
+    <!--  New Button Styles from UpgradePremiumPage.xaml  -->
     <Style x:Key="UpgradePremiumPrimaryButton" TargetType="Button">
         <Setter Property="Padding" Value="15,12" />
     </Style>
@@ -127,19 +128,22 @@
         <Setter Property="BorderWidth" Value="1" />
     </Style>
 
-    <!-- New SubscribeTodayPageSubscribeButton Style -->
-    <Style x:Key="SubscribeTodayPageSubscribeButton" TargetType="Button" BasedOn="{StaticResource SubmitButton}">
-        <!-- Text is "Subscribe!" and Clicked is handled in code-behind -->
+    <!--  New SubscribeTodayPageSubscribeButton Style  -->
+    <Style
+        x:Key="SubscribeTodayPageSubscribeButton"
+        BasedOn="{StaticResource SubmitButton}"
+        TargetType="Button">
+        <!--  Text is "Subscribe!" and Clicked is handled in code-behind  -->
     </Style>
 
-    <!-- New DisclaimerPopupButton Style -->
+    <!--  New DisclaimerPopupButton Style  -->
     <Style x:Key="DisclaimerPopupButton" TargetType="Button">
         <Setter Property="BackgroundColor" Value="{StaticResource ButtonColor}" />
         <Setter Property="Margin" Value="10" />
         <Setter Property="Padding" Value="10" />
     </Style>
 
-    <!-- New Button Styles from ImageCachePage.xaml -->
+    <!--  New Button Styles from ImageCachePage.xaml  -->
     <Style x:Key="ImageCacheActionButton" TargetType="Button">
         <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
         <Setter Property="TextColor" Value="White" />
@@ -155,11 +159,14 @@
         <Setter Property="FontSize" Value="12" />
     </Style>
 
-    <Style x:Key="ImageCacheDebugCopyButton" TargetType="Button" BasedOn="{StaticResource ImageCacheDebugButton}">
+    <Style
+        x:Key="ImageCacheDebugCopyButton"
+        BasedOn="{StaticResource ImageCacheDebugButton}"
+        TargetType="Button">
         <Setter Property="BackgroundColor" Value="Orange" />
     </Style>
 
-    <!-- New Button Styles from ManageMetaPage.xaml -->
+    <!--  New Button Styles from ManageMetaPage.xaml  -->
     <Style x:Key="MetaDeleteButtonStyle" TargetType="Button">
         <Setter Property="ImageSource" Value="{StaticResource IconDelete}" />
         <Setter Property="Background" Value="Transparent" />
@@ -167,7 +174,7 @@
 
     <Style x:Key="MetaSaveButtonStyle" TargetType="Button">
         <Setter Property="Text" Value="Save" />
-        <Setter Property="MinimumHeightRequest" Value="{OnIdiom 44,Desktop=60}" />
+        <Setter Property="MinimumHeightRequest" Value="{OnIdiom 44, Desktop=60}" />
     </Style>
 
     <Style x:Key="MetaAddButtonStyle" TargetType="Button">
@@ -177,13 +184,13 @@
     <Style x:Key="AddButtonStyle" TargetType="Button">
         <Setter Property="ImageSource" Value="{StaticResource IconAdd}" />
     </Style>
-    <!-- New ProjectDetailSaveButton Style -->
+    <!--  New ProjectDetailSaveButton Style  -->
     <Style x:Key="ProjectDetailSaveButton" TargetType="Button">
         <Setter Property="Text" Value="Save" />
         <Setter Property="MinimumHeightRequest" Value="{OnIdiom 44, Desktop=60}" />
     </Style>
 
-    <!-- New TaskDetailSaveButton Style -->
+    <!--  New TaskDetailSaveButton Style  -->
     <Style x:Key="TaskDetailSaveButton" TargetType="Button">
         <Setter Property="MinimumHeightRequest" Value="{OnIdiom 44, Desktop=60}" />
         <Setter Property="Text" Value="Save" />

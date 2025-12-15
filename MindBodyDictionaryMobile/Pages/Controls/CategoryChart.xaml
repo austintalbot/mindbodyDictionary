@@ -1,58 +1,55 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<Border xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-        xmlns:chart="clr-namespace:Syncfusion.Maui.Toolkit.Charts;assembly=Syncfusion.Maui.Toolkit"
-        xmlns:controls="clr-namespace:MindBodyDictionaryMobile.Pages.Controls"
-        xmlns:shimmer="clr-namespace:Syncfusion.Maui.Toolkit.Shimmer;assembly=Syncfusion.Maui.Toolkit"
-        xmlns:pageModels="clr-namespace:MindBodyDictionaryMobile.PageModels"
-        xmlns:models="clr-namespace:MindBodyDictionaryMobile.Models"
-        xmlns:converter="clr-namespace:MindBodyDictionaryMobile.Converter"
-        x:Class="MindBodyDictionaryMobile.Pages.Controls.CategoryChart"
-        x:DataType="pageModels:MainPageModel"
-        Style="{StaticResource CategoryChartBorderStyle}">
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Border
+    x:Class="MindBodyDictionaryMobile.Pages.Controls.CategoryChart"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:chart="clr-namespace:Syncfusion.Maui.Toolkit.Charts;assembly=Syncfusion.Maui.Toolkit"
+    xmlns:controls="clr-namespace:MindBodyDictionaryMobile.Pages.Controls"
+    xmlns:converter="clr-namespace:MindBodyDictionaryMobile.Converter"
+    xmlns:models="clr-namespace:MindBodyDictionaryMobile.Models"
+    xmlns:pageModels="clr-namespace:MindBodyDictionaryMobile.PageModels"
+    xmlns:shimmer="clr-namespace:Syncfusion.Maui.Toolkit.Shimmer;assembly=Syncfusion.Maui.Toolkit"
+    x:DataType="pageModels:MainPageModel"
+    Style="{StaticResource CategoryChartBorderStyle}">
     <shimmer:SfShimmer
+        x:DataType="pageModels:MainPageModel"
         AutomationProperties.IsInAccessibleTree="False"
         BackgroundColor="Transparent"
-        VerticalOptions="Fill"
-        x:DataType="pageModels:MainPageModel"
-        IsActive="{Binding IsBusy}">
+        IsActive="{Binding IsBusy}"
+        VerticalOptions="Fill">
         <shimmer:SfShimmer.CustomView>
             <Grid>
-                <BoxView Style="{StaticResource ShimmerChartBoxViewStyle}"/>
+                <BoxView Style="{StaticResource ShimmerChartBoxViewStyle}" />
             </Grid>
         </shimmer:SfShimmer.CustomView>
         <shimmer:SfShimmer.Content>
-            <chart:SfCircularChart x:Name="Chart"
-                                   SemanticProperties.Description="Task Categories Chart">
+            <chart:SfCircularChart x:Name="Chart" SemanticProperties.Description="Task Categories Chart">
                 <chart:DoughnutSeries
+                    x:Name="doughnutSeries"
                     x:DataType="pageModels:MainPageModel"
+                    EnableTooltip="False"
+                    InnerRadius="0.7"
                     ItemsSource="{Binding TodoCategoryData}"
                     PaletteBrushes="{Binding TodoCategoryColors}"
-                    XBindingPath="Title"
-                    YBindingPath="Count"
+                    Radius="{OnIdiom 0.6,
+                                     Phone=0.5}"
                     ShowDataLabels="True"
-                    EnableTooltip="False"
-                    x:Name="doughnutSeries"
-                    Radius="{OnIdiom 0.6, Phone=0.5}"
-                    InnerRadius="0.7">
+                    XBindingPath="Title"
+                    YBindingPath="Count">
                     <chart:DoughnutSeries.LabelTemplate>
                         <DataTemplate>
                             <HorizontalStackLayout x:DataType="chart:ChartDataLabel">
-                                <Label Text="{Binding Item, Converter={StaticResource DataLabelValueConverter}, ConverterParameter='Title'}"
-                                       Style="{StaticResource CategoryChartDataLabel}"/>
-                                <Label Text=": "
-                                       Style="{StaticResource CategoryChartDataLabel}"/>
-                                <Label Text="{Binding Item, Converter={StaticResource DataLabelValueConverter}, ConverterParameter='Count'}"
-                                       Style="{StaticResource CategoryChartDataLabel}"/>
+                                <Label Style="{StaticResource CategoryChartDataLabel}" Text="{Binding Item, Converter={StaticResource DataLabelValueConverter}, ConverterParameter='Title'}" />
+                                <Label Style="{StaticResource CategoryChartDataLabel}" Text=": " />
+                                <Label Style="{StaticResource CategoryChartDataLabel}" Text="{Binding Item, Converter={StaticResource DataLabelValueConverter}, ConverterParameter='Count'}" />
                             </HorizontalStackLayout>
                         </DataTemplate>
                     </chart:DoughnutSeries.LabelTemplate>
 
                     <chart:DoughnutSeries.DataLabelSettings>
-                        <chart:CircularDataLabelSettings LabelPosition="Outside"
-                                                         SmartLabelAlignment="Shift">
+                        <chart:CircularDataLabelSettings LabelPosition="Outside" SmartLabelAlignment="Shift">
                             <chart:CircularDataLabelSettings.ConnectorLineSettings>
-                                <chart:ConnectorLineStyle ConnectorType="Line" StrokeWidth="3"></chart:ConnectorLineStyle>
+                                <chart:ConnectorLineStyle ConnectorType="Line" StrokeWidth="3" />
                             </chart:CircularDataLabelSettings.ConnectorLineSettings>
                         </chart:CircularDataLabelSettings>
                     </chart:DoughnutSeries.DataLabelSettings>

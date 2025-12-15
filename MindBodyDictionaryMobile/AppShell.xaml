@@ -1,111 +1,112 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+﻿<?xml version="1.0" encoding="UTF-8" ?>
 <Shell
     x:Class="MindBodyDictionaryMobile.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:sf="clr-namespace:Syncfusion.Maui.Toolkit.SegmentedControl;assembly=Syncfusion.Maui.Toolkit"
     xmlns:pages="clr-namespace:MindBodyDictionaryMobile.Pages"
-    Shell.FlyoutBehavior="Flyout"
-    Title="Mind Body Dictionary">
+    xmlns:sf="clr-namespace:Syncfusion.Maui.Toolkit.SegmentedControl;assembly=Syncfusion.Maui.Toolkit"
+    Title="Mind Body Dictionary"
+    Shell.FlyoutBehavior="Flyout">
 
 
-  <!-- Flyout Header with Logo -->
-  <Shell.FlyoutHeader>
-    <pages:FlyoutHeaderView />
-  </Shell.FlyoutHeader>
+    <!--  Flyout Header with Logo  -->
+    <Shell.FlyoutHeader>
+        <pages:FlyoutHeaderView />
+    </Shell.FlyoutHeader>
 
-  <!-- Main Navigation Items -->
-  <ShellContent
-    Title="Home"
-    AutomationId="HomeShellContent"
-    Icon="{StaticResource IconDashboard}"
-    ContentTemplate="{DataTemplate pages:MbdConditionHomePage}"
-    Route="home" />
+    <!--  Main Navigation Items  -->
+    <ShellContent
+        Title="Home"
+        AutomationId="HomeShellContent"
+        ContentTemplate="{DataTemplate pages:MbdConditionHomePage}"
+        Icon="{StaticResource IconDashboard}"
+        Route="home" />
 
-  <ShellContent
-    Title="Search"
-    AutomationId="SearchShellContent"
-    Icon="{StaticResource IconMeta}"
-    ContentTemplate="{DataTemplate pages:SearchPage}"
-    Route="search" />
+    <ShellContent
+        Title="Search"
+        AutomationId="SearchShellContent"
+        ContentTemplate="{DataTemplate pages:SearchPage}"
+        Icon="{StaticResource IconMeta}"
+        Route="search" />
 
-  <ShellContent
-    Title="Manage Meta"
-    AutomationId="ManageMetaShellContent"
-    Icon="{StaticResource IconMeta}"
-    ContentTemplate="{DataTemplate pages:ManageMetaPage}"
-    Route="manage" />
+    <ShellContent
+        Title="Manage Meta"
+        AutomationId="ManageMetaShellContent"
+        ContentTemplate="{DataTemplate pages:ManageMetaPage}"
+        Icon="{StaticResource IconMeta}"
+        Route="manage" />
 
-  <ShellContent
-    Title="Notifications"
-    AutomationId="NotificationsShellContent"
-    Icon="{StaticResource IconNotifications}"
-    ContentTemplate="{DataTemplate pages:NotificationSettingsPage}"
-    Route="notifications" />
+    <ShellContent
+        Title="Notifications"
+        AutomationId="NotificationsShellContent"
+        ContentTemplate="{DataTemplate pages:NotificationSettingsPage}"
+        Icon="{StaticResource IconNotifications}"
+        Route="notifications" />
 
-  <ShellContent
-    Title="Premium"
-    AutomationId="PremiumShellContent"
-    Icon="{StaticResource IconPremium}"
-    ContentTemplate="{DataTemplate pages:UpgradePremiumPage}"
-    Route="premium" />
+    <ShellContent
+        Title="Premium"
+        AutomationId="PremiumShellContent"
+        ContentTemplate="{DataTemplate pages:UpgradePremiumPage}"
+        Icon="{StaticResource IconPremium}"
+        Route="premium" />
 
-  <ShellContent
-    Title="About"
-    AutomationId="AboutShellContent"
-    Icon="{StaticResource IconMeta}"
-    ContentTemplate="{DataTemplate pages:AboutPage}"
-    Route="about" />
+    <ShellContent
+        Title="About"
+        AutomationId="AboutShellContent"
+        ContentTemplate="{DataTemplate pages:AboutPage}"
+        Icon="{StaticResource IconMeta}"
+        Route="about" />
 
-  <ShellContent
-    Title="FAQ"
-    AutomationId="FaqShellContent"
-    Icon="{StaticResource IconMeta}"
-    ContentTemplate="{DataTemplate pages:FaqPage}"
-    Route="faq" />
+    <ShellContent
+        Title="FAQ"
+        AutomationId="FaqShellContent"
+        ContentTemplate="{DataTemplate pages:FaqPage}"
+        Icon="{StaticResource IconMeta}"
+        Route="faq" />
 
-  <!-- Debug Pages -->
-  <ShellContent
-    Title="Image Cache (Debug)"
-    AutomationId="ImageCacheShellContent"
-    x:Name="ImageCacheContent"
-    Icon="{StaticResource IconImageCache}"
-    ContentTemplate="{DataTemplate pages:ImageCachePage}"
-    Route="imagecache" />
+    <!--  Debug Pages  -->
+    <ShellContent
+        x:Name="ImageCacheContent"
+        Title="Image Cache (Debug)"
+        AutomationId="ImageCacheShellContent"
+        ContentTemplate="{DataTemplate pages:ImageCachePage}"
+        Icon="{StaticResource IconImageCache}"
+        Route="imagecache" />
 
-  <ShellContent
-    Title="Notification Test (Debug)"
-    AutomationId="NotificationTestShellContent"
-    Icon="{StaticResource IconTest}"
-    ContentTemplate="{DataTemplate pages:NotificationTestPage}"
-    Route="notificationtest" />
+    <ShellContent
+        Title="Notification Test (Debug)"
+        AutomationId="NotificationTestShellContent"
+        ContentTemplate="{DataTemplate pages:NotificationTestPage}"
+        Icon="{StaticResource IconTest}"
+        Route="notificationtest" />
 
-  <!-- Flyout Footer with Theme Selector -->
-  <Shell.FlyoutFooter>
-    <Grid Padding="15" RowDefinitions="Auto">
-      <Label
-        Grid.Row="0"
-        Text="Theme"
-        FontSize="12"
-        TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}"
-        Margin="0,0,0,10" />
+    <!--  Flyout Footer with Theme Selector  -->
+    <Shell.FlyoutFooter>
+        <Grid Padding="15" RowDefinitions="Auto">
+            <Label
+                Grid.Row="0"
+                Margin="0,0,0,10"
+                FontSize="12"
+                Text="Theme"
+                TextColor="{AppThemeBinding Light={StaticResource Gray900},
+                                            Dark={StaticResource White}}" />
 
-      <sf:SfSegmentedControl
-        x:Name="ThemeSegmentedControl"
-        AutomationId="ThemeSegmentedControl"
-        Grid.Row="1"
-        VerticalOptions="Center"
-        HorizontalOptions="Center"
-        SelectionChanged="SfSegmentedControl_SelectionChanged"
-        SegmentWidth="40"
-        SegmentHeight="40">
-        <sf:SfSegmentedControl.ItemsSource>
-          <x:Array Type="{x:Type sf:SfSegmentItem}">
-            <sf:SfSegmentItem ImageSource="{StaticResource IconLight}"/>
-            <sf:SfSegmentItem ImageSource="{StaticResource IconDark}"/>
-          </x:Array>
-        </sf:SfSegmentedControl.ItemsSource>
-      </sf:SfSegmentedControl>
-    </Grid>
-  </Shell.FlyoutFooter>
+            <sf:SfSegmentedControl
+                x:Name="ThemeSegmentedControl"
+                Grid.Row="1"
+                AutomationId="ThemeSegmentedControl"
+                HorizontalOptions="Center"
+                SegmentHeight="40"
+                SegmentWidth="40"
+                SelectionChanged="SfSegmentedControl_SelectionChanged"
+                VerticalOptions="Center">
+                <sf:SfSegmentedControl.ItemsSource>
+                    <x:Array Type="{x:Type sf:SfSegmentItem}">
+                        <sf:SfSegmentItem ImageSource="{StaticResource IconLight}" />
+                        <sf:SfSegmentItem ImageSource="{StaticResource IconDark}" />
+                    </x:Array>
+                </sf:SfSegmentedControl.ItemsSource>
+            </sf:SfSegmentedControl>
+        </Grid>
+    </Shell.FlyoutFooter>
 </Shell>

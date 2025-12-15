@@ -1,128 +1,168 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:vm="clr-namespace:MindBodyDictionaryMobile.PageModels"
-             xmlns:local="clr-namespace:MindBodyDictionaryMobile.Converter"
-             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             x:Class="MindBodyDictionaryMobile.Pages.ImageCachePage"
-             x:DataType="vm:ImageCachePageModel"
-             Title="Image Cache (Debug)">
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="MindBodyDictionaryMobile.Pages.ImageCachePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:MindBodyDictionaryMobile.Converter"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:vm="clr-namespace:MindBodyDictionaryMobile.PageModels"
+    Title="Image Cache (Debug)"
+    x:DataType="vm:ImageCachePageModel">
 
 
 
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="20">
 
-            <!-- Header -->
+            <!--  Header  -->
             <Label Style="{StaticResource ImageCacheHeaderLabel}" />
 
-            <!-- Status Message -->
+            <!--  Status Message  -->
             <Border Style="{StaticResource ImageCacheStatusBorder}">
-                <Label Text="{Binding StatusMessage}" Style="{StaticResource ImageCacheStatusLabel}" />
+                <Label Style="{StaticResource ImageCacheStatusLabel}" Text="{Binding StatusMessage}" />
             </Border>
 
-            <!-- Cache Statistics -->
+            <!--  Cache Statistics  -->
             <Border Style="{StaticResource ImageCacheStatusBorder}">
                 <VerticalStackLayout Spacing="12">
                     <Label Style="{StaticResource ImageCacheSummaryHeaderLabel}" />
 
                     <VerticalStackLayout Style="{StaticResource ImageCacheDebugStatsLayout}">
-                        <Label Text="{Binding TotalImagesInResources, StringFormat='DEBUG TotalImagesInResources: {0}'}" Style="{StaticResource ImageCacheDebugStatLabel}" />
-                        <Label Text="{Binding CachedImages, StringFormat='DEBUG CachedImages: {0}'}" Style="{StaticResource ImageCacheDebugStatLabel}" />
-                        <Label Text="{Binding PercentageCached, StringFormat='DEBUG PercentageCached: {0}'}" Style="{StaticResource ImageCacheDebugStatLabel}" />
-                        <Label Text="{Binding TotalCacheSize, StringFormat='DEBUG TotalCacheSize: {0}'}" Style="{StaticResource ImageCacheDebugStatLabel}" />
+                        <Label Style="{StaticResource ImageCacheDebugStatLabel}" Text="{Binding TotalImagesInResources, StringFormat='DEBUG TotalImagesInResources: {0}'}" />
+                        <Label Style="{StaticResource ImageCacheDebugStatLabel}" Text="{Binding CachedImages, StringFormat='DEBUG CachedImages: {0}'}" />
+                        <Label Style="{StaticResource ImageCacheDebugStatLabel}" Text="{Binding PercentageCached, StringFormat='DEBUG PercentageCached: {0}'}" />
+                        <Label Style="{StaticResource ImageCacheDebugStatLabel}" Text="{Binding TotalCacheSize, StringFormat='DEBUG TotalCacheSize: {0}'}" />
                     </VerticalStackLayout>
 
-                    <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto,Auto" ColumnSpacing="15" RowSpacing="10">
+                    <Grid
+                        ColumnDefinitions="*,*"
+                        ColumnSpacing="15"
+                        RowDefinitions="Auto,Auto,Auto,Auto"
+                        RowSpacing="10">
 
-                        <Label Text="Images in Resources:" Style="{StaticResource ImageCacheStatTitleLabel}" Grid.Row="0" Grid.Column="0" />
-                        <Label Text="{Binding TotalImagesInResources}" Style="{StaticResource ImageCacheStatValueLabel}" Grid.Row="0" Grid.Column="1" />
+                        <Label
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Style="{StaticResource ImageCacheStatTitleLabel}"
+                            Text="Images in Resources:" />
+                        <Label
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Style="{StaticResource ImageCacheStatValueLabel}"
+                            Text="{Binding TotalImagesInResources}" />
 
-                        <Label Text="Cached Images:" Style="{StaticResource ImageCacheStatTitleLabel}" Grid.Row="1" Grid.Column="0" />
-                        <Label Text="{Binding CachedImages}" Style="{StaticResource ImageCacheStatValueLabel}" Grid.Row="1" Grid.Column="1" />
+                        <Label
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Style="{StaticResource ImageCacheStatTitleLabel}"
+                            Text="Cached Images:" />
+                        <Label
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            Style="{StaticResource ImageCacheStatValueLabel}"
+                            Text="{Binding CachedImages}" />
 
-                        <Label Text="Cache Percentage:" Style="{StaticResource ImageCacheStatTitleLabel}" Grid.Row="2" Grid.Column="0" />
-                        <Label Text="{Binding PercentageCached, StringFormat='{0}%'}" Style="{StaticResource ImageCacheStatValueLabel}" Grid.Row="2" Grid.Column="1" />
+                        <Label
+                            Grid.Row="2"
+                            Grid.Column="0"
+                            Style="{StaticResource ImageCacheStatTitleLabel}"
+                            Text="Cache Percentage:" />
+                        <Label
+                            Grid.Row="2"
+                            Grid.Column="1"
+                            Style="{StaticResource ImageCacheStatValueLabel}"
+                            Text="{Binding PercentageCached, StringFormat='{0}%'}" />
 
-                        <Label Text="Total Cache Size:" Style="{StaticResource ImageCacheStatTitleLabel}" Grid.Row="3" Grid.Column="0" />
-                        <Label Text="{Binding TotalCacheSize, Converter={StaticResource BytesToFormattedSizeConverter}}" Style="{StaticResource ImageCacheStatValueLabel}" Grid.Row="3" Grid.Column="1" />
+                        <Label
+                            Grid.Row="3"
+                            Grid.Column="0"
+                            Style="{StaticResource ImageCacheStatTitleLabel}"
+                            Text="Total Cache Size:" />
+                        <Label
+                            Grid.Row="3"
+                            Grid.Column="1"
+                            Style="{StaticResource ImageCacheStatValueLabel}"
+                            Text="{Binding TotalCacheSize, Converter={StaticResource BytesToFormattedSizeConverter}}" />
                     </Grid>
                 </VerticalStackLayout>
             </Border>
 
-            <!-- Action Buttons -->
+            <!--  Action Buttons  -->
             <VerticalStackLayout Spacing="10">
-                <Button Text="Refresh Cache from Resources"
-                        AutomationId="RefreshCacheButton"
-                        Command="{Binding RefreshCacheCommand}"
-                        Style="{StaticResource ImageCacheActionButton}"
-                        IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}" />
+                <Button
+                    AutomationId="RefreshCacheButton"
+                    Command="{Binding RefreshCacheCommand}"
+                    IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"
+                    Style="{StaticResource ImageCacheActionButton}"
+                    Text="Refresh Cache from Resources" />
 
-                <Button Text="Clear Cache"
-                        AutomationId="ClearCacheButton"
-                        Command="{Binding ClearCacheCommand}"
-                        Style="{StaticResource ImageCacheActionButton}"
-                        BackgroundColor="{StaticResource Secondary}"
-                        IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}" />
+                <Button
+                    AutomationId="ClearCacheButton"
+                    BackgroundColor="{StaticResource Secondary}"
+                    Command="{Binding ClearCacheCommand}"
+                    IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"
+                    Style="{StaticResource ImageCacheActionButton}"
+                    Text="Clear Cache" />
 
-                <Button Text="Reload Stats"
-                        AutomationId="ReloadStatsButton"
-                        Command="{Binding LoadCacheStatsCommand}"
-                        Style="{StaticResource ImageCacheActionButton}"
-                        BackgroundColor="{StaticResource Tertiary}"
-                        IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}" />
+                <Button
+                    AutomationId="ReloadStatsButton"
+                    BackgroundColor="{StaticResource Tertiary}"
+                    Command="{Binding LoadCacheStatsCommand}"
+                    IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"
+                    Style="{StaticResource ImageCacheActionButton}"
+                    Text="Reload Stats" />
             </VerticalStackLayout>
 
-            <!-- Loading Indicator -->
-            <ActivityIndicator IsRunning="{Binding IsLoading}"
-                              IsVisible="{Binding IsLoading}"
-                              Style="{StaticResource ImageCacheLoadingIndicator}" />
+            <!--  Loading Indicator  -->
+            <ActivityIndicator
+                IsRunning="{Binding IsLoading}"
+                IsVisible="{Binding IsLoading}"
+                Style="{StaticResource ImageCacheLoadingIndicator}" />
 
-            <!-- Cached Images List -->
-            <Label Style="{StaticResource ImageCacheListHeaderLabel}"
-                   IsVisible="{Binding CachedImagesList, Converter={StaticResource IsNotNullOrEmptyConverter}}" />
+            <!--  Cached Images List  -->
+            <Label IsVisible="{Binding CachedImagesList, Converter={StaticResource IsNotNullOrEmptyConverter}}" Style="{StaticResource ImageCacheListHeaderLabel}" />
 
-            <Label Text="{Binding CachedImagesList.Count, StringFormat='Total items in list: {0}'}"
-                   Style="{StaticResource ImageCacheListCountLabel}" />
+            <Label Style="{StaticResource ImageCacheListCountLabel}" Text="{Binding CachedImagesList.Count, StringFormat='Total items in list: {0}'}" />
 
-            <CollectionView ItemsSource="{Binding CachedImagesList}"
-                           IsVisible="{Binding CachedImagesList, Converter={StaticResource IsNotNullOrEmptyConverter}}">
+            <CollectionView IsVisible="{Binding CachedImagesList, Converter={StaticResource IsNotNullOrEmptyConverter}}" ItemsSource="{Binding CachedImagesList}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Border Style="{StaticResource ImageCacheListItemBorder}">
                             <VerticalStackLayout Spacing="4">
-                                <Label Text="{Binding FileName}" Style="{StaticResource ImageCacheListItemFileNameLabel}" />
-                                <Label Text="{Binding ContentType, StringFormat='Type: {0}'}" Style="{StaticResource ImageCacheListItemDetailLabel}" />
-                                <Label Text="{Binding SizeKb, StringFormat='Size: {0:F2} KB'}" Style="{StaticResource ImageCacheListItemDetailLabel}" />
-                                <Label Text="{Binding CachedAt, StringFormat='Cached: {0:G}'}" Style="{StaticResource ImageCacheListItemCachedAtLabel}" />
+                                <Label Style="{StaticResource ImageCacheListItemFileNameLabel}" Text="{Binding FileName}" />
+                                <Label Style="{StaticResource ImageCacheListItemDetailLabel}" Text="{Binding ContentType, StringFormat='Type: {0}'}" />
+                                <Label Style="{StaticResource ImageCacheListItemDetailLabel}" Text="{Binding SizeKb, StringFormat='Size: {0:F2} KB'}" />
+                                <Label Style="{StaticResource ImageCacheListItemCachedAtLabel}" Text="{Binding CachedAt, StringFormat='Cached: {0:G}'}" />
                             </VerticalStackLayout>
                         </Border>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
 
-            <!-- Debug Info Section -->
+            <!--  Debug Info Section  -->
             <Border Style="{StaticResource ImageCacheDebugInfoBorder}">
                 <VerticalStackLayout Spacing="12">
                     <Label Style="{StaticResource ImageCacheDebugInfoHeaderLabel}" />
 
                     <VerticalStackLayout Spacing="8">
-                        <Label Text="{Binding DebugResourcesFound, StringFormat='Manifest Resources Found: {0}'}" Style="{StaticResource ImageCacheDebugStatItemLabel}" />
-                        <Label Text="{Binding DebugImagesInResources, StringFormat='Images in Resources: {0}'}" Style="{StaticResource ImageCacheDebugStatItemLabel}" />
-                        <Label Text="{Binding DebugCachedCount, StringFormat='Images in Cache DB: {0}'}" Style="{StaticResource ImageCacheDebugStatItemLabel}" />
-                        <Label Text="{Binding DebugCacheDbPath, StringFormat='Cache DB Path: {0}'}" Style="{StaticResource ImageCacheDebugPathLabel}" />
+                        <Label Style="{StaticResource ImageCacheDebugStatItemLabel}" Text="{Binding DebugResourcesFound, StringFormat='Manifest Resources Found: {0}'}" />
+                        <Label Style="{StaticResource ImageCacheDebugStatItemLabel}" Text="{Binding DebugImagesInResources, StringFormat='Images in Resources: {0}'}" />
+                        <Label Style="{StaticResource ImageCacheDebugStatItemLabel}" Text="{Binding DebugCachedCount, StringFormat='Images in Cache DB: {0}'}" />
+                        <Label Style="{StaticResource ImageCacheDebugPathLabel}" Text="{Binding DebugCacheDbPath, StringFormat='Cache DB Path: {0}'}" />
                     </VerticalStackLayout>
 
-                    <Button Text="Load Debug Info"
-                            Command="{Binding LoadDebugInfoCommand}"
-                            Style="{StaticResource ImageCacheDebugButton}" />
+                    <Button
+                        Command="{Binding LoadDebugInfoCommand}"
+                        Style="{StaticResource ImageCacheDebugButton}"
+                        Text="Load Debug Info" />
 
-                    <Button Text="Copy Debug Info"
-                            Command="{Binding CopyDebugInfoCommand}"
-                            Style="{StaticResource ImageCacheDebugCopyButton}" />
+                    <Button
+                        Command="{Binding CopyDebugInfoCommand}"
+                        Style="{StaticResource ImageCacheDebugCopyButton}"
+                        Text="Copy Debug Info" />
 
                     <ScrollView HeightRequest="150">
-                        <Label Text="{Binding DebugLog}" Style="{StaticResource ImageCacheDebugLogLabel}" />
+                        <Label Style="{StaticResource ImageCacheDebugLogLabel}" Text="{Binding DebugLog}" />
                     </ScrollView>
                 </VerticalStackLayout>
             </Border>

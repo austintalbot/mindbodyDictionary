@@ -1,8 +1,6 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+﻿<?xml version="1.0" encoding="UTF-8" ?>
 <?xaml-comp compile="true" ?>
-<ResourceDictionary
-    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
     <Style x:Key="ShimmerPlaceholderBorder" TargetType="Border">
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}" />
@@ -10,13 +8,19 @@
         <Setter Property="StrokeShape" Value="RoundRectangle 6" />
     </Style>
 
-    <Style x:Key="ShimmerTextLineBorder" TargetType="Border" BasedOn="{StaticResource ShimmerPlaceholderBorder}">
+    <Style
+        x:Key="ShimmerTextLineBorder"
+        BasedOn="{StaticResource ShimmerPlaceholderBorder}"
+        TargetType="Border">
         <Setter Property="HeightRequest" Value="20" />
         <Setter Property="Opacity" Value="0.6" />
         <Setter Property="StrokeShape" Value="RoundRectangle 3" />
     </Style>
 
-    <Style x:Key="ShimmerTitleBorder" TargetType="Border" BasedOn="{StaticResource ShimmerPlaceholderBorder}">
+    <Style
+        x:Key="ShimmerTitleBorder"
+        BasedOn="{StaticResource ShimmerPlaceholderBorder}"
+        TargetType="Border">
         <Setter Property="WidthRequest" Value="130" />
         <Setter Property="HeightRequest" Value="18" />
         <Setter Property="HorizontalOptions" Value="Center" />
@@ -25,14 +29,20 @@
         <Setter Property="StrokeShape" Value="RoundRectangle 3" />
     </Style>
 
-    <!-- New ShimmerChartBoxViewStyle -->
-    <Style x:Key="ShimmerChartBoxViewStyle" TargetType="BoxView" BasedOn="{StaticResource ShimmerCustomViewStyle}">
+    <!--  New ShimmerChartBoxViewStyle  -->
+    <Style
+        x:Key="ShimmerChartBoxViewStyle"
+        BasedOn="{StaticResource ShimmerCustomViewStyle}"
+        TargetType="BoxView">
         <Setter Property="CornerRadius" Value="12" />
         <Setter Property="VerticalOptions" Value="Fill" />
     </Style>
 
-    <!-- New ShimmerProjectCard styles -->
-    <Style x:Key="ShimmerProjectCardIcon" TargetType="BoxView" BasedOn="{StaticResource ShimmerCustomViewStyle}">
+    <!--  New ShimmerProjectCard styles  -->
+    <Style
+        x:Key="ShimmerProjectCardIcon"
+        BasedOn="{StaticResource ShimmerCustomViewStyle}"
+        TargetType="BoxView">
         <Setter Property="CornerRadius" Value="48" />
         <Setter Property="WidthRequest" Value="24" />
         <Setter Property="HeightRequest" Value="24" />
@@ -40,28 +50,43 @@
         <Setter Property="VerticalOptions" Value="Start" />
     </Style>
 
-    <Style x:Key="ShimmerProjectCardTextLineShort" TargetType="BoxView" BasedOn="{StaticResource ShimmerCustomViewStyle}">
+    <Style
+        x:Key="ShimmerProjectCardTextLineShort"
+        BasedOn="{StaticResource ShimmerCustomViewStyle}"
+        TargetType="BoxView">
         <Setter Property="HeightRequest" Value="24" />
     </Style>
 
-    <Style x:Key="ShimmerProjectCardTextLineMedium" TargetType="BoxView" BasedOn="{StaticResource ShimmerCustomViewStyle}">
+    <Style
+        x:Key="ShimmerProjectCardTextLineMedium"
+        BasedOn="{StaticResource ShimmerCustomViewStyle}"
+        TargetType="BoxView">
         <Setter Property="HeightRequest" Value="48" />
     </Style>
 
-    <Style x:Key="ShimmerProjectCardTextLineLong" TargetType="BoxView" BasedOn="{StaticResource ShimmerCustomViewStyle}">
+    <Style
+        x:Key="ShimmerProjectCardTextLineLong"
+        BasedOn="{StaticResource ShimmerCustomViewStyle}"
+        TargetType="BoxView">
         <Setter Property="HeightRequest" Value="24" />
         <Setter Property="Margin" Value="0, 12" />
     </Style>
 
-    <!-- New ShimmerTaskViewCheckbox Style -->
-    <Style x:Key="ShimmerTaskViewCheckbox" TargetType="BoxView" BasedOn="{StaticResource ShimmerCustomViewStyle}">
+    <!--  New ShimmerTaskViewCheckbox Style  -->
+    <Style
+        x:Key="ShimmerTaskViewCheckbox"
+        BasedOn="{StaticResource ShimmerCustomViewStyle}"
+        TargetType="BoxView">
         <Setter Property="WidthRequest" Value="24" />
         <Setter Property="HeightRequest" Value="24" />
         <Setter Property="Margin" Value="12, 0" />
     </Style>
 
-    <!-- New ShimmerTaskViewText Style -->
-    <Style x:Key="ShimmerTaskViewText" TargetType="BoxView" BasedOn="{StaticResource ShimmerCustomViewStyle}">
+    <!--  New ShimmerTaskViewText Style  -->
+    <Style
+        x:Key="ShimmerTaskViewText"
+        BasedOn="{StaticResource ShimmerCustomViewStyle}"
+        TargetType="BoxView">
         <Setter Property="HeightRequest" Value="24" />
         <Setter Property="Margin" Value="12, 0" />
     </Style>

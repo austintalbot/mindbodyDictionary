@@ -1,17 +1,18 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:pageModels="clr-namespace:MindBodyDictionaryMobile.PageModels"
-             xmlns:models="clr-namespace:MindBodyDictionaryMobile.Models"
-             xmlns:pages="clr-namespace:MindBodyDictionaryMobile.Pages"
-             xmlns:sf="clr-namespace:Syncfusion.Maui.Toolkit.TextInputLayout;assembly=Syncfusion.Maui.Toolkit"
-             xmlns:tabView="clr-namespace:Syncfusion.Maui.TabView;assembly=Syncfusion.Maui.TabView"
-             xmlns:controls="clr-namespace:MindBodyDictionaryMobile.Pages.Controls"
-             xmlns:fonts="clr-namespace:Fonts"
-             xmlns:converters="clr-namespace:MindBodyDictionaryMobile.Converter"
-             x:Class="MindBodyDictionaryMobile.Pages.MbdConditionDetailPage"
-             x:DataType="pageModels:MbdConditionDetailPageModel"
-             Title="Condition">
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="MindBodyDictionaryMobile.Pages.MbdConditionDetailPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:MindBodyDictionaryMobile.Pages.Controls"
+    xmlns:converters="clr-namespace:MindBodyDictionaryMobile.Converter"
+    xmlns:fonts="clr-namespace:Fonts"
+    xmlns:models="clr-namespace:MindBodyDictionaryMobile.Models"
+    xmlns:pageModels="clr-namespace:MindBodyDictionaryMobile.PageModels"
+    xmlns:pages="clr-namespace:MindBodyDictionaryMobile.Pages"
+    xmlns:sf="clr-namespace:Syncfusion.Maui.Toolkit.TextInputLayout;assembly=Syncfusion.Maui.Toolkit"
+    xmlns:tabView="clr-namespace:Syncfusion.Maui.TabView;assembly=Syncfusion.Maui.TabView"
+    Title="Condition"
+    x:DataType="pageModels:MbdConditionDetailPageModel">
 
     <ContentPage.Resources>
         <converters:InverseBoolConverter x:Key="InverseBoolConverter" />
@@ -19,31 +20,31 @@
 
     <ContentPage.ToolbarItems>
         <ToolbarItem
-            Text="Delete"
             AutomationId="DeleteToolbarItem"
             Command="{Binding DeleteCommand}"
+            IconImageSource="{StaticResource IconDelete}"
             Order="Primary"
             Priority="0"
-            IconImageSource="{StaticResource IconDelete}"
-            SemanticProperties.Description="Delete Condition" />
+            SemanticProperties.Description="Delete Condition"
+            Text="Delete" />
     </ContentPage.ToolbarItems>
 
     <Grid Style="{StaticResource MainPageGrid}">
         <tabView:SfTabView
-            Grid.Row="0"
             x:Name="AilmentDetailsTabview"
+            Grid.Row="0"
             AutomationId="AilmentDetailsTabview"
-            TabBarBackground="{StaticResource BarColor}"
-            TabBarPlacement="Bottom"
-            IndicatorPlacement="Fill"
             IndicatorBackground="{StaticResource BarSelectedColor}"
-            TabBarHeight="60">
+            IndicatorPlacement="Fill"
+            TabBarBackground="{StaticResource BarColor}"
+            TabBarHeight="60"
+            TabBarPlacement="Bottom">
 
-            <!-- Problem Tab -->
+            <!--  Problem Tab  -->
             <tabView:SfTabItem
                 AutomationId="ProblemTab"
-                Style="{StaticResource BaseSfTabItem}"
-                Header="Problem">
+                Header="Problem"
+                Style="{StaticResource BaseSfTabItem}">
                 <tabView:SfTabItem.ImageSource ResourceKey="IconWarning" />
                 <tabView:SfTabItem.Content>
                     <Grid Style="{StaticResource ContentGrid}">
@@ -52,147 +53,148 @@
                             Grid.Row="0"
                             Grid.Column="0" />
 
-                        <!-- Lock Overlay for Problem Tab -->
-                        <Grid IsVisible="{Binding Condition.DisplayLock}" Grid.Row="0" Grid.Column="0"
-                              Style="{StaticResource LockOverlayGrid}">
-                             <VerticalStackLayout Style="{StaticResource LockOverlayVerticalStackLayout}">
-                                 <Image Style="{StaticResource LockOverlayImage}" />
-                                 <Label Style="{StaticResource LockOverlayPremiumContentLabel}" />
-                                 <Label Style="{StaticResource LockOverlayUpgradeLabel}" />
-                                 <Button Style="{StaticResource LockOverlayUpgradeButton}" />
-                             </VerticalStackLayout>
+                        <!--  Lock Overlay for Problem Tab  -->
+                        <Grid
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            IsVisible="{Binding Condition.DisplayLock}"
+                            Style="{StaticResource LockOverlayGrid}">
+                            <VerticalStackLayout Style="{StaticResource LockOverlayVerticalStackLayout}">
+                                <Image Style="{StaticResource LockOverlayImage}" />
+                                <Label Style="{StaticResource LockOverlayPremiumContentLabel}" />
+                                <Label Style="{StaticResource LockOverlayUpgradeLabel}" />
+                                <Button Style="{StaticResource LockOverlayUpgradeButton}" />
+                            </VerticalStackLayout>
                         </Grid>
                     </Grid>
                 </tabView:SfTabItem.Content>
             </tabView:SfTabItem>
 
-            <!-- Affirmations Tab -->
+            <!--  Affirmations Tab  -->
             <tabView:SfTabItem
                 AutomationId="AffirmationsTab"
-                Style="{StaticResource BaseSfTabItem}"
-                Header="Affirmations">
+                Header="Affirmations"
+                Style="{StaticResource BaseSfTabItem}">
                 <tabView:SfTabItem.ImageSource ResourceKey="IconLightbulb" />
                 <tabView:SfTabItem.Content>
                     <Grid RowDefinitions="*">
-                        <pages:MbdConditionDetailsAffirmationsView
-                            Grid.Row="0"
-                            MbdCondition="{Binding Condition}" />
+                        <pages:MbdConditionDetailsAffirmationsView Grid.Row="0" MbdCondition="{Binding Condition}" />
 
-                        <!-- Lock Overlay for Affirmations Tab -->
-                        <Grid IsVisible="{Binding Condition.DisplayLock}" ZIndex="10" Grid.Row="0"
-                              Style="{StaticResource LockOverlayGrid}">
-                             <VerticalStackLayout Style="{StaticResource LockOverlayVerticalStackLayout}">
-                                 <Image Style="{StaticResource LockOverlayImage}" />
-                                 <Label Style="{StaticResource LockOverlayPremiumContentLabel}" />
-                                 <Label Style="{StaticResource LockOverlayUpgradeLabel}" />
-                                 <Button Style="{StaticResource LockOverlayUpgradeButton}" />
-                             </VerticalStackLayout>
+                        <!--  Lock Overlay for Affirmations Tab  -->
+                        <Grid
+                            Grid.Row="0"
+                            IsVisible="{Binding Condition.DisplayLock}"
+                            Style="{StaticResource LockOverlayGrid}"
+                            ZIndex="10">
+                            <VerticalStackLayout Style="{StaticResource LockOverlayVerticalStackLayout}">
+                                <Image Style="{StaticResource LockOverlayImage}" />
+                                <Label Style="{StaticResource LockOverlayPremiumContentLabel}" />
+                                <Label Style="{StaticResource LockOverlayUpgradeLabel}" />
+                                <Button Style="{StaticResource LockOverlayUpgradeButton}" />
+                            </VerticalStackLayout>
                         </Grid>
                     </Grid>
                 </tabView:SfTabItem.Content>
             </tabView:SfTabItem>
 
-            <!-- Recommendations Tab -->
+            <!--  Recommendations Tab  -->
             <tabView:SfTabItem
                 AutomationId="RecommendationsTab"
-                Style="{StaticResource BaseSfTabItem}"
-                Header="Recommendations">
+                Header="Recommendations"
+                Style="{StaticResource BaseSfTabItem}">
                 <tabView:SfTabItem.ImageSource ResourceKey="IconStar" />
                 <tabView:SfTabItem.Content>
                     <ScrollView Style="{StaticResource ContentScrollView}">
                         <VerticalStackLayout Style="{StaticResource MainContentStack}">
 
                             <VerticalStackLayout Style="{StaticResource HeaderSection}">
-                                <Label Style="{StaticResource SubtitleLabel}"
-                                       Text="Recommendations for" />
+                                <Label Style="{StaticResource SubtitleLabel}" Text="Recommendations for" />
 
-                                <Label Style="{StaticResource SectionTitleLabel}"
-                                       Text="{Binding Condition.Name}" />
+                                <Label Style="{StaticResource SectionTitleLabel}" Text="{Binding Condition.Name}" />
                             </VerticalStackLayout>
 
-                            <Border Style="{StaticResource MbdConditionCardWithShadow}"
-                                    Margin="0,10,0,0">
+                            <Border Margin="0,10,0,0" Style="{StaticResource MbdConditionCardWithShadow}">
                                 <tabView:SfTabView
                                     x:Name="RecommendationsTab"
                                     AutomationId="RecommendationsTabView"
-                                    TabBarPlacement="Top"
-                                    TabBarBackground="{StaticResource BarColor}"
                                     IndicatorBackground="{StaticResource BarSelectedColor}"
+                                    IndicatorPlacement="Fill"
+                                    TabBarBackground="{StaticResource BarColor}"
                                     TabBarHeight="50"
-                                    IndicatorPlacement="Fill">
+                                    TabBarPlacement="Top">
 
-                                    <!-- Foods Tab -->
-                                    <tabView:SfTabItem
-                                        Style="{StaticResource RecommendationsSubTabItem}"
-                                        Header="Foods">
+                                    <!--  Foods Tab  -->
+                                    <tabView:SfTabItem Header="Foods" Style="{StaticResource RecommendationsSubTabItem}">
                                         <tabView:SfTabItem.Content>
                                             <ScrollView Padding="0">
                                                 <Grid Style="{StaticResource TabContentGrid}">
                                                     <pages:MbdConditionDetailsFoodView
                                                         Grid.Row="0"
-                                                        MbdCondition="{Binding Condition}"
+                                                        InputTransparent="False"
                                                         IsVisible="{Binding Condition.DisplayLock, Converter={StaticResource InverseBoolConverter}}"
-                                                        InputTransparent="False" />
+                                                        MbdCondition="{Binding Condition}" />
 
-                                                    <!-- Lock Overlay for Foods -->
-                                                    <Grid IsVisible="{Binding Condition.DisplayLock}" Grid.Row="0"
-                                                          Style="{StaticResource LockOverlayGrid}">
-                                                         <VerticalStackLayout Style="{StaticResource LockOverlayVerticalStackLayout}">
-                                                             <Image Style="{StaticResource LockOverlayImage}" />
-                                                             <Label Style="{StaticResource LockOverlayPremiumContentLabel}" />
-                                                             <Button Style="{StaticResource LockOverlayUpgradeButton}" />
-                                                         </VerticalStackLayout>
+                                                    <!--  Lock Overlay for Foods  -->
+                                                    <Grid
+                                                        Grid.Row="0"
+                                                        IsVisible="{Binding Condition.DisplayLock}"
+                                                        Style="{StaticResource LockOverlayGrid}">
+                                                        <VerticalStackLayout Style="{StaticResource LockOverlayVerticalStackLayout}">
+                                                            <Image Style="{StaticResource LockOverlayImage}" />
+                                                            <Label Style="{StaticResource LockOverlayPremiumContentLabel}" />
+                                                            <Button Style="{StaticResource LockOverlayUpgradeButton}" />
+                                                        </VerticalStackLayout>
                                                     </Grid>
                                                 </Grid>
                                             </ScrollView>
                                         </tabView:SfTabItem.Content>
                                     </tabView:SfTabItem>
 
-                                    <!-- Products Tab -->
-                                    <tabView:SfTabItem
-                                        Style="{StaticResource RecommendationsSubTabItem}"
-                                        Header="Products">
+                                    <!--  Products Tab  -->
+                                    <tabView:SfTabItem Header="Products" Style="{StaticResource RecommendationsSubTabItem}">
                                         <tabView:SfTabItem.Content>
                                             <Grid Style="{StaticResource TabContentGrid}">
                                                 <pages:MbdConditionDetailsProductsView
                                                     Grid.Row="0"
-                                                    MbdCondition="{Binding Condition}"
+                                                    InputTransparent="False"
                                                     IsVisible="{Binding Condition.DisplayLock, Converter={StaticResource InverseBoolConverter}}"
-                                                    InputTransparent="False"/>
+                                                    MbdCondition="{Binding Condition}" />
 
-                                                <!-- Lock Overlay for Products -->
-                                                <Grid IsVisible="{Binding Condition.DisplayLock}" Grid.Row="0"
-                                                      Style="{StaticResource LockOverlayGrid}">
-                                                     <VerticalStackLayout Style="{StaticResource LockOverlayVerticalStackLayout}">
-                                                         <Image Style="{StaticResource LockOverlayImage}" />
-                                                         <Label Style="{StaticResource LockOverlayPremiumContentLabel}" />
-                                                         <Button Style="{StaticResource LockOverlayUpgradeButton}" />
-                                                     </VerticalStackLayout>
+                                                <!--  Lock Overlay for Products  -->
+                                                <Grid
+                                                    Grid.Row="0"
+                                                    IsVisible="{Binding Condition.DisplayLock}"
+                                                    Style="{StaticResource LockOverlayGrid}">
+                                                    <VerticalStackLayout Style="{StaticResource LockOverlayVerticalStackLayout}">
+                                                        <Image Style="{StaticResource LockOverlayImage}" />
+                                                        <Label Style="{StaticResource LockOverlayPremiumContentLabel}" />
+                                                        <Button Style="{StaticResource LockOverlayUpgradeButton}" />
+                                                    </VerticalStackLayout>
                                                 </Grid>
                                             </Grid>
                                         </tabView:SfTabItem.Content>
                                     </tabView:SfTabItem>
 
-                                    <!-- Book Resources Tab -->
-                                    <tabView:SfTabItem
-                                        Style="{StaticResource RecommendationsSubTabItem}"
-                                        Header="Resources">
+                                    <!--  Book Resources Tab  -->
+                                    <tabView:SfTabItem Header="Resources" Style="{StaticResource RecommendationsSubTabItem}">
                                         <tabView:SfTabItem.Content>
                                             <Grid Style="{StaticResource TabContentGrid}">
                                                 <pages:MbdConditionDetailsResourcesView
                                                     Grid.Row="0"
-                                                    MbdCondition="{Binding Condition}"
+                                                    InputTransparent="False"
                                                     IsVisible="{Binding Condition.DisplayLock, Converter={StaticResource InverseBoolConverter}}"
-                                                    InputTransparent="False"/>
+                                                    MbdCondition="{Binding Condition}" />
 
-                                                <!-- Lock Overlay for Resources -->
-                                                <Grid IsVisible="{Binding Condition.DisplayLock}" Grid.Row="0"
-                                                      Style="{StaticResource LockOverlayGrid}">
-                                                     <VerticalStackLayout Style="{StaticResource LockOverlayVerticalStackLayout}">
-                                                         <Image Style="{StaticResource LockOverlayImage}" />
-                                                         <Label Style="{StaticResource LockOverlayPremiumContentLabel}" />
-                                                         <Button Style="{StaticResource LockOverlayUpgradeButton}" />
-                                                     </VerticalStackLayout>
+                                                <!--  Lock Overlay for Resources  -->
+                                                <Grid
+                                                    Grid.Row="0"
+                                                    IsVisible="{Binding Condition.DisplayLock}"
+                                                    Style="{StaticResource LockOverlayGrid}">
+                                                    <VerticalStackLayout Style="{StaticResource LockOverlayVerticalStackLayout}">
+                                                        <Image Style="{StaticResource LockOverlayImage}" />
+                                                        <Label Style="{StaticResource LockOverlayPremiumContentLabel}" />
+                                                        <Button Style="{StaticResource LockOverlayUpgradeButton}" />
+                                                    </VerticalStackLayout>
                                                 </Grid>
                                             </Grid>
                                         </tabView:SfTabItem.Content>
@@ -204,34 +206,29 @@
                 </tabView:SfTabItem.Content>
             </tabView:SfTabItem>
 
-            <!-- Tasks Tab -->
-            <tabView:SfTabItem
-                Style="{StaticResource BaseSfTabItem}"
-                Header="Tasks">
+            <!--  Tasks Tab  -->
+            <tabView:SfTabItem Header="Tasks" Style="{StaticResource BaseSfTabItem}">
                 <tabView:SfTabItem.ImageSource ResourceKey="IconClipboardTask" />
                 <tabView:SfTabItem.Content>
                     <ScrollView Style="{StaticResource ContentScrollView}">
-                         <VerticalStackLayout Style="{StaticResource MainContentStack}">
+                        <VerticalStackLayout Style="{StaticResource MainContentStack}">
                             <Grid HeightRequest="44">
                                 <Label
-                                    Text="Tasks"
                                     Style="{StaticResource SubHeadline}"
-                                    VerticalOptions="Center"/>
+                                    Text="Tasks"
+                                    VerticalOptions="Center" />
                                 <ImageButton
-                                    Source="{StaticResource IconClean}"
-                                    HorizontalOptions="End"
-                                    VerticalOptions="Center"
                                     Aspect="Center"
-                                    HeightRequest="44"
-                                    WidthRequest="44"
-                                    IsVisible="{Binding HasCompletedTasks}"
                                     Command="{Binding CleanTasksCommand}"
+                                    HeightRequest="44"
+                                    HorizontalOptions="End"
+                                    IsVisible="{Binding HasCompletedTasks}"
                                     SemanticProperties.Description="Clean up"
-                                    />
+                                    Source="{StaticResource IconClean}"
+                                    VerticalOptions="Center"
+                                    WidthRequest="44" />
                             </Grid>
-                            <VerticalStackLayout
-                                Spacing="{StaticResource LayoutSpacing}"
-                                BindableLayout.ItemsSource="{Binding Tasks}">
+                            <VerticalStackLayout BindableLayout.ItemsSource="{Binding Tasks}" Spacing="{StaticResource LayoutSpacing}">
                                 <BindableLayout.ItemTemplate>
                                     <DataTemplate>
                                         <controls:TaskView TaskCompletedCommand="{Binding TaskCompletedCommand, Source={RelativeSource AncestorType={x:Type pageModels:MbdConditionDetailPageModel}}, x:DataType=pageModels:MbdConditionDetailPageModel}" />
@@ -245,11 +242,12 @@
 
         </tabView:SfTabView>
 
-        <controls:AddButton Command="{Binding AddTaskCommand}"
-                            SemanticProperties.Description="Add task"
-                            ZIndex="100"
-                            Margin="20"
-                            VerticalOptions="End"
-                            HorizontalOptions="End"/>
+        <controls:AddButton
+            Margin="20"
+            Command="{Binding AddTaskCommand}"
+            HorizontalOptions="End"
+            SemanticProperties.Description="Add task"
+            VerticalOptions="End"
+            ZIndex="100" />
     </Grid>
 </ContentPage>

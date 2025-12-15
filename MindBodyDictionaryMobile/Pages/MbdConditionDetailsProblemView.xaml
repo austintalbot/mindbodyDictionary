@@ -1,116 +1,125 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:vm="clr-namespace:MindBodyDictionaryMobile.PageModels"
-             xmlns:model="clr-namespace:MindBodyDictionaryMobile.Models"
-             x:DataType="vm:MbdConditionDetailPageModel"
-             x:Name="this"
-             x:Class="MindBodyDictionaryMobile.Pages.MbdConditionDetailsProblemView">
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="MindBodyDictionaryMobile.Pages.MbdConditionDetailsProblemView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:model="clr-namespace:MindBodyDictionaryMobile.Models"
+    xmlns:vm="clr-namespace:MindBodyDictionaryMobile.PageModels"
+    x:Name="this"
+    x:DataType="vm:MbdConditionDetailPageModel">
 
-    <Grid Padding="0"
-        VerticalOptions="Fill"
-        HorizontalOptions="Fill">
-    <Grid.ColumnDefinitions>
-        <ColumnDefinition Width="*" />
-        <ColumnDefinition Width="*" />
-    </Grid.ColumnDefinitions>
-    <Grid.RowDefinitions>
-        <RowDefinition Height="auto" />
-        <RowDefinition Height="*" />
-        <RowDefinition Height="*" />
-        <RowDefinition Height="auto" />
-    </Grid.RowDefinitions>
-    <!--Problem Header-->
-    <VerticalStackLayout Grid.Row="0"
-                        Grid.Column="0"
-                        Grid.ColumnSpan="2"
-                        HorizontalOptions="Center"
-                        VerticalOptions="Center">
-        <Image x:Name="ProblemsMindBodyLogo"
-                Style="{StaticResource MbdIconImage}"></Image>
-        <Label Text="Mindsets for" Style="{StaticResource MindsetsForLabelStyle}" />
-        <Label Text="{Binding Condition.Name}" Style="{StaticResource ConditionNameLabelStyle}" />
-    </VerticalStackLayout>
-    <Border Margin="10"
-        Grid.Row="1"
-        Grid.Column="0"
-        Grid.ColumnSpan="2"
+    <Grid
+        Padding="0"
         HorizontalOptions="Fill"
-        Stroke="{StaticResource MbdConditionCardBorder}"
-        StrokeThickness="1"
-        Background="White"
         VerticalOptions="Fill">
-    <Border.GestureRecognizers>
-        <TapGestureRecognizer Command="{Binding NavigateToSummaryCommand}"
-                              CommandParameter="Negative"></TapGestureRecognizer>
-    </Border.GestureRecognizers>
-    <Grid HorizontalOptions="Fill"
-            VerticalOptions="Fill"
-            Background="White">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
             <RowDefinition Height="*" />
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
-        <Image Grid.Column="0"
-                x:Name="NegativeImage"
-                Aspect="AspectFit"
-                VerticalOptions="Center"
-                Source="{Binding Condition.CachedImageOneSource}" />
-        <Label x:Name="NegativeMindsetLabel" Style="{StaticResource MindsetTroubledLabelStyle}" />
+        <!--  Problem Header  -->
+        <VerticalStackLayout
+            Grid.Row="0"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            HorizontalOptions="Center"
+            VerticalOptions="Center">
+            <Image x:Name="ProblemsMindBodyLogo" Style="{StaticResource MbdIconImage}" />
+            <Label Style="{StaticResource MindsetsForLabelStyle}" Text="Mindsets for" />
+            <Label Style="{StaticResource ConditionNameLabelStyle}" Text="{Binding Condition.Name}" />
+        </VerticalStackLayout>
+        <Border
+            Grid.Row="1"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            Margin="10"
+            Background="White"
+            HorizontalOptions="Fill"
+            Stroke="{StaticResource MbdConditionCardBorder}"
+            StrokeThickness="1"
+            VerticalOptions="Fill">
+            <Border.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding NavigateToSummaryCommand}" CommandParameter="Negative" />
+            </Border.GestureRecognizers>
+            <Grid
+                Background="White"
+                HorizontalOptions="Fill"
+                VerticalOptions="Fill">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
+                <Image
+                    x:Name="NegativeImage"
+                    Grid.Column="0"
+                    Aspect="AspectFit"
+                    Source="{Binding Condition.CachedImageOneSource}"
+                    VerticalOptions="Center" />
+                <Label x:Name="NegativeMindsetLabel" Style="{StaticResource MindsetTroubledLabelStyle}" />
 
-        <Label x:Name="NegativeLabel" Style="{StaticResource ProblemSummaryLabelStyle}"
-               Grid.Column="1"
-               Grid.ColumnSpan="2"
-               Grid.Row="0"
-               Grid.RowSpan="2"
-               Text="{Binding Condition.SummaryNegative}" />
-    </Grid>
-    </Border>
+                <Label
+                    x:Name="NegativeLabel"
+                    Grid.Row="0"
+                    Grid.RowSpan="2"
+                    Grid.Column="1"
+                    Grid.ColumnSpan="2"
+                    Style="{StaticResource ProblemSummaryLabelStyle}"
+                    Text="{Binding Condition.SummaryNegative}" />
+            </Grid>
+        </Border>
 
-    <Border Margin="10"
-        HorizontalOptions="Fill"
-        VerticalOptions="Fill"
-        Grid.Row="2"
-        Grid.Column="0"
-        Grid.ColumnSpan="2"
-        Stroke="{StaticResource MbdConditionCardBorder}"
-        StrokeThickness="1"
-        Background="White">
-    <Border.GestureRecognizers>
-        <TapGestureRecognizer Command="{Binding NavigateToSummaryCommand}"
-                              CommandParameter="Positive"></TapGestureRecognizer>
-    </Border.GestureRecognizers>
-    <Grid HorizontalOptions="Fill"
-            VerticalOptions="Fill"
-            Background="White">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="auto" />
-        </Grid.RowDefinitions>
-        <Image x:Name="PositiveImage"
-                Grid.Column="3"
-                Grid.Row="0"
-                Aspect="AspectFit"
-                VerticalOptions="Center"
-                Source="{Binding Condition.CachedImageTwoSource}" />
-        <Label x:Name="PositiveMindsetLabel" Style="{StaticResource MindsetHealingLabelStyle}" />
-        <Label Grid.Column="0"
-                Grid.Row="0"
-                Grid.ColumnSpan="2"
-                Grid.RowSpan="2"
-                x:Name="PositiveLabel"
-                Style="{StaticResource PositiveSummaryLabelStyle}"
-                Text="{Binding Condition.SummaryPositive}" />
+        <Border
+            Grid.Row="2"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            Margin="10"
+            Background="White"
+            HorizontalOptions="Fill"
+            Stroke="{StaticResource MbdConditionCardBorder}"
+            StrokeThickness="1"
+            VerticalOptions="Fill">
+            <Border.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding NavigateToSummaryCommand}" CommandParameter="Positive" />
+            </Border.GestureRecognizers>
+            <Grid
+                Background="White"
+                HorizontalOptions="Fill"
+                VerticalOptions="Fill">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
+                <Image
+                    x:Name="PositiveImage"
+                    Grid.Row="0"
+                    Grid.Column="3"
+                    Aspect="AspectFit"
+                    Source="{Binding Condition.CachedImageTwoSource}"
+                    VerticalOptions="Center" />
+                <Label x:Name="PositiveMindsetLabel" Style="{StaticResource MindsetHealingLabelStyle}" />
+                <Label
+                    x:Name="PositiveLabel"
+                    Grid.Row="0"
+                    Grid.RowSpan="2"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    Style="{StaticResource PositiveSummaryLabelStyle}"
+                    Text="{Binding Condition.SummaryPositive}" />
             </Grid>
         </Border>
     </Grid>
