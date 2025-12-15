@@ -1,9 +1,7 @@
 import { app, BrowserWindow } from 'electron'
-import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 
-const require = createRequire(import.meta.url)
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 // The built directory structure
@@ -75,10 +73,8 @@ app.on('activate', () => {
 import installExtension, { REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer'
 
 app.whenReady().then(() => {
-  if (VITE_DEV_SERVER_URL) { // Only install in development
-    installExtension(REACT_DEVELOPER_TOOLS)
-      .then((name) => console.log(`Added Extension: ${name}`))
-      .catch((err) => console.log('An error occurred installing React DevTools: ', err));
-  }
+  installExtension(REACT_DEVELOPER_TOOLS)
+    .then((name) => console.log(`Added Extension: ${name}`))
+    .catch((err) => console.log('An error occurred installing React DevTools: ', err));
   createWindow()
 })

@@ -2,8 +2,6 @@
 
 import {
   ADMIN_API_URL,
-  AILMENTS_TABLE_CODE, // Keep for now if upsert/delete still uses it, or remove if fully migrated
-  AILMENT_CODE, // Keep for now
   DELETE_AILMENT_CODE,
   UPSERT_AILMENT_CODE,
   IMAGES_TABLE_CODE,
@@ -13,10 +11,10 @@ import {
   SEND_PUSH_NOTIFICATION_CODE,
   CREATE_BACKUP_CODE,
   RESTORE_DATABASE_CODE,
-  GET_MBD_CONDITIONS_TABLE_CODE, // New constant
-  GET_MBD_CONDITIONS_CODE // New constant
+  GET_MBD_CONDITIONS_TABLE_CODE,
+  GET_MBD_CONDITIONS_CODE,
 } from '../constants';
-import { MbdCondition, Recommendation } from '../types'; // Import from barrel file
+import { MbdCondition } from '../types'; // Import from barrel file
 
 // Helper for making API requests
 async function makeApiRequest<T>(
@@ -128,4 +126,4 @@ export const restoreDatabase = async (file: File): Promise<void> => {
 };
 
 // Expose image base URL for direct use in image src attributes
-export const getImageBaseUrl = (): string => IMAGE_BASE_URL;
+// export const getImageBaseUrl = (): string => IMAGE_BASE_URL; // Moved to constants.ts

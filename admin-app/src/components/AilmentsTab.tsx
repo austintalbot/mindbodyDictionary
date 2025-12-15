@@ -1,7 +1,8 @@
 // admin-app/src/components/AilmentsTab.tsx
 import React, { useEffect, useState } from 'react';
-import { fetchMbdConditionsTable, upsertAilment, deleteAilment, fetchMbdCondition, getImageBaseUrl } from '../services/apiService';
-import { MbdCondition, Recommendation } from '../types'; // Corrected import path
+import { fetchMbdConditionsTable, upsertAilment, deleteAilment, fetchMbdCondition } from '../services/apiService';
+import { MbdCondition, Recommendation } from '../types';
+import { getImageBaseUrl } from '../constants'; // Import directly from constants
 
 // Interface for what Ailment data looks like, extends MbdCondition for additional properties if any
 interface Ailment extends MbdCondition {}
@@ -57,8 +58,6 @@ const AilmentsTab: React.FC = () => {
       physicalConnections: [],
       tags: [],
       recommendations: [],
-      imageAffirmation: '',
-      imagePhysical: '',
     });
     setShowAilmentDiv(true);
     setAlertMessage(null);
@@ -160,7 +159,7 @@ const AilmentsTab: React.FC = () => {
   const getImageUrl = (type: 'negative' | 'positive') => {
     if (!currentAilment) return '';
     const baseUrl = getImageBaseUrl();
-    const ailmentName = currentAilment.imageShareOverrideAilmentName || currentAilment.name;
+    const ailmentName = currentAilment.name;
     if (!ailmentName) return '';
     return `${baseUrl}/${ailmentName}${type === 'negative' ? '1' : '2'}.png`;
   };
@@ -271,39 +270,6 @@ const AilmentsTab: React.FC = () => {
                   onChange={handleAilmentChange}
                 />
                 <label htmlFor="subscriptionOnly">Subscription Only</label>
-              </div>
-              <div className="form-group">
-                <label htmlFor="imageShareOverrideAilmentName">Image Share Ailment Name:</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Ailment with which it will share an image"
-                  id="imageShareOverrideAilmentName"
-                  value={currentAilment.imageShareOverrideAilmentName || ''}
-                  onChange={handleAilmentChange}
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="imageAffirmation">Image Affirmation:</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Image for Affirmation"
-                  id="imageAffirmation"
-                  value={currentAilment.imageAffirmation || ''}
-                  onChange={handleAilmentChange}
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="imagePhysical">Image Physical:</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Image for Physical"
-                  id="imagePhysical"
-                  value={currentAilment.imagePhysical || ''}
-                  onChange={handleAilmentChange}
-                />
               </div>
               <div className="form-group">
                 <label htmlFor="summaryNegative">Summary Negative:</label>

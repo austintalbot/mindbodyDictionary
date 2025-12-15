@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import './App.css';
 import AilmentsTab from './components/AilmentsTab';
 import ImagesTab from './components/ImagesTab';

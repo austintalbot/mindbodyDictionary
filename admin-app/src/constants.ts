@@ -16,3 +16,6 @@ export const CREATE_BACKUP_CODE = import.meta.env.VITE_CREATE_BACKUP_CODE || 'YO
 export const RESTORE_DATABASE_CODE = import.meta.env.VITE_RESTORE_DATABASE_CODE || 'YOUR_RESTORE_DATABASE_CODE';
 export const GET_MBD_CONDITIONS_TABLE_CODE = import.meta.env.VITE_GET_MBD_CONDITIONS_TABLE_CODE || 'YOUR_GET_MBD_CONDITIONS_TABLE_CODE';
 export const GET_MBD_CONDITIONS_CODE = import.meta.env.VITE_GET_MBD_CONDITIONS_CODE || 'YOUR_GET_MBD_CONDITIONS_CODE';
+
+// Expose image base URL for direct use in image src attributes
+export const getImageBaseUrl = (): string => IMAGE_BASE_URL;

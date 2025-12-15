@@ -1,7 +1,8 @@
 // admin-app/src/components/ImagesTab.tsx
 import React, { useEffect, useState } from 'react';
-import { fetchImagesTable, deleteImage, uploadImage, getImageBaseUrl, fetchMbdConditionsTable } from '../services/apiService';
-import { MbdCondition } from '../types'; // Import MbdCondition
+import { fetchImagesTable, deleteImage, uploadImage, fetchMbdConditionsTable } from '../services/apiService';
+import { MbdCondition } from '../types';
+import { getImageBaseUrl } from '../constants'; // Import directly from constants
 
 interface Image {
   name: string;
