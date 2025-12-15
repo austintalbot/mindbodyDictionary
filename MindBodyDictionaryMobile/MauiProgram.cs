@@ -111,6 +111,11 @@ public static class MauiProgram
     var logger = app.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Startup");
     logger.LogInformation("App startup log test");
     Services = app.Services;
+
+    // Load images into cache on startup
+    var imageCacheService = Services.GetRequiredService<ImageCacheService>();
+    imageCacheService.LoadImagesFromResourcesAsync().FireAndForgetSafeAsync(app.Services.GetRequiredService<ModalErrorHandler>());
+
     return app;
   }
 }

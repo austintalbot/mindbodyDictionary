@@ -17,21 +17,23 @@ public class ImageCacheService(ImageCacheRepository imageCacheRepository, ILogge
   /// Loads all images from Resources/Raw/images into the local cache database.
   /// </summary>
   public async Task LoadImagesFromResourcesAsync() {
+    _logger.LogInformation("LoadImagesFromResourcesAsync: Starting to load images from resources.");
     try
     {
       var imageFiles = await GetImageFilesFromResourcesAsync();
-      _logger.LogInformation("Found {Count} image files to cache", imageFiles.Count);
+      _logger.LogInformation("LoadImagesFromResourcesAsync: Found {Count} image files to cache", imageFiles.Count);
 
       foreach (var filePath in imageFiles)
       {
+        _logger.LogDebug("LoadImagesFromResourcesAsync: Attempting to cache image: {FilePath}", filePath);
         await CacheImageAsync(filePath);
       }
 
-      _logger.LogInformation("Successfully cached {Count} images", imageFiles.Count);
+      _logger.LogInformation("LoadImagesFromResourcesAsync: Successfully cached {Count} images", imageFiles.Count);
     }
     catch (Exception e)
     {
-      _logger.LogError(e, "Error loading images from resources");
+      _logger.LogError(e, "LoadImagesFromResourcesAsync: Error loading images from resources");
       throw;
     }
   }
@@ -40,62 +42,98 @@ public class ImageCacheService(ImageCacheRepository imageCacheRepository, ILogge
   /// Gets an image from cache. If not found, loads it from resources.
   /// </summary>
   public async Task<ImageSource?> GetImageAsync(string fileName) {
+    _logger.LogDebug("GetImageAsync: Requesting image: {FileName}", fileName);
     try
     {
-      // First, try to get from database cache
+      // 1. Try to get from database cache
+      _logger.LogDebug("GetImageAsync: Checking database cache for {FileName}", fileName);
       var cachedImage = await _imageCacheRepository.GetByFileNameAsync(fileName);
       if (cachedImage != null)
       {
-        _logger.LogDebug("Retrieved image from cache: {FileName}", fileName);
+        _logger.LogInformation("GetImageAsync: Retrieved image from cache: {FileName}", fileName);
         return ImageSource.FromStream(() => new MemoryStream(cachedImage.ImageData));
       }
+      else
+      {
+        _logger.LogDebug("GetImageAsync: Image not found in database cache: {FileName}", fileName);
+      }
 
-      // If not in cache, try resources first, then remote
-      var imagePath = $"{ImagesResourcePath}/{fileName}";
+      // 2. If not in cache, try remote Azure Storage
+      ImageSource? imageSource = null;
       try
       {
-        await using var stream = await FileSystem.OpenAppPackageFileAsync(imagePath);
-        var memoryStream = new MemoryStream();
-        await stream.CopyToAsync(memoryStream);
-        var imageData = memoryStream.ToArray();
+        using var httpClient = new HttpClient();
+        var url = $"{RemoteImageBaseUrl}{Uri.EscapeDataString(fileName)}";
+        _logger.LogInformation("GetImageAsync: Attempting to download image from remote: {Url}", url);
 
-        // Cache the image in the database
-        await SaveToCacheAsync(fileName, imageData);
-        _logger.LogDebug("Cached image from resources: {FileName}", fileName);
+        var imageData = await httpClient.GetByteArrayAsync(url);
 
-        return ImageSource.FromStream(() => new MemoryStream(imageData));
-      }
-      catch (Exception)
-      {
-        _logger.LogWarning("Image not found in resources: {FileName}, trying remote...", fileName);
-
-        try
+        if (imageData.Length > 0)
         {
-          using var httpClient = new HttpClient();
-          // Handle spaces in URL
-          var url = $"{RemoteImageBaseUrl}{Uri.EscapeDataString(fileName)}";
-          _logger.LogInformation("Downloading image from: {Url}", url);
+          await SaveToCacheAsync(fileName, imageData);
+          _logger.LogInformation("GetImageAsync: Successfully downloaded and cached from remote: {FileName} ({Size} bytes)", fileName, imageData.Length);
+          imageSource = ImageSource.FromStream(() => new MemoryStream(imageData));
+        }
+        else
+        {
+            _logger.LogWarning("GetImageAsync: Remote download returned empty data for {FileName}", fileName);
+        }
+      }
+      catch (Exception ex)
+      {
+        _logger.LogWarning(ex, "GetImageAsync: Failed to download image from remote: {FileName}", fileName);
+      }
 
-          var imageData = await httpClient.GetByteArrayAsync(url);
+      if (imageSource != null)
+      {
+          _logger.LogDebug("GetImageAsync: Returning image from remote for {FileName}", fileName);
+          return imageSource;
+      }
 
-          if (imageData.Length > 0)
+      // 3. If remote fails, fall back to embedded resources
+      _logger.LogDebug("GetImageAsync: Attempting to load image from embedded resources: {FileName}", fileName);
+      try
+      {
+        var assembly = typeof(ImageCacheService).Assembly;
+        var resourceName = assembly.GetManifestResourceNames()
+            .FirstOrDefault(name => name.EndsWith($".{fileName}", StringComparison.OrdinalIgnoreCase));
+
+        if (resourceName != null)
+        {
+          _logger.LogInformation("GetImageAsync: Found embedded resource: {ResourceName} for {FileName}", resourceName, fileName);
+          await using var stream = assembly.GetManifestResourceStream(resourceName);
+          if (stream != null)
           {
+            var memoryStream = new MemoryStream();
+            await stream.CopyToAsync(memoryStream);
+            var imageData = memoryStream.ToArray();
+
             await SaveToCacheAsync(fileName, imageData);
-            _logger.LogInformation("Successfully downloaded and cached: {FileName}", fileName);
+            _logger.LogInformation("GetImageAsync: Successfully loaded and cached from embedded resources: {FileName} ({Size} bytes)", fileName, imageData.Length);
             return ImageSource.FromStream(() => new MemoryStream(imageData));
           }
+          else
+          {
+            _logger.LogWarning("GetImageAsync: Failed to open embedded resource stream for {ResourceName} (Stream was null)", resourceName);
+          }
         }
-        catch (Exception ex)
+        else
         {
-          _logger.LogError(ex, "Failed to download image from remote: {FileName}", fileName);
+          _logger.LogWarning("GetImageAsync: Embedded image resource not found for {FileName} (No matching resourceName)", fileName);
         }
-
-        return null;
       }
+      catch (Exception ex)
+      {
+        _logger.LogWarning(ex, "GetImageAsync: Error opening embedded resource stream for {FileName}.", fileName);
+      }
+
+      // If all attempts fail
+      _logger.LogWarning("GetImageAsync: All attempts to retrieve image failed for {FileName}", fileName);
+      return null;
     }
     catch (Exception e)
     {
-      _logger.LogError(e, "Error retrieving image: {FileName}", fileName);
+      _logger.LogError(e, "GetImageAsync: Top-level error retrieving image: {FileName}", fileName);
       return null;
     }
   }
@@ -229,6 +267,7 @@ public class ImageCacheService(ImageCacheRepository imageCacheRepository, ILogge
   private async Task<List<string>> GetImageFilesFromResourcesAsync() {
     var imageFiles = new List<string>();
 
+    _logger.LogInformation("GetImageFilesFromResourcesAsync: Starting to get image files from resources.");
     try
     {
       // In MAUI, we need to enumerate resources from the assembly
@@ -239,28 +278,43 @@ public class ImageCacheService(ImageCacheRepository imageCacheRepository, ILogge
 
       foreach (var resourceName in resourceNames)
       {
+        _logger.LogDebug("GetImageFilesFromResourcesAsync: Processing resource name: {ResourceName}", resourceName);
         // Check if resource is in the images folder - match pattern like "MindBodyDictionaryMobile.Resources.Raw.images.imageName.png"
         if (resourceName.Contains(".images.") && (resourceName.EndsWith(".png") || resourceName.EndsWith(".jpg") ||
             resourceName.EndsWith(".jpeg") || resourceName.EndsWith(".gif") || resourceName.EndsWith(".svg") ||
             resourceName.EndsWith(".webp")))
         {
+          _logger.LogDebug("GetImageFilesFromResourcesAsync: Resource {ResourceName} matches image pattern", resourceName);
           // Extract the file name from the resource name
           // Pattern: MindBodyDictionaryMobile.Resources.Raw.images.FileName.png
           var imagesIndex = resourceName.IndexOf(".images.", StringComparison.Ordinal);
           if (imagesIndex >= 0)
           {
             var fileName = resourceName[(imagesIndex + ".images.".Length)..];
+            _logger.LogDebug("GetImageFilesFromResourcesAsync: Extracted fileName: {FileName} from {ResourceName}", fileName, resourceName);
 
             if (IsImageFile(fileName))
             {
               imageFiles.Add(fileName);
-              _logger.LogDebug("GetImageFilesFromResourcesAsync: Found image {ResourceName} -> {FileName}", resourceName, fileName);
+              _logger.LogInformation("GetImageFilesFromResourcesAsync: Added image file: {FileName}", fileName);
+            }
+            else
+            {
+                _logger.LogDebug("GetImageFilesFromResourcesAsync: Extracted fileName {FileName} is not a valid image file extension.", fileName);
             }
           }
+          else
+          {
+              _logger.LogDebug("GetImageFilesFromResourcesAsync: Resource {ResourceName} contains '.images.' but index not found. Skipping.", resourceName);
+          }
+        }
+        else
+        {
+            _logger.LogDebug("GetImageFilesFromResourcesAsync: Resource {ResourceName} does not match image folder or extension pattern. Skipping.", resourceName);
         }
       }
 
-      _logger.LogInformation("GetImageFilesFromResourcesAsync: Found {Count} image files in resources", imageFiles.Count);
+      _logger.LogInformation("GetImageFilesFromResourcesAsync: Finished. Found {Count} image files in resources", imageFiles.Count);
     }
     catch (Exception e)
     {

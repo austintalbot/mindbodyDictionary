@@ -26,7 +26,7 @@ public class SmokeTests : BaseTest
         {
             Output.WriteLine("Initializing Driver...");
             InitializeDriver(platform);
-            
+
             // 1. Home Page (default start)
             // Verify something on home page. HomePageTests checks MbdConditionSearchBar, RefreshConditionsButton, ConditionsList, AppLogo
             // Let's check AppLogo as it seems most 'home' like.
