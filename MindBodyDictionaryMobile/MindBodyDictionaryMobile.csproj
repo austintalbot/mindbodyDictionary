@@ -119,6 +119,7 @@
 		<PackageReference Include="Xamarin.Firebase.Messaging" Version="125.0.1" />
 		<PackageReference Include="Xamarin.GooglePlayServices.Base" Version="118.9.0" />
 		<PackageReference Include="Xamarin.Android.Google.BillingClient" Version="8.0.0" />
+		<PackageReference Include="Xamarin.AndroidX.Fragment.Ktx" Version="1.8.9" />
 		<GoogleServicesJson Include="Platforms\Android\google-services.json" />
 	</ItemGroup>
 
