@@ -24,6 +24,7 @@
                 <ResourceDictionary Source="Resources/Styles/Components/MbdConditionStyles.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Components/NotificationStyles.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Components/ImageStyles.xaml" />
+                <ResourceDictionary Source="Resources/Styles/Components/ImageCacheStyles.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Components/CollectionStyles.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Components/ShimmerStyles.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Components/ProgressStyles.xaml" />

@@ -161,12 +161,12 @@ public class SeedDataService(ProjectRepository projectRepository, TaskRepository
       // Only seed if DB is empty, unless forced
       if (!forceUpdate)
       {
-          var existingConditions = await _mbdConditionRepository.ListAsync();
-          if (existingConditions != null && existingConditions.Count > 0)
-          {
-            _logger.LogInformation($"Database already has {existingConditions.Count} conditions. Skipping seeding.");
-            return;
-          }
+        var existingConditions = await _mbdConditionRepository.ListAsync();
+        if (existingConditions != null && existingConditions.Count > 0)
+        {
+          _logger.LogInformation($"Database already has {existingConditions.Count} conditions. Skipping seeding.");
+          return;
+        }
       }
 
       // Try API first

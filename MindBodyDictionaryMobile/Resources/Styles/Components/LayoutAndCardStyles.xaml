@@ -255,4 +255,19 @@
         <Setter Property="Padding" Value="15" />
         <Setter Property="StrokeShape" Value="RoundRectangle 10" />
     </Style>
+
+    <!--  New Styles for ManageMetaPage.xaml  -->
+    <Style x:Key="MetaItemGridStyle" TargetType="Grid">
+        <Setter Property="ColumnDefinitions" Value="*, Auto, 50, Auto" />
+        <Setter Property="ColumnSpacing" Value="10" />
+        <Setter Property="Margin" Value="0,5" />
+    </Style>
+
+    <Style x:Key="MetaColorBoxViewStyle" TargetType="BoxView">
+        <Setter Property="WidthRequest" Value="30" />
+        <Setter Property="HeightRequest" Value="30" />
+        <Setter Property="CornerRadius" Value="5" />
+        <Setter Property="VerticalOptions" Value="Center" />
+    </Style>
+
 </ResourceDictionary>

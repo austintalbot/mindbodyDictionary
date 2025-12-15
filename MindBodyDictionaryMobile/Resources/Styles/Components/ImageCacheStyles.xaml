@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<?xaml-comp compile="true" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <!-- Styles for ImageCachePage -->
+
+    <Style x:Key="ImageCacheSummaryHeaderLabel" TargetType="Label">
+        <Setter Property="Text" Value="Cache Statistics" />
+        <Setter Property="FontSize" Value="20" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="HorizontalOptions" Value="Center" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}" />
+        <Setter Property="Margin" Value="0,10,0,0" />
+    </Style>
+
+    <Style x:Key="ImageCacheStatusBorder" TargetType="Border">
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}" />
+        <Setter Property="Padding" Value="15" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+    </Style>
+
+    <Style x:Key="ImageCacheStatusLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource Gray100}}" />
+    </Style>
+
+    <Style x:Key="ImageCacheDebugStatsLayout" TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="5" />
+    </Style>
+
+    <Style x:Key="ImageCacheDebugStatLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray400}}" />
+    </Style>
+
+    <Style x:Key="ImageCacheStatTitleLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}" />
+    </Style>
+
+    <Style x:Key="ImageCacheStatValueLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="HorizontalOptions" Value="End" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}" />
+    </Style>
+
+    <Style x:Key="ImageCacheActionButton" TargetType="Button" BasedOn="{StaticResource Button}">
+        <Setter Property="Margin" Value="0" />
+    </Style>
+
+    <Style x:Key="ImageCacheLoadingIndicator" TargetType="ActivityIndicator">
+        <Setter Property="Color" Value="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" />
+        <Setter Property="HorizontalOptions" Value="Center" />
+        <Setter Property="VerticalOptions" Value="Center" />
+    </Style>
+
+    <Style x:Key="ImageCacheListHeaderLabel" TargetType="Label">
+        <Setter Property="Text" Value="Cached Images:" />
+        <Setter Property="FontSize" Value="20" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}" />
+        <Setter Property="Margin" Value="0,20,0,10" />
+    </Style>
+
+    <Style x:Key="ImageCacheListCountLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray400}}" />
+        <Setter Property="Margin" Value="0,0,0,10" />
+    </Style>
+
+    <Style x:Key="ImageCacheListItemBorder" TargetType="Border">
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}" />
+        <Setter Property="Padding" Value="10" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+        <Setter Property="Margin" Value="0,5" />
+    </Style>
+
+    <Style x:Key="ImageCacheListItemFileNameLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}" />
+    </Style>
+
+    <Style x:Key="ImageCacheListItemDetailLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray400}}" />
+    </Style>
+
+    <Style x:Key="ImageCacheListItemCachedAtLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray500}}" />
+    </Style>
+
+    <Style x:Key="ImageCacheDebugInfoBorder" TargetType="Border">
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Accent}}" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource LightSecondaryBackground}, Dark={StaticResource DarkSecondaryBackground}}" />
+        <Setter Property="Padding" Value="15" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+        <Setter Property="Margin" Value="0,20,0,0" />
+    </Style>
+
+    <Style x:Key="ImageCacheDebugInfoHeaderLabel" TargetType="Label">
+        <Setter Property="Text" Value="Debug Information" />
+        <Setter Property="FontSize" Value="20" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="HorizontalOptions" Value="Center" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Accent}}" />
+        <Setter Property="Margin" Value="0,0,0,10" />
+    </Style>
+
+    <Style x:Key="ImageCacheDebugStatItemLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource Gray100}}" />
+    </Style>
+
+    <Style x:Key="ImageCacheDebugPathLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray400}}" />
+        <Setter Property="LineBreakMode" Value="WordWrap" />
+    </Style>
+
+    <Style x:Key="ImageCacheDebugButton" TargetType="Button" BasedOn="{StaticResource Button}">
+        <Setter Property="Margin" Value="0" />
+        <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+    </Style>
+
+    <Style x:Key="ImageCacheDebugCopyButton" TargetType="Button" BasedOn="{StaticResource Button}">
+        <Setter Property="Margin" Value="0" />
+        <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+    </Style>
+
+    <Style x:Key="ImageCacheDebugLogLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray400}}" />
+        <Setter Property="LineBreakMode" Value="WordWrap" />
+    </Style>
+
+</ResourceDictionary>

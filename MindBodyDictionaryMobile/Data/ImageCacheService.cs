@@ -68,26 +68,26 @@ public class ImageCacheService(ImageCacheRepository imageCacheRepository, ILogge
       catch (Exception)
       {
         _logger.LogWarning("Image not found in resources: {FileName}, trying remote...", fileName);
-        
+
         try
         {
-            using var httpClient = new HttpClient();
-            // Handle spaces in URL
-            var url = $"{RemoteImageBaseUrl}{Uri.EscapeDataString(fileName)}";
-            _logger.LogInformation("Downloading image from: {Url}", url);
-            
-            var imageData = await httpClient.GetByteArrayAsync(url);
-            
-            if (imageData.Length > 0)
-            {
-                await SaveToCacheAsync(fileName, imageData);
-                _logger.LogInformation("Successfully downloaded and cached: {FileName}", fileName);
-                return ImageSource.FromStream(() => new MemoryStream(imageData));
-            }
+          using var httpClient = new HttpClient();
+          // Handle spaces in URL
+          var url = $"{RemoteImageBaseUrl}{Uri.EscapeDataString(fileName)}";
+          _logger.LogInformation("Downloading image from: {Url}", url);
+
+          var imageData = await httpClient.GetByteArrayAsync(url);
+
+          if (imageData.Length > 0)
+          {
+            await SaveToCacheAsync(fileName, imageData);
+            _logger.LogInformation("Successfully downloaded and cached: {FileName}", fileName);
+            return ImageSource.FromStream(() => new MemoryStream(imageData));
+          }
         }
         catch (Exception ex)
         {
-             _logger.LogError(ex, "Failed to download image from remote: {FileName}", fileName);
+          _logger.LogError(ex, "Failed to download image from remote: {FileName}", fileName);
         }
 
         return null;
@@ -100,17 +100,16 @@ public class ImageCacheService(ImageCacheRepository imageCacheRepository, ILogge
     }
   }
 
-  private async Task SaveToCacheAsync(string fileName, byte[] imageData)
-  {
-        var imageCache = new ImageCache
-        {
-          FileName = fileName,
-          ImageData = imageData,
-          CachedAt = DateTime.UtcNow,
-          ContentType = GetContentType(fileName)
-        };
+  private async Task SaveToCacheAsync(string fileName, byte[] imageData) {
+    var imageCache = new ImageCache
+    {
+      FileName = fileName,
+      ImageData = imageData,
+      CachedAt = DateTime.UtcNow,
+      ContentType = GetContentType(fileName)
+    };
 
-        await _imageCacheRepository.SaveItemAsync(imageCache);
+    await _imageCacheRepository.SaveItemAsync(imageCache);
   }
 
   /// <summary>
