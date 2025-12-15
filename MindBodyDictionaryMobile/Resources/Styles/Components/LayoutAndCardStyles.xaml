@@ -104,6 +104,7 @@
         <Setter Property="VerticalOptions" Value="Fill" />
         <Setter Property="HorizontalOptions" Value="Fill" />
         <Setter Property="WidthRequest" Value="300" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource LightOnLightBackground}, Dark={StaticResource DarkSecondaryBackground}}" />
     </Style>
 
     <!-- New ProjectCardTagsLayout Style -->

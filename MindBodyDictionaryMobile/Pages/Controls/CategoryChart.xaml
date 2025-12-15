@@ -52,7 +52,7 @@
                         <chart:CircularDataLabelSettings LabelPosition="Outside"
                                                          SmartLabelAlignment="Shift">
                             <chart:CircularDataLabelSettings.ConnectorLineSettings>
-                                <chart:ConnectorLineStyle Style="{StaticResource ChartConnectorLineStyle}"></chart:ConnectorLineStyle>
+                                <chart:ConnectorLineStyle ConnectorType="Line" StrokeWidth="3" />
                             </chart:CircularDataLabelSettings.ConnectorLineSettings>
                         </chart:CircularDataLabelSettings>
                     </chart:DoughnutSeries.DataLabelSettings>

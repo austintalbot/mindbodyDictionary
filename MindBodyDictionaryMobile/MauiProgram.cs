@@ -85,6 +85,8 @@ public static class MauiProgram
     // Register New Condition Pages and ViewModels
     builder.Services.AddSingleton<MbdConditionHomePageModel>();
     builder.Services.AddSingleton<MbdConditionHomePage>();
+    builder.Services.AddSingleton<MbdConditionListPageModel>();
+    builder.Services.AddSingleton<MbdConditionListPage>();
 
     builder.Services.AddSingleton<SearchPageModel>();
     builder.Services.AddSingleton<SearchPage>();

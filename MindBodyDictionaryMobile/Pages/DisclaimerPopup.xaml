@@ -3,7 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MindBodyDictionaryMobile.Pages.DisclaimerPopup"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             xmlns:pages="clr-namespace:MindBodyDictionaryMobile.Pages">
+             xmlns:pages="clr-namespace:MindBodyDictionaryMobile.Pages"
+             Color="#80000000"
+             CanBeDismissedByTouch="False">
 
     <toolkit:Popup.Resources>
         <Style TargetType="{x:Type pages:DisclaimerPopup}">
