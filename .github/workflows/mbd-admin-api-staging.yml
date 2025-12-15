@@ -51,9 +51,9 @@ jobs:
     - name: Azure Login
       uses: azure/login@v2
       with:
-        client-id: ${{ vars.mbd_admin_api_staging_CLIENT_ID_60CE }}
-        tenant-id: ${{ vars.mbd_admin_api_staging_TENANT_ID_60CE }}
-        subscription-id: ${{ vars.mbd_admin_api_staging_SUBSCRIPTION_ID_60CE }}
+        client-id: ${{ vars.MBD_ADMIN_API_STAGING_CLIENT_ID_60CE }}
+        tenant-id: ${{ vars.MBD_ADMIN_API_STAGING_TENANT_ID_60CE }}
+        subscription-id: ${{ vars.MBD_ADMIN_API_STAGING_SUBSCRIPTION_ID_60CE }}
     - name: Deploy to Azure Function App
       uses: Azure/functions-action@v1
       with:
