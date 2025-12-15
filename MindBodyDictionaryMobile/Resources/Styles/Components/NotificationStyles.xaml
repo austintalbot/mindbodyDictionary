@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<?xaml-comp compile="true" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <Style x:Key="NotificationHeaderLabel" TargetType="Label" BasedOn="{StaticResource PageTitleLabel}">
+        <Setter Property="Text" Value="Notification Settings" />
+    </Style>
+
+    <Style x:Key="NotificationInfoBorder" TargetType="Border">
+        <Setter Property="Padding" Value="15" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray900}}" />
+        <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray700}}" />
+    </Style>
+
+    <Style x:Key="NotificationInfoTitleLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+    </Style>
+
+    <Style x:Key="NotificationInfoMessageLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Gray700}, Dark={StaticResource Gray300}}" />
+    </Style>
+
+    <Style x:Key="NotificationInfoLastActionLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}" />
+        <Setter Property="FontAttributes" Value="Italic" />
+    </Style>
+
+    <Style x:Key="NotificationRegistrationStatusLayout" TargetType="HorizontalStackLayout">
+        <Setter Property="Spacing" Value="10" />
+        <Setter Property="VerticalOptions" Value="Center" />
+    </Style>
+
+    <Style x:Key="NotificationRegistrationStatusTitleLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+        <Setter Property="VerticalOptions" Value="Center" />
+    </Style>
+
+    <Style x:Key="NotificationRegistrationStatusValueLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="VerticalOptions" Value="Center" />
+    </Style>
+
+    <Style x:Key="NotificationActionButton" TargetType="Button">
+        <Setter Property="HeightRequest" Value="50" />
+        <Setter Property="CornerRadius" Value="25" />
+        <Setter Property="FontAttributes" Value="Bold" />
+    </Style>
+
+    <Style x:Key="NotificationInfoTextLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Gray700}, Dark={StaticResource Gray300}}" />
+        <Setter Property="LineHeight" Value="1.2" />
+    </Style>
+
+</ResourceDictionary>
+
