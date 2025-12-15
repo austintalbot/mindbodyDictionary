@@ -485,4 +485,4 @@ When adding new tests or UI elements:
 4. Run tests on both platforms
 5. Document any special setup requirements
 
-Happy Testing! 🎉
+Happy Testing!

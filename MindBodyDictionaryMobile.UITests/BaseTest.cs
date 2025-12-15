@@ -58,7 +58,7 @@ public abstract class BaseTest : IDisposable
                 Output.WriteLine("Popup: Found Notification Permission 'Allow' button. Clicking...");
                 allowButtons[0].Click();
             }
-            else 
+            else
             {
                  // Fallback: Try finding by text "Allow" if ID fails (less reliable but useful)
                  var allowTextButtons = Driver.FindElements(By.XPath("//*[@text='Allow']"));
@@ -122,12 +122,13 @@ public abstract class BaseTest : IDisposable
 
     private AppiumOptions GetIOSOptions()
     {
+        // xcrun simctl list devices available | grep "iPhone 17 Pro Max"
         var options = new AppiumOptions
         {
             AutomationName = "XCUITest",
             PlatformName = "iOS",
-            PlatformVersion = Environment.GetEnvironmentVariable("IOS_PLATFORM_VERSION") ?? "15.0",
-            DeviceName = Environment.GetEnvironmentVariable("IOS_DEVICE_NAME") ?? "iPhone 14"
+            PlatformVersion = Environment.GetEnvironmentVariable("IOS_PLATFORM_VERSION") ?? "26.1",
+            DeviceName = Environment.GetEnvironmentVariable("IOS_DEVICE_NAME") ?? "iPhone 17 Pro Max"
         };
 
         // Bundle ID

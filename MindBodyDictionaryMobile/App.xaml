@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <Application
     x:Class="MindBodyDictionaryMobile.App"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
@@ -22,6 +22,7 @@
                 <ResourceDictionary Source="Resources/Styles/Components/PageLayoutStyles.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Components/SearchPageStyles.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Components/MbdConditionStyles.xaml" />
+                <ResourceDictionary Source="Resources/Styles/Components/NotificationStyles.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Components/ImageStyles.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Components/CollectionStyles.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Components/ShimmerStyles.xaml" />
