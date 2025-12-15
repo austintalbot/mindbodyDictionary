@@ -10,13 +10,12 @@ interface Ailment extends MbdCondition {}
 const AilmentsTab: React.FC = () => {
   const [ailments, setAilments] = useState<Ailment[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const [currentAilment, setCurrentAilment] = useState<Ailment | null>(null);
-  const [showAilmentDiv, setShowAilmentDiv] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
   const [showDetailModal, setShowDetailModal] = useState<boolean>(false);
   const [selectedAilmentForModal, setSelectedAilmentForModal] = useState<Ailment | null>(null);
+  const [activeModalTab, setActiveModalTab] = useState<string>('basicInfo');
 
   useEffect(() => {
     loadAilments();
@@ -55,13 +54,12 @@ const AilmentsTab: React.FC = () => {
   const handleCloseModal = () => {
     setShowDetailModal(false);
     setSelectedAilmentForModal(null);
-    setCurrentAilment(null); // Clear current ailment when modal closes
     setError(null); // Clear any errors
     setAlertMessage(null); // Clear any alert messages
   };
 
   const addAilment = () => {
-    setCurrentAilment({
+    setSelectedAilmentForModal({
       id: '',
       name: '',
       subscriptionOnly: false,
@@ -72,15 +70,15 @@ const AilmentsTab: React.FC = () => {
       tags: [],
       recommendations: [],
     });
-    setShowAilmentDiv(true);
+    setShowDetailModal(true);
     setAlertMessage(null);
     setError(null);
   };
 
   const duplicateAilment = () => {
-    if (currentAilment) {
-      setCurrentAilment({
-        ...currentAilment,
+    if (selectedAilmentForModal) {
+      setSelectedAilmentForModal({
+        ...selectedAilmentForModal,
         id: '', // Clear ID for duplication
         name: '', // Clear name to prompt new name
       });
@@ -88,14 +86,14 @@ const AilmentsTab: React.FC = () => {
   };
 
   const saveAilment = async () => {
-    if (!currentAilment || !currentAilment.name || currentAilment.name.trim() === '') {
+    if (!selectedAilmentForModal || !selectedAilmentForModal.name || selectedAilmentForModal.name.trim() === '') {
       alert('Must specify an Ailment name');
       return;
     }
 
     try {
-      const savedAilment = await upsertAilment(currentAilment);
-      setCurrentAilment(savedAilment);
+      const savedAilment = await upsertAilment(selectedAilmentForModal);
+      setSelectedAilmentForModal(savedAilment);
       setAlertMessage('Saved!');
       loadAilments(); // Reload table after save
     } catch (err: any) {
@@ -116,9 +114,9 @@ const AilmentsTab: React.FC = () => {
   };
 
   const handleAilmentChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    if (currentAilment) {
+    if (selectedAilmentForModal) {
       const { id, value, type, checked } = e.target as HTMLInputElement;
-      setCurrentAilment((prev) => ({
+      setSelectedAilmentForModal((prev) => ({
         ...prev!,
         [id]: type === 'checkbox' ? checked : value,
       }));
@@ -126,10 +124,10 @@ const AilmentsTab: React.FC = () => {
   };
 
   const handleArrayChange = (index: number, value: string, arrayType: 'affirmations' | 'physicalConnections' | 'tags') => {
-    if (currentAilment && currentAilment[arrayType]) {
-      const newArray = [...currentAilment[arrayType]!];
+    if (selectedAilmentForModal && selectedAilmentForModal[arrayType]) {
+      const newArray = [...selectedAilmentForModal[arrayType]!];
       newArray[index] = value;
-      setCurrentAilment((prev) => ({
+      setSelectedAilmentForModal((prev) => ({
         ...prev!,
         [arrayType]: newArray,
       }));
@@ -137,8 +135,8 @@ const AilmentsTab: React.FC = () => {
   };
 
   const addToArray = (arrayType: 'affirmations' | 'physicalConnections' | 'tags') => {
-    if (currentAilment) {
-      setCurrentAilment((prev) => ({
+    if (selectedAilmentForModal) {
+      setSelectedAilmentForModal((prev) => ({
         ...prev!,
         [arrayType]: [...(prev![arrayType] || []), ''],
       }));
@@ -146,13 +144,13 @@ const AilmentsTab: React.FC = () => {
   };
 
   const handleRecommendationChange = (index: number, field: keyof Recommendation, value: string) => {
-    if (currentAilment && currentAilment.recommendations) {
-      const newRecommendations = [...currentAilment.recommendations];
+    if (selectedAilmentForModal && selectedAilmentForModal.recommendations) {
+      const newRecommendations = [...selectedAilmentForModal.recommendations];
       newRecommendations[index] = {
         ...newRecommendations[index],
         [field]: field === 'recommendationType' ? parseInt(value) : value,
       };
-      setCurrentAilment((prev) => ({
+      setSelectedAilmentForModal((prev) => ({
         ...prev!,
         recommendations: newRecommendations,
       }));
@@ -160,8 +158,8 @@ const AilmentsTab: React.FC = () => {
   };
 
   const addRecommendation = () => {
-    if (currentAilment) {
-      setCurrentAilment((prev) => ({
+    if (selectedAilmentForModal) {
+      setSelectedAilmentForModal((prev) => ({
         ...prev!,
         recommendations: [...(prev!.recommendations || []), { name: '', url: '', recommendationType: 0 }],
       }));
@@ -170,18 +168,18 @@ const AilmentsTab: React.FC = () => {
 
 
   const getImageUrl = (type: 'negative' | 'positive') => {
-    if (!currentAilment) return '';
+    if (!selectedAilmentForModal) return '';
     const baseUrl = getImageBaseUrl();
 
     let imageFileName = '';
     // Prioritize imageNegative/imagePositive from API response
-    if (type === 'negative' && currentAilment.imageNegative) {
-      imageFileName = currentAilment.imageNegative;
-    } else if (type === 'positive' && currentAilment.imagePositive) {
-      imageFileName = currentAilment.imagePositive;
+    if (type === 'negative' && selectedAilmentForModal.imageNegative) {
+      imageFileName = selectedAilmentForModal.imageNegative;
+    } else if (type === 'positive' && selectedAilmentForModal.imagePositive) {
+      imageFileName = selectedAilmentForModal.imagePositive;
     } else {
       // Fallback: Construct name from ailment.name
-      const ailmentName = currentAilment.name;
+      const ailmentName = selectedAilmentForModal.name;
       if (!ailmentName) return '';
       imageFileName = `${ailmentName}${type === 'negative' ? '1' : '2'}`;
     }
@@ -245,7 +243,7 @@ const AilmentsTab: React.FC = () => {
                         className="btn btn-outline-info"
                         onClick={() => selectAilment(ailment.id!, ailment.name!)}
                       >
-                        <i className="fas fa-file-alt"></i>
+                        <i className="fas fa-edit"></i> Edit
                       </button>
                     </td>
                     <td>
@@ -276,252 +274,310 @@ const AilmentsTab: React.FC = () => {
           <div className="modal-dialog modal-xl" role="document">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title">Ailment Details: {selectedAilmentForModal.name}</h5>
+                <h5 className="modal-title">
+                  {selectedAilmentForModal.id ? `Edit Ailment: ${selectedAilmentForModal.name}` : 'Add New Ailment'}
+                </h5>
                 <button type="button" className="close" aria-label="Close" onClick={handleCloseModal}>
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
               <div className="modal-body">
-                <div className="card mt-3" id="ailmentDiv">
-                  <div className="card-body">
-                    <h5 className="card-title">Basic Info</h5>
-                    <div className="row">
-                      <div className="col-sm-6">
-                        <div id="ailmentInfo" className="mb-3">
-                          <div className="form-group">
-                            <label htmlFor="id">Id:</label>
-                            <input
-                              type="text"
-                              className="form-control"
-                              id="id"
-                              value={selectedAilmentForModal.id || ''}
-                              disabled
-                            />
-                          </div>
-                          <div className="form-group">
-                            <label htmlFor="name">Name:</label>
-                            <div className="input-group">
+                <ul className="nav nav-tabs" id="myTab" role="tablist">
+                  <li className="nav-item">
+                    <a
+                      className={`nav-link ${activeModalTab === 'basicInfo' ? 'active' : ''}`}
+                      onClick={() => setActiveModalTab('basicInfo')}
+                      role="tab"
+                    >
+                      Basic Info
+                    </a>
+                  </li>
+                  <li className="nav-item">
+                    <a
+                      className={`nav-link ${activeModalTab === 'affirmations' ? 'active' : ''}`}
+                      onClick={() => setActiveModalTab('affirmations')}
+                      role="tab"
+                    >
+                      Affirmations
+                    </a>
+                  </li>
+                  <li className="nav-item">
+                    <a
+                      className={`nav-link ${activeModalTab === 'physicalConnections' ? 'active' : ''}`}
+                      onClick={() => setActiveModalTab('physicalConnections')}
+                      role="tab"
+                    >
+                      Physical Connections
+                    </a>
+                  </li>
+                  <li className="nav-item">
+                    <a
+                      className={`nav-link ${activeModalTab === 'tags' ? 'active' : ''}`}
+                      onClick={() => setActiveModalTab('tags')}
+                      role="tab"
+                    >
+                      Tags
+                    </a>
+                  </li>
+                  <li className="nav-item">
+                    <a
+                      className={`nav-link ${activeModalTab === 'recommendations' ? 'active' : ''}`}
+                      onClick={() => setActiveModalTab('recommendations')}
+                      role="tab"
+                    >
+                      Recommendations
+                    </a>
+                  </li>
+                </ul>
+
+                <div className="tab-content mt-3">
+                  {/* Basic Info Tab Pane */}
+                  {activeModalTab === 'basicInfo' && (
+                    <div className="tab-pane fade show active" role="tabpanel">
+                      <h5 className="card-title">Basic Info</h5>
+                      <div className="row">
+                        <div className="col-sm-6">
+                          <div id="ailmentInfo" className="mb-3">
+                            <div className="form-group">
+                              <label htmlFor="id">Id:</label>
                               <input
                                 type="text"
                                 className="form-control"
-                                id="name"
-                                value={selectedAilmentForModal.name || ''}
-                                onChange={handleAilmentChange}
-                                disabled={!!selectedAilmentForModal.id}
-                                placeholder={selectedAilmentForModal.id ? '' : 'Input Ailment Name'}
+                                id="id"
+                                value={selectedAilmentForModal.id || ''}
+                                disabled
                               />
-                              <div className="input-group-append">
-                                <button className="btn btn-outline-warning" onClick={duplicateAilment} type="button">
-                                  Duplicate Ailment
-                                </button>
+                            </div>
+                            <div className="form-group">
+                              <label htmlFor="name">Name:</label>
+                              <div className="input-group">
+                                <input
+                                  type="text"
+                                  className="form-control"
+                                  id="name"
+                                  value={selectedAilmentForModal.name || ''}
+                                  onChange={handleAilmentChange}
+                                  disabled={!!selectedAilmentForModal.id}
+                                  placeholder={selectedAilmentForModal.id ? '' : 'Input Ailment Name'}
+                                />
+                                <div className="input-group-append">
+                                  <button className="btn btn-outline-warning" onClick={duplicateAilment} type="button">
+                                    Duplicate Ailment
+                                  </button>
+                                </div>
                               </div>
                             </div>
                           </div>
                         </div>
+                        <div id="ailmentImages" className="col-sm-6 text-center">
+                          <i>Negative</i>
+                          <img id="negativeImage" style={{ maxWidth: '120px' }} src={getImageUrl('negative')} alt="Negative Ailment" />
+                          <i>Positive</i>
+                          <img id="positiveImage" style={{ maxWidth: '120px' }} src={getImageUrl('positive')} alt="Positive Ailment" />
+                        </div>
                       </div>
-                      <div id="ailmentImages" className="col-sm-6 text-center">
-                        <i>Negative</i>
-                        <img id="negativeImage" style={{ maxWidth: '120px' }} src={getImageUrl('negative')} alt="Negative Ailment" />
-                        <i>Positive</i>
-                        <img id="positiveImage" style={{ maxWidth: '120px' }} src={getImageUrl('positive')} alt="Positive Ailment" />
+                      <div id="ailmentEdit">
+                        <div className="form-check">
+                          <input
+                            type="checkbox"
+                            className="form-check-input"
+                            id="subscriptionOnly"
+                            checked={selectedAilmentForModal.subscriptionOnly}
+                            onChange={handleAilmentChange}
+                          />
+                          <label htmlFor="subscriptionOnly">Subscription Only</label>
+                        </div>
+                        <div className="form-group">
+                          <label htmlFor="summaryNegative">Summary Negative:</label>
+                          <textarea
+                            className="form-control"
+                            rows={5}
+                            id="summaryNegative"
+                            value={selectedAilmentForModal.summaryNegative || ''}
+                            onChange={handleAilmentChange}
+                          ></textarea>
+                        </div>
+                        <div className="form-group">
+                          <label htmlFor="summaryPositive">Summary Positive:</label>
+                          <textarea
+                            className="form-control"
+                            rows={5}
+                            id="summaryPositive"
+                            value={selectedAilmentForModal.summaryPositive || ''}
+                            onChange={handleAilmentChange}
+                          ></textarea>
+                        </div>
                       </div>
                     </div>
-                    <div id="ailmentEdit">
-                      <div className="form-check">
-                        <input
-                          type="checkbox"
-                          className="form-check-input"
-                          id="subscriptionOnly"
-                          checked={selectedAilmentForModal.subscriptionOnly}
-                          onChange={handleAilmentChange}
-                        />
-                        <label htmlFor="subscriptionOnly">Subscription Only</label>
-                      </div>
-                      <div className="form-group">
-                        <label htmlFor="summaryNegative">Summary Negative:</label>
-                        <textarea
-                          className="form-control"
-                          rows={5}
-                          id="summaryNegative"
-                          value={selectedAilmentForModal.summaryNegative || ''}
-                          onChange={handleAilmentChange}
-                        ></textarea>
-                      </div>
-                      <div className="form-group">
-                        <label htmlFor="summaryPositive">Summary Positive:</label>
-                        <textarea
-                          className="form-control"
-                          rows={5}
-                          id="summaryPositive"
-                          value={selectedAilmentForModal.summaryPositive || ''}
-                          onChange={handleAilmentChange}
-                        ></textarea>
-                      </div>
+                  )}
 
-                      <div className="row mt-3">
-                        <div className="col-sm">
-                          <div>
-                            <div className="row">
-                              <h5 className="col">Affirmations</h5>
-                              <div className="col">
-                                <button type="button" className="btn btn-sm btn-outline-primary" onClick={() => addToArray('affirmations')}>
-                                  Add
-                                </button>
-                              </div>
-                            </div>
-                            <i style={{ display: 'block' }}>Statements of Affirmation</i>
-                            <hr />
-                            <table style={{ width: '100%' }}>
-                              <tbody>
-                                {(selectedAilmentForModal.affirmations || []).map((affirmation, index) => (
-                                  <tr key={index}>
-                                    <td>
-                                      <textarea
-                                        rows={2}
-                                        className="sol-sm-12 form-control"
-                                        value={affirmation}
-                                        onChange={(e) => handleArrayChange(index, e.target.value, 'affirmations')}
-                                      ></textarea>
-                                    </td>
-                                  </tr>
-                                ))}
-                              </tbody>
-                            </table>
-                          </div>
-                        </div>
-                        <div className="col-sm">
-                          <div>
-                            <div className="row">
-                              <h5 className="col">Physical Connections</h5>
-                              <div className="col">
-                                <button type="button" className="btn btn-sm btn-outline-primary" onClick={() => addToArray('physicalConnections')}>
-                                  Add
-                                </button>
-                              </div>
-                            </div>
-                            <i style={{ display: 'block' }}>Locations on the body that can be referenced by this Ailment i.e Adrenal Problems linked to Kidney</i>
-                            <hr />
-                            <table style={{ width: '100%' }}>
-                              <tbody>
-                                {(selectedAilmentForModal.physicalConnections || []).map((connection, index) => (
-                                  <tr key={index}>
-                                    <td>
-                                      <input
-                                        type="text"
-                                        className="sol-sm-12 form-control"
-                                        value={connection}
-                                        onChange={(e) => handleArrayChange(index, e.target.value, 'physicalConnections')}
-                                      />
-                                    </td>
-                                  </tr>
-                                ))}
-                              </tbody>
-                            </table>
-                          </div>
-                        </div>
-                        <div className="col-sm">
-                          <div>
-                            <div className="row">
-                              <h5 className="col">Tags</h5>
-                              <div className="col">
-                                <button type="button" className="btn btn-sm btn-outline-primary" onClick={() => addToArray('tags')}>
-                                  Add
-                                </button>
-                              </div>
-                            </div>
-                            <i style={{ display: 'block' }}>Single words used for matching Ailment to search parameters</i>
-                            <hr />
-                            <table style={{ width: '100%' }}>
-                              <tbody>
-                                {(selectedAilmentForModal.tags || []).map((tag, index) => (
-                                  <tr key={index}>
-                                    <td>
-                                      <input
-                                        type="text"
-                                        className="sol-sm-12 form-control"
-                                        value={tag}
-                                        onChange={(e) => handleArrayChange(index, e.target.value, 'tags')}
-                                      />
-                                    </td>
-                                  </tr>
-                                ))}
-                              </tbody>
-                            </table>
-                          </div>
+                  {/* Affirmations Tab Pane */}
+                  {activeModalTab === 'affirmations' && (
+                    <div className="tab-pane fade show active" role="tabpanel">
+                      <div className="row">
+                        <h5 className="col">Affirmations</h5>
+                        <div className="col">
+                          <button type="button" className="btn btn-sm btn-outline-primary" onClick={() => addToArray('affirmations')}>
+                            Add
+                          </button>
                         </div>
                       </div>
-
-                      <div className="col-sm-12 mt-3">
-                        <div>
-                          <div className="row">
-                            <h5 className="">Recommendations</h5>
-                            <div className="col">
-                              <button type="button" className="btn btn-sm btn-outline-primary" onClick={addRecommendation}>
-                                Add
-                              </button>
-                            </div>
-                          </div>
-                          <table style={{ width: '100%' }}>
-                            <thead>
-                              <tr>
-                                <th>Name</th>
-                                <th>URL</th>
-                                <th>Type</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {(selectedAilmentForModal.recommendations || []).map((rec, index) => (
-                                <tr key={index}>
-                                  <td>
-                                    <input
-                                      type="text"
-                                      className="sol-sm-12 form-control rName"
-                                      value={rec.name || ''}
-                                      onChange={(e) => handleRecommendationChange(index, 'name', e.target.value)}
-                                    />
-                                  </td>
-                                  <td>
-                                    <input
-                                      type="text"
-                                      className="sol-sm-12 form-control rUrl"
-                                      value={rec.url || ''}
-                                      onChange={(e) => handleRecommendationChange(index, 'url', e.target.value)}
-                                    />
-                                  </td>
-                                  <td>
-                                    <select
-                                      className="form-control rType"
-                                      value={rec.recommendationType}
-                                      onChange={(e) => handleRecommendationChange(index, 'recommendationType', e.target.value)}
-                                    >
-                                      <option value={0}>Product</option>
-                                      <option value={1}>Practitioner</option>
-                                      <option value={2}>Book</option>
-                                      <option value={3}>Food</option>
-                                    </select>
-                                  </td>
-                                </tr>
-                              ))}
-                            </tbody>
-                          </table>
-                        </div>
-                      </div>
-                      {alertMessage && (
-                        <div className="alert alert-success mt-3" role="alert">
-                          {alertMessage}
-                        </div>
-                      )}
-                      {error && (
-                        <div className="alert alert-danger mt-3" role="alert">
-                          Error: {error}
-                        </div>
-                      )}
-                      <button className="btn btn-primary btn-lg btn-block btn-success mt-3" onClick={saveAilment}>
-                        Save
-                      </button>
+                      <i style={{ display: 'block' }}>Statements of Affirmation</i>
+                      <hr />
+                      <table style={{ width: '100%' }}>
+                        <tbody>
+                          {(selectedAilmentForModal.affirmations || []).map((affirmation, index) => (
+                            <tr key={index}>
+                              <td>
+                                <textarea
+                                  rows={2}
+                                  className="sol-sm-12 form-control"
+                                  value={affirmation}
+                                  onChange={(e) => handleArrayChange(index, e.target.value, 'affirmations')}
+                                ></textarea>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
                     </div>
-                  </div>
+                  )}
+
+                  {/* Physical Connections Tab Pane */}
+                  {activeModalTab === 'physicalConnections' && (
+                    <div className="tab-pane fade show active" role="tabpanel">
+                      <div className="row">
+                        <h5 className="col">Physical Connections</h5>
+                        <div className="col">
+                          <button type="button" className="btn btn-sm btn-outline-primary" onClick={() => addToArray('physicalConnections')}>
+                            Add
+                          </button>
+                        </div>
+                      </div>
+                      <i style={{ display: 'block' }}>Locations on the body that can be referenced by this Ailment i.e Adrenal Problems linked to Kidney</i>
+                      <hr />
+                      <table style={{ width: '100%' }}>
+                        <tbody>
+                          {(selectedAilmentForModal.physicalConnections || []).map((connection, index) => (
+                            <tr key={index}>
+                              <td>
+                                <input
+                                  type="text"
+                                  className="sol-sm-12 form-control"
+                                  value={connection}
+                                  onChange={(e) => handleArrayChange(index, e.target.value, 'physicalConnections')}
+                                />
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+
+                  {/* Tags Tab Pane */}
+                  {activeModalTab === 'tags' && (
+                    <div className="tab-pane fade show active" role="tabpanel">
+                      <div className="row">
+                        <h5 className="col">Tags</h5>
+                        <div className="col">
+                          <button type="button" className="btn btn-sm btn-outline-primary" onClick={() => addToArray('tags')}>
+                            Add
+                          </button>
+                        </div>
+                      </div>
+                      <i style={{ display: 'block' }}>Single words used for matching Ailment to search parameters</i>
+                      <hr />
+                      <table style={{ width: '100%' }}>
+                        <tbody>
+                          {(selectedAilmentForModal.tags || []).map((tag, index) => (
+                            <tr key={index}>
+                              <td>
+                                <input
+                                  type="text"
+                                  className="sol-sm-12 form-control"
+                                  value={tag}
+                                  onChange={(e) => handleArrayChange(index, e.target.value, 'tags')}
+                                />
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+
+                  {/* Recommendations Tab Pane */}
+                  {activeModalTab === 'recommendations' && (
+                    <div className="tab-pane fade show active" role="tabpanel">
+                      <div className="row">
+                        <h5 className="col">Recommendations</h5>
+                        <div className="col">
+                          <button type="button" className="btn btn-sm btn-outline-primary" onClick={addRecommendation}>
+                            Add
+                          </button>
+                        </div>
+                      </div>
+                      <table style={{ width: '100%' }}>
+                        <thead>
+                          <tr>
+                            <th>Name</th>
+                            <th>URL</th>
+                            <th>Type</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {(selectedAilmentForModal.recommendations || []).map((rec, index) => (
+                            <tr key={index}>
+                              <td>
+                                <input
+                                  type="text"
+                                  className="sol-sm-12 form-control rName"
+                                  value={rec.name || ''}
+                                  onChange={(e) => handleRecommendationChange(index, 'name', e.target.value)}
+                                />
+                              </td>
+                              <td>
+                                <input
+                                  type="text"
+                                  className="sol-sm-12 form-control rUrl"
+                                  value={rec.url || ''}
+                                  onChange={(e) => handleRecommendationChange(index, 'url', e.target.value)}
+                                />
+                              </td>
+                              <td>
+                                <select
+                                  className="form-control rType"
+                                  value={rec.recommendationType}
+                                  onChange={(e) => handleRecommendationChange(index, 'recommendationType', e.target.value)}
+                                >
+                                  <option value={0}>Product</option>
+                                  <option value={1}>Practitioner</option>
+                                  <option value={2}>Book</option>
+                                  <option value={3}>Food</option>
+                                </select>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
                 </div>
+
+                {alertMessage && (
+                  <div className="alert alert-success mt-3" role="alert">
+                    {alertMessage}
+                  </div>
+                )}
+                {error && (
+                  <div className="alert alert-danger mt-3" role="alert">
+                    Error: {error}
+                  </div>
+                )}
+                <button className="btn btn-primary btn-lg btn-block btn-success mt-3" onClick={saveAilment}>
+                  Save
+                </button>
               </div>
               <div className="modal-footer">
                 <button type="button" className="btn btn-secondary" onClick={handleCloseModal}>Close</button>
