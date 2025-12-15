@@ -8,7 +8,7 @@ public class GetMbdConditionsTable(ILogger<GetMbdConditionsTable> logger, Cosmos
 
 	[Function("GetMbdConditionsTable")]
 	public async Task<IActionResult> Run(
-		[HttpTrigger(AuthorizationLevel.Function, "get", Route = null)] HttpRequest req)
+		[HttpTrigger(AuthorizationLevel.Function, "get", Route = null)] HttpRequest _)
 	{
 		try
 		{
