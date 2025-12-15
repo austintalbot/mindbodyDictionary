@@ -2,8 +2,8 @@
 
 import {
   ADMIN_API_URL,
-  AILMENTS_TABLE_CODE,
-  AILMENT_CODE,
+  AILMENTS_TABLE_CODE, // Keep for now if upsert/delete still uses it, or remove if fully migrated
+  AILMENT_CODE, // Keep for now
   DELETE_AILMENT_CODE,
   UPSERT_AILMENT_CODE,
   IMAGES_TABLE_CODE,
@@ -12,7 +12,9 @@ import {
   DELETE_CONTACT_CODE,
   SEND_PUSH_NOTIFICATION_CODE,
   CREATE_BACKUP_CODE,
-  RESTORE_DATABASE_CODE
+  RESTORE_DATABASE_CODE,
+  GET_MBD_CONDITIONS_TABLE_CODE, // New constant
+  GET_MBD_CONDITIONS_CODE // New constant
 } from '../constants';
 import { MbdCondition, Recommendation } from '../types'; // Import from barrel file
 
@@ -53,18 +55,19 @@ async function makeApiRequest<T>(
 
   // Check if the response has content before parsing as JSON
   const responseText = await response.text();
+  console.log('API Raw Response Text:', endpoint, responseText); // Added log
   return responseText ? JSON.parse(responseText) : ({} as T);
 }
 
-// --- Ailment API Calls ---
-export const fetchAilmentsTable = async (): Promise<MbdCondition[]> => {
-  return makeApiRequest<MbdCondition[]>(`AilmentsTable?code=${AILMENTS_TABLE_CODE}`);
+// --- MbdCondition API Calls ---
+export const fetchMbdConditionsTable = async (): Promise<any> => { // The API returns {"data":[]} so it returns 'any' for now.
+  return makeApiRequest<any>(`GetMbdConditionsTable?code=${GET_MBD_CONDITIONS_TABLE_CODE}`);
 };
 
-export const fetchAilment = async (id: string, name: string): Promise<MbdCondition> => {
+export const fetchMbdCondition = async (id: string, name: string): Promise<MbdCondition> => {
   // Original JS replaced single quote with 'paranthesis' - we need to reverse that for the actual API call
   const decodedName = name.replace("paranthesis", "'");
-  return makeApiRequest<MbdCondition>(`Ailment?code=${AILMENT_CODE}&id=${id}&name=${encodeURIComponent(decodedName)}`);
+  return makeApiRequest<MbdCondition>(`GetMbdConditions?code=${GET_MBD_CONDITIONS_CODE}&id=${id}&name=${encodeURIComponent(decodedName)}`);
 };
 
 export const upsertAilment = async (ailment: MbdCondition): Promise<MbdCondition> => {

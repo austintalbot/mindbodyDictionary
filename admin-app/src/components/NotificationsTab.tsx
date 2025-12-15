@@ -1,6 +1,6 @@
 // admin-app/src/components/NotificationsTab.tsx
 import React, { useState, useEffect } from 'react';
-import { sendPushNotification, fetchAilmentsTable } from '../services/apiService';
+import { sendPushNotification, fetchMbdConditionsTable } from '../services/apiService';
 import { MbdCondition } from '../types'; // Import MbdCondition
 
 // AilmentOption now uses MbdCondition for name and id
@@ -26,8 +26,12 @@ const NotificationsTab: React.FC = () => {
   const loadAilmentOptions = async () => {
     setLoadingAilments(true);
     try {
-        const data = await fetchAilmentsTable();
-        setAilmentOptions(data.map((ailment: MbdCondition) => ({ id: ailment.id, name: ailment.name })));
+        const response = await fetchMbdConditionsTable(); // Changed to fetchMbdConditionsTable
+        if (response && Array.isArray(response.data)) {
+            setAilmentOptions(response.data.map((ailment: MbdCondition) => ({ id: ailment.id, name: ailment.name })));
+        } else {
+            throw new Error('API response data for MbdConditions is not an array or is missing.');
+        }
     } catch (err: any) {
         setError(err.message || "Failed to load ailments for notifications");
     } finally {

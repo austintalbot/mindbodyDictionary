@@ -1,6 +1,6 @@
 // admin-app/src/components/ImagesTab.tsx
 import React, { useEffect, useState } from 'react';
-import { fetchImagesTable, deleteImage, uploadImage, getImageBaseUrl, fetchAilmentsTable } from '../services/apiService';
+import { fetchImagesTable, deleteImage, uploadImage, getImageBaseUrl, fetchMbdConditionsTable } from '../services/apiService';
 import { MbdCondition } from '../types'; // Import MbdCondition
 
 interface Image {
@@ -49,12 +49,15 @@ const ImagesTab: React.FC = () => {
 
   const loadAilmentOptions = async () => {
     try {
-        const data = await fetchAilmentsTable();
-        // Assuming AilmentsTable returns objects with { id: string, name: string }
-        setAilmentOptions(data.map((ailment: MbdCondition) => ({ id: ailment.id, name: ailment.name })));
+        const response = await fetchMbdConditionsTable(); // Changed to fetchMbdConditionsTable
+        if (response && Array.isArray(response.data)) {
+            setAilmentOptions(response.data.map((ailment: MbdCondition) => ({ id: ailment.id, name: ailment.name })));
+        } else {
+            throw new Error('API response data for MbdConditions is not an array or is missing.');
+        }
     } catch (err: any) {
-        // Handle error, maybe set an error state for the form
         console.error("Failed to load ailment options:", err);
+        setError(err.message || "Failed to load ailment options");
     }
   };
 

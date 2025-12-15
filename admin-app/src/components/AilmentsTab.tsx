@@ -1,6 +1,6 @@
 // admin-app/src/components/AilmentsTab.tsx
 import React, { useEffect, useState } from 'react';
-import { fetchAilmentsTable, upsertAilment, deleteAilment, fetchAilment, getImageBaseUrl } from '../services/apiService';
+import { fetchMbdConditionsTable, upsertAilment, deleteAilment, fetchMbdCondition, getImageBaseUrl } from '../services/apiService';
 import { MbdCondition, Recommendation } from '../types'; // Corrected import path
 
 // Interface for what Ailment data looks like, extends MbdCondition for additional properties if any
@@ -22,8 +22,12 @@ const AilmentsTab: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      const data = await fetchAilmentsTable();
-      setAilments(data);
+      const response = await fetchMbdConditionsTable(); // Changed to fetchMbdConditionsTable
+      if (response && Array.isArray(response.data)) { // Check if response.data exists and is an array
+        setAilments(response.data);
+      } else {
+        throw new Error('API response data is not an array or is missing.');
+      }
     } catch (err: any) {
       setError(err.message || 'Failed to fetch ailments');
     } finally {
@@ -35,7 +39,7 @@ const AilmentsTab: React.FC = () => {
     setShowAilmentDiv(true);
     setAlertMessage(null);
     try {
-      const data = await fetchAilment(id, name);
+      const data = await fetchMbdCondition(id, name); // Changed to fetchMbdCondition
       setCurrentAilment(data);
     } catch (err: any) {
       setError(err.message || 'Failed to fetch ailment details');
@@ -53,6 +57,8 @@ const AilmentsTab: React.FC = () => {
       physicalConnections: [],
       tags: [],
       recommendations: [],
+      imageAffirmation: '',
+      imagePhysical: '',
     });
     setShowAilmentDiv(true);
     setAlertMessage(null);
@@ -274,6 +280,28 @@ const AilmentsTab: React.FC = () => {
                   placeholder="Ailment with which it will share an image"
                   id="imageShareOverrideAilmentName"
                   value={currentAilment.imageShareOverrideAilmentName || ''}
+                  onChange={handleAilmentChange}
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="imageAffirmation">Image Affirmation:</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Image for Affirmation"
+                  id="imageAffirmation"
+                  value={currentAilment.imageAffirmation || ''}
+                  onChange={handleAilmentChange}
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="imagePhysical">Image Physical:</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Image for Physical"
+                  id="imagePhysical"
+                  value={currentAilment.imagePhysical || ''}
                   onChange={handleAilmentChange}
                 />
               </div>

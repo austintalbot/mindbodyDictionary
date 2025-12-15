@@ -30,7 +30,14 @@ function createWindow() {
   win = new BrowserWindow({
     icon: path.join(process.env.VITE_PUBLIC, 'electron-vite.svg'),
     webPreferences: {
-      preload: path.join(__dirname, 'preload.mjs'),
+      // preload: path.join(__dirname, 'preload.mjs'), // Disabled preload script due to contextIsolation conflict
+      // WARNING: These settings are generally NOT recommended for production Electron applications
+      // due to significant security risks. They are included here for compatibility with the
+      // original application's behavior (which relied on Node.js APIs directly in the renderer).
+      // For a secure production app, `contextIsolation` should be `true` and `nodeIntegration` `false`,
+      // with necessary APIs exposed securely via the preload script using `contextBridge`.
+      nodeIntegration: true,
+      contextIsolation: false,
     },
   })
 
@@ -65,4 +72,13 @@ app.on('activate', () => {
   }
 })
 
-app.whenReady().then(createWindow)
+import installExtension, { REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer'
+
+app.whenReady().then(() => {
+  if (VITE_DEV_SERVER_URL) { // Only install in development
+    installExtension(REACT_DEVELOPER_TOOLS)
+      .then((name) => console.log(`Added Extension: ${name}`))
+      .catch((err) => console.log('An error occurred installing React DevTools: ', err));
+  }
+  createWindow()
+})
