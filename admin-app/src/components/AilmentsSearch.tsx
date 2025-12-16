@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTheme } from '../theme/useTheme';
 
 interface AilmentsSearchProps {
   searchTerm: string;
@@ -6,6 +7,7 @@ interface AilmentsSearchProps {
 }
 
 const AilmentsSearch: React.FC<AilmentsSearchProps> = ({ searchTerm, onChange }) => {
+  const { colors } = useTheme();
   return (
     <div style={{ marginBottom: '24px' }}>
       <input
@@ -17,7 +19,9 @@ const AilmentsSearch: React.FC<AilmentsSearchProps> = ({ searchTerm, onChange })
           width: '100%',
           padding: '12px 16px',
           fontSize: '14px',
-          border: '1px solid #d0d0d0',
+          border: `1px solid ${colors.inputBorder}`,
+          backgroundColor: colors.inputBackground,
+          color: colors.foreground,
           borderRadius: '6px',
           boxSizing: 'border-box',
           fontFamily: 'inherit',
@@ -25,11 +29,11 @@ const AilmentsSearch: React.FC<AilmentsSearchProps> = ({ searchTerm, onChange })
           outline: 'none',
         }}
         onFocus={(e) => {
-          e.currentTarget.style.borderColor = '#0066cc';
-          e.currentTarget.style.boxShadow = '0 0 0 3px rgba(0, 102, 204, 0.1)';
+          e.currentTarget.style.borderColor = colors.inputFocus;
+          e.currentTarget.style.boxShadow = `0 0 0 3px ${colors.inputFocusRing}`;
         }}
         onBlur={(e) => {
-          e.currentTarget.style.borderColor = '#d0d0d0';
+          e.currentTarget.style.borderColor = colors.inputBorder;
           e.currentTarget.style.boxShadow = 'none';
         }}
       />

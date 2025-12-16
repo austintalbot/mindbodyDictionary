@@ -1,24 +1,36 @@
 import React from 'react';
-import { useTheme } from '../contexts/useTheme';
-import { Sun, Moon } from 'lucide-react';
+import { useTheme } from '../theme/useTheme';
 
-export const ThemeToggle: React.FC = () => {
-  const { theme, toggleTheme } = useTheme();
+const ThemeToggle: React.FC = () => {
+  const { theme, colors, toggleTheme } = useTheme();
 
   return (
     <button
       onClick={toggleTheme}
-      className="inline-flex items-center justify-center rounded-md border border-input bg-background px-3 py-2 text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
-      aria-label="Toggle theme"
+      style={{
+        padding: '8px 16px',
+        backgroundColor: colors.neutral,
+        border: `1px solid ${colors.borderLight}`,
+        borderRadius: '6px',
+        cursor: 'pointer',
+        fontSize: '14px',
+        fontWeight: '600',
+        color: colors.foreground,
+        transition: 'all 0.2s',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px',
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.backgroundColor = colors.neutralHover;
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.backgroundColor = colors.neutral;
+      }}
     >
-      {theme === 'light' ? (
-        <Moon className="h-4 w-4" />
-      ) : (
-        <Sun className="h-4 w-4" />
-      )}
-      <span className="ml-2 hidden sm:inline-block">
-        {theme === 'light' ? 'Dark' : 'Light'}
-      </span>
+      {theme === 'light' ? '🌙 Dark' : '☀️ Light'}
     </button>
   );
 };
+
+export default ThemeToggle;

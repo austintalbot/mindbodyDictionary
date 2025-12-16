@@ -1,15 +1,17 @@
 import React from 'react';
-import { Ailment } from '../types';
+import { useTheme } from '../theme/useTheme';
+import { MbdCondition } from '../types';
 
 interface AilmentsTableProps {
-  ailments: Ailment[];
-  onEdit: (id: string, name: string) => void;
+  ailments: MbdCondition[];
+  onEdit: (ailment: MbdCondition) => void;
   onDelete: (id: string, name: string) => void;
 }
 
 const AilmentsTable: React.FC<AilmentsTableProps> = ({ ailments, onEdit, onDelete }) => {
+  const { colors } = useTheme();
   return (
-    <div style={{ backgroundColor: '#fff', borderRadius: '8px', border: '1px solid #e9ecef', overflow: 'hidden', marginBottom: '20px' }}>
+    <div style={{ backgroundColor: colors.background, borderRadius: '8px', border: `1px solid ${colors.border}`, overflow: 'hidden', marginBottom: '20px' }}>
       <div style={{ overflowX: 'auto' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px' }}>
           <thead>
@@ -30,7 +32,7 @@ const AilmentsTable: React.FC<AilmentsTableProps> = ({ ailments, onEdit, onDelet
               >
                 <td style={{ padding: '16px', whiteSpace: 'nowrap' }}>
                   <button
-                    onClick={() => onEdit(ailment.id!, ailment.name!)}
+                    onClick={() => onEdit(ailment)}
                     style={{
                       padding: '6px 12px',
                       marginRight: '8px',
@@ -88,7 +90,7 @@ const AilmentsTable: React.FC<AilmentsTableProps> = ({ ailments, onEdit, onDelet
                 </td>
                 <td style={{ padding: '16px', color: '#6c757d', fontSize: '13px' }}>
                   {(ailment.tags || []).length > 0
-                    ? (ailment.tags || []).map((tag, i) => (
+                    ? (ailment.tags || []).map((tag: string, i: number) => (
                         <span key={i} style={{
                           display: 'inline-block',
                           backgroundColor: '#e3f2fd',

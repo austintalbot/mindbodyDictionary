@@ -1,14 +1,16 @@
 import React from 'react';
+import { useTheme } from '../theme/useTheme';
 
 interface StyledInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
 }
 
 const StyledInput: React.FC<StyledInputProps> = ({ label, ...props }) => {
+  const { colors } = useTheme();
   return (
     <div style={{ marginBottom: '20px' }}>
       {label && (
-        <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '8px', color: '#495057' }}>
+        <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '8px', color: colors.lightText }}>
           {label}
         </label>
       )}
@@ -18,21 +20,21 @@ const StyledInput: React.FC<StyledInputProps> = ({ label, ...props }) => {
           width: '100%',
           padding: '10px 12px',
           fontSize: '14px',
-          border: '1px solid #d0d0d0',
+          border: `1px solid ${colors.inputBorder}`,
           borderRadius: '6px',
-          backgroundColor: '#fff',
-          color: '#1a1a1a',
+          backgroundColor: colors.inputBackground,
+          color: colors.foreground,
           fontFamily: 'inherit',
           transition: 'all 0.2s',
           outline: 'none',
           ...(props.style as React.CSSProperties),
         }}
         onFocus={(e) => {
-          e.currentTarget.style.borderColor = '#0066cc';
-          e.currentTarget.style.boxShadow = '0 0 0 3px rgba(0, 102, 204, 0.1)';
+          e.currentTarget.style.borderColor = colors.inputFocus;
+          e.currentTarget.style.boxShadow = `0 0 0 3px ${colors.inputFocusRing}`;
         }}
         onBlur={(e) => {
-          e.currentTarget.style.borderColor = '#d0d0d0';
+          e.currentTarget.style.borderColor = colors.inputBorder;
           e.currentTarget.style.boxShadow = 'none';
         }}
       />

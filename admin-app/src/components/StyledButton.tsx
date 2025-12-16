@@ -1,70 +1,73 @@
 import React from 'react';
+import { useTheme } from '../theme/useTheme';
 
 interface StyledButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'danger' | 'warning';
   size?: 'sm' | 'md' | 'lg';
 }
 
-const getButtonStyles = (variant: string = 'primary', size: string = 'md') => {
-  const baseStyles = {
-    border: 'none',
-    borderRadius: '6px',
-    cursor: 'pointer',
-    fontWeight: '600',
-    transition: 'all 0.2s',
-    fontFamily: 'inherit',
-    outline: 'none',
-  };
+const StyledButton = React.forwardRef<HTMLButtonElement, StyledButtonProps>(
+  ({ variant = 'primary', size = 'md', children, ...props }, ref) => {
+    const { colors } = useTheme();
 
-  const sizeStyles: Record<string, React.CSSProperties> = {
-    sm: { padding: '6px 12px', fontSize: '12px' },
-    md: { padding: '10px 20px', fontSize: '14px' },
-    lg: { padding: '12px 24px', fontSize: '16px' },
-  };
+    const getButtonStyles = (variant: string, size: string) => {
+      const baseStyles = {
+        border: 'none',
+        borderRadius: '6px',
+        cursor: 'pointer',
+        fontWeight: '600',
+        transition: 'all 0.2s',
+        fontFamily: 'inherit',
+        outline: 'none',
+      };
 
-  const variantStyles: Record<string, { bg: string; color: string; hover: string }> = {
-    primary: { bg: '#0066cc', color: '#fff', hover: '#0052a3' },
-    secondary: { bg: '#f0f0f0', color: '#1a1a1a', hover: '#e0e0e0' },
-    danger: { bg: '#ffebee', color: '#d32f2f', hover: '#d32f2f' },
-    warning: { bg: '#ffc107', color: '#fff', hover: '#ffb300' },
-  };
+      const sizeStyles: Record<string, React.CSSProperties> = {
+        sm: { padding: '6px 12px', fontSize: '12px' },
+        md: { padding: '10px 20px', fontSize: '14px' },
+        lg: { padding: '12px 24px', fontSize: '16px' },
+      };
 
-  const variantConfig = variantStyles[variant];
+      const variantStyles: Record<string, { bg: string; color: string; hover: string }> = {
+        primary: { bg: colors.primary, color: '#fff', hover: colors.primaryHover },
+        secondary: { bg: colors.neutral, color: colors.foreground, hover: colors.neutralHover },
+        danger: { bg: colors.dangerLight, color: colors.danger, hover: colors.danger },
+        warning: { bg: colors.warning, color: '#fff', hover: colors.warningHover },
+      };
 
-  return {
-    base: {
-      ...baseStyles,
-      ...sizeStyles[size],
-      backgroundColor: variantConfig.bg,
-      color: variantConfig.color,
-    },
-    hover: variantConfig.hover,
-  };
-};
+      const variantConfig = variantStyles[variant];
 
-const StyledButton: React.FC<StyledButtonProps> = ({
-  variant = 'primary',
-  size = 'md',
-  children,
-  ...props
-}) => {
-  const styles = getButtonStyles(variant, size);
+      return {
+        base: {
+          ...baseStyles,
+          ...sizeStyles[size],
+          backgroundColor: variantConfig.bg,
+          color: variantConfig.color,
+        },
+        hover: variantConfig.hover,
+      };
+    };
 
-  return (
-    <button
-      {...props}
-      style={styles.base as React.CSSProperties}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.backgroundColor = styles.hover;
-      }}
-      onMouseLeave={(e) => {
-        const variantConfig = getButtonStyles(variant, size);
-        e.currentTarget.style.backgroundColor = (variantConfig.base as any).backgroundColor;
-      }}
-    >
-      {children}
-    </button>
-  );
-};
+    const styles = getButtonStyles(variant, size);
+    const baseColor = (styles.base as Record<string, string>).backgroundColor;
+
+    return (
+      <button
+        ref={ref}
+        {...props}
+        style={styles.base as React.CSSProperties}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.backgroundColor = styles.hover;
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.backgroundColor = baseColor;
+        }}
+      >
+        {children}
+      </button>
+    );
+  }
+);
+
+StyledButton.displayName = 'StyledButton';
 
 export default StyledButton;
