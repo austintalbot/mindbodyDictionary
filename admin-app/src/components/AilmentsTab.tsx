@@ -2,8 +2,11 @@
 import React, { useEffect, useState } from 'react';
 import { fetchMbdConditionsTable, upsertAilment, deleteAilment, fetchMbdCondition } from '../services/apiService';
 import { MbdCondition, Recommendation } from '../types';
-import { getImageBaseUrl } from '../constants'; // Import directly from constants
+import { getImageBaseUrl } from '../constants';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './components/ui/tabs';
+import AilmentsSearch from './AilmentsSearch';
+import AilmentsTable from './AilmentsTable';
+import StyledButton from './StyledButton';
 
 // Interface for what Ailment data looks like, extends MbdCondition for additional properties if any
 interface Ailment extends MbdCondition {}
@@ -214,163 +217,15 @@ const AilmentsTab: React.FC = () => {
   return (
     <div>
       {/* Search Bar */}
-      <div style={{ marginBottom: '24px' }}>
-        <input
-          type="text"
-          placeholder="Search by Name, Physical Connections, or Tags"
-          value={searchTerm}
-          onChange={handleSearchChange}
-          style={{
-            width: '100%',
-            padding: '12px 16px',
-            fontSize: '14px',
-            border: '1px solid #d0d0d0',
-            borderRadius: '6px',
-            boxSizing: 'border-box',
-            fontFamily: 'inherit',
-            transition: 'border-color 0.2s',
-            outline: 'none',
-          }}
-          onFocus={(e) => {
-            e.currentTarget.style.borderColor = '#0066cc';
-            e.currentTarget.style.boxShadow = '0 0 0 3px rgba(0, 102, 204, 0.1)';
-          }}
-          onBlur={(e) => {
-            e.currentTarget.style.borderColor = '#d0d0d0';
-            e.currentTarget.style.boxShadow = 'none';
-          }}
-        />
-      </div>
+      <AilmentsSearch searchTerm={searchTerm} onChange={(value) => handleSearchChange({ target: { value } } as React.ChangeEvent<HTMLInputElement>)} />
 
-      {/* Table Container */}
-      <div style={{ backgroundColor: '#fff', borderRadius: '8px', border: '1px solid #e9ecef', overflow: 'hidden', marginBottom: '20px' }}>
-        <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px' }}>
-            <thead>
-              <tr style={{ backgroundColor: '#f8f9fa', borderBottom: '2px solid #e9ecef' }}>
-                <th style={{ padding: '16px', textAlign: 'left', fontWeight: '600', color: '#495057' }}>Actions</th>
-                <th style={{ padding: '16px', textAlign: 'left', fontWeight: '600', color: '#495057' }}>Name</th>
-                <th style={{ padding: '16px', textAlign: 'left', fontWeight: '600', color: '#495057' }}>Physical Connections</th>
-                <th style={{ padding: '16px', textAlign: 'left', fontWeight: '600', color: '#495057' }}>Tags</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredAilments.map((ailment) => (
-                <tr key={ailment.id} style={{ borderBottom: '1px solid #e9ecef', transition: 'background-color 0.15s' }}
-                    onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#f8f9fa'; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = '#fff'; }}>
-                  <td style={{ padding: '16px', whiteSpace: 'nowrap' }}>
-                    <button
-                      onClick={() => selectAilment(ailment.id!, ailment.name!)}
-                      style={{
-                        padding: '6px 12px',
-                        marginRight: '8px',
-                        fontSize: '12px',
-                        fontWeight: '600',
-                        color: '#0066cc',
-                        backgroundColor: '#f0f7ff',
-                        border: '1px solid #0066cc',
-                        borderRadius: '4px',
-                        cursor: 'pointer',
-                        transition: 'all 0.2s',
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.backgroundColor = '#0066cc';
-                        e.currentTarget.style.color = '#fff';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.backgroundColor = '#f0f7ff';
-                        e.currentTarget.style.color = '#0066cc';
-                      }}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => deleteAilmentConfirm(ailment.id!, ailment.name!)}
-                      style={{
-                        padding: '6px 12px',
-                        fontSize: '12px',
-                        fontWeight: '600',
-                        color: '#d32f2f',
-                        backgroundColor: '#ffebee',
-                        border: '1px solid #d32f2f',
-                        borderRadius: '4px',
-                        cursor: 'pointer',
-                        transition: 'all 0.2s',
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.backgroundColor = '#d32f2f';
-                        e.currentTarget.style.color = '#fff';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.backgroundColor = '#ffebee';
-                        e.currentTarget.style.color = '#d32f2f';
-                      }}
-                    >
-                      Delete
-                    </button>
-                  </td>
-                  <td style={{ padding: '16px', fontWeight: '500', color: '#1a1a1a' }}>{ailment.name}</td>
-                  <td style={{ padding: '16px', color: '#6c757d', fontSize: '13px' }}>
-                    {(ailment.physicalConnections || []).length > 0
-                      ? (ailment.physicalConnections || []).join(', ')
-                      : <span style={{ color: '#adb5bd' }}>—</span>
-                    }
-                  </td>
-                  <td style={{ padding: '16px', color: '#6c757d', fontSize: '13px' }}>
-                    {(ailment.tags || []).length > 0
-                      ? (ailment.tags || []).map((tag, i) => (
-                          <span key={i} style={{
-                            display: 'inline-block',
-                            backgroundColor: '#e3f2fd',
-                            color: '#1976d2',
-                            padding: '2px 8px',
-                            borderRadius: '12px',
-                            marginRight: '4px',
-                            marginBottom: '4px',
-                            fontSize: '12px'
-                          }}>
-                            {tag}
-                          </span>
-                        ))
-                      : <span style={{ color: '#adb5bd' }}>—</span>
-                    }
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        {filteredAilments.length === 0 && (
-          <div style={{ padding: '40px 20px', textAlign: 'center', color: '#adb5bd' }}>
-            No ailments found
-          </div>
-        )}
-      </div>
+      {/* Table */}
+      <AilmentsTable ailments={filteredAilments} onEdit={selectAilment} onDelete={deleteAilmentConfirm} />
 
       {/* Add Button */}
-      <button
-        onClick={addAilment}
-        style={{
-          padding: '10px 20px',
-          fontSize: '14px',
-          fontWeight: '600',
-          color: '#fff',
-          backgroundColor: '#0066cc',
-          border: 'none',
-          borderRadius: '6px',
-          cursor: 'pointer',
-          transition: 'all 0.2s',
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.backgroundColor = '#0052a3';
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.backgroundColor = '#0066cc';
-        }}
-      >
+      <StyledButton variant="primary" size="md" onClick={addAilment}>
         + Add New Ailment
-      </button>
+      </StyledButton>
 
       {/* Ailment Detail Modal */}
       {selectedAilmentForModal && (
@@ -406,7 +261,7 @@ const AilmentsTab: React.FC = () => {
               alignItems: 'center'
             }}>
               <h2 style={{ margin: 0, fontSize: '20px', fontWeight: '700', color: '#1a1a1a' }}>
-                {selectedAilmentForModal.id ? `Edit: ${selectedAilmentForModal.name}` : 'Add New Ailment'}
+                {selectedAilmentForModal?.id ? `Edit: ${selectedAilmentForModal.name}` : 'Add New Ailment'}
               </h2>
               <button
                 onClick={handleCloseModal}
