@@ -15,31 +15,50 @@ function AppContent() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', padding: '20px', backgroundColor: '#f5f5f5' }}>
-      <h1>MBD Admin Portal</h1>
-      <p>Active tab: {activeTab}</p>
-      
-      <div style={{ marginTop: '20px', display: 'flex', gap: '10px' }}>
-        {['ailments', 'images', 'contacts', 'notifications', 'database'].map((tab) => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            style={{
-              padding: '10px 15px',
-              backgroundColor: activeTab === tab ? '#007bff' : '#f0f0f0',
-              color: activeTab === tab ? 'white' : 'black',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-            }}
-          >
-            {tab}
-          </button>
-        ))}
+    <div style={{ minHeight: '100vh', backgroundColor: '#f8f9fa' }}>
+      {/* Header */}
+      <div style={{ backgroundColor: '#fff', borderBottom: '1px solid #e9ecef', padding: '30px 20px' }}>
+        <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
+          <h1 style={{ fontSize: '28px', fontWeight: '700', margin: '0 0 8px 0', color: '#1a1a1a' }}>
+            MBD Admin Portal
+          </h1>
+          <p style={{ fontSize: '14px', color: '#6c757d', margin: 0 }}>
+            Manage your Mind-Body Dictionary content
+          </p>
+        </div>
       </div>
 
-      <div style={{ marginTop: '20px', padding: '20px', backgroundColor: '#fff', borderRadius: '4px', border: '1px solid #ddd' }}>
-        {renderContent()}
+      {/* Navigation */}
+      <div style={{ backgroundColor: '#fff', borderBottom: '1px solid #e9ecef', padding: '0 20px' }}>
+        <div style={{ maxWidth: '1400px', margin: '0 auto', display: 'flex', gap: '2px' }}>
+          {['ailments', 'images', 'contacts', 'notifications', 'database'].map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              style={{
+                padding: '16px 20px',
+                fontSize: '14px',
+                fontWeight: activeTab === tab ? '600' : '500',
+                textTransform: 'capitalize',
+                background: 'none',
+                border: 'none',
+                borderBottom: activeTab === tab ? '3px solid #0066cc' : '3px solid transparent',
+                color: activeTab === tab ? '#0066cc' : '#6c757d',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+              }}
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Content */}
+      <div style={{ padding: '30px 20px' }}>
+        <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
+          {renderContent()}
+        </div>
       </div>
     </div>
   );

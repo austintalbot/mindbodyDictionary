@@ -208,195 +208,539 @@ const AilmentsTab: React.FC = () => {
     );
   });
 
-  if (loading) return <div>Loading Ailments...</div>;
-  if (error) return <div className="alert alert-danger">Error: {error}</div>;
+  if (loading) return <div style={{ padding: '20px', color: '#666' }}>Loading Ailments...</div>;
+  if (error) return <div style={{ padding: '20px', color: '#d32f2f', backgroundColor: '#ffebee', borderRadius: '4px' }}>Error: {error}</div>;
 
   return (
-    <div className="tab-pane fade show active" id="nav-ailments" role="tabpanel" aria-labelledby="nav-ailments-tab">
-      <div className="card">
-        <div className="card-body">
-          <h5 className="card-title">Ailments</h5>
-          <div className="mb-3">
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Search by Name, Physical Connections, or Tags"
-              value={searchTerm}
-              onChange={handleSearchChange}
-            />
-          </div>
-          <div className="table-responsive">
-            <table className="table table-hover" style={{ width: '100%' }}>
-              <thead>
-                <tr>
-                  <th>View</th>
-                  <th>Delete</th>
-                  <th>Name</th>
-                  <th>Physical Connections</th>
-                  <th>Tags</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredAilments.map((ailment) => (
-                  <tr key={ailment.id}>
-                    <td>
-                      <button
-                        className="btn btn-outline-info"
-                        onClick={() => selectAilment(ailment.id!, ailment.name!)}
-                      >
-                        <i className="fas fa-edit"></i> Edit
-                      </button>
-                    </td>
-                    <td>
-                      <button
-                        className="btn btn-outline-dark"
-                        onClick={() => deleteAilmentConfirm(ailment.id!, ailment.name!)}
-                      >
-                        <i className="fas fa-trash"></i>
-                      </button>
-                    </td>
-                    <td>{ailment.name}</td>
-                    <td>{(ailment.physicalConnections || []).join(', ')}</td>
-                    <td>{(ailment.tags || []).join(', ')}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <button type="button" className="btn btn-sm btn-outline-primary" onClick={addAilment}>
-            Add
-          </button>
-        </div>
+    <div>
+      {/* Search Bar */}
+      <div style={{ marginBottom: '24px' }}>
+        <input
+          type="text"
+          placeholder="Search by Name, Physical Connections, or Tags"
+          value={searchTerm}
+          onChange={handleSearchChange}
+          style={{
+            width: '100%',
+            padding: '12px 16px',
+            fontSize: '14px',
+            border: '1px solid #d0d0d0',
+            borderRadius: '6px',
+            boxSizing: 'border-box',
+            fontFamily: 'inherit',
+            transition: 'border-color 0.2s',
+            outline: 'none',
+          }}
+          onFocus={(e) => {
+            e.currentTarget.style.borderColor = '#0066cc';
+            e.currentTarget.style.boxShadow = '0 0 0 3px rgba(0, 102, 204, 0.1)';
+          }}
+          onBlur={(e) => {
+            e.currentTarget.style.borderColor = '#d0d0d0';
+            e.currentTarget.style.boxShadow = 'none';
+          }}
+        />
       </div>
+
+      {/* Table Container */}
+      <div style={{ backgroundColor: '#fff', borderRadius: '8px', border: '1px solid #e9ecef', overflow: 'hidden', marginBottom: '20px' }}>
+        <div style={{ overflowX: 'auto' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px' }}>
+            <thead>
+              <tr style={{ backgroundColor: '#f8f9fa', borderBottom: '2px solid #e9ecef' }}>
+                <th style={{ padding: '16px', textAlign: 'left', fontWeight: '600', color: '#495057' }}>Actions</th>
+                <th style={{ padding: '16px', textAlign: 'left', fontWeight: '600', color: '#495057' }}>Name</th>
+                <th style={{ padding: '16px', textAlign: 'left', fontWeight: '600', color: '#495057' }}>Physical Connections</th>
+                <th style={{ padding: '16px', textAlign: 'left', fontWeight: '600', color: '#495057' }}>Tags</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredAilments.map((ailment) => (
+                <tr key={ailment.id} style={{ borderBottom: '1px solid #e9ecef', transition: 'background-color 0.15s' }}
+                    onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#f8f9fa'; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = '#fff'; }}>
+                  <td style={{ padding: '16px', whiteSpace: 'nowrap' }}>
+                    <button
+                      onClick={() => selectAilment(ailment.id!, ailment.name!)}
+                      style={{
+                        padding: '6px 12px',
+                        marginRight: '8px',
+                        fontSize: '12px',
+                        fontWeight: '600',
+                        color: '#0066cc',
+                        backgroundColor: '#f0f7ff',
+                        border: '1px solid #0066cc',
+                        borderRadius: '4px',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s',
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = '#0066cc';
+                        e.currentTarget.style.color = '#fff';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = '#f0f7ff';
+                        e.currentTarget.style.color = '#0066cc';
+                      }}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => deleteAilmentConfirm(ailment.id!, ailment.name!)}
+                      style={{
+                        padding: '6px 12px',
+                        fontSize: '12px',
+                        fontWeight: '600',
+                        color: '#d32f2f',
+                        backgroundColor: '#ffebee',
+                        border: '1px solid #d32f2f',
+                        borderRadius: '4px',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s',
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = '#d32f2f';
+                        e.currentTarget.style.color = '#fff';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = '#ffebee';
+                        e.currentTarget.style.color = '#d32f2f';
+                      }}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                  <td style={{ padding: '16px', fontWeight: '500', color: '#1a1a1a' }}>{ailment.name}</td>
+                  <td style={{ padding: '16px', color: '#6c757d', fontSize: '13px' }}>
+                    {(ailment.physicalConnections || []).length > 0
+                      ? (ailment.physicalConnections || []).join(', ')
+                      : <span style={{ color: '#adb5bd' }}>—</span>
+                    }
+                  </td>
+                  <td style={{ padding: '16px', color: '#6c757d', fontSize: '13px' }}>
+                    {(ailment.tags || []).length > 0
+                      ? (ailment.tags || []).map((tag, i) => (
+                          <span key={i} style={{
+                            display: 'inline-block',
+                            backgroundColor: '#e3f2fd',
+                            color: '#1976d2',
+                            padding: '2px 8px',
+                            borderRadius: '12px',
+                            marginRight: '4px',
+                            marginBottom: '4px',
+                            fontSize: '12px'
+                          }}>
+                            {tag}
+                          </span>
+                        ))
+                      : <span style={{ color: '#adb5bd' }}>—</span>
+                    }
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        {filteredAilments.length === 0 && (
+          <div style={{ padding: '40px 20px', textAlign: 'center', color: '#adb5bd' }}>
+            No ailments found
+          </div>
+        )}
+      </div>
+
+      {/* Add Button */}
+      <button
+        onClick={addAilment}
+        style={{
+          padding: '10px 20px',
+          fontSize: '14px',
+          fontWeight: '600',
+          color: '#fff',
+          backgroundColor: '#0066cc',
+          border: 'none',
+          borderRadius: '6px',
+          cursor: 'pointer',
+          transition: 'all 0.2s',
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.backgroundColor = '#0052a3';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.backgroundColor = '#0066cc';
+        }}
+      >
+        + Add New Ailment
+      </button>
 
       {/* Ailment Detail Modal */}
       {selectedAilmentForModal && (
-        <div className={`modal fade ${showDetailModal ? 'show d-block' : ''}`} tabIndex={-1} role="dialog" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
-          <div className="modal-dialog modal-xl" role="document">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">
-                  {selectedAilmentForModal.id ? `Edit Ailment: ${selectedAilmentForModal.name}` : 'Add New Ailment'}
-                </h5>
-                <button type="button" className="close" aria-label="Close" onClick={handleCloseModal}>
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div className="modal-body">
-                <Tabs defaultValue="basicInfo" className="w-full">
-                  <TabsList className="grid w-full grid-cols-5">
-                    <TabsTrigger value="basicInfo">Basic Info</TabsTrigger>
-                    <TabsTrigger value="affirmations">Affirmations</TabsTrigger>
-                    <TabsTrigger value="physicalConnections">Physical Connections</TabsTrigger>
-                    <TabsTrigger value="tags">Tags</TabsTrigger>
-                    <TabsTrigger value="recommendations">Recommendations</TabsTrigger>
-                  </TabsList>
+        <div style={{
+          display: showDetailModal ? 'flex' : 'none',
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0,0,0,0.5)',
+          zIndex: 1050,
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '20px'
+        }}>
+          <div style={{
+            backgroundColor: '#fff',
+            borderRadius: '8px',
+            width: '100%',
+            maxWidth: '900px',
+            maxHeight: '90vh',
+            display: 'flex',
+            flexDirection: 'column',
+            boxShadow: '0 10px 40px rgba(0,0,0,0.2)'
+          }}>
+            {/* Modal Header */}
+            <div style={{
+              padding: '24px',
+              borderBottom: '1px solid #e9ecef',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center'
+            }}>
+              <h2 style={{ margin: 0, fontSize: '20px', fontWeight: '700', color: '#1a1a1a' }}>
+                {selectedAilmentForModal.id ? `Edit: ${selectedAilmentForModal.name}` : 'Add New Ailment'}
+              </h2>
+              <button
+                onClick={handleCloseModal}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  fontSize: '24px',
+                  color: '#6c757d',
+                  cursor: 'pointer',
+                  padding: 0,
+                  width: '32px',
+                  height: '32px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: '4px',
+                  transition: 'all 0.2s'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = '#f0f0f0';
+                  e.currentTarget.style.color = '#000';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                  e.currentTarget.style.color = '#6c757d';
+                }}
+              >
+                ✕
+              </button>
+            </div>
 
-                  <TabsContent value="basicInfo">
-                    <div className="p-4">
-                      <h5 className="text-lg font-semibold mb-3">Basic Info</h5>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                          <div id="ailmentInfo" className="mb-3">
-                            <div className="mb-3">
-                              <label htmlFor="id" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Id:</label>
-                              <input
-                                type="text"
-                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                                id="id"
-                                value={selectedAilmentForModal.id || ''}
-                                disabled
-                              />
-                            </div>
-                            <div className="mb-3">
-                              <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Name:</label>
-                              <div className="flex">
-                                <input
-                                  type="text"
-                                  className="mt-1 block w-full rounded-l-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                                  id="name"
-                                  value={selectedAilmentForModal.name || ''}
-                                  onChange={handleAilmentChange}
-                                  disabled={!!selectedAilmentForModal.id}
-                                  placeholder={selectedAilmentForModal.id ? '' : 'Input Ailment Name'}
-                                />
-                                <button className="inline-flex items-center px-4 py-2 border border-l-0 border-gray-300 rounded-r-md bg-yellow-500 text-white shadow-sm hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 dark:bg-yellow-600 dark:hover:bg-yellow-700" onClick={duplicateAilment} type="button">
-                                  Duplicate
-                                </button>
-                              </div>
-                            </div>
+            {/* Modal Body */}
+            <div style={{ flex: 1, overflowY: 'auto', padding: '24px' }}>
+              <Tabs defaultValue="basicInfo" className="w-full">
+                <TabsList className="grid w-full grid-cols-5" style={{
+                  marginBottom: '20px',
+                  borderBottom: '2px solid #e9ecef',
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(5, 1fr)',
+                  gap: '8px'
+                }}>
+                  <TabsTrigger value="basicInfo" style={{
+                    padding: '12px 16px',
+                    borderRadius: 0,
+                    backgroundColor: 'transparent',
+                    border: 'none'
+                  }}>Basic Info</TabsTrigger>
+                  <TabsTrigger value="affirmations" style={{
+                    padding: '12px 16px',
+                    borderRadius: 0,
+                    backgroundColor: 'transparent',
+                    border: 'none'
+                  }}>Affirmations</TabsTrigger>
+                  <TabsTrigger value="physicalConnections" style={{
+                    padding: '12px 16px',
+                    borderRadius: 0,
+                    backgroundColor: 'transparent',
+                    border: 'none'
+                  }}>Physical Connections</TabsTrigger>
+                  <TabsTrigger value="tags" style={{
+                    padding: '12px 16px',
+                    borderRadius: 0,
+                    backgroundColor: 'transparent',
+                    border: 'none'
+                  }}>Tags</TabsTrigger>
+                  <TabsTrigger value="recommendations" style={{
+                    padding: '12px 16px',
+                    borderRadius: 0,
+                    backgroundColor: 'transparent',
+                    border: 'none'
+                  }}>Recommendations</TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="basicInfo">
+                  <div style={{ padding: '20px' }}>
+                    <h5 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '20px', color: '#1a1a1a' }}>Basic Information</h5>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+                      <div>
+                        <div style={{ marginBottom: '20px' }}>
+                          <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '8px', color: '#495057' }} htmlFor="id">ID</label>
+                          <input
+                            type="text"
+                            style={{
+                              width: '100%',
+                              padding: '10px 12px',
+                              fontSize: '14px',
+                              border: '1px solid #d0d0d0',
+                              borderRadius: '6px',
+                              backgroundColor: '#f8f9fa',
+                              color: '#6c757d',
+                              cursor: 'not-allowed'
+                            }}
+                            id="id"
+                            value={selectedAilmentForModal.id || ''}
+                            disabled
+                          />
+                        </div>
+                        <div style={{ marginBottom: '20px' }}>
+                          <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '8px', color: '#495057' }} htmlFor="name">Name</label>
+                          <div style={{ display: 'flex', gap: '8px' }}>
+                            <input
+                              type="text"
+                              style={{
+                                flex: 1,
+                                padding: '10px 12px',
+                                fontSize: '14px',
+                                border: '1px solid #d0d0d0',
+                                borderRadius: '6px 0 0 6px',
+                                backgroundColor: '#fff',
+                                color: '#1a1a1a',
+                                transition: 'all 0.2s',
+                                outline: 'none'
+                              }}
+                              id="name"
+                              value={selectedAilmentForModal.name || ''}
+                              onChange={handleAilmentChange}
+                              disabled={!!selectedAilmentForModal.id}
+                              placeholder={selectedAilmentForModal.id ? '' : 'Enter ailment name'}
+                              onFocus={(e) => {
+                                e.currentTarget.style.borderColor = '#0066cc';
+                                e.currentTarget.style.boxShadow = '0 0 0 3px rgba(0, 102, 204, 0.1)';
+                              }}
+                              onBlur={(e) => {
+                                e.currentTarget.style.borderColor = '#d0d0d0';
+                                e.currentTarget.style.boxShadow = 'none';
+                              }}
+                            />
+                            <button
+                              style={{
+                                padding: '10px 16px',
+                                fontSize: '13px',
+                                fontWeight: '600',
+                                color: '#fff',
+                                backgroundColor: '#ffc107',
+                                border: 'none',
+                                borderRadius: '0 6px 6px 0',
+                                cursor: 'pointer',
+                                transition: 'background-color 0.2s'
+                              }}
+                              onClick={duplicateAilment}
+                              type="button"
+                              onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#ffb300'; }}
+                              onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = '#ffc107'; }}
+                            >
+                              Duplicate
+                            </button>
                           </div>
                         </div>
-                        <div id="ailmentImages" className="text-center">
-                          <i className="block text-sm font-medium text-gray-700 dark:text-gray-300">Negative</i>
-                          <img id="negativeImage" className="max-w-[120px] mx-auto my-2" src={getImageUrl('negative')} alt="Negative Ailment" />
-                          <i className="block text-sm font-medium text-gray-700 dark:text-gray-300">Positive</i>
-                          <img id="positiveImage" className="max-w-[120px] mx-auto my-2" src={getImageUrl('positive')} alt="Positive Ailment" />
+                        <div style={{ marginBottom: '20px' }}>
+                          <label style={{ display: 'flex', alignItems: 'center', fontSize: '14px', color: '#495057', cursor: 'pointer' }}>
+                            <input
+                              type="checkbox"
+                              style={{
+                                width: '16px',
+                                height: '16px',
+                                marginRight: '8px',
+                                cursor: 'pointer',
+                                accentColor: '#0066cc'
+                              }}
+                              id="subscriptionOnly"
+                              checked={selectedAilmentForModal.subscriptionOnly}
+                              onChange={handleAilmentChange}
+                            />
+                            Subscription Only
+                          </label>
                         </div>
                       </div>
-                      <div id="ailmentEdit" className="mt-4">
-                        <div className="flex items-center mb-3">
-                          <input
-                            type="checkbox"
-                            className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded dark:bg-gray-700 dark:border-gray-600"
-                            id="subscriptionOnly"
-                            checked={selectedAilmentForModal.subscriptionOnly}
-                            onChange={handleAilmentChange}
-                          />
-                          <label htmlFor="subscriptionOnly" className="ml-2 block text-sm text-gray-900 dark:text-gray-100">Subscription Only</label>
+                      <div style={{ textAlign: 'center' }}>
+                        <h6 style={{ fontSize: '13px', fontWeight: '600', color: '#495057', marginBottom: '12px' }}>Preview Images</h6>
+                        <div style={{ marginBottom: '16px' }}>
+                          <p style={{ fontSize: '12px', color: '#6c757d', marginBottom: '8px', fontWeight: '500' }}>Negative</p>
+                          <img style={{ maxWidth: '100px', height: 'auto', borderRadius: '6px', border: '1px solid #e9ecef' }} src={getImageUrl('negative')} alt="Negative" />
                         </div>
-                        <div className="mb-3">
-                          <label htmlFor="summaryNegative" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Summary Negative:</label>
-                          <textarea
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                            rows={5}
-                            id="summaryNegative"
-                            value={selectedAilmentForModal.summaryNegative || ''}
-                            onChange={handleAilmentChange}
-                          ></textarea>
-                        </div>
-                        <div className="mb-3">
-                          <label htmlFor="summaryPositive" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Summary Positive:</label>
-                          <textarea
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                            rows={5}
-                            id="summaryPositive"
-                            value={selectedAilmentForModal.summaryPositive || ''}
-                            onChange={handleAilmentChange}
-                          ></textarea>
+                        <div>
+                          <p style={{ fontSize: '12px', color: '#6c757d', marginBottom: '8px', fontWeight: '500' }}>Positive</p>
+                          <img style={{ maxWidth: '100px', height: 'auto', borderRadius: '6px', border: '1px solid #e9ecef' }} src={getImageUrl('positive')} alt="Positive" />
                         </div>
                       </div>
                     </div>
-                  </TabsContent>
+                    <div style={{ marginTop: '24px', paddingTop: '20px', borderTop: '1px solid #e9ecef' }}>
+                      <h6 style={{ fontSize: '14px', fontWeight: '600', color: '#1a1a1a', marginBottom: '16px' }}>Descriptions</h6>
+                      <div style={{ marginBottom: '20px' }}>
+                        <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '8px', color: '#495057' }} htmlFor="summaryNegative">Negative Summary</label>
+                        <textarea
+                          style={{
+                            width: '100%',
+                            padding: '10px 12px',
+                            fontSize: '13px',
+                            border: '1px solid #d0d0d0',
+                            borderRadius: '6px',
+                            backgroundColor: '#fff',
+                            color: '#1a1a1a',
+                            fontFamily: 'inherit',
+                            transition: 'all 0.2s',
+                            resize: 'vertical',
+                            minHeight: '100px',
+                            outline: 'none'
+                          }}
+                          rows={4}
+                          id="summaryNegative"
+                          value={selectedAilmentForModal.summaryNegative || ''}
+                          onChange={handleAilmentChange}
+                          onFocus={(e) => {
+                            e.currentTarget.style.borderColor = '#0066cc';
+                            e.currentTarget.style.boxShadow = '0 0 0 3px rgba(0, 102, 204, 0.1)';
+                          }}
+                          onBlur={(e) => {
+                            e.currentTarget.style.borderColor = '#d0d0d0';
+                            e.currentTarget.style.boxShadow = 'none';
+                          }}
+                        ></textarea>
+                      </div>
+                      <div style={{ marginBottom: '20px' }}>
+                        <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '8px', color: '#495057' }} htmlFor="summaryPositive">Positive Summary</label>
+                        <textarea
+                          style={{
+                            width: '100%',
+                            padding: '10px 12px',
+                            fontSize: '13px',
+                            border: '1px solid #d0d0d0',
+                            borderRadius: '6px',
+                            backgroundColor: '#fff',
+                            color: '#1a1a1a',
+                            fontFamily: 'inherit',
+                            transition: 'all 0.2s',
+                            resize: 'vertical',
+                            minHeight: '100px',
+                            outline: 'none'
+                          }}
+                          rows={4}
+                          id="summaryPositive"
+                          value={selectedAilmentForModal.summaryPositive || ''}
+                          onChange={handleAilmentChange}
+                          onFocus={(e) => {
+                            e.currentTarget.style.borderColor = '#0066cc';
+                            e.currentTarget.style.boxShadow = '0 0 0 3px rgba(0, 102, 204, 0.1)';
+                          }}
+                          onBlur={(e) => {
+                            e.currentTarget.style.borderColor = '#d0d0d0';
+                            e.currentTarget.style.boxShadow = 'none';
+                          }}
+                        ></textarea>
+                      </div>
+                    </div>
+                  </div>
+                </TabsContent>
 
-                  <TabsContent value="affirmations">
-                    <div className="p-4">
-                      <h5 className="text-lg font-semibold mb-3">Affirmations</h5>
-                      <div className="flex justify-between items-center mb-3">
-                        <i className="block text-sm font-medium text-gray-700 dark:text-gray-300">Statements of Affirmation</i>
-                        <button type="button" className="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" onClick={() => addToArray('affirmations')}>
-                          Add
+                <TabsContent value="affirmations">
+                  <div style={{ padding: '20px' }}>
+                    <div style={{ marginBottom: '20px' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                        <h5 style={{ margin: 0, fontSize: '16px', fontWeight: '600', color: '#1a1a1a' }}>Affirmations</h5>
+                        <button
+                          type="button"
+                          style={{
+                            padding: '8px 16px',
+                            fontSize: '13px',
+                            fontWeight: '600',
+                            color: '#fff',
+                            backgroundColor: '#0066cc',
+                            border: 'none',
+                            borderRadius: '6px',
+                            cursor: 'pointer',
+                            transition: 'background-color 0.2s'
+                          }}
+                          onClick={() => addToArray('affirmations')}
+                          onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#0052a3'; }}
+                          onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = '#0066cc'; }}
+                        >
+                          + Add
                         </button>
                       </div>
-                      <div className="space-y-2">
+                      <p style={{ fontSize: '13px', color: '#6c757d', marginBottom: '16px' }}>Positive affirmation statements</p>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                         {(selectedAilmentForModal.affirmations || []).map((affirmation, index) => (
                           <textarea
                             key={index}
+                            style={{
+                              width: '100%',
+                              padding: '10px 12px',
+                              fontSize: '13px',
+                              border: '1px solid #d0d0d0',
+                              borderRadius: '6px',
+                              backgroundColor: '#fff',
+                              color: '#1a1a1a',
+                              fontFamily: 'inherit',
+                              transition: 'all 0.2s',
+                              resize: 'vertical',
+                              minHeight: '80px',
+                              outline: 'none'
+                            }}
                             rows={2}
-                            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                             value={affirmation}
                             onChange={(e) => handleArrayChange(index, e.target.value, 'affirmations')}
+                            onFocus={(e) => {
+                              e.currentTarget.style.borderColor = '#0066cc';
+                              e.currentTarget.style.boxShadow = '0 0 0 3px rgba(0, 102, 204, 0.1)';
+                            }}
+                            onBlur={(e) => {
+                              e.currentTarget.style.borderColor = '#d0d0d0';
+                              e.currentTarget.style.boxShadow = 'none';
+                            }}
                           ></textarea>
                         ))}
                       </div>
-                    </div>
-                  </TabsContent>
+                    </div>                  </div>                </TabsContent>
 
-                  <TabsContent value="physicalConnections">
-                    <div className="p-4">
-                      <h5 className="text-lg font-semibold mb-3">Physical Connections</h5>
-                      <div className="flex justify-between items-center mb-3">
-                        <i className="block text-sm font-medium text-gray-700 dark:text-gray-300">Locations on the body that can be referenced by this Ailment i.e Adrenal Problems linked to Kidney</i>
+                <TabsContent value="physicalConnections">
+                  <div style={{ padding: '20px' }}>
+                    <div style={{ marginBottom: '20px' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                        <h5 style={{ margin: 0, fontSize: '16px', fontWeight: '600', color: '#1a1a1a' }}>Physical Connections</h5>
+                        <button
+                          type="button"
+                          style={{
+                            padding: '8px 16px',
+                            fontSize: '13px',
+                            fontWeight: '600',
+                            color: '#fff',
+                            backgroundColor: '#0066cc',
+                            border: 'none',
+                            borderRadius: '6px',
+                            cursor: 'pointer',
+                            transition: 'background-color 0.2s'
+                          }}
+                          onClick={() => addToArray('physicalConnections')}
+                          onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#0052a3'; }}
+                          onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = '#0066cc'; }}
+                        >
+                          + Add
+                        </button>
+                      </div>
+                      <p style={{ fontSize: '13px', color: '#6c757d', marginBottom: '16px' }}>Body locations referenced by this ailment</p>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                         <button type="button" className="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" onClick={() => addToArray('physicalConnections')}>
                           Add
                         </button>
@@ -413,10 +757,11 @@ const AilmentsTab: React.FC = () => {
                         ))}
                       </div>
                     </div>
-                  </TabsContent>
+                  </div>
+                </TabsContent>
 
-                  <TabsContent value="tags">
-                    <div className="p-4">
+                <TabsContent value="tags">
+                  <div className="p-4">
                       <h5 className="text-lg font-semibold mb-3">Tags</h5>
                       <div className="flex justify-between items-center mb-3">
                         <i className="block text-sm font-medium text-gray-700 dark:text-gray-300">Single words used for matching Ailment to search parameters</i>
@@ -436,10 +781,10 @@ const AilmentsTab: React.FC = () => {
                         ))}
                       </div>
                     </div>
-                  </TabsContent>
+                </TabsContent>
 
-                  <TabsContent value="recommendations">
-                    <div className="p-4">
+                <TabsContent value="recommendations">
+                  <div className="p-4">
                       <h5 className="text-lg font-semibold mb-3">Recommendations</h5>
                       <div className="flex justify-between items-center mb-3">
                         <button type="button" className="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" onClick={addRecommendation}>
@@ -505,17 +850,60 @@ const AilmentsTab: React.FC = () => {
                     Error: {error}
                   </div>
                 )}
-                <button className="w-full inline-flex items-center justify-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mt-4" onClick={saveAilment}>
-                  Save
+                <button style={{
+                  width: '100%',
+                  padding: '12px 16px',
+                  marginTop: '16px',
+                  backgroundColor: '#0066cc',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: '6px',
+                  fontSize: '14px',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  transition: 'background-color 0.2s'
+                }} onClick={saveAilment}
+                onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#0052a3'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = '#0066cc'; }}>
+                  Save Changes
                 </button>
               </div>
-              <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" onClick={handleCloseModal}>Close</button>
-                {/* Additional buttons can go here if needed */}
-              </div>
+            </div>
+
+
+            {/* Modal Footer */}
+            <div style={{
+              padding: '16px 24px',
+              borderTop: '1px solid #e9ecef',
+              display: 'flex',
+              gap: '12px',
+              justifyContent: 'flex-end'
+            }}>
+              <button
+                type="button"
+                onClick={handleCloseModal}
+                style={{
+                  padding: '10px 20px',
+                  backgroundColor: '#f0f0f0',
+                  color: '#1a1a1a',
+                  border: '1px solid #d0d0d0',
+                  borderRadius: '6px',
+                  fontSize: '14px',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = '#e0e0e0';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = '#f0f0f0';
+                }}
+              >
+                Close
+              </button>
             </div>
           </div>
-        </div>
       )}
     </div>
   );
