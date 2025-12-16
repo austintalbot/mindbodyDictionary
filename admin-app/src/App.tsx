@@ -14,12 +14,12 @@ function AppContent() {
       case 'ailments':
         return <AilmentsTab />;
       default:
-        return <p>Tab content for {activeTab} not yet implemented</p>;
+        return <p style={{ color: colors.foreground }}>Tab content for {activeTab} not yet implemented</p>;
     }
   };
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: colors.backgroundSecondary }}>
+    <div style={{ minHeight: '100vh', backgroundColor: colors.backgroundSecondary, color: colors.foreground }}>
       {/* Header */}
       <div style={{ backgroundColor: colors.background, borderBottom: `1px solid ${colors.border}`, padding: '30px 20px' }}>
         <div style={{ maxWidth: '1400px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>

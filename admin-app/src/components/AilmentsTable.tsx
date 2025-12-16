@@ -15,20 +15,28 @@ const AilmentsTable: React.FC<AilmentsTableProps> = ({ ailments, onEdit, onDelet
       <div style={{ overflowX: 'auto' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px' }}>
           <thead>
-            <tr style={{ backgroundColor: '#f8f9fa', borderBottom: '2px solid #e9ecef' }}>
-              <th style={{ padding: '16px', textAlign: 'left', fontWeight: '600', color: '#495057' }}>Actions</th>
-              <th style={{ padding: '16px', textAlign: 'left', fontWeight: '600', color: '#495057' }}>Name</th>
-              <th style={{ padding: '16px', textAlign: 'left', fontWeight: '600', color: '#495057' }}>Physical Connections</th>
-              <th style={{ padding: '16px', textAlign: 'left', fontWeight: '600', color: '#495057' }}>Tags</th>
+            <tr style={{ backgroundColor: colors.backgroundSecondary, borderBottom: `2px solid ${colors.border}` }}>
+              <th style={{ padding: '16px', textAlign: 'left', fontWeight: '600', color: colors.mutedText }}>Actions</th>
+              <th style={{ padding: '16px', textAlign: 'left', fontWeight: '600', color: colors.mutedText }}>Name</th>
+              <th style={{ padding: '16px', textAlign: 'left', fontWeight: '600', color: colors.mutedText }}>Physical Connections</th>
+              <th style={{ padding: '16px', textAlign: 'left', fontWeight: '600', color: colors.mutedText }}>Tags</th>
             </tr>
           </thead>
           <tbody>
-            {ailments.map((ailment) => (
+            {ailments.map((ailment, index) => (
               <tr
                 key={ailment.id}
-                style={{ borderBottom: '1px solid #e9ecef', transition: 'background-color 0.15s' }}
-                onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#f8f9fa'; }}
-                onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = '#fff'; }}
+                style={{
+                  backgroundColor: index % 2 === 0 ? colors.background : colors.backgroundSecondary,
+                  borderBottom: `1px solid ${colors.border}`,
+                  transition: 'background-color 0.15s',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = colors.border;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = index % 2 === 0 ? colors.background : colors.backgroundSecondary;
+                }}
               >
                 <td style={{ padding: '16px', whiteSpace: 'nowrap' }}>
                   <button
@@ -38,20 +46,20 @@ const AilmentsTable: React.FC<AilmentsTableProps> = ({ ailments, onEdit, onDelet
                       marginRight: '8px',
                       fontSize: '12px',
                       fontWeight: '600',
-                      color: '#0066cc',
-                      backgroundColor: '#f0f7ff',
-                      border: '1px solid #0066cc',
+                      color: colors.primary,
+                      backgroundColor: colors.primaryLight,
+                      border: `1px solid ${colors.primary}`,
                       borderRadius: '4px',
                       cursor: 'pointer',
                       transition: 'all 0.2s',
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = '#0066cc';
+                      e.currentTarget.style.backgroundColor = colors.primary;
                       e.currentTarget.style.color = '#fff';
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = '#f0f7ff';
-                      e.currentTarget.style.color = '#0066cc';
+                      e.currentTarget.style.backgroundColor = colors.primaryLight;
+                      e.currentTarget.style.color = colors.primary;
                     }}
                   >
                     Edit
@@ -62,39 +70,39 @@ const AilmentsTable: React.FC<AilmentsTableProps> = ({ ailments, onEdit, onDelet
                       padding: '6px 12px',
                       fontSize: '12px',
                       fontWeight: '600',
-                      color: '#d32f2f',
-                      backgroundColor: '#ffebee',
-                      border: '1px solid #d32f2f',
+                      color: colors.danger,
+                      backgroundColor: colors.dangerLight,
+                      border: `1px solid ${colors.danger}`,
                       borderRadius: '4px',
                       cursor: 'pointer',
                       transition: 'all 0.2s',
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = '#d32f2f';
+                      e.currentTarget.style.backgroundColor = colors.danger;
                       e.currentTarget.style.color = '#fff';
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = '#ffebee';
-                      e.currentTarget.style.color = '#d32f2f';
+                      e.currentTarget.style.backgroundColor = colors.dangerLight;
+                      e.currentTarget.style.color = colors.danger;
                     }}
                   >
                     Delete
                   </button>
                 </td>
-                <td style={{ padding: '16px', fontWeight: '500', color: '#1a1a1a' }}>{ailment.name}</td>
-                <td style={{ padding: '16px', color: '#6c757d', fontSize: '13px' }}>
+                <td style={{ padding: '16px', fontWeight: '500', color: colors.foreground }}>{ailment.name}</td>
+                <td style={{ padding: '16px', color: colors.mutedText, fontSize: '13px' }}>
                   {(ailment.physicalConnections || []).length > 0
                     ? (ailment.physicalConnections || []).join(', ')
-                    : <span style={{ color: '#adb5bd' }}>—</span>
+                    : <span style={{ color: colors.placeholder }}>—</span>
                   }
                 </td>
-                <td style={{ padding: '16px', color: '#6c757d', fontSize: '13px' }}>
+                <td style={{ padding: '16px', color: colors.mutedText, fontSize: '13px' }}>
                   {(ailment.tags || []).length > 0
                     ? (ailment.tags || []).map((tag: string, i: number) => (
                         <span key={i} style={{
                           display: 'inline-block',
-                          backgroundColor: '#e3f2fd',
-                          color: '#1976d2',
+                          backgroundColor: colors.primaryLight,
+                          color: colors.primary,
                           padding: '2px 8px',
                           borderRadius: '12px',
                           marginRight: '4px',
@@ -113,7 +121,7 @@ const AilmentsTable: React.FC<AilmentsTableProps> = ({ ailments, onEdit, onDelet
         </table>
       </div>
       {ailments.length === 0 && (
-        <div style={{ padding: '40px 20px', textAlign: 'center', color: '#adb5bd' }}>
+        <div style={{ padding: '40px 20px', textAlign: 'center', color: colors.placeholder }}>
           No ailments found
         </div>
       )}
