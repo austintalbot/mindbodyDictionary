@@ -89,7 +89,7 @@ const AilmentModal: React.FC<AilmentModalProps> = ({
             </div>
 
         {/* Modal Body */}
-        <div style={{ flex: 1, overflowY: 'auto', padding: '24px' }}>
+        <div style={{ flex: 1, overflowY: 'auto', padding: '32px' }}>
           <Tabs defaultValue="basicInfo" className="w-full">
             <TabsList className="grid w-full grid-cols-5" style={{
               marginBottom: '20px',
@@ -293,12 +293,14 @@ const AilmentModal: React.FC<AilmentModalProps> = ({
                     }}
                   />
                 </div>
-                <div style={{ marginTop: '24px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-                  <div>
-                    <img src={getImageUrl('negative')} alt="Negative" style={{ width: '100%', maxHeight: '200px', objectFit: 'cover', borderRadius: '6px' }} />
+                <div style={{ marginTop: '32px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', paddingTop: '32px', borderTop: `1px solid ${colors.border}` }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+                    <img src={getImageUrl('negative')} alt="Negative" style={{ width: '100%', maxHeight: '250px', objectFit: 'contain', borderRadius: '6px', backgroundColor: '#ffffff', padding: '12px', border: `1px solid ${colors.border}` }} />
+                    <p style={{ fontSize: '12px', color: colors.mutedText, margin: 0 }}>Negative</p>
                   </div>
-                  <div>
-                    <img src={getImageUrl('positive')} alt="Positive" style={{ width: '100%', maxHeight: '200px', objectFit: 'cover', borderRadius: '6px' }} />
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+                    <img src={getImageUrl('positive')} alt="Positive" style={{ width: '100%', maxHeight: '250px', objectFit: 'contain', borderRadius: '6px', backgroundColor: '#ffffff', padding: '12px', border: `1px solid ${colors.border}` }} />
+                    <p style={{ fontSize: '12px', color: colors.mutedText, margin: 0 }}>Positive</p>
                   </div>
                 </div>
               </div>
