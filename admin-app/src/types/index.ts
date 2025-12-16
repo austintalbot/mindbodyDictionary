@@ -1,9 +1,15 @@
 // admin-app/src/types/index.ts
 
+export enum RecommendationType {
+  Product = 0,
+  Book = 2,
+  Food = 3,
+}
+
 export interface Recommendation {
   name?: string;
   url?: string;
-  recommendationType: number;
+  recommendationType: RecommendationType;
 }
 
 export interface MbdCondition {
@@ -25,8 +31,8 @@ export interface MbdCondition {
 // {
 //   "id": "816ff179-67cf-4e3b-88ef-ab5dd230e13d",
 //   "name": "Lung Problems",
-//   "imageNegative": "Lung Problems2",
-//   "imagePositive": "Lung Problems1",
+//   "imageNegative": "lungProblemsNegative.png",
+//   "imagePositive": "lungProblemsPositive.png",
 //   "summaryNegative": "\"I'm so sad I can barely breathe.\" \nYou are experiencing panic or anxiety stemming from a sense of abandonment. \nThe grief, shame, loneliness, and hopeless have become overwhelming. \nYou may feel confused as you struggle to piece together how to honor your path and purpose, feeling it is against the opinions of others. \nYou've suppressed yourself, and you may feel smothered by how others think you should do things.\nStarved for love, you've been unwilling to maintain yourself from one moment to the next, believing you don't even deserve it. ",
 //   "summaryPositive": "Observe your experience as separate from the essence of who you are to make space for healing. Breathe in and out as you use the affirmations to help bring vitality and enthusiasm back into your experience. When flying in an airplane, you have to put the breathing mask on yourself before you turn to help others. Be there for you, rise into you, then you will be able to help others appropriately. ",
 //   "affirmations": [

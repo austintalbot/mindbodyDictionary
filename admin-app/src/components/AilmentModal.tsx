@@ -1,7 +1,7 @@
 import React from 'react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from './components/ui/tabs';
 import { useTheme } from '../theme/useTheme';
-import { MbdCondition, Recommendation } from '../types';
+import { MbdCondition, Recommendation, RecommendationType } from '../types';
 
 interface AilmentModalProps {
   isOpen: boolean;
@@ -620,7 +620,7 @@ const AilmentModal: React.FC<AilmentModalProps> = ({
                         </button>
                       </div>
                       <select
-                        value={typeof rec === 'string' ? 0 : rec?.recommendationType || 0}
+                        value={typeof rec === 'string' ? RecommendationType.Product : rec?.recommendationType || RecommendationType.Product}
                         onChange={(e) => {
                           const newRecommendations = [...(ailment.recommendations || [])];
                           const typeValue = parseInt(e.target.value, 10);
@@ -650,9 +650,9 @@ const AilmentModal: React.FC<AilmentModalProps> = ({
                           e.currentTarget.style.boxShadow = 'none';
                         }}
                       >
-                        <option value={0}>Supplement / Product</option>
-                        <option value={2}>Book / Resource</option>
-                        <option value={3}>Food</option>
+                        <option value={RecommendationType.Product}>Supplement / Product</option>
+                        <option value={RecommendationType.Book}>Book / Resource</option>
+                        <option value={RecommendationType.Food}>Food</option>
                       </select>
                     </div>
                   ))}
