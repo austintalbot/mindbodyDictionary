@@ -3,6 +3,7 @@ import './App.css';
 import { ThemeProvider } from './theme/ThemeProvider';
 import { useTheme } from './theme/useTheme';
 import AilmentsTab from './components/AilmentsTab';
+import ImagesTab from './components/ImagesTab';
 import ThemeToggle from './components/ThemeToggle';
 
 function AppContent() {
@@ -13,6 +14,8 @@ function AppContent() {
     switch (activeTab) {
       case 'ailments':
         return <AilmentsTab />;
+      case 'images':
+        return <ImagesTab />;
       default:
         return <p style={{ color: colors.foreground }}>Tab content for {activeTab} not yet implemented</p>;
     }

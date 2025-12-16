@@ -17,6 +17,10 @@ import {
 } from '../constants';
 import { MbdCondition } from '../types'; // Import from barrel file
 
+// In-memory caches
+let mbdConditionsCache: any[] | null = null;
+let imagesCache: any[] | null = null;
+
 // Helper for making API requests
 async function makeApiRequest<T>(
   endpoint: string,
@@ -55,12 +59,45 @@ async function makeApiRequest<T>(
   // Check if the response has content before parsing as JSON
   const responseText = await response.text();
   console.log('API Raw Response Text:', endpoint, responseText); // Added log
-  return responseText ? JSON.parse(responseText) : ({} as T);
+  const responseData = responseText ? JSON.parse(responseText) : ({} as T);
+
+  if (method === 'GET') {
+    let count = 0;
+    if (Array.isArray(responseData)) {
+      count = responseData.length;
+    } else if (responseData && (responseData as any).data && Array.isArray((responseData as any).data)) {
+      count = (responseData as any).data.length;
+    } else if (responseData && Object.keys(responseData).length > 0) {
+      count = 1; // Assume a single object if not an array and not empty
+    }
+    console.log(`[API] GET ${endpoint} returned ${count} items.`);
+  }
+
+  return responseData;
 }
 
+// --- Cache Management Functions ---
+export const clearMbdConditionsCache = () => {
+  mbdConditionsCache = null;
+  console.log('MBD Conditions Cache cleared.');
+};
+
+export const clearImagesCache = () => {
+  imagesCache = null;
+  console.log('Images Cache cleared.');
+};
+
+
 // --- MbdCondition API Calls ---
-export const fetchMbdConditionsTable = async (): Promise<any> => { // The API returns {"data":[]} so it returns 'any' for now.
-  return makeApiRequest<any>(`GetMbdConditionsTable?code=${GET_MBD_CONDITIONS_TABLE_CODE}`);
+export const fetchMbdConditions = async (): Promise<any> => {
+  if (mbdConditionsCache) {
+    console.log('Returning MBD Conditions from cache.');
+    return mbdConditionsCache;
+  }
+  const response = await makeApiRequest<any>(`GetMbdConditions?code=${GET_MBD_CONDITIONS_TABLE_CODE}`);
+  const data = (response as any).data || response; // Handle { data: [...] } or direct array
+  mbdConditionsCache = data;
+  return data;
 };
 
 export const fetchMbdCondition = async (id: string, name: string): Promise<MbdCondition> => {
@@ -70,24 +107,35 @@ export const fetchMbdCondition = async (id: string, name: string): Promise<MbdCo
 };
 
 export const upsertAilment = async (ailment: MbdCondition): Promise<MbdCondition> => {
+  clearMbdConditionsCache(); // Clear cache on data modification
   return makeApiRequest<MbdCondition>(`UpsertAilment?code=${UPSERT_AILMENT_CODE}`, 'POST', ailment);
 };
 
 export const deleteAilment = async (id: string, name: string): Promise<void> => {
+  clearMbdConditionsCache(); // Clear cache on data modification
   const decodedName = name.replace("paranthesis", "'");
   return makeApiRequest<void>(`DeleteAilment?code=${DELETE_AILMENT_CODE}&id=${id}&name=${encodeURIComponent(decodedName)}`, 'POST');
 };
 
 // --- Image API Calls ---
 export const fetchImagesTable = async (): Promise<any[]> => {
-  return makeApiRequest<any[]>(`GetMbdImages?code=${GET_MBD_IMAGES_CODE}`);
+  if (imagesCache) {
+    console.log('Returning Images from cache.');
+    return imagesCache;
+  }
+  const response = await makeApiRequest<any[]>(`GetMbdImages?code=${GET_MBD_IMAGES_CODE}`);
+  const data = (response as any).data || response; // Handle { data: [...] } or direct array
+  imagesCache = data;
+  return data;
 };
 
 export const deleteImage = async (imageName: string): Promise<void> => {
+  clearImagesCache(); // Clear cache on data modification
   return makeApiRequest<void>(`DeleteImage?code=${DELETE_IMAGE_CODE}&name=${encodeURIComponent(imageName)}`, 'POST');
 };
 
 export const uploadImage = async (ailmentName: string, imageType: string, file: File): Promise<any> => {
+  clearImagesCache(); // Clear cache on data modification
   const name = `${ailmentName}${imageType}.png`;
   const formData = new FormData();
   formData.append('file', file);

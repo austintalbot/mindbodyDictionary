@@ -1,7 +1,7 @@
 // admin-app/src/constants.ts
 
 export const ADMIN_API_URL = import.meta.env.VITE_ADMIN_API_URL || 'http://localhost:7071'; // Default to a local Azure Function host
-export const IMAGE_BASE_URL = import.meta.env.VITE_IMAGE_BASE_URL || 'https://mbdstoragesa.blob.core.windows.net/mbd-images';
+export const IMAGE_BASE_URL = import.meta.env.VITE_IMAGE_BASE_URL || 'https://mbdstoragesa.blob.core.windows.net/mbdconditionimages';
 
 export const AILMENTS_TABLE_CODE = import.meta.env.VITE_AILMENTS_TABLE_CODE || 'YOUR_AILMENTS_TABLE_CODE';
 export const AILMENT_CODE = import.meta.env.VITE_AILMENT_CODE || 'YOUR_AILMENT_CODE';

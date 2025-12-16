@@ -1,6 +1,6 @@
 // admin-app/src/components/AilmentsTab.tsx
 import React, { useEffect, useState } from 'react';
-import { fetchMbdConditionsTable, upsertAilment, deleteAilment, fetchMbdCondition } from '../services/apiService';
+import { fetchMbdConditions, upsertAilment, deleteAilment, fetchMbdCondition, clearMbdConditionsCache } from '../services/apiService';
 import { MbdCondition } from '../types';
 import { getImageBaseUrl } from '../constants';
 import { useTheme } from '../theme/useTheme';
@@ -29,7 +29,7 @@ const AilmentsTab: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetchMbdConditionsTable(); // Changed to fetchMbdConditionsTable
+      const response = await fetchMbdConditions(); // Changed to fetchMbdConditions
       if (response && Array.isArray(response)) {
         const sortedAilments = response.sort((a, b) => a.name!.localeCompare(b.name!));
         setAilments(sortedAilments);
@@ -41,6 +41,11 @@ const AilmentsTab: React.FC = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleRefreshAilments = () => {
+    clearMbdConditionsCache();
+    loadAilments();
   };
 
   const selectAilment = async (ailment: Ailment) => {
@@ -159,11 +164,16 @@ const AilmentsTab: React.FC = () => {
       <AilmentsTable ailments={filteredAilments} onEdit={selectAilment} onDelete={deleteAilmentConfirm} />
 
       {/* Add Button */}
-      <StyledButton variant="primary" size="md" onClick={addAilment}>
-        + Add New Ailment
-      </StyledButton>
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
+        <StyledButton variant="secondary" size="md" onClick={handleRefreshAilments}>
+          Refresh Ailments
+        </StyledButton>
+        <StyledButton variant="primary" size="md" onClick={addAilment}>
+          + Add New Ailment
+        </StyledButton>
+      </div>
 
-      {/* Ailment Detail Modal */}
+      {/* Table */}
 
       {/* Ailment Detail Modal */}
       <AilmentModal

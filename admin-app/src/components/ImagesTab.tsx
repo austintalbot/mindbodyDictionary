@@ -1,8 +1,9 @@
 // admin-app/src/components/ImagesTab.tsx
 import React, { useEffect, useState } from 'react';
-import { fetchImagesTable, deleteImage, uploadImage, fetchMbdConditionsTable } from '../services/apiService';
+import { fetchImagesTable, deleteImage, uploadImage, fetchMbdConditions, clearImagesCache } from '../services/apiService';
 import { MbdCondition } from '../types';
 import { getImageBaseUrl } from '../constants'; // Import directly from constants
+import { useTheme } from '../theme/useTheme';
 
 interface Image {
   name: string;
@@ -17,12 +18,14 @@ interface AilmentOption {
 }
 
 const ImagesTab: React.FC = () => {
+  const { colors } = useTheme();
   const [images, setImages] = useState<Image[]>([]);
   const [ailmentOptions, setAilmentOptions] = useState<AilmentOption[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedImage, setSelectedImage] = useState<Image | null>(null);
   const [showAddImageDiv, setShowAddImageDiv] = useState(false);
+  const [searchTerm, setSearchTerm] = useState<string>('');
 
   // Form states for adding image
   const [imageAilment, setImageAilment] = useState('0');
@@ -39,8 +42,17 @@ const ImagesTab: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      const data = await fetchImagesTable();
-      setImages(data);
+      const response = await fetchImagesTable();
+      // Handle the new response structure which is wrapped in a "data" property
+      // and ensure we fallback to an empty array if data is missing.
+      const imageData = (response as any).data || response;
+
+      if (Array.isArray(imageData)) {
+          setImages(imageData);
+      } else {
+          setImages([]); // Fallback to empty array if not an array
+          console.warn('Unexpected response format for images:', response);
+      }
     } catch (err: any) {
       setError(err.message || 'Failed to fetch images');
     } finally {
@@ -50,7 +62,7 @@ const ImagesTab: React.FC = () => {
 
   const loadAilmentOptions = async () => {
     try {
-        const response = await fetchMbdConditionsTable(); // Changed to fetchMbdConditionsTable
+        const response = await fetchMbdConditions(); // Changed to fetchMbdConditions
         if (response && Array.isArray(response)) {
             setAilmentOptions(response.map((ailment: MbdCondition) => ({ id: ailment.id, name: ailment.name })));
         } else {
@@ -135,80 +147,302 @@ const ImagesTab: React.FC = () => {
     }
   };
 
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
+  };
 
-  if (loading) return <div>Loading Images...</div>;
-  if (error) return <div className="alert alert-danger">Error: {error}</div>;
+  const filteredImages = images.filter((image) => {
+    const lowerCaseSearchTerm = searchTerm.toLowerCase();
+    return (
+      image.name.toLowerCase().includes(lowerCaseSearchTerm) ||
+      image.ailment.toLowerCase().includes(lowerCaseSearchTerm)
+    );
+  });
+
+
+  if (loading) return <div style={{ padding: '20px', color: colors.mutedText }}>Loading Images...</div>;
+  if (error) return <div style={{ padding: '20px', color: colors.danger, backgroundColor: colors.dangerLight, borderRadius: '4px' }}>Error: {error}</div>;
 
   return (
-    <div className="tab-pane fade show active" id="nav-images" role="tabpanel" aria-labelledby="nav-images-tab">
-      <div className="card">
-        <div className="card-body">
-          <h5 className="card-title">Images</h5>
-          <button className="btn btn-primary" onClick={loadImages}>Refresh Images</button> {/* Changed to Refresh */}
-          <div id="imagesInternalDiv" className="mt-3">
-            <table className="display" style={{ width: '100%' }}>
-              <thead>
-                <tr>
-                  <th>View</th>
-                  <th>Name</th>
-                  <th>Default Ailment</th>
-                  <th>Delete</th>
-                </tr>
-              </thead>
-              <tbody>
-                {images.map((image) => (
-                  <tr key={image.name}>
-                    <td>
-                      <button className="btn btn-outline-info" onClick={() => selectImage(image)}>
-                        <i className="fas fa-image"></i>
-                      </button>
-                    </td>
-                    <td>{image.name}</td>
-                    <td>{image.ailment}</td>
-                    <td>
-                      <button className="btn btn-outline-dark" onClick={() => deleteImageConfirm(image.name)}>
-                        <i className="fas fa-trash"></i>
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            <button type="button" id="addImageButton" className="btn btn-sm btn-outline-primary" onClick={addImage}>
-              Add
-            </button>
-          </div>
+    <div style={{ padding: '20px' }}>
+      <div style={{
+        backgroundColor: colors.background,
+        borderRadius: '8px',
+        border: `1px solid ${colors.border}`,
+        padding: '24px'
+      }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+          <h5 style={{ fontSize: '18px', fontWeight: '600', margin: 0, color: colors.foreground }}>Images</h5>
+          <button
+            onClick={() => { clearImagesCache(); loadImages(); }}
+            style={{
+              padding: '8px 16px',
+              backgroundColor: colors.primary,
+              color: '#fff',
+              border: 'none',
+              borderRadius: '6px',
+              cursor: 'pointer',
+              fontWeight: '600',
+              fontSize: '14px',
+              transition: 'all 0.2s'
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.primaryHover}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.primary}
+          >
+            Refresh Images
+          </button>
         </div>
+
+        {/* Search input field */}
+        <div style={{ marginBottom: '20px' }}>
+            <input
+                type="text"
+                placeholder="Search images by name or ailment..."
+                value={searchTerm}
+                onChange={handleSearchChange}
+                style={{
+                    width: '100%',
+                    padding: '10px 12px',
+                    fontSize: '14px',
+                    border: `1px solid ${colors.inputBorder}`,
+                    borderRadius: '6px',
+                    backgroundColor: colors.inputBackground,
+                    color: colors.foreground,
+                    outline: 'none',
+                }}
+            />
+        </div>
+
+        <div style={{ overflowX: 'auto', marginBottom: '20px' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px' }}>
+            <thead>
+              <tr style={{ backgroundColor: colors.backgroundSecondary, borderBottom: `2px solid ${colors.border}` }}>
+                <th style={{ padding: '12px', textAlign: 'left', fontWeight: '600', color: colors.mutedText }}>View</th>
+                <th style={{ padding: '12px', textAlign: 'left', fontWeight: '600', color: colors.mutedText }}>Name</th>
+                <th style={{ padding: '12px', textAlign: 'left', fontWeight: '600', color: colors.mutedText }}>Default Ailment</th>
+                <th style={{ padding: '12px', textAlign: 'left', fontWeight: '600', color: colors.mutedText }}>Delete</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredImages.map((image, index) => ( // Use filteredImages here
+                <tr
+                  key={image.name}
+                  style={{
+                    backgroundColor: index % 2 === 0 ? colors.background : colors.backgroundSecondary,
+                    borderBottom: `1px solid ${colors.border}`,
+                    transition: 'background-color 0.15s',
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.border}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = index % 2 === 0 ? colors.background : colors.backgroundSecondary}
+                >
+                  <td style={{ padding: '12px' }}>
+                    <button
+                      onClick={() => selectImage(image)}
+                      style={{
+                        padding: '6px 10px',
+                        backgroundColor: colors.primaryLight,
+                        color: colors.primary,
+                        border: `1px solid ${colors.primary}`,
+                        borderRadius: '4px',
+                        cursor: 'pointer',
+                        fontSize: '12px',
+                        fontWeight: '600',
+                        transition: 'all 0.2s'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = colors.primary;
+                        e.currentTarget.style.color = '#fff';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = colors.primaryLight;
+                        e.currentTarget.style.color = colors.primary;
+                      }}
+                    >
+                      View
+                    </button>
+                  </td>
+                  <td style={{ padding: '12px', color: colors.foreground }}>{image.name}</td>
+                  <td style={{ padding: '12px', color: colors.foreground }}>{image.ailment}</td>
+                  <td style={{ padding: '12px' }}>
+                    <button
+                      onClick={() => deleteImageConfirm(image.name)}
+                      style={{
+                        padding: '6px 10px',
+                        backgroundColor: colors.dangerLight,
+                        color: colors.danger,
+                        border: `1px solid ${colors.danger}`,
+                        borderRadius: '4px',
+                        cursor: 'pointer',
+                        fontSize: '12px',
+                        fontWeight: '600',
+                        transition: 'all 0.2s'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = colors.danger;
+                        e.currentTarget.style.color = '#fff';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = colors.dangerLight;
+                        e.currentTarget.style.color = colors.danger;
+                      }}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <button
+          onClick={addImage}
+          style={{
+            padding: '10px 20px',
+            backgroundColor: colors.primary,
+            color: '#fff',
+            border: 'none',
+            borderRadius: '6px',
+            cursor: 'pointer',
+            fontSize: '14px',
+            fontWeight: '600',
+            marginBottom: '20px',
+            transition: 'all 0.2s'
+          }}
+          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.primaryHover}
+          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.primary}
+        >
+          + Add New Image
+        </button>
+
         {selectedImage && (
-          <div id="imageDiv" className="text-center mb-3">
-            <div id="selectedImageName">{selectedImage.name}</div>
-            <img id="selectedImage" style={{ maxWidth: '120px' }} src={getImageBaseUrl() + '/' + selectedImage.name} alt={selectedImage.name} />
+          <div style={{
+            textAlign: 'center',
+            marginBottom: '20px',
+            padding: '20px',
+            backgroundColor: colors.backgroundSecondary,
+            borderRadius: '8px',
+            border: `1px solid ${colors.border}`
+          }}>
+            <div style={{ fontSize: '16px', fontWeight: '600', marginBottom: '12px', color: colors.foreground }}>
+              {selectedImage.name}
+            </div>
+            <img
+              style={{ maxWidth: '200px', borderRadius: '4px', border: `1px solid ${colors.border}` }}
+              src={getImageBaseUrl() + '/' + selectedImage.name}
+              alt={selectedImage.name}
+            />
           </div>
         )}
+
         {showAddImageDiv && (
-          <div id="addImageDiv" className="row">
-            <div className="offset-sm-4 col-sm-4">
-              <div className="form-group">
-                <select className="form-control" id="imageAilment" value={imageAilment} onChange={(e) => setImageAilment(e.target.value)}>
-                  <option value="0">Select Ailment...</option>
-                  {ailmentOptions.map(opt => <option key={opt.id} value={opt.id!}>{opt.name}</option>)}
-                </select>
-              </div>
-              <div className="form-group">
-                <select className="form-control" id="imageType" value={imageType} onChange={(e) => setImageType(e.target.value)}>
-                  <option value="0">Select Image Type...</option>
-                  <option value="1">Negative</option>
-                  <option value="2">Positive</option>
-                </select>
-              </div>
-              <div className="input-group mb-3">
-                <div className="custom-file">
-                  <input type="file" className="custom-file-input" id="imageFile" onChange={handleFileChange} />
-                  <label className="custom-file-label" htmlFor="imageFile">{fileLabel}</label>
+          <div style={{
+            maxWidth: '500px',
+            margin: '0 auto',
+            padding: '24px',
+            backgroundColor: colors.backgroundSecondary,
+            borderRadius: '8px',
+            border: `1px solid ${colors.border}`
+          }}>
+            <h6 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '20px', color: colors.foreground }}>Upload New Image</h6>
+
+            <div style={{ marginBottom: '16px' }}>
+              <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '8px', color: colors.lightText }}>Select Ailment</label>
+              <select
+                value={imageAilment}
+                onChange={(e) => setImageAilment(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '10px 12px',
+                  fontSize: '14px',
+                  border: `1px solid ${colors.inputBorder}`,
+                  borderRadius: '6px',
+                  backgroundColor: colors.inputBackground,
+                  color: colors.foreground,
+                  outline: 'none',
+                  cursor: 'pointer'
+                }}
+              >
+                <option value="0">Select Ailment...</option>
+                {ailmentOptions.map(opt => <option key={opt.id} value={opt.id!}>{opt.name}</option>)}
+              </select>
+            </div>
+
+            <div style={{ marginBottom: '16px' }}>
+              <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '8px', color: colors.lightText }}>Image Type</label>
+              <select
+                value={imageType}
+                onChange={(e) => setImageType(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '10px 12px',
+                  fontSize: '14px',
+                  border: `1px solid ${colors.inputBorder}`,
+                  borderRadius: '6px',
+                  backgroundColor: colors.inputBackground,
+                  color: colors.foreground,
+                  outline: 'none',
+                  cursor: 'pointer'
+                }}
+              >
+                <option value="0">Select Image Type...</option>
+                <option value="1">Negative</option>
+                <option value="2">Positive</option>
+              </select>
+            </div>
+
+            <div style={{ marginBottom: '24px' }}>
+              <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '8px', color: colors.lightText }}>Image File</label>
+              <div style={{ position: 'relative', overflow: 'hidden', display: 'inline-block', width: '100%' }}>
+                <input
+                  type="file"
+                  id="imageFile"
+                  onChange={handleFileChange}
+                  style={{
+                    position: 'absolute',
+                    left: 0,
+                    top: 0,
+                    opacity: 0,
+                    width: '100%',
+                    height: '100%',
+                    cursor: 'pointer'
+                  }}
+                />
+                <div style={{
+                  padding: '10px 12px',
+                  fontSize: '14px',
+                  border: `1px solid ${colors.inputBorder}`,
+                  borderRadius: '6px',
+                  backgroundColor: colors.inputBackground,
+                  color: colors.mutedText,
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis'
+                }}>
+                  {fileLabel}
                 </div>
               </div>
-              <button className="btn btn-primary" onClick={submitImage}>Submit</button>
             </div>
+
+            <button
+              onClick={submitImage}
+              style={{
+                width: '100%',
+                padding: '12px',
+                backgroundColor: colors.primary,
+                color: '#fff',
+                border: 'none',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                fontSize: '14px',
+                fontWeight: '600',
+                transition: 'all 0.2s'
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.primaryHover}
+              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.primary}
+            >
+              Upload Image
+            </button>
           </div>
         )}
       </div>
@@ -217,3 +451,4 @@ const ImagesTab: React.FC = () => {
 };
 
 export default ImagesTab;
+

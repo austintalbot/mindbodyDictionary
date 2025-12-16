@@ -1,6 +1,6 @@
 // admin-app/src/components/NotificationsTab.tsx
 import React, { useState, useEffect } from 'react';
-import { sendPushNotification, fetchMbdConditionsTable } from '../services/apiService';
+import { sendPushNotification, fetchMbdConditions } from '../services/apiService';
 import { MbdCondition } from '../types'; // Import MbdCondition
 
 // AilmentOption now uses MbdCondition for name and id
@@ -26,7 +26,7 @@ const NotificationsTab: React.FC = () => {
   const loadAilmentOptions = async () => {
     setLoadingAilments(true);
     try {
-        const response = await fetchMbdConditionsTable(); // Changed to fetchMbdConditionsTable
+        const response = await fetchMbdConditions(); // Changed to fetchMbdConditions
         if (response && Array.isArray(response)) {
             const sorted = response
           .map((ailment: MbdCondition) => ({ id: ailment.id, name: ailment.name }))
