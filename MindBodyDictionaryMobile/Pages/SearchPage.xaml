@@ -47,10 +47,10 @@
                 <CollectionView.ItemsLayout>
                     <GridItemsLayout
                         x:Name="ShimmerGridItemsLayout"
-                        HorizontalItemSpacing="8"
+                        HorizontalItemSpacing="6"
                         Orientation="Vertical"
                         Span="3"
-                        VerticalItemSpacing="8" />
+                        VerticalItemSpacing="6" />
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
@@ -106,10 +106,10 @@
                 <CollectionView.ItemsLayout>
                     <GridItemsLayout
                         x:Name="CollectionViewGridItemLayout"
-                        HorizontalItemSpacing="12"
+                        HorizontalItemSpacing="8"
                         Orientation="Vertical"
                         Span="3"
-                        VerticalItemSpacing="12" />
+                        VerticalItemSpacing="8" />
                 </CollectionView.ItemsLayout>
 
                 <CollectionView.ItemTemplate>
