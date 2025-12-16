@@ -13,6 +13,7 @@ import {
   RESTORE_DATABASE_CODE,
   GET_MBD_CONDITIONS_TABLE_CODE,
   GET_MBD_CONDITIONS_CODE,
+  GET_MBD_IMAGES_CODE,
 } from '../constants';
 import { MbdCondition } from '../types'; // Import from barrel file
 
@@ -79,7 +80,7 @@ export const deleteAilment = async (id: string, name: string): Promise<void> => 
 
 // --- Image API Calls ---
 export const fetchImagesTable = async (): Promise<any[]> => {
-  return makeApiRequest<any[]>(`ImagesTable?code=${IMAGES_TABLE_CODE}`);
+  return makeApiRequest<any[]>(`GetMbdImages?code=${GET_MBD_IMAGES_CODE}`);
 };
 
 export const deleteImage = async (imageName: string): Promise<void> => {

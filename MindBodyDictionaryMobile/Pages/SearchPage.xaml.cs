@@ -18,6 +18,27 @@ public partial class SearchPage : ContentPage
     GetConditions();
   }
 
+  protected override void OnSizeAllocated(double width, double height) {
+    base.OnSizeAllocated(width, height);
+
+    if (width < 400)
+    {
+      if (CollectionViewGridItemLayout.Span != 2)
+      {
+        CollectionViewGridItemLayout.Span = 2;
+        ShimmerGridItemsLayout.Span = 2;
+      }
+    }
+    else
+    {
+      if (CollectionViewGridItemLayout.Span != 3)
+      {
+        CollectionViewGridItemLayout.Span = 3;
+        ShimmerGridItemsLayout.Span = 3;
+      }
+    }
+  }
+
   private async void GetConditions() {
 
     await _searchPageModel.GetConditionShortList();

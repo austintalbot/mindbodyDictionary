@@ -1,10 +1,11 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
     x:Class="MindBodyDictionaryMobile.Pages.SearchPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:android="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific;assembly=Microsoft.Maui.Controls"
     xmlns:model="clr-namespace:MindBodyDictionaryMobile.Models"
+    xmlns:shimmer="clr-namespace:Syncfusion.Maui.Toolkit.Shimmer;assembly=Syncfusion.Maui.Toolkit"
     xmlns:vm="clr-namespace:MindBodyDictionaryMobile.PageModels"
     Title="{Binding Title}"
     x:DataType="vm:SearchPageModel">
@@ -45,6 +46,7 @@
                 </CollectionView.ItemsSource>
                 <CollectionView.ItemsLayout>
                     <GridItemsLayout
+                        x:Name="ShimmerGridItemsLayout"
                         HorizontalItemSpacing="8"
                         Orientation="Vertical"
                         Span="3"
@@ -52,27 +54,35 @@
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Border Style="{StaticResource SearchMbdConditionCard}">
-                            <VerticalStackLayout Spacing="8" VerticalOptions="Center">
-                                <!--  Image placeholder  -->
-                                <Border
-                                    HeightRequest="50"
-                                    HorizontalOptions="Center"
-                                    Style="{StaticResource ShimmerPlaceholderBorder}"
-                                    WidthRequest="50">
-                                    <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="8" />
-                                    </Border.StrokeShape>
-                                </Border>
+                        <shimmer:SfShimmer IsActive="True">
+                            <shimmer:SfShimmer.CustomView>
+                                <Border Style="{StaticResource SearchMbdConditionCard}">
+                                    <Grid Padding="0" RowDefinitions="*,Auto">
+                                        <!--  Image placeholder  -->
+                                        <Border
+                                            Grid.Row="0"
+                                            HeightRequest="100"
+                                            HorizontalOptions="Center"
+                                            Style="{StaticResource ShimmerPlaceholderBorder}"
+                                            VerticalOptions="Start"
+                                            WidthRequest="100">
+                                            <Border.StrokeShape>
+                                                <RoundRectangle CornerRadius="8" />
+                                            </Border.StrokeShape>
+                                        </Border>
 
-                                <!--  Text placeholder  -->
-                                <Border
-                                    HeightRequest="12"
-                                    HorizontalOptions="Center"
-                                    Style="{StaticResource ShimmerPlaceholderBorder}"
-                                    WidthRequest="60" />
-                            </VerticalStackLayout>
-                        </Border>
+                                        <!--  Text placeholder  -->
+                                        <Border
+                                            Grid.Row="1"
+                                            HeightRequest="16"
+                                            HorizontalOptions="Center"
+                                            Margin="0,8"
+                                            Style="{StaticResource ShimmerPlaceholderBorder}"
+                                            WidthRequest="80" />
+                                    </Grid>
+                                </Border>
+                            </shimmer:SfShimmer.CustomView>
+                        </shimmer:SfShimmer>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
