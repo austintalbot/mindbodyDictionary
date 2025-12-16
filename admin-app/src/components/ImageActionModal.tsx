@@ -25,6 +25,7 @@ const ImageActionModal: React.FC<ImageActionModalProps> = ({
   const [fileLabel, setFileLabel] = useState('Choose new image file');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [previewImageUrl, setPreviewImageUrl] = useState<string | null>(null); // New state for image preview
 
   useEffect(() => {
     if (!isOpen) {
@@ -33,8 +34,21 @@ const ImageActionModal: React.FC<ImageActionModalProps> = ({
       setFileLabel('Choose new image file');
       setError(null);
       setLoading(false);
+      if (previewImageUrl) {
+        URL.revokeObjectURL(previewImageUrl); // Clean up the old preview URL
+        setPreviewImageUrl(null);
+      }
     }
-  }, [isOpen]);
+  }, [isOpen, previewImageUrl]);
+
+  // Clean up object URL on component unmount
+  useEffect(() => {
+    return () => {
+      if (previewImageUrl) {
+        URL.revokeObjectURL(previewImageUrl);
+      }
+    };
+  }, [previewImageUrl]);
 
   if (!isOpen || !image) return null;
 
@@ -46,13 +60,25 @@ const ImageActionModal: React.FC<ImageActionModalProps> = ({
         setImageFile(null);
         setFileLabel('Please Select a new file');
         e.target.value = ''; // Clear input
+        if (previewImageUrl) {
+          URL.revokeObjectURL(previewImageUrl);
+          setPreviewImageUrl(null);
+        }
       } else {
         setImageFile(file);
         setFileLabel(file.name);
+        if (previewImageUrl) { // Revoke previous URL if any
+          URL.revokeObjectURL(previewImageUrl);
+        }
+        setPreviewImageUrl(URL.createObjectURL(file)); // Create new preview URL
       }
     } else {
       setImageFile(null);
       setFileLabel('Choose new image file');
+      if (previewImageUrl) {
+        URL.revokeObjectURL(previewImageUrl);
+        setPreviewImageUrl(null);
+      }
     }
   };
 
@@ -262,6 +288,16 @@ const ImageActionModal: React.FC<ImageActionModalProps> = ({
           {/* Image Upload Form */}
           <div style={{ borderTop: `1px solid ${colors.border}`, paddingTop: '20px', marginTop: '20px' }}>
             <h6 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '15px', color: colors.foreground }}>Replace Image</h6>
+            {previewImageUrl && (
+              <div style={{ textAlign: 'center', marginBottom: '15px' }}>
+                <img
+                  src={previewImageUrl}
+                  alt="New Image Preview"
+                  style={{ maxWidth: '100%', maxHeight: '200px', objectFit: 'contain', border: `1px solid ${colors.border}`, borderRadius: '4px' }}
+                />
+                <p style={{ fontSize: '12px', color: colors.mutedText, marginTop: '8px' }}>Preview of new image</p>
+              </div>
+            )}
             <div style={{ marginBottom: '15px' }}>
               <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '8px', color: colors.lightText }}>Image File</label>
               <div style={{ position: 'relative', overflow: 'hidden', display: 'inline-block', width: '100%' }}>
