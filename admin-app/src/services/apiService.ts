@@ -103,7 +103,19 @@ export const fetchMbdConditions = async (): Promise<any> => {
 export const fetchMbdCondition = async (id: string, name: string): Promise<MbdCondition> => {
   // Original JS replaced single quote with 'paranthesis' - we need to reverse that for the actual API call
   const decodedName = name.replace("paranthesis", "'");
-  return makeApiRequest<MbdCondition>(`GetMbdConditions?code=${GET_MBD_CONDITIONS_CODE}&id=${id}&name=${encodeURIComponent(decodedName)}`);
+  const response = await makeApiRequest<MbdCondition[]>(`GetMbdConditions?code=${GET_MBD_CONDITIONS_CODE}&id=${id}&name=${encodeURIComponent(decodedName)}`);
+
+  // Assuming the API returns an array, even for a single-item query.
+  // We take the first element if available, otherwise return a default empty MbdCondition object.
+  if (response && Array.isArray(response) && response.length > 0) {
+    return response[0];
+  } else {
+    // Return a default empty MbdCondition object if no matching ailment is found or response is malformed.
+    return {
+      id: '', name: '', subscriptionOnly: false, summaryNegative: '', summaryPositive: '',
+      affirmations: [], physicalConnections: [], searchTags: [], tags: [], recommendations: []
+    };
+  }
 };
 
 export const upsertAilment = async (ailment: MbdCondition): Promise<MbdCondition> => {

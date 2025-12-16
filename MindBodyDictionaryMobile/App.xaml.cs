@@ -24,7 +24,7 @@ public partial class App : Application
       {
         if (searchPageModel != null)
         {
-           await searchPageModel.GetConditionShortList();
+          await searchPageModel.GetConditionShortList();
         }
       }
       catch (Exception ex)
