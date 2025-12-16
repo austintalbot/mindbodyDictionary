@@ -76,7 +76,7 @@ public class ImageCacheService(ImageCacheRepository imageCacheRepository, ILogge
         }
         else
         {
-            _logger.LogWarning("GetImageAsync: Remote download returned empty data for {FileName}", fileName);
+          _logger.LogWarning("GetImageAsync: Remote download returned empty data for {FileName}", fileName);
         }
       }
       catch (Exception ex)
@@ -86,8 +86,8 @@ public class ImageCacheService(ImageCacheRepository imageCacheRepository, ILogge
 
       if (imageSource != null)
       {
-          _logger.LogDebug("GetImageAsync: Returning image from remote for {FileName}", fileName);
-          return imageSource;
+        _logger.LogDebug("GetImageAsync: Returning image from remote for {FileName}", fileName);
+        return imageSource;
       }
 
       // 3. If remote fails, fall back to embedded resources
@@ -300,17 +300,17 @@ public class ImageCacheService(ImageCacheRepository imageCacheRepository, ILogge
             }
             else
             {
-                _logger.LogDebug("GetImageFilesFromResourcesAsync: Extracted fileName {FileName} is not a valid image file extension.", fileName);
+              _logger.LogDebug("GetImageFilesFromResourcesAsync: Extracted fileName {FileName} is not a valid image file extension.", fileName);
             }
           }
           else
           {
-              _logger.LogDebug("GetImageFilesFromResourcesAsync: Resource {ResourceName} contains '.images.' but index not found. Skipping.", resourceName);
+            _logger.LogDebug("GetImageFilesFromResourcesAsync: Resource {ResourceName} contains '.images.' but index not found. Skipping.", resourceName);
           }
         }
         else
         {
-            _logger.LogDebug("GetImageFilesFromResourcesAsync: Resource {ResourceName} does not match image folder or extension pattern. Skipping.", resourceName);
+          _logger.LogDebug("GetImageFilesFromResourcesAsync: Resource {ResourceName} does not match image folder or extension pattern. Skipping.", resourceName);
         }
       }
 
