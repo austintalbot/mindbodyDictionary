@@ -560,29 +560,86 @@ const AilmentModal: React.FC<AilmentModalProps> = ({
                 <h5 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '20px', color: colors.foreground }}>Recommendations</h5>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                   {(ailment.recommendations || []).map((rec: Recommendation, idx: number) => (
-                    <div key={idx} style={{ display: 'flex', gap: '8px' }}>
-                      <textarea
-                        value={typeof rec === 'string' ? rec : rec?.name || ''}
+                    <div key={idx} style={{ display: 'flex', flexDirection: 'column', gap: '8px', padding: '12px', backgroundColor: colors.backgroundSecondary, borderRadius: '6px' }}>
+                      <div style={{ display: 'flex', gap: '8px' }}>
+                        <textarea
+                          value={typeof rec === 'string' ? rec : rec?.name || ''}
+                          onChange={(e) => {
+                            const newRecommendations = [...(ailment.recommendations || [])];
+                            if (typeof rec === 'string') {
+                              newRecommendations[idx] = { name: e.target.value, url: '', recommendationType: 0 } as Recommendation;
+                            } else {
+                              newRecommendations[idx] = { ...rec, name: e.target.value };
+                            }
+                            onChange({ ...ailment, recommendations: newRecommendations });
+                          }}
+                          placeholder="Recommendation name"
+                          style={{
+                            flex: 1,
+                            padding: '10px 12px',
+                            fontSize: '14px',
+                            border: `1px solid ${colors.inputBorder}`,
+                            borderRadius: '6px',
+                            minHeight: '60px',
+                            fontFamily: 'inherit',
+                            transition: 'all 0.2s',
+                            backgroundColor: colors.inputBackground,
+                            color: colors.foreground
+                          }}
+                          onFocus={(e) => {
+                            e.currentTarget.style.borderColor = colors.inputFocus;
+                            e.currentTarget.style.boxShadow = `0 0 0 3px ${colors.inputFocusRing}`;
+                          }}
+                          onBlur={(e) => {
+                            e.currentTarget.style.borderColor = colors.inputBorder;
+                            e.currentTarget.style.boxShadow = 'none';
+                          }}
+                        />
+                        <button
+                          onClick={() => {
+                            const newRecommendations = ailment.recommendations?.filter((_: Recommendation, i: number) => i !== idx) || [];
+                            onChange({ ...ailment, recommendations: newRecommendations });
+                          }}
+                          style={{
+                            padding: '8px 12px',
+                            backgroundColor: colors.danger,
+                            color: '#fff',
+                            border: 'none',
+                            borderRadius: '6px',
+                            cursor: 'pointer',
+                            fontSize: '14px',
+                            fontWeight: '600',
+                            transition: 'all 0.2s',
+                            height: 'fit-content',
+                            marginTop: '10px'
+                          }}
+                          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.dangerHover}
+                          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.danger}
+                        >
+                          Remove
+                        </button>
+                      </div>
+                      <select
+                        value={typeof rec === 'string' ? 0 : rec?.recommendationType || 0}
                         onChange={(e) => {
                           const newRecommendations = [...(ailment.recommendations || [])];
+                          const typeValue = parseInt(e.target.value, 10);
                           if (typeof rec === 'string') {
-                            newRecommendations[idx] = { name: e.target.value, url: '', recommendationType: 0 } as Recommendation;
+                            newRecommendations[idx] = { name: '', url: '', recommendationType: typeValue } as Recommendation;
                           } else {
-                            newRecommendations[idx] = { ...rec, name: e.target.value };
+                            newRecommendations[idx] = { ...rec, recommendationType: typeValue };
                           }
                           onChange({ ...ailment, recommendations: newRecommendations });
                         }}
                         style={{
-                          flex: 1,
-                          padding: '10px 12px',
+                          padding: '8px 12px',
                           fontSize: '14px',
                           border: `1px solid ${colors.inputBorder}`,
                           borderRadius: '6px',
-                          minHeight: '60px',
-                          fontFamily: 'inherit',
-                          transition: 'all 0.2s',
                           backgroundColor: colors.inputBackground,
-                          color: colors.foreground
+                          color: colors.foreground,
+                          transition: 'all 0.2s',
+                          cursor: 'pointer'
                         }}
                         onFocus={(e) => {
                           e.currentTarget.style.borderColor = colors.inputFocus;
@@ -592,30 +649,11 @@ const AilmentModal: React.FC<AilmentModalProps> = ({
                           e.currentTarget.style.borderColor = colors.inputBorder;
                           e.currentTarget.style.boxShadow = 'none';
                         }}
-                      />
-                      <button
-                        onClick={() => {
-                          const newRecommendations = ailment.recommendations?.filter((_: Recommendation, i: number) => i !== idx) || [];
-                          onChange({ ...ailment, recommendations: newRecommendations });
-                        }}
-                        style={{
-                          padding: '8px 12px',
-                          backgroundColor: colors.danger,
-                          color: '#fff',
-                          border: 'none',
-                          borderRadius: '6px',
-                          cursor: 'pointer',
-                          fontSize: '14px',
-                          fontWeight: '600',
-                          transition: 'all 0.2s',
-                          height: 'fit-content',
-                          marginTop: '10px'
-                        }}
-                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.dangerHover}
-                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.danger}
                       >
-                        Remove
-                      </button>
+                        <option value={0}>Supplement / Product</option>
+                        <option value={2}>Book / Resource</option>
+                        <option value={3}>Food</option>
+                      </select>
                     </div>
                   ))}
                   <button
