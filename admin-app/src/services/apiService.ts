@@ -173,4 +173,3 @@ export const restoreDatabase = async (file: File): Promise<void> => {
   formData.append('File', file);
   return makeApiRequest<void>(`RestoreDatabase?code=${RESTORE_DATABASE_CODE}`, 'POST', formData);
 };
-

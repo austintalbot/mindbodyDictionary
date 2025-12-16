@@ -20,47 +20,47 @@ def to_camel_case(text):
     words = text.split()
     if not words:
         return ""
-    
+
     # 2. Lowercase first word, capitalize subsequent words
     res = [words[0].lower()]
     for w in words[1:]:
         res.append(w.capitalize())
-    
+
     return "".join(res)
 
 updates = 0
 
 for c in conditions:
     name = c['name']
-    
+
     # Generate camelCase base name
     camel_name = to_camel_case(name)
-    
+
     # Expected names
     target_neg = f"{camel_name}Negative.png"
     target_pos = f"{camel_name}Positive.png"
-    
+
     # Update JSON
     c['imageNegative'] = target_neg
     c['imagePositive'] = target_pos
-    
+
     # Check Negative
     if target_neg not in files:
         # Try to find candidate from previous iterations or loose matches
         candidates = []
-        
+
         # Previous convention: Lung-Problems-Negative.png
         safe_name_hyphen = name.replace(':', '-').replace('/', '-').replace(' ', '-').replace("'s", "")
         candidates.append(f"{safe_name_hyphen}-Negative.png")
-        
+
         # "1" suffix: Lung-Problems1.png
         candidates.append(f"{safe_name_hyphen}1.png")
         candidates.append(f"{name}1.png")
-        
+
         # Underscores
         safe_name_underscore = safe_name_hyphen.replace('-', '_')
         candidates.append(f"{safe_name_underscore}1.png")
-        
+
         # "Swelling-_-Edema" type weirdness
         weird_name = name.replace(':', '-').replace('/', '-').replace(' ', '-_-').replace("'s", "")
         candidates.append(f"{weird_name}1.png")
@@ -74,7 +74,7 @@ for c in conditions:
              if cand.lower() in files_lower:
                  found = files_lower[cand.lower()]
                  break
-        
+
         if found and found != target_neg:
             print(f"Renaming {found} -> {target_neg}")
             shutil.move(os.path.join(images_dir, found), os.path.join(images_dir, target_neg))
@@ -88,16 +88,16 @@ for c in conditions:
     # Check Positive
     if target_pos not in files:
         candidates = []
-        
+
         safe_name_hyphen = name.replace(':', '-').replace('/', '-').replace(' ', '-').replace("'s", "")
         candidates.append(f"{safe_name_hyphen}-Positive.png")
-        
+
         candidates.append(f"{safe_name_hyphen}2.png")
         candidates.append(f"{name}2.png")
-        
+
         safe_name_underscore = safe_name_hyphen.replace('-', '_')
         candidates.append(f"{safe_name_underscore}2.png")
-        
+
         weird_name = name.replace(':', '-').replace('/', '-').replace(' ', '-_-').replace("'s", "")
         candidates.append(f"{weird_name}2.png")
         candidates.append(f"{weird_name}-Positive.png")
@@ -110,7 +110,7 @@ for c in conditions:
              if cand.lower() in files_lower:
                  found = files_lower[cand.lower()]
                  break
-        
+
         if found and found != target_pos:
             print(f"Renaming {found} -> {target_pos}")
             shutil.move(os.path.join(images_dir, found), os.path.join(images_dir, target_pos))

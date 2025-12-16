@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentView
     x:Class="MindBodyDictionaryMobile.Pages.MbdConditionDetailsResourcesView"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
@@ -14,35 +14,37 @@
             EmptyView="There are no corresponding resources for this Condition"
             InputTransparent="False"
             ItemsSource="{Binding BooksResourcesList}"
-            SelectionMode="None">
+            SelectionMode="None"
+            Style="{StaticResource HorizontalCollectionView}">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <Grid
                         x:DataType="model:Recommendation"
-                        HorizontalOptions="Center"
+                        HorizontalOptions="Fill"
                         InputTransparent="False"
-                        VerticalOptions="Fill">
+                        VerticalOptions="Fill"
+                        Padding="5">
                         <Border
                             Background="White"
                             InputTransparent="False"
                             Style="{StaticResource RecommendationBorder}">
-                            <Grid RowDefinitions="Auto,Auto,Auto">
+                            <VerticalStackLayout Padding="10">
                                 <Label
-                                    Grid.Row="0"
                                     Style="{StaticResource RecommendationNameLabel}"
-                                    Text="{Binding Name}" />
-                                <BoxView Grid.Row="1" Style="{StaticResource RecommendationBoxView}" />
+                                    Text="{Binding Name}"
+                                    Margin="0,0,0,5" />
                                 <Button
-                                    Grid.Row="2"
-                                    Margin="0,10,0,0"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RecommendationsPageModel}}, Path=ResourceClickedCommand}"
+                                    CommandParameter="{Binding .}"
+                                    Text="View Resource"
+                                    Style="{StaticResource AccentButton}"
+                                    Margin="0,5,0,5" />
+                                <Button
                                     Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RecommendationsPageModel}}, Path=AddToMyListCommand}"
                                     CommandParameter="{Binding .}"
-                                    Style="{StaticResource AccentButton}"
-                                    Text="Add to List" />
-                            </Grid>
-                            <Border.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MbdConditionDetailPageModel}}, Path=ResourceLinkClickCommand}" CommandParameter="{Binding .}" />
-                            </Border.GestureRecognizers>
+                                    Text="Add to List"
+                                    Style="{StaticResource SecondaryButton}" />
+                            </VerticalStackLayout>
                         </Border>
                     </Grid>
                 </DataTemplate>

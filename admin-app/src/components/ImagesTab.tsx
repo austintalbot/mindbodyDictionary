@@ -4,6 +4,7 @@ import { fetchImagesTable, deleteImage, uploadImage, fetchMbdConditions, clearIm
 import { MbdCondition } from '../types';
 import { getImageBaseUrl } from '../constants'; // Import directly from constants
 import { useTheme } from '../theme/useTheme';
+import ErrorModal from './ErrorModal'; // Import ErrorModal
 
 interface Image {
   name: string;
@@ -22,10 +23,11 @@ const ImagesTab: React.FC = () => {
   const [images, setImages] = useState<Image[]>([]);
   const [ailmentOptions, setAilmentOptions] = useState<AilmentOption[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [selectedImage, setSelectedImage] = useState<Image | null>(null);
   const [showAddImageDiv, setShowAddImageDiv] = useState(false);
   const [searchTerm, setSearchTerm] = useState<string>('');
+  const [showErrorModal, setShowErrorModal] = useState(false); // New state for error modal visibility
+  const [modalErrorMessage, setModalErrorMessage] = useState(''); // New state for error modal message
 
   // Form states for adding image
   const [imageAilment, setImageAilment] = useState('0');
@@ -40,7 +42,7 @@ const ImagesTab: React.FC = () => {
 
   const loadImages = async () => {
     setLoading(true);
-    setError(null);
+    // setError(null); // No longer needed directly for rendering
     try {
       const response = await fetchImagesTable();
       // Handle the new response structure which is wrapped in a "data" property
@@ -54,7 +56,8 @@ const ImagesTab: React.FC = () => {
           console.warn('Unexpected response format for images:', response);
       }
     } catch (err: any) {
-      setError(err.message || 'Failed to fetch images');
+      setModalErrorMessage(err.message || 'Failed to fetch images'); // Set error message for modal
+      setShowErrorModal(true); // Show error modal
     } finally {
       setLoading(false);
     }
@@ -70,7 +73,8 @@ const ImagesTab: React.FC = () => {
         }
     } catch (err: any) {
         console.error("Failed to load ailment options:", err);
-        setError(err.message || "Failed to load ailment options");
+        setModalErrorMessage(err.message || "Failed to load ailment options"); // Set error message for modal
+        setShowErrorModal(true); // Show error modal
     }
   };
 
@@ -86,7 +90,8 @@ const ImagesTab: React.FC = () => {
         loadImages(); // Reload table after deletion
         setSelectedImage(null); // Clear selected image
       } catch (err: any) {
-        setError(err.message || 'Failed to delete image');
+        setModalErrorMessage(err.message || 'Failed to delete image'); // Set error message for modal
+        setShowErrorModal(true); // Show error modal
       }
     }
   };
@@ -142,9 +147,10 @@ const ImagesTab: React.FC = () => {
         alert("Image uploaded successfully!");
         setShowAddImageDiv(false);
         loadImages(); // Reload images table
-    } catch (err: any) {
-      setError(err.message || 'Failed to upload image');
-    }
+      } catch (err: any) {
+        setModalErrorMessage(err.message || 'Failed to upload image'); // Set error message for modal
+        setShowErrorModal(true); // Show error modal
+      }
   };
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -161,7 +167,7 @@ const ImagesTab: React.FC = () => {
 
 
   if (loading) return <div style={{ padding: '20px', color: colors.mutedText }}>Loading Images...</div>;
-  if (error) return <div style={{ padding: '20px', color: colors.danger, backgroundColor: colors.dangerLight, borderRadius: '4px' }}>Error: {error}</div>;
+
 
   return (
     <div style={{ padding: '20px' }}>
@@ -446,9 +452,14 @@ const ImagesTab: React.FC = () => {
           </div>
         )}
       </div>
+      {showErrorModal && (
+        <ErrorModal
+          message={modalErrorMessage}
+          onClose={() => setShowErrorModal(false)}
+        />
+      )}
     </div>
   );
 };
 
 export default ImagesTab;
-

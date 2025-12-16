@@ -19,7 +19,7 @@ declare -a FUNCTIONS=(
     "SendPushNotification"
     "CreateBackup"
     "RestoreDatabase"
-    "GetMbdConditionsTable" # Added new function
+    "GetMbdConditions" # Added new function
     "GetMbdConditions" # Added for fetching single MBD condition
 )
 
@@ -64,7 +64,7 @@ echo "Found ADMIN_API_URL: https://$ADMIN_API_URL"
 # Start creating .env file content
 ENV_CONTENT=""
 ENV_CONTENT+="VITE_ADMIN_API_URL=https://$ADMIN_API_URL\n"
-ENV_CONTENT+="VITE_IMAGE_BASE_URL=https://mbdstoragesa.blob.core.windows.net/mbd-images\n" # Static URL
+ENV_CONTENT+="VITE_IMAGE_BASE_URL=https://mbdstoragesa.blob.core.windows.net/mbdconditionimages\n" # Static URL
 
 # Retrieve the master key for the staging slot
 echo "Retrieving Master Key for staging slot..."

@@ -207,7 +207,7 @@ public class SeedDataService(ProjectRepository projectRepository, TaskRepository
   }
 
   /// <summary>
-  /// Loads conditions from the Azure function API at http://localhost:7071/api/GetMbdConditionsTable
+  /// Loads conditions from the Azure function API at http://localhost:7071/api/GetMbdConditions
   /// </summary>
   private async Task<bool> LoadConditionsFromApiAsync() {
     try
@@ -220,9 +220,9 @@ public class SeedDataService(ProjectRepository projectRepository, TaskRepository
       // Try multiple possible endpoints
       var apiUrls = new[]
       {
-        "https://mbd-admin-api-staging.azurewebsites.net/api/GetMbdConditionsTable?code=QdxCTyJyLD418FuUxNkGK8-ECvMI7oekYqCQIMaIm2f1AzFuFvu1Dw==",
-        "http://127.0.0.1:7071/api/GetMbdConditionsTable",  // Direct localhost
-        "http://localhost:7071/api/GetMbdConditionsTable",  // Named localhost
+        "https://mbd-admin-api-staging.azurewebsites.net/api/GetMbdConditions?code=QdxCTyJyLD418FuUxNkGK8-ECvMI7oekYqCQIMaIm2f1AzFuFvu1Dw==",
+        "http://127.0.0.1:7071/api/GetMbdConditions",  // Direct localhost
+        "http://localhost:7071/api/GetMbdConditions",  // Named localhost
       };
 
 #if DEBUG
@@ -231,7 +231,7 @@ public class SeedDataService(ProjectRepository projectRepository, TaskRepository
       var hostIp = GetLocalIpAddress();
       if (!string.IsNullOrEmpty(hostIp) && hostIp != "127.0.0.1")
       {
-        apiUrls = apiUrls.Prepend($"http://{hostIp}:7071/api/GetMbdConditionsTable").ToArray();
+        apiUrls = [.. apiUrls.Prepend($"http://{hostIp}:7071/api/GetMbdConditions")];
       }
 #endif
 

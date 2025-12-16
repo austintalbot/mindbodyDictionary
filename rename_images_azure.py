@@ -51,7 +51,7 @@ for condition in conditions_data:
 
     expected_negative_image_from_json = condition.get('imageNegative')
     expected_positive_image_from_json = condition.get('imagePositive')
-    
+
     # Handle cases where imageNegative/Positive might be null or need regeneration based on condition_display_name
     if not expected_negative_image_from_json:
         # Construct expected filename from condition_display_name in the app's standard format
@@ -72,7 +72,7 @@ for condition in conditions_data:
     # Find the Azure source file for the negative image
     # Try to match the normalized display name with '1' suffix for negative
     original_azure_negative_filename = azure_searchable_to_original_full_name.get((normalized_display_name_for_search, '1'))
-    
+
     if original_azure_negative_filename:
         if original_azure_negative_filename != expected_negative_image_from_json:
             rename_operations.append((
@@ -85,7 +85,7 @@ for condition in conditions_data:
     # Find the Azure source file for the positive image
     # Try to match the normalized display name with '2' suffix for positive
     original_azure_positive_filename = azure_searchable_to_original_full_name.get((normalized_display_name_for_search, '2'))
-    
+
     if original_azure_positive_filename:
         if original_azure_positive_filename != expected_positive_image_from_json:
             rename_operations.append((

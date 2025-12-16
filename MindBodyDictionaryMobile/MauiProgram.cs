@@ -39,6 +39,7 @@ public static class MauiProgram
     builder.Services.AddSingleton<CategoryRepository>();
     builder.Services.AddSingleton<TagRepository>();
     builder.Services.AddSingleton<MbdConditionRepository>();
+    builder.Services.AddSingleton<UserListRepository>();
     builder.Services.AddSingleton<ImageCacheRepository>();
     builder.Services.AddSingleton<ImageCacheService>();
     builder.Services.AddSingleton<IImageCacheHelper, ImageCacheHelper>();

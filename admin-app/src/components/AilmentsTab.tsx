@@ -8,6 +8,7 @@ import AilmentsSearch from './AilmentsSearch';
 import AilmentsTable from './AilmentsTable';
 import StyledButton from './StyledButton';
 import AilmentModal from './AilmentModal';
+import ErrorModal from './ErrorModal';
 
 // Interface for what Ailment data looks like, extends MbdCondition for additional properties if any
 interface Ailment extends MbdCondition {}
@@ -16,9 +17,10 @@ const AilmentsTab: React.FC = () => {
   const [ailments, setAilments] = useState<Ailment[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [showDetailModal, setShowDetailModal] = useState<boolean>(false);
   const [selectedAilmentForModal, setSelectedAilmentForModal] = useState<Ailment | null>(null);
+  const [showErrorModal, setShowErrorModal] = useState(false); // New state for error modal visibility
+  const [modalErrorMessage, setModalErrorMessage] = useState(''); // New state for error modal message
 
 
   useEffect(() => {
@@ -27,7 +29,7 @@ const AilmentsTab: React.FC = () => {
 
   const loadAilments = async () => {
     setLoading(true);
-    setError(null);
+    // setError(null); // No longer needed directly for rendering
     try {
       const response = await fetchMbdConditions(); // Changed to fetchMbdConditions
       if (response && Array.isArray(response)) {
@@ -37,7 +39,8 @@ const AilmentsTab: React.FC = () => {
         throw new Error('API response data is not an array or is missing.');
       }
     } catch (err) {
-      setError((err as Error).message || 'Failed to fetch ailments');
+      setModalErrorMessage((err as Error).message || 'Failed to fetch ailments'); // Set error message for modal
+      setShowErrorModal(true); // Show error modal
     } finally {
       setLoading(false);
     }
@@ -49,20 +52,21 @@ const AilmentsTab: React.FC = () => {
   };
 
   const selectAilment = async (ailment: Ailment) => {
-    setError(null);
+    // setError(null); // No longer needed directly for rendering
     try {
       const data = await fetchMbdCondition(ailment.id!, ailment.name!);
       setSelectedAilmentForModal(data);
       setShowDetailModal(true);
     } catch (err) {
-      setError((err as Error).message || 'Failed to fetch ailment details');
+      setModalErrorMessage((err as Error).message || 'Failed to fetch ailment details'); // Set error message for modal
+      setShowErrorModal(true); // Show error modal
     }
   };
 
   const handleCloseModal = () => {
     setShowDetailModal(false);
     setSelectedAilmentForModal(null);
-    setError(null);
+    // setError(null); // No longer needed
   };
 
   const addAilment = () => {
@@ -78,7 +82,7 @@ const AilmentsTab: React.FC = () => {
       recommendations: [],
     });
     setShowDetailModal(true);
-    setError(null);
+    // setError(null); // No longer needed
   };
 
   const saveAilment = async () => {
@@ -93,7 +97,8 @@ const AilmentsTab: React.FC = () => {
       loadAilments(); // Reload table after save
       handleCloseModal();
     } catch (err) {
-      setError((err as Error).message || 'Failed to save ailment');
+      setModalErrorMessage((err as Error).message || 'Failed to save ailment'); // Set error message for modal
+      setShowErrorModal(true); // Show error modal
     }
   };
 
@@ -104,7 +109,8 @@ const AilmentsTab: React.FC = () => {
         loadAilments(); // Reload table after deletion
         addAilment(); // Reset form
       } catch (err) {
-        setError((err as Error).message || 'Failed to delete ailment');
+        setModalErrorMessage((err as Error).message || 'Failed to delete ailment'); // Set error message for modal
+        setShowErrorModal(true); // Show error modal
       }
     }
   };
@@ -153,7 +159,7 @@ const AilmentsTab: React.FC = () => {
   const { colors } = useTheme();
 
   if (loading) return <div style={{ padding: '20px', color: colors.mutedText }}>Loading Ailments...</div>;
-  if (error) return <div style={{ padding: '20px', color: colors.danger, backgroundColor: colors.dangerLight, borderRadius: '4px' }}>Error: {error}</div>;
+
 
   return (
     <div>
@@ -184,6 +190,13 @@ const AilmentsTab: React.FC = () => {
         onChange={setSelectedAilmentForModal}
         getImageUrl={getImageUrl}
       />
+
+      {showErrorModal && (
+        <ErrorModal
+          message={modalErrorMessage}
+          onClose={() => setShowErrorModal(false)}
+        />
+      )}
     </div>
   );
 };

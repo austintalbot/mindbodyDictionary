@@ -16,4 +16,3 @@ const defaultValue: ThemeContextType = {
 };
 
 export const ThemeContext = createContext<ThemeContextType>(defaultValue);
-
