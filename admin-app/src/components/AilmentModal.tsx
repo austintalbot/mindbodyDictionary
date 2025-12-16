@@ -22,6 +22,11 @@ const AilmentModal: React.FC<AilmentModalProps> = ({
 }) => {
   const { colors } = useTheme();
   if (!ailment) return null;
+  console.log("Ailment data in modal:", ailment);
+
+  // Log image URLs for debugging
+  console.log("Image URL (negative):", getImageUrl('negative'));
+  console.log("Image URL (positive):", getImageUrl('positive'));
 
   return (
     <div style={{

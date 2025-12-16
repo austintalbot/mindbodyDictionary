@@ -94,28 +94,64 @@ export const fetchMbdConditions = async (): Promise<any> => {
     console.log('Returning MBD Conditions from cache.');
     return mbdConditionsCache;
   }
-  const response = await makeApiRequest<any>(`GetMbdConditions?code=${GET_MBD_CONDITIONS_TABLE_CODE}`);
+  const response = await makeApiRequest<any>(`GetMbdConditions?code=${GET_MBD_CONDITIONS_CODE}`);
   const data = (response as any).data || response; // Handle { data: [...] } or direct array
   mbdConditionsCache = data;
   return data;
 };
 
-export const fetchMbdCondition = async (id: string, name: string): Promise<MbdCondition> => {
-  // Original JS replaced single quote with 'paranthesis' - we need to reverse that for the actual API call
+export const fetchMbdCondition = async (requestedId: string, name: string): Promise<MbdCondition> => {
+  console.log("fetchMbdCondition called with - requestedId:", requestedId, "name:", name);
   const decodedName = name.replace("paranthesis", "'");
-  const response = await makeApiRequest<MbdCondition[]>(`GetMbdConditions?code=${GET_MBD_CONDITIONS_CODE}&id=${id}&name=${encodeURIComponent(decodedName)}`);
 
-  // Assuming the API returns an array, even for a single-item query.
-  // We take the first element if available, otherwise return a default empty MbdCondition object.
-  if (response && Array.isArray(response) && response.length > 0) {
-    return response[0];
-  } else {
-    // Return a default empty MbdCondition object if no matching ailment is found or response is malformed.
-    return {
-      id: '', name: '', subscriptionOnly: false, summaryNegative: '', summaryPositive: '',
-      affirmations: [], physicalConnections: [], searchTags: [], tags: [], recommendations: []
-    };
+  // Attempt 1: Fetch all conditions and perform client-side filtering.
+  // This is for scenarios where GetMbdConditions (plural) is used as primary data source,
+  // but doesn't filter server-side effectively by ID/Name.
+  try {
+    const responseAll = await makeApiRequest<MbdCondition[]>(`GetMbdConditions?code=${GET_MBD_CONDITIONS_CODE}&id=${requestedId}&name=${encodeURIComponent(decodedName)}`);
+    console.log("API response from GetMbdConditions (plural):", responseAll.slice(0, 5)); // Log first few items
+    console.log("All IDs in GetMbdConditions response:", responseAll.map(a => a.id));
+
+    if (responseAll && Array.isArray(responseAll)) {
+      const foundAilmentById = responseAll.find(apiAilment => {
+        console.log(`(Attempt 1 - ID) Comparing requested ID "${requestedId}" with API ailment ID "${apiAilment.id}"`);
+        return apiAilment.id === requestedId;
+      });
+      if (foundAilmentById) {
+        console.log("Client-side foundAilment (by ID) from GetMbdConditions:", foundAilmentById);
+        return foundAilmentById;
+      }
+
+      const foundAilmentByName = responseAll.find(apiAilment => {
+        console.log(`(Attempt 1 - Name) Comparing requested NAME "${name}" with API ailment NAME "${apiAilment.name}"`);
+        return apiAilment.name === name;
+      });
+      if (foundAilmentByName) {
+        console.log("Client-side foundAilment (by Name) from GetMbdConditions:", foundAilmentByName);
+        return foundAilmentByName;
+      }
+    }
+  } catch (error) {
+    console.warn("Client-side filtering from GetMbdConditions failed:", error);
   }
+
+  // Attempt 2: If client-side filtering fails, leverage the singular GetMbdCondition endpoint.
+  // This assumes AILMENT_CODE corresponds to a specific GetMbdCondition endpoint.
+  try {
+    console.log("Attempt 2: Falling back to singular GetMbdCondition endpoint for ID:", requestedId);
+    // Note: The `name` parameter is typically not needed for a singular endpoint by ID.
+    const singularAilment = await makeApiRequest<MbdCondition>(`GetMbdCondition?code=${GET_MBD_CONDITION_CODE}&id=${requestedId}`);
+    console.log("Response from singular GetMbdCondition:", singularAilment);
+    return singularAilment;
+  } catch (error) {
+    console.warn("Fallback to singular GetMbdCondition endpoint failed:", error);
+  }
+
+  // If both attempts fail, return a default empty MbdCondition object.
+  return {
+    id: '', name: '', subscriptionOnly: false, summaryNegative: '', summaryPositive: '',
+    affirmations: [], physicalConnections: [], searchTags: [], tags: [], recommendations: []
+  };
 };
 
 export const upsertAilment = async (ailment: MbdCondition): Promise<MbdCondition> => {

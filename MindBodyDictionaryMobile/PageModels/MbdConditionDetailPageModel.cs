@@ -386,39 +386,26 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
   private async Task LoadData(string id) {
 
     try
-
     {
-
-      IsBusy = true;
-
-
+     IsBusy = true;
 
       Condition = await _mbdConditionRepository.GetAsync(id);
-
-
-
-      if (Condition.IsNullOrNew())
-
+      _logger.LogInformation($"LoadData: Condition retrieved from repository. IsNull: {Condition == null}");
+      if (Condition != null)
       {
-
+          _logger.LogInformation($"LoadData: Retrieved Condition Id: {Condition.Id}, Name: {Condition.Name}");
+      }
+      if (Condition.IsNullOrNew())
+      {
         _errorHandler.HandleError(new Exception($"Condition with id {id} could not be found."));
-
         return;
-
       }
 
-
-
       Name = Condition.Name ?? string.Empty;
-
       Description = Condition.Description ?? string.Empty;
-
       Tasks = Condition.Tasks;
-
       SummaryNegative = Condition.SummaryNegative ?? string.Empty;
-
       SummaryPositive = Condition.SummaryPositive ?? string.Empty;
-
       // Check subscription
       bool isSubscribed = false;
       try
