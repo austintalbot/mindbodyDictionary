@@ -5,6 +5,7 @@ import { MbdCondition } from '../types';
 import { getImageBaseUrl } from '../constants'; // Import directly from constants
 import { useTheme } from '../theme/useTheme';
 import ErrorModal from './ErrorModal'; // Import ErrorModal
+import ImageActionModal from './ImageActionModal'; // Import ImageActionModal
 
 interface Image {
   name: string;
@@ -28,6 +29,8 @@ const ImagesTab: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [showErrorModal, setShowErrorModal] = useState(false); // New state for error modal visibility
   const [modalErrorMessage, setModalErrorMessage] = useState(''); // New state for error modal message
+  const [showImageActionModal, setShowImageActionModal] = useState(false); // New state for image action modal visibility
+  const [selectedImageForAction, setSelectedImageForAction] = useState<Image | null>(null); // New state for image passed to action modal
 
   // Form states for adding image
   const [imageAilment, setImageAilment] = useState('0');
@@ -79,7 +82,8 @@ const ImagesTab: React.FC = () => {
   };
 
   const selectImage = (image: Image) => {
-    setSelectedImage(image);
+    setSelectedImageForAction(image);
+    setShowImageActionModal(true);
     setShowAddImageDiv(false); // Hide add image form when selecting an image
   };
 
@@ -88,13 +92,15 @@ const ImagesTab: React.FC = () => {
       try {
         await deleteImage(imageName);
         loadImages(); // Reload table after deletion
-        setSelectedImage(null); // Clear selected image
+        // No longer need setSelectedImage(null) as inline image display is removed
       } catch (err: any) {
-        setModalErrorMessage(err.message || 'Failed to delete image'); // Set error message for modal
-        setShowErrorModal(true); // Show error modal
+        setModalErrorMessage(err.message || 'Failed to delete image');
+        setShowErrorModal(true);
       }
     }
   };
+
+
 
   const addImage = () => {
     setSelectedImage(null); // Clear selected image when adding new
@@ -218,6 +224,9 @@ const ImagesTab: React.FC = () => {
                 }}
             />
         </div>
+        <div style={{ marginBottom: '15px', fontSize: '14px', color: colors.mutedText }}>
+            Total Images: {filteredImages.length}
+        </div>
 
         <div style={{ overflowX: 'auto', marginBottom: '20px' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px' }}>
@@ -295,6 +304,7 @@ const ImagesTab: React.FC = () => {
                       Delete
                     </button>
                   </td>
+
                 </tr>
               ))}
             </tbody>
@@ -321,25 +331,7 @@ const ImagesTab: React.FC = () => {
           + Add New Image
         </button>
 
-        {selectedImage && (
-          <div style={{
-            textAlign: 'center',
-            marginBottom: '20px',
-            padding: '20px',
-            backgroundColor: colors.backgroundSecondary,
-            borderRadius: '8px',
-            border: `1px solid ${colors.border}`
-          }}>
-            <div style={{ fontSize: '16px', fontWeight: '600', marginBottom: '12px', color: colors.foreground }}>
-              {selectedImage.name}
-            </div>
-            <img
-              style={{ maxWidth: '200px', borderRadius: '4px', border: `1px solid ${colors.border}` }}
-              src={getImageBaseUrl() + '/' + selectedImage.name}
-              alt={selectedImage.name}
-            />
-          </div>
-        )}
+
 
         {showAddImageDiv && (
           <div style={{
@@ -452,6 +444,26 @@ const ImagesTab: React.FC = () => {
           </div>
         )}
       </div>
+      {showImageActionModal && selectedImageForAction && (
+        <ImageActionModal
+          isOpen={showImageActionModal}
+          onClose={() => {
+            setShowImageActionModal(false);
+            setSelectedImageForAction(null); // Clear selected image
+          }}
+          image={selectedImageForAction}
+          onImageDeleted={() => {
+            setShowImageActionModal(false);
+            setSelectedImageForAction(null); // Clear selected image
+            loadImages(); // Reload table after deletion
+          }}
+          onImageUploaded={() => {
+            setShowImageActionModal(false);
+            setSelectedImageForAction(null); // Clear selected image
+            loadImages(); // Reload table after upload
+          }}
+        />
+      )}
       {showErrorModal && (
         <ErrorModal
           message={modalErrorMessage}

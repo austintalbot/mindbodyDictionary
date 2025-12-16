@@ -143,7 +143,8 @@ export const fetchImagesTable = async (): Promise<any[]> => {
 
 export const deleteImage = async (imageName: string): Promise<void> => {
   clearImagesCache(); // Clear cache on data modification
-  return makeApiRequest<void>(`DeleteImage?code=${DELETE_IMAGE_CODE}&name=${encodeURIComponent(imageName)}`, 'POST');
+  const url = `deletembdimage?code=${DELETE_IMAGE_CODE}&name=${encodeURIComponent(imageName)}`;
+  return makeApiRequest<void>(url, 'POST');
 };
 
 export const uploadImage = async (ailmentName: string, imageType: string, file: File): Promise<any> => {
