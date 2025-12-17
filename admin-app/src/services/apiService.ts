@@ -214,6 +214,7 @@ export interface NotificationPayload {
   Body: string;
   SubscribersOnly: string;
   AilmentId: string;
+  DeepLink: string;
 }
 
 export const sendPushNotification = async (notification: NotificationPayload): Promise<void> => {

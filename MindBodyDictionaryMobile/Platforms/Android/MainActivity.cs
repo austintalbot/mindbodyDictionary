@@ -23,6 +23,51 @@ public class MainActivity : MauiAppCompatActivity
     CreateNotificationChannel();
     RequestNotificationPermission();
     RequestFirebaseToken();
+
+    // Handle deep link when app is launched from a notification
+    HandleIntent(Intent);
+  }
+
+  protected override void OnNewIntent(Android.Content.Intent? intent)
+  {
+      base.OnNewIntent(intent);
+      // Handle deep link when app is already running and a new notification arrives
+      HandleIntent(intent);
+  }
+
+  private void HandleIntent(Android.Content.Intent? intent)
+  {
+      if (intent == null)
+      {
+          Android.Util.Log.Warn("DeepLink", "⚠️ HandleIntent called with null intent.");
+          return;
+      }
+
+      if (intent.HasExtra("deep_link"))
+      {
+          var deepLink = intent.GetStringExtra("deep_link");
+          if (!string.IsNullOrEmpty(deepLink))
+          {
+              Android.Util.Log.Info("DeepLink", $"✅ Deep link received: {deepLink}");
+              // Use MainThread.BeginInvokeOnMainThread to ensure UI operations are on the main thread
+              MainThread.BeginInvokeOnMainThread(async () =>
+              {
+                  // Navigate to the specified deep link route
+                  // Assuming the deep links are structured as Shell routes (e.g., //ailments/some-id)
+                  // You might need to adjust the format or add logic to map deep links to actual Shell routes
+                  await Shell.Current.GoToAsync($"//{deepLink}");
+                  Android.Util.Log.Info("DeepLink", $"Navigated to: //{deepLink}");
+              });
+          }
+          else
+          {
+              Android.Util.Log.Warn("DeepLink", "⚠️ Deep link extra found but value is empty.");
+          }
+      }
+      else
+      {
+          Android.Util.Log.Info("DeepLink", "No deep link extra found in intent.");
+      }
   }
 
   void CreateNotificationChannel() {
