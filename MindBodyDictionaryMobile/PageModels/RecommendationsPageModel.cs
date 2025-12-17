@@ -70,9 +70,9 @@ namespace MindBodyDictionaryMobile.PageModels
         _logger.LogInformation($"Recommendation: {rec.Name}, Type: {rec.RecommendationType}");
       }
 
-      var foods = Condition.Recommendations.Where(r => r.RecommendationType == RecommendationType.Food).ToList();
-      var products = Condition.Recommendations.Where(r => r.RecommendationType == RecommendationType.Product).ToList();
-      var resources = Condition.Recommendations.Where(r => r.RecommendationType == RecommendationType.Book).ToList();
+      var foods = Condition.Recommendations.Where(r => r.RecommendationType == (int)RecommendationType.Food).ToList();
+      var products = Condition.Recommendations.Where(r => r.RecommendationType == (int)RecommendationType.Product).ToList();
+      var resources = Condition.Recommendations.Where(r => r.RecommendationType == (int)RecommendationType.Book).ToList();
 
 
       // Put all recommendations in Foods to test rendering

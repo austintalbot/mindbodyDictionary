@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging; // Add this for logging
 using Microsoft.Maui.Accessibility;
 using Microsoft.Maui.Controls;
 using MindBodyDictionaryMobile.Enums; // Add this using statement
-using MindBodyDictionaryMobile.Models;
+using Microsoft.Maui.ApplicationModel; // For Launcher
 using MindBodyDictionaryMobile.Services.billing;
 
 public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttributable, IProjectTaskPageModel
@@ -37,13 +37,10 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
   private readonly ImageCacheService _imageCacheService; // Assign injected service
 
   private readonly IBillingService _billingService;
-
+  private readonly IServiceProvider _serviceProvider;
   // Injected Views
   private readonly MbdConditionDetailsProblemView _problemView;
   private readonly MbdConditionDetailsAffirmationsView _affirmationsView;
-  private readonly MbdConditionDetailsRecommendationsView _recommendationsView;
-
-  private readonly RecommendationsPageModel _recommendationsPageModel;
 
   [ObservableProperty]
 
@@ -152,6 +149,21 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
   [ObservableProperty]
   private List<Recommendation> _booksResourcesList = [];
 
+  [ObservableProperty]
+  private int _foodCount = 0;
+
+  [ObservableProperty]
+  private int _productCount = 0;
+
+  [ObservableProperty]
+  private int _booksResourcesCount = 0;
+
+  [ObservableProperty]
+  private string _selectedInnerTab = "Foods"; // Inner tab for recommendations
+
+  [ObservableProperty]
+  private ContentView _currentInnerView; // Holds the inner view for recommendations
+
   private bool _canDelete;
 
 
@@ -203,10 +215,9 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
       ILogger<MbdConditionDetailPageModel> logger,
       ImageCacheService imageCacheService,
       IBillingService billingService,
+      IServiceProvider serviceProvider,
       MbdConditionDetailsProblemView problemView,
-      MbdConditionDetailsAffirmationsView affirmationsView,
-      MbdConditionDetailsRecommendationsView recommendationsView,
-      RecommendationsPageModel recommendationsPageModel) {
+      MbdConditionDetailsAffirmationsView affirmationsView) {
 
     _mbdConditionRepository = mbdConditionRepository;
 
@@ -224,10 +235,10 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
 
     _billingService = billingService;
 
+    _serviceProvider = serviceProvider;
+
     _problemView = problemView;
     _affirmationsView = affirmationsView;
-    _recommendationsView = recommendationsView;
-    _recommendationsPageModel = recommendationsPageModel;
 
     _icon = _icons.First();
 
@@ -301,32 +312,122 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
         CurrentView = _affirmationsView;
 
                   CurrentView.BindingContext = this;
-        
+
                 break;
-        
+
       case "Recommendations":
-
-        CurrentView = _recommendationsView;
-
-        CurrentView.BindingContext = _recommendationsPageModel; // MbdConditionDetailsRecommendationsView has its own ViewModel
-
-        if (Condition != null)
-
-        {
-
-          _recommendationsPageModel.MbdCondition = Condition; // Pass the condition to the inner ViewModel
-
-          _recommendationsPageModel.InitializeTabs(); // Initialize tabs and load data
-
-        }
-
+        PopulateRecommendationLists();
+        InitializeInnerTabs();
         break;
     }
 
   }
 
+  partial void OnConditionChanged(MbdCondition value) {
+    PopulateRecommendationLists();
+  }
+
+    private void PopulateRecommendationLists() {
+      if (Condition?.Recommendations == null)
+      {
+        FoodList = [];
+        ProductList = [];
+        BooksResourcesList = [];
+        FoodCount = 0;
+        ProductCount = 0;
+        BooksResourcesCount = 0;
+        _logger.LogWarning("Condition or Recommendations is null");
+        return;
+      }
+  
+      FoodList = Condition.Recommendations
+                      .Where(r => r.RecommendationType == (int)RecommendationType.Food)
+                      .ToList();
+      ProductList = Condition.Recommendations
+                      .Where(r => r.RecommendationType == (int)RecommendationType.Product)
+                      .ToList();
+      BooksResourcesList = Condition.Recommendations
+                      .Where(r => r.RecommendationType == (int)RecommendationType.Book)
+                      .ToList();
+  
+      FoodCount = FoodList.Count;
+      ProductCount = ProductList.Count;
+      BooksResourcesCount = BooksResourcesList.Count;
+      
+      _logger.LogInformation($"Counts - Foods: {FoodCount}, Products: {ProductCount}, Resources: {BooksResourcesCount}");
+    }
+  private void InitializeInnerTabs() {
+    if (Condition == null)
+    {
+      _logger.LogWarning("Condition is null when initializing inner tabs");
+      return;
+    }
+
+    SelectedInnerTab = "Foods";
+    SelectInnerTabCommand.Execute("Foods");
+  }
+
+  [RelayCommand]
+  private void SelectInnerTab(string tabName) {
+    SelectedInnerTab = tabName;
+
+    switch (tabName)
+    {
+      case "Foods":
+        CurrentInnerView = _serviceProvider.GetRequiredService<MbdConditionDetailsFoodView>();
+        break;
+      case "Products":
+        CurrentInnerView = _serviceProvider.GetRequiredService<MbdConditionDetailsProductsView>();
+        break;
+      case "Resources":
+        CurrentInnerView = _serviceProvider.GetRequiredService<MbdConditionDetailsResourcesView>();
+        break;
+    }
+
+    if (CurrentInnerView != null)
+    {
+      CurrentInnerView.BindingContext = this;
+    }
+  }
 
 
+    [RelayCommand]
+    private async Task ProductClicked(Recommendation recommendation) {
+      if (!string.IsNullOrEmpty(recommendation.Url))
+      {
+        try
+        {
+          await Launcher.OpenAsync(recommendation.Url);
+        }
+        catch (Exception ex)
+        {
+          _logger.LogError(ex, "Failed to open product URL: {Url}", recommendation.Url);
+          _errorHandler.HandleError(new Exception("Could not open product link."));
+        }
+      }
+    }
+
+    [RelayCommand]
+    private async Task ResourceClicked(Recommendation recommendation) {
+      if (!string.IsNullOrEmpty(recommendation.Url))
+      {
+        try
+        {
+          await Launcher.OpenAsync(recommendation.Url);
+        }
+        catch (Exception ex)
+        {
+          _logger.LogError(ex, "Failed to open resource URL: {Url}", recommendation.Url);
+          _errorHandler.HandleError(new Exception("Could not open resource link."));
+        }
+      }
+    }
+
+    [RelayCommand]
+    private async Task AddToMyList(Recommendation recommendation) {
+      // This will eventually add the item to a persistent list, but for now, just show a message.
+      await AppShell.DisplayToastAsync($"Adding '{recommendation.Name}' to your list!");
+    }
 
 
   private async Task LoadCategories() =>
@@ -414,16 +515,24 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
       Condition.DisplayLock = Condition.SubscriptionOnly && !isSubscribed;
 
       // Load Images from properties
+      _logger.LogInformation($"Loading images for condition: {Condition.Name}");
+      _logger.LogInformation($"ImageNegative: {Condition.ImageNegative ?? "null"}");
+      _logger.LogInformation($"ImagePositive: {Condition.ImagePositive ?? "null"}");
 
       if (!string.IsNullOrEmpty(Condition.ImageNegative))
-
-        Condition.CachedImageOneSource = await _imageCacheService.GetImageAsync(Condition.ImageNegative);
-
+      {
+        var cachedImageOne = await _imageCacheService.GetImageAsync(Condition.ImageNegative);
+        Condition.CachedImageOneSource = cachedImageOne;
+        _logger.LogInformation($"CachedImageOneSource result: {(cachedImageOne == null ? "null" : "ImageSource loaded")}");
+      }
 
 
       if (!string.IsNullOrEmpty(Condition.ImagePositive))
-
-        Condition.CachedImageTwoSource = await _imageCacheService.GetImageAsync(Condition.ImagePositive);
+      {
+        var cachedImageTwo = await _imageCacheService.GetImageAsync(Condition.ImagePositive);
+        Condition.CachedImageTwoSource = cachedImageTwo;
+        _logger.LogInformation($"CachedImageTwoSource result: {(cachedImageTwo == null ? "null" : "ImageSource loaded")}");
+      }
 
 
 

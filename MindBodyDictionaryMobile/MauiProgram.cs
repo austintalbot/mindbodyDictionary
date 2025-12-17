@@ -100,13 +100,9 @@ public static class MauiProgram
     // Register Sub-Views for Condition Details
     builder.Services.AddTransient<MbdConditionDetailsProblemView>();
     builder.Services.AddTransient<MbdConditionDetailsAffirmationsView>();
-    builder.Services.AddTransient<MbdConditionDetailsRecommendationsView>();
     builder.Services.AddTransient<MbdConditionDetailsFoodView>();
     builder.Services.AddTransient<MbdConditionDetailsProductsView>();
     builder.Services.AddTransient<MbdConditionDetailsResourcesView>();
-
-    // Register PageModels for Sub-Views
-    builder.Services.AddTransient<RecommendationsPageModel>();
 
     var app = builder.Build();
     var logger = app.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Startup");
