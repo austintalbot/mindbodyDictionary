@@ -1,30 +1,48 @@
-﻿<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <ContentPage
     x:Class="MindBodyDictionaryMobile.Pages.FaqPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:models="clr-namespace:MindBodyDictionaryMobile.Models"
     xmlns:pm="clr-namespace:MindBodyDictionaryMobile.PageModels"
     Title="FAQ"
     x:DataType="pm:FaqPageModel">
 
-    <CollectionView
-        AutomationId="FaqCollectionView"
-        ItemsSource="{Binding FaqItems}"
-        SelectionMode="Single">
-        <CollectionView.ItemTemplate>
-            <DataTemplate x:DataType="pm:FaqItem">
-                <VerticalStackLayout Style="{StaticResource FaqItemVerticalStackLayout}">
-                    <Frame Style="{StaticResource FaqItemFrameStyle}">
-                        <VerticalStackLayout Style="{StaticResource FaqItemContentVerticalStackLayout}">
-                            <!--  Question Header  -->
-                            <Label Style="{StaticResource FaqQuestionLabelStyle}" Text="{Binding Question}" />
-
-                            <!--  Answer (Expandable)  -->
-                            <Label Style="{StaticResource FaqAnswerLabelStyle}" Text="{Binding Answer}" />
-                        </VerticalStackLayout>
-                    </Frame>
+    <Grid>
+        <CollectionView
+            AutomationId="FaqCollectionView"
+            ItemsSource="{Binding FaqItems}"
+            SelectionMode="Single">
+            
+            <CollectionView.Header>
+                <VerticalStackLayout Padding="0,20,0,20">
+                    <Image Style="{StaticResource AppLogoImage}" />
                 </VerticalStackLayout>
-            </DataTemplate>
-        </CollectionView.ItemTemplate>
-    </CollectionView>
+            </CollectionView.Header>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:FaqItem">
+                    <VerticalStackLayout Style="{StaticResource FaqItemVerticalStackLayout}">
+                        <Frame Style="{StaticResource FaqItemFrameStyle}">
+                            <VerticalStackLayout Style="{StaticResource FaqItemContentVerticalStackLayout}">
+                                <!--  Question Header  -->
+                                <Label Style="{StaticResource FaqQuestionLabelStyle}" Text="{Binding Question}" />
+
+                                <!--  Short Answer  -->
+                                <Label Style="{StaticResource FaqAnswerLabelStyle}" Text="{Binding ShortAnswer}" FontAttributes="Bold" Margin="0,5,0,0"/>
+
+                                <!--  Answer (Expandable)  -->
+                                <Label Style="{StaticResource FaqAnswerLabelStyle}" Text="{Binding Answer}" Margin="0,5,0,0" />
+                            </VerticalStackLayout>
+                        </Frame>
+                    </VerticalStackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <ActivityIndicator IsRunning="{Binding IsBusy}" 
+                           IsVisible="{Binding IsBusy}" 
+                           HorizontalOptions="Center" 
+                           VerticalOptions="Center" />
+    </Grid>
 </ContentPage>
