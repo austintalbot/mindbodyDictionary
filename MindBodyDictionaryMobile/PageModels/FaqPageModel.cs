@@ -1,6 +1,7 @@
 namespace MindBodyDictionaryMobile.PageModels;
 
 using System.Collections.ObjectModel;
+using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.Logging;
 using MindBodyDictionaryMobile.Models;
@@ -39,13 +40,16 @@ public partial class FaqPageModel : ObservableObject
       {
         var faqs = await _faqApiService.GetFaqsAsync();
         _logger.LogInformation($"Fetched {faqs.Count} FAQs.");
+        
+        var sortedFaqs = faqs.OrderBy(f => f.Order ?? int.MaxValue).ToList();
+
         MainThread.BeginInvokeOnMainThread(() => {
           FaqItems.Clear();
-          foreach (var faq in faqs)
+          foreach (var faq in sortedFaqs)
           {
             FaqItems.Add(faq);
           }
-          _logger.LogInformation("FaqItems collection updated.");
+          _logger.LogInformation("FaqItems collection updated and sorted.");
         });
       }
       catch (Exception ex)

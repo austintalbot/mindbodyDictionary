@@ -52,7 +52,7 @@
                 Text="Send Feedback" />
 
             <!--  Copyright  -->
-            <Label Style="{StaticResource AboutPageCopyrightLabel}" Text="© 2025 Mind Body Dictionary, LLC. All rights reserved." />
+            <Label Style="{StaticResource AboutPageCopyrightLabel}" Text="© 2025 mbd, LLC. All rights reserved." />
 
         </VerticalStackLayout>
     </ScrollView>

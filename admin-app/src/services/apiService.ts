@@ -17,7 +17,7 @@ import {
   UPDATE_FAQS_ORDER_CODE,
   COSMOS_DB_CONTAINER_NAME,
 } from '../constants';
-import { MbdCondition, Faq } from '../types'; // Import from barrel file
+import { MbdCondition, Faq, MbdMovementLink } from '../types'; // Import from barrel file
 
 // In-memory caches
 let mbdConditionsCache: any[] | null = null;
@@ -247,4 +247,22 @@ export const deleteFaq = async (id: string): Promise<void> => {
 
 export const updateFaqsOrder = async (faqs: Faq[]): Promise<void> => {
   return makeApiRequest<void>(`UpdateFaqsOrder?code=${UPDATE_FAQS_ORDER_CODE}`, 'POST', faqs);
+};
+
+// --- Movement Link API Calls ---
+export const fetchMovementLinks = async (): Promise<MbdMovementLink[]> => {
+  const response = await makeApiRequest<any>(`GetMbdMovementLinks`);
+  return (response as any).data || response;
+};
+
+export const upsertMovementLink = async (link: MbdMovementLink): Promise<MbdMovementLink> => {
+  return makeApiRequest<MbdMovementLink>(`UpsertMbdMovementLink`, 'POST', link);
+};
+
+export const deleteMovementLink = async (id: string): Promise<void> => {
+  return makeApiRequest<void>(`DeleteMbdMovementLink?id=${id}`, 'POST');
+};
+
+export const updateMovementLinksOrder = async (links: MbdMovementLink[]): Promise<void> => {
+  return makeApiRequest<void>(`UpdateMbdMovementLinksOrder`, 'POST', links);
 };

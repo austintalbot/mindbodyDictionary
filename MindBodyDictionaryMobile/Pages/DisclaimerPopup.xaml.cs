@@ -16,6 +16,14 @@ public partial class DisclaimerPopup : Popup
     InitializeComponent();
     _logger = logger; // Assign logger
     this.CanBeDismissedByTappingOutsideOfPopup = false; // Prevent dismissal by tapping outside
+    
+    // Force full screen by setting RootGrid size
+    var displayInfo = DeviceDisplay.MainDisplayInfo;
+    var width = displayInfo.Width / displayInfo.Density;
+    var height = displayInfo.Height / displayInfo.Density;
+    
+    RootGrid.WidthRequest = width;
+    RootGrid.HeightRequest = height;
   }
 
   private async void OnYesButtonClicked(object? sender, EventArgs e) {

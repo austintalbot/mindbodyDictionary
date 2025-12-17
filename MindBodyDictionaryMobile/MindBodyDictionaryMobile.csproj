@@ -23,7 +23,7 @@
 		<RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
 
 		<!-- Display name -->
-		<ApplicationTitle>MindBodyDictionaryMobile</ApplicationTitle>
+		<ApplicationTitle>mbd</ApplicationTitle>
 
 		<!-- App Identifier -->
 		<ApplicationId>com.mbd.mindbodydictionarymobile</ApplicationId>

@@ -4,6 +4,10 @@ using CommunityToolkit.Maui;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using MindBodyDictionaryMobile.Services.billing;
+using MindBodyDictionaryMobile.Services;
+using MindBodyDictionaryMobile.Models;
+using MindBodyDictionaryMobile.PageModels;
+using MindBodyDictionaryMobile.Pages;
 using Syncfusion.Maui.Core.Hosting;
 using Syncfusion.Maui.Toolkit.Hosting;
 
@@ -34,6 +38,7 @@ public static class MauiProgram
     builder.Services.AddLogging(configure => configure.AddDebug());
 #endif
 
+    builder.Services.AddSingleton<AppShell>();
     builder.Services.AddSingleton<ProjectRepository>();
     builder.Services.AddSingleton<TaskRepository>();
     builder.Services.AddSingleton<CategoryRepository>();
@@ -82,6 +87,10 @@ public static class MauiProgram
     builder.Services.AddSingleton<FaqApiService>();
     builder.Services.AddSingleton<FaqPageModel>();
     builder.Services.AddSingleton<FaqPage>();
+
+    builder.Services.AddSingleton<MovementLinkApiService>();
+    builder.Services.AddSingleton<MovementLinksPageModel>();
+    builder.Services.AddSingleton<MovementLinksPage>();
 
     builder.Services.AddTransientWithShellRoute<ProjectDetailPage, ProjectDetailPageModel>("project");
     builder.Services.AddTransientWithShellRoute<TaskDetailPage, TaskDetailPageModel>("task");

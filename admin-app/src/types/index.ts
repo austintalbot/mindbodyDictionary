@@ -26,6 +26,13 @@ export interface Faq {
   order?: number;
 }
 
+export interface MbdMovementLink {
+  id?: string;
+  title: string;
+  url: string;
+  order?: number;
+}
+
 export interface MbdCondition {
   id?: string;
   name?: string;

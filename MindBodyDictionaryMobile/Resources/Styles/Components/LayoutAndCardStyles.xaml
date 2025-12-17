@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <?xaml-comp compile="true" ?>
 <ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
@@ -104,8 +104,7 @@
     <Style x:Key="DisclaimerPopupVerticalStackLayout" TargetType="VerticalStackLayout">
         <Setter Property="VerticalOptions" Value="Fill" />
         <Setter Property="HorizontalOptions" Value="Fill" />
-        <Setter Property="WidthRequest" Value="300" />
-        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource LightOnLightBackground}, Dark={StaticResource DarkSecondaryBackground}}" />
+        <Setter Property="BackgroundColor" Value="Transparent" />
     </Style>
 
     <!--  New ProjectCardTagsLayout Style  -->

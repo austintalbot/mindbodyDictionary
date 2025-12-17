@@ -2,12 +2,21 @@ namespace MindBodyDictionaryMobile;
 
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
+using CommunityToolkit.Maui.Extensions;
+using CommunityToolkit.Maui.Views;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.DependencyInjection;
 using Font = Microsoft.Maui.Font;
 
 public partial class AppShell : Shell
 {
-  public AppShell() {
+  private readonly IServiceProvider _serviceProvider;
+
+  public AppShell(IServiceProvider serviceProvider) {
+    _serviceProvider = serviceProvider;
     InitializeComponent();
+    BindingContext = this;
     var currentTheme = Application.Current!.RequestedTheme;
     ThemeSegmentedControl.SelectedIndex = currentTheme == AppTheme.Light ? 0 : 1;
 
@@ -19,6 +28,33 @@ public partial class AppShell : Shell
 		}
 #endif
   }
+
+  [RelayCommand]
+  private async Task ShowDisclaimer() {
+    var disclaimerPopup = _serviceProvider.GetRequiredService<MindBodyDictionaryMobile.Pages.DisclaimerPopup>();
+    await this.ShowPopupAsync(disclaimerPopup);
+  }
+
+  private async void OnMenuItemClicked(object sender, EventArgs e) {
+    if (sender is MenuItem menuItem && menuItem.CommandParameter is string url)
+    {
+      await OpenUrl(url);
+    }
+  }
+
+  [RelayCommand]
+  private async Task OpenUrl(string url) {
+    if (string.IsNullOrEmpty(url)) return;
+    try
+    {
+      await Launcher.Default.OpenAsync(new Uri(url));
+    }
+    catch (Exception ex)
+    {
+      await DisplayAlert("Error", $"Could not open link: {ex.Message}", "OK");
+    }
+  }
+
   public static async Task DisplaySnackbarAsync(string message) {
     CancellationTokenSource cancellationTokenSource = new();
 

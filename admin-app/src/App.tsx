@@ -8,6 +8,7 @@ import ContactsTab from './components/ContactsTab';
 import NotificationsTab from './components/NotificationsTab';
 import DatabaseTab from './components/DatabaseTab';
 import FaqsTab from './components/FaqsTab';
+import MovementLinksTab from './components/MovementLinksTab';
 import ThemeToggle from './components/ThemeToggle';
 
 function AppContent() {
@@ -26,6 +27,8 @@ function AppContent() {
         return <NotificationsTab />;
       case 'faqs':
         return <FaqsTab />;
+      case 'links':
+        return <MovementLinksTab />;
       case 'database':
         return <DatabaseTab />;
       default:
@@ -53,7 +56,7 @@ function AppContent() {
       {/* Navigation */}
       <div style={{ backgroundColor: colors.background, borderBottom: `1px solid ${colors.border}`, padding: '0 20px' }}>
         <div style={{ maxWidth: '1400px', margin: '0 auto', display: 'flex', gap: '2px' }}>
-          {['conditions', 'images', 'contacts', 'notifications', 'faqs', 'database'].map((tab) => (
+          {['conditions', 'images', 'contacts', 'notifications', 'faqs', 'links', 'database'].map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
