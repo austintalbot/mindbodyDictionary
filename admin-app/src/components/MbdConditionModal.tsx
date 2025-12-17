@@ -11,6 +11,8 @@ interface MbdConditionModalProps {
   onSave: () => void;
   onChange: (mbdCondition: MbdCondition) => void;
   getImageUrl: (type: 'negative' | 'positive') => string;
+  mbdConditionOptions?: { id?: string; name?: string }[];
+  onImageUpdate?: () => void;
 }
 
 const MbdConditionModal: React.FC<MbdConditionModalProps> = ({
@@ -20,18 +22,21 @@ const MbdConditionModal: React.FC<MbdConditionModalProps> = ({
   onSave,
   onChange,
   getImageUrl,
+  mbdConditionOptions = [],
+  onImageUpdate,
 }) => {
   const { colors } = useTheme();
   const [showImageActionModal, setShowImageActionModal] = React.useState(false);
   const [selectedImageForAction, setSelectedImageForAction] = React.useState<Image | null>(null);
 
   if (!mbdCondition) return null;
-  console.log("Condition data in modal:", mbdCondition);
+  // console.log("Condition data in modal:", mbdCondition);
 
   const handleImageClick = (imageName: string | undefined) => {
     if (!imageName) return;
     const imageObj: Image = {
       name: imageName,
+      mbdCondition: mbdCondition.name // Associate with current condition name
     };
     setSelectedImageForAction(imageObj);
     setShowImageActionModal(true);
@@ -772,15 +777,16 @@ const MbdConditionModal: React.FC<MbdConditionModalProps> = ({
             setSelectedImageForAction(null);
           }}
           image={selectedImageForAction}
+          mbdConditionOptions={mbdConditionOptions}
           onImageDeleted={() => {
             setShowImageActionModal(false);
             setSelectedImageForAction(null);
-            // Optionally refresh ailment or notify parent
+            if (onImageUpdate) onImageUpdate();
           }}
           onImageUploaded={() => {
             setShowImageActionModal(false);
             setSelectedImageForAction(null);
-            // Optionally refresh ailment or notify parent
+            if (onImageUpdate) onImageUpdate();
           }}
         />
       )}

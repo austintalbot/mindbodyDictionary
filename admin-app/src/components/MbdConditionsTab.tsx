@@ -94,6 +94,18 @@ const MbdConditionsTab: React.FC = () => {
     }
   };
 
+  const refreshCurrentCondition = async () => {
+    if (selectedMbdConditionForModal && selectedMbdConditionForModal.id && selectedMbdConditionForModal.name) {
+      try {
+        const data = await fetchMbdCondition(selectedMbdConditionForModal.id, selectedMbdConditionForModal.name);
+        setSelectedMbdConditionForModal(data);
+        loadMbdConditions();
+      } catch (err) {
+        console.error("Failed to refresh condition:", err);
+      }
+    }
+  };
+
   const deleteMbdConditionConfirm = async (id: string, name: string) => {
     if (window.confirm(`Are you sure you want to delete ${name}?`)) {
       try {
@@ -240,6 +252,8 @@ const MbdConditionsTab: React.FC = () => {
         onSave={saveMbdCondition}
         onChange={setSelectedMbdConditionForModal}
         getImageUrl={getImageUrl}
+        mbdConditionOptions={mbdConditions.map(c => ({ id: c.id, name: c.name }))}
+        onImageUpdate={refreshCurrentCondition}
       />
 
       {showErrorModal && (
