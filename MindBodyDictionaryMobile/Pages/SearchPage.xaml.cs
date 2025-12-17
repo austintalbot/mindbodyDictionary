@@ -55,4 +55,24 @@ public partial class SearchPage : ContentPage
       _logger.LogError(err, "Error in ConditionSearchBar_TextChanged"); // Replace Logger.Error
     }
   }
+
+  private async void OnConditionTapped(object? sender, TappedEventArgs e) {
+    try
+    {
+      var border = sender as Border;
+      if (border == null) return;
+
+      var condition = border.BindingContext as MbdCondition;
+      if (condition == null || string.IsNullOrEmpty(condition.Id)) return;
+
+#if DEBUG
+      await AppShell.DisplaySnackbarAsync($"Tapped: {condition.Name}");
+#endif
+      await Shell.Current.GoToAsync($"mbdcondition?id={condition.Id}");
+    }
+    catch (Exception err)
+    {
+      _logger.LogError(err, "Error in OnConditionTapped");
+    }
+  }
 }

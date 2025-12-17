@@ -32,20 +32,21 @@
                         IsVisible="{Binding IsInitialized}"
                         ItemSizingStrategy="MeasureAllItems"
                         ItemsSource="{Binding RandomConditionCollection}"
-                        SelectionMode="Single"
-                        SelectedItem="{Binding SelectedCondition}">
+                        SelectionMode="None">
                         <CollectionView.ItemsLayout>
                             <LinearItemsLayout ItemSpacing="5" Orientation="Vertical" />
                         </CollectionView.ItemsLayout>
                         <CollectionView.ItemTemplate>
                             <DataTemplate x:DataType="model:MbdCondition">
-                                <Border Style="{StaticResource MbdHomePageConditionCard}">
-                                    <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,*" InputTransparent="False">
+                                <Border Style="{StaticResource MbdHomePageConditionCard}" InputTransparent="False">
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="OnConditionTapped" />
+                                    </Border.GestureRecognizers>
+                                    <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,*">
                                         <!--  Name  -->
                                         <Label
                                             Grid.Row="0"
                                             Grid.Column="0"
-                                            InputTransparent="True"
                                             Style="{StaticResource HomePageConditionNameLabel}"
                                             Text="{Binding Name}" />
 
@@ -53,7 +54,6 @@
                                         <Image
                                             Grid.Row="0"
                                             Grid.Column="1"
-                                            InputTransparent="True"
                                             IsVisible="{Binding DisplayLock}"
                                             Style="{StaticResource HomePageLockImage}" />
 
@@ -62,7 +62,6 @@
                                             Grid.Row="1"
                                             Grid.Column="0"
                                             Grid.ColumnSpan="2"
-                                            InputTransparent="True"
                                             Style="{StaticResource HomePageAffirmationLabel}"
                                             Text="{Binding DisplayedAffirmation}" />
                                     </Grid>

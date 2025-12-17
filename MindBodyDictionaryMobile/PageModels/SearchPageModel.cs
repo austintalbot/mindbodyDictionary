@@ -34,9 +34,6 @@ public partial class SearchPageModel : ObservableObject
   [ObservableProperty]
   private bool _hasNoResults;
 
-  [ObservableProperty]
-  private MbdCondition? _selectedCondition;
-
   public SearchPageModel(MbdConditionRepository mbdConditionRepository, MindBodyDictionaryMobile.Data.ImageCacheService imageCacheService, IBillingService billingService) {
     _mbdConditionRepository = mbdConditionRepository;
     _imageCacheService = imageCacheService;
@@ -132,13 +129,5 @@ public partial class SearchPageModel : ObservableObject
     }
 
     await Shell.Current.GoToAsync($"mbdcondition?id={condition.Id}");
-  }
-
-  async partial void OnSelectedConditionChanged(MbdCondition? value) {
-    if (value is not null)
-    {
-      await SelectMbdCondition(value);
-      SelectedCondition = null;
-    }
   }
 }
