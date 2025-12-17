@@ -33,12 +33,20 @@ public class GetFaq(ILogger<GetFaq> logger, CosmosClient client)
                        query: "SELECT * FROM c",
                        itemSelector: x => x.Id == id);
 
-            return item != null ? new OkObjectResult(item) : new NotFoundResult();
+            if (item != null)
+            {
+                _logger.LogInformation("Successfully retrieved FAQ: {Id} (Question: {Question})", id, item.Question?.Substring(0, Math.Min(item.Question.Length, 30)));
+                return new OkObjectResult(item);
+            }
+            else
+            {
+                _logger.LogWarning("GetFaq: FAQ with Id {Id} not found.", id);
+                return new NotFoundResult();
+            }
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error getting Faq");
-            _logger.LogError(message: ex.Message);
+            _logger.LogError(ex, "Error getting FAQ with ID {Id}", id);
             return new StatusCodeResult(StatusCodes.Status500InternalServerError);
         }
     }

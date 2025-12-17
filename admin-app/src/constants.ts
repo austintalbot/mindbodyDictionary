@@ -18,6 +18,7 @@ export const GET_MBD_CONDITIONS_TABLE_CODE = import.meta.env.VITE_GET_MBD_CONDIT
 export const GET_MBD_CONDITIONS_CODE = import.meta.env.VITE_GET_MBD_CONDITIONS_CODE || 'YOUR_GET_MBD_CONDITIONS_CODE';
 export const GET_MBD_IMAGES_CODE = import.meta.env.VITE_GET_MBD_IMAGES_CODE || 'YOUR_GET_MBD_IMAGES_CODE';
 export const FAQ_FUNCTION_CODE = import.meta.env.VITE_FAQ_FUNCTION_CODE || 'p8_sBm-IGx0vcvseYZK_mGxL16_CYCbH7RgPb2p-YoIkAzFuiNtQ1Q==';
+export const UPDATE_FAQS_ORDER_CODE = import.meta.env.VITE_UPDATE_FAQS_ORDER_CODE || 'p8_sBm-IGx0vcvseYZK_mGxL16_CYCbH7RgPb2p-YoIkAzFuiNtQ1Q==';
 export const COSMOS_DB_CONTAINER_NAME = import.meta.env.VITE_COSMOS_DB_CONTAINER_NAME || 'mindbody';
 
 // Expose image base URL for direct use in image src attributes

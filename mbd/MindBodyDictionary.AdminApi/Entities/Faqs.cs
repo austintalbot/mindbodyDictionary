@@ -12,4 +12,6 @@ public class Faqs
 	public string? ShortAnswer { get; set; }
 	[JsonProperty(PropertyName = "answer")]
 	public string? Answer { get; set; }
+	[JsonProperty(PropertyName = "order")]
+	public int? Order { get; set; }
 }

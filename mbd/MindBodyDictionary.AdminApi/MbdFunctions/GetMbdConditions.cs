@@ -24,12 +24,12 @@ public class GetMbdConditions(ILogger<GetMbdConditions> logger, CosmosClient cli
 					   containerName: backend.CosmosDB.CosmosDbConstants.Containers.MbdConditions,
 					   query: "SELECT * FROM c");
 
+            _logger.LogInformation("Successfully retrieved {Count} MbdConditions.", items.Count);
 			return new OkObjectResult(items);
 		}
 		catch (Exception ex)
 		{
-            _logger.LogError(ex, "Error getting MbdConditions");
-            _logger.LogError(message: ex.Message);
+            _logger.LogError(ex, "Error getting all MbdConditions.");
 			return new StatusCodeResult(StatusCodes.Status500InternalServerError);
 		}
 	}

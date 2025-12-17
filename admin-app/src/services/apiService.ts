@@ -14,6 +14,7 @@ import {
   GET_MBD_IMAGES_CODE,
   MBD_CONDITION_CODE,
   FAQ_FUNCTION_CODE,
+  UPDATE_FAQS_ORDER_CODE,
   COSMOS_DB_CONTAINER_NAME,
 } from '../constants';
 import { MbdCondition, Faq } from '../types'; // Import from barrel file
@@ -242,4 +243,8 @@ export const upsertFaq = async (faq: Faq): Promise<Faq> => {
 
 export const deleteFaq = async (id: string): Promise<void> => {
   return makeApiRequest<void>(`DeleteFaq?code=${FAQ_FUNCTION_CODE}&id=${id}`, 'POST');
+};
+
+export const updateFaqsOrder = async (faqs: Faq[]): Promise<void> => {
+  return makeApiRequest<void>(`UpdateFaqsOrder?code=${UPDATE_FAQS_ORDER_CODE}`, 'POST', faqs);
 };

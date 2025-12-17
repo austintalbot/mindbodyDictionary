@@ -45,9 +45,11 @@ public class UpsertMbdImage(ILogger<UpsertMbdImage> logger)
 
             if (file == null)
             {
-                _logger.LogWarning("File is missing in the form data.");
+                _logger.LogWarning("File is missing in the form data for {Name} during upsert.", name);
                 return new BadRequestResult();
             }
+
+            _logger.LogInformation("Attempting to upsert file: {FileName} ({Size} bytes) as {Name}", file.FileName, file.Length, name);
 
             var connectionString = Environment.GetEnvironmentVariable(StorageConstants.ConnectionStringSetting);
             var blobServiceClient = new BlobServiceClient(connectionString);
@@ -62,12 +64,12 @@ public class UpsertMbdImage(ILogger<UpsertMbdImage> logger)
                 await blobClient.UploadAsync(stream, new BlobUploadOptions { HttpHeaders = blobHttpHeaders });
             }
 
-            _logger.LogInformation("File upserted successfully.");
+            _logger.LogInformation("File {Name} upserted successfully in blob storage.", name);
             return new OkResult();
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Exception occurred during upsert.");
+            _logger.LogError(ex, "Exception occurred during image upsert for {Name}.", name);
             return new BadRequestObjectResult(ex.Message);
         }
     }

@@ -42,18 +42,21 @@ public class CreateMbdCondition(ILogger<CreateMbdCondition> logger, CosmosClient
 
         if (string.IsNullOrEmpty(mbdCondition.Id))
         {
-            _logger.LogInformation("Creating new MbdCondition ID");
             mbdCondition.Id = Guid.NewGuid().ToString();
+            _logger.LogInformation("Assigned new ID to MbdCondition: {Id}", mbdCondition.Id);
         }
+
+        _logger.LogInformation("Attempting to create MbdCondition: {Name} (ID: {Id})", mbdCondition.Name, mbdCondition.Id);
 
         try
         {
             var container = _client.GetContainer(CosmosDbConstants.DatabaseName, CosmosDbConstants.Containers.MbdConditions);
             // Use CreateItemAsync to ensure we don't overwrite if it exists (though GUID makes collision unlikely)
             var response = await container.CreateItemAsync(mbdCondition, new PartitionKey(mbdCondition.Id));
-            _logger.LogInformation("Created MbdCondition: {Id}", response.Resource.Id);
+            _logger.LogInformation("Successfully created MbdCondition: {Name} (ID: {Id})", mbdCondition.Name, response.Resource.Id);
 
             // Update LastUpdatedTime
+            _logger.LogInformation("Updating LastUpdatedTime in System container.");
             var systemContainer = _client.GetContainer(CosmosDbConstants.DatabaseName, CosmosDbConstants.Containers.System);
             var lastUpdatedTime = new LastUpdatedTime
             {
@@ -62,19 +65,18 @@ public class CreateMbdCondition(ILogger<CreateMbdCondition> logger, CosmosClient
                 Name = "lastUpdatedTime"
             };
             await systemContainer.UpsertItemAsync(lastUpdatedTime, new PartitionKey(lastUpdatedTime.Id));
+            _logger.LogInformation("LastUpdatedTime updated successfully.");
 
             return new OkObjectResult(response.Resource);
         }
         catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.Conflict)
         {
-            _logger.LogWarning("MbdCondition with Id {Id} already exists", mbdCondition.Id);
-            _logger.LogError(message: ex.Message);
+            _logger.LogWarning("Conflict: MbdCondition with Id {Id} already exists. Name: {Name}. Message: {Message}", mbdCondition.Id, mbdCondition.Name, ex.Message);
             return new ConflictResult();
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error creating MbdCondition");
-            _logger.LogError(message: ex.Message);
+            _logger.LogError(ex, "Error creating MbdCondition: {Name} (ID: {Id})", mbdCondition.Name, mbdCondition.Id);
             return new StatusCodeResult(StatusCodes.Status500InternalServerError);
         }
     }

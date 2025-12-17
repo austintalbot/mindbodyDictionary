@@ -46,9 +46,11 @@ public class CreateMbdImage(ILogger<CreateMbdImage> logger)
 
             if (file == null)
             {
-                _logger.LogWarning("File is missing in the form data.");
+                _logger.LogWarning("File is missing in the form data for {Name}.", name);
                 return new BadRequestResult();
             }
+
+            _logger.LogInformation("Attempting to upload file: {FileName} ({Size} bytes) as {Name}", file.FileName, file.Length, name);
 
             var connectionString = Environment.GetEnvironmentVariable(StorageConstants.ConnectionStringSetting);
             var blobServiceClient = new BlobServiceClient(connectionString);
@@ -69,19 +71,17 @@ public class CreateMbdImage(ILogger<CreateMbdImage> logger)
                 await blobClient.UploadAsync(stream, options);
             }
 
-            _logger.LogInformation("File created successfully.");
+            _logger.LogInformation("File {Name} created successfully in blob storage.", name);
             return new OkResult();
         }
         catch (RequestFailedException ex) when (ex.ErrorCode == BlobErrorCode.BlobAlreadyExists)
         {
-             _logger.LogWarning("Image already exists.");
-             _logger.LogError(message: ex.Message);
+             _logger.LogWarning("Conflict: Image {Name} already exists in storage.", name);
              return new ConflictResult();
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Exception occurred during creation.");
-            _logger.LogError(message: ex.Message);
+            _logger.LogError(ex, "Exception occurred during image creation for {Name}.", name);
             return new BadRequestObjectResult(ex.Message);
         }
     }

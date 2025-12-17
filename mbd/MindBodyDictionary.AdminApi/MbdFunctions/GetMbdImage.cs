@@ -30,6 +30,7 @@ public class GetMbdImage(ILogger<GetMbdImage> logger)
 
         try
         {
+            _logger.LogInformation("Connecting to blob storage to retrieve: {Name}", name);
             var connectionString = Environment.GetEnvironmentVariable(StorageConstants.ConnectionStringSetting);
             var blobServiceClient = new BlobServiceClient(connectionString);
             var containerClient = blobServiceClient.GetBlobContainerClient(StorageConstants.Containers.Images);
@@ -37,6 +38,7 @@ public class GetMbdImage(ILogger<GetMbdImage> logger)
 
             if (!await blobClient.ExistsAsync())
             {
+                 _logger.LogWarning("GetMbdImage: Image {Name} not found in storage.", name);
                  return new NotFoundResult();
             }
 
@@ -62,12 +64,12 @@ public class GetMbdImage(ILogger<GetMbdImage> logger)
                 Size = props.Value.ContentLength
             };
 
+            _logger.LogInformation("Successfully retrieved metadata for image: {Name}. URI: {Uri}", name, image.Uri);
             return new OkObjectResult(image);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error getting MbdImage");
-            _logger.LogError(message: ex.Message);
+            _logger.LogError(ex, "Error getting MbdImage {Name} from blob storage.", name);
             return new StatusCodeResult(StatusCodes.Status500InternalServerError);
         }
     }

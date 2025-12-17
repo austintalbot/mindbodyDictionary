@@ -26,27 +26,28 @@ public class DeleteMbdImage(ILogger<DeleteMbdImage> logger)
 
         try
         {
+            _logger.LogInformation("Connecting to blob storage to delete: {Name}", name);
             var connectionString = Environment.GetEnvironmentVariable(StorageConstants.ConnectionStringSetting);
             var blobServiceClient = new BlobServiceClient(connectionString);
             var containerClient = blobServiceClient.GetBlobContainerClient(StorageConstants.Containers.Images);
             var blobClient = containerClient.GetBlobClient(name);
+            
             bool result = await blobClient.DeleteIfExistsAsync();
 
             if (result)
             {
+                _logger.LogInformation("Successfully deleted image: {Name}", name);
                 return new OkResult();
             }
             else
             {
-                _logger.LogWarning("Image {Name} not found or could not be deleted.", name);
-                _logger.LogError(message: $"Image {name} not found or could not be deleted.");
-                return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+                _logger.LogWarning("DeleteMbdImage: Image {Name} not found in storage.", name);
+                return new NotFoundResult(); // Changed from 500 to 404 for better semantics
             }
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error deleting image {Name}", name);
-            _logger.LogError(message: ex.Message);
+            _logger.LogError(ex, "Error deleting image {Name} from blob storage.", name);
             return new StatusCodeResult(StatusCodes.Status500InternalServerError);
         }
     }

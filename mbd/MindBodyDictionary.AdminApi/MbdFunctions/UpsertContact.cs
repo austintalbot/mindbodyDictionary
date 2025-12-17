@@ -41,22 +41,28 @@ public class UpsertContact(ILogger<UpsertContact> logger, CosmosClient client)
         if (string.IsNullOrEmpty(contact.Id))
         {
             contact.Id = Guid.NewGuid().ToString();
+            _logger.LogInformation("Assigned new ID to Contact for upsert: {Id}", contact.Id);
         }
-         if (contact.SaveDateTime == default)
+
+        if (contact.SaveDateTime == default)
         {
             contact.SaveDateTime = DateTime.UtcNow;
+            _logger.LogInformation("Set SaveDateTime to UtcNow for Contact {Id} during upsert.", contact.Id);
         }
+
+        _logger.LogInformation("Attempting to upsert Contact: {Email} (ID: {Id})", contact.Email, contact.Id);
 
         try
         {
             var container = _client.GetContainer(CosmosDbConstants.DatabaseName, CosmosDbConstants.Containers.Emails);
             var response = await container.UpsertItemAsync(contact, new PartitionKey(contact.Id));
 
+            _logger.LogInformation("Successfully upserted Contact: {Id}. StatusCode: {StatusCode}", contact.Id, response.StatusCode);
             return new OkObjectResult(response.Resource);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error upserting Contact");
+            _logger.LogError(ex, "Error upserting Contact: {Email} (ID: {Id})", contact.Email, contact.Id);
             return new StatusCodeResult(StatusCodes.Status500InternalServerError);
         }
     }

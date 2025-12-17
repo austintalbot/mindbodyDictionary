@@ -37,22 +37,27 @@ public class DeleteFaq(ILogger<DeleteFaq> logger, CosmosClient client)
 
             if (faq == null)
             {
+                _logger.LogWarning("DeleteFaq: FAQ with Id {Id} not found.", id);
                 return new NotFoundResult();
             }
+
+            _logger.LogInformation("Attempting to delete FAQ: {Id} (Question: {Question})", id, faq.Question?.Substring(0, Math.Min(faq.Question.Length, 30)));
 
             var container = _client.GetContainer(CosmosDbConstants.DatabaseName, CosmosDbConstants.Containers.Faqs);
             var response = await container.DeleteItemAsync<Faqs>(id, new PartitionKey(id));
 
             if (response.StatusCode != HttpStatusCode.NoContent)
             {
+                _logger.LogError("DeleteFaq: Failed to delete FAQ {Id}. StatusCode: {StatusCode}", id, response.StatusCode);
                 return new StatusCodeResult(StatusCodes.Status500InternalServerError);
             }
 
+            _logger.LogInformation("Successfully deleted FAQ: {Id}", id);
             return new OkResult();
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error deleting FAQ.");
+            _logger.LogError(ex, "Error deleting FAQ with ID {Id}.", id);
             return new StatusCodeResult(StatusCodes.Status500InternalServerError);
         }
     }

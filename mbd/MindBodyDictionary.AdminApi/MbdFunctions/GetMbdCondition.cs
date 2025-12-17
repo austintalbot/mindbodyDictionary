@@ -32,12 +32,20 @@ public class GetMbdCondition(ILogger<GetMbdCondition> logger, CosmosClient clien
                        query: "SELECT * FROM c", // Using c as standard alias
                        itemSelector: x => x.Id == id);
 
-            return item != null ? new OkObjectResult(item) : new NotFoundResult();
+            if (item != null)
+            {
+                _logger.LogInformation("Successfully retrieved MbdCondition: {Id} ({Name})", id, item.Name);
+                return new OkObjectResult(item);
+            }
+            else
+            {
+                _logger.LogWarning("GetMbdCondition: MbdCondition with Id {Id} not found.", id);
+                return new NotFoundResult();
+            }
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error getting MbdCondition");
-            _logger.LogError(message: ex.Message);
+            _logger.LogError(ex, "Error getting MbdCondition with ID {Id}", id);
             return new StatusCodeResult(StatusCodes.Status500InternalServerError);
         }
     }

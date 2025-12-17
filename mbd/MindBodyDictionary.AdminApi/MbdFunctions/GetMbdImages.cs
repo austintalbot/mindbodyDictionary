@@ -20,6 +20,7 @@ public class GetMbdImages(ILogger<GetMbdImages> logger)
 
         try
         {
+            _logger.LogInformation("Connecting to blob storage to list images.");
             var connectionString = Environment.GetEnvironmentVariable(StorageConstants.ConnectionStringSetting);
             var blobServiceClient = new BlobServiceClient(connectionString);
             var containerClient = blobServiceClient.GetBlobContainerClient(StorageConstants.Containers.Images);
@@ -29,14 +30,12 @@ public class GetMbdImages(ILogger<GetMbdImages> logger)
             {
                 list.Add(blobItem);
             }
-            _logger.LogInformation("Found {Count} images", list.Count);
+            _logger.LogInformation("Found {Count} total blobs in container {Container}", list.Count, StorageConstants.Containers.Images);
 
             var images = list.Select(i =>
             {
                 string nameOnly = i.Name.Replace($"{StorageConstants.ImageBasePath}/", "");
                 string ailmentName = Path.GetFileNameWithoutExtension(nameOnly);
-
-                _logger.LogInformation("Processing blob: {BlobName}, nameOnly: {NameOnly}, ailmentName: {AilmentName}", i.Name, nameOnly, ailmentName);
 
                 ailmentName = ailmentName switch
                 {
@@ -55,11 +54,12 @@ public class GetMbdImages(ILogger<GetMbdImages> logger)
                 };
             }).ToList(); // Force enumeration here
 
+            _logger.LogInformation("Successfully processed metadata for {Count} images.", images.Count);
             return new OkObjectResult(new { data = images });
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error in GetMbdImages function");
+            _logger.LogError(ex, "Error in GetMbdImages function listing blobs.");
             return new StatusCodeResult(StatusCodes.Status500InternalServerError);
         }
     }

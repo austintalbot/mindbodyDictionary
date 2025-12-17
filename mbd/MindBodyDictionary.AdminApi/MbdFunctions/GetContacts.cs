@@ -26,12 +26,12 @@ public class GetContacts(ILogger<GetContacts> logger, CosmosClient client)
                        containerName: CosmosDbConstants.Containers.Emails,
                        query: "SELECT * FROM c");
 
+            _logger.LogInformation("Successfully retrieved {Count} Contacts.", items.Count);
             return new OkObjectResult(items);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error getting Contacts");
-            _logger.LogError(message: ex.Message);
+            _logger.LogError(ex, "Error getting all Contacts.");
             return new StatusCodeResult(StatusCodes.Status500InternalServerError);
         }
     }

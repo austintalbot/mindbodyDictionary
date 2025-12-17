@@ -42,11 +42,16 @@ public class CreateContact(ILogger<CreateContact> logger, CosmosClient client)
         if (string.IsNullOrEmpty(contact.Id))
         {
             contact.Id = Guid.NewGuid().ToString();
+            _logger.LogInformation("Assigned new ID to Contact: {Id}", contact.Id);
         }
+
+        _logger.LogInformation("Attempting to create Contact for {Email} with ID {Id}", contact.Email, contact.Id);
+
         // Ensure SaveDateTime is set if missing?
         if (contact.SaveDateTime == default)
         {
             contact.SaveDateTime = DateTime.UtcNow;
+            _logger.LogInformation("Set SaveDateTime to UtcNow for Contact {Id}", contact.Id);
         }
 
         try
@@ -54,18 +59,17 @@ public class CreateContact(ILogger<CreateContact> logger, CosmosClient client)
             var container = _client.GetContainer(CosmosDbConstants.DatabaseName, CosmosDbConstants.Containers.Emails);
             var response = await container.CreateItemAsync(contact, new PartitionKey(contact.Id));
 
+            _logger.LogInformation("Successfully created Contact: {Id}", contact.Id);
             return new OkObjectResult(response.Resource);
         }
         catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.Conflict)
         {
-            _logger.LogWarning("Contact with Id {Id} already exists", contact.Id);
-            _logger.LogError(message: ex.Message);
+            _logger.LogWarning("Conflict: Contact with Id {Id} already exists. Message: {Message}", contact.Id, ex.Message);
             return new ConflictResult();
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error creating Contact");
-            _logger.LogError(message: ex.Message);
+            _logger.LogError(ex, "Error creating Contact with ID {Id}. Email: {Email}", contact.Id, contact.Email);
             return new StatusCodeResult(StatusCodes.Status500InternalServerError);
         }
     }

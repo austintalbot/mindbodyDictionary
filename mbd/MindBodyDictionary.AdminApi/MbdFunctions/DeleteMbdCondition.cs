@@ -28,20 +28,21 @@ public class DeleteMbdCondition(ILogger<DeleteMbdCondition> logger, CosmosClient
 
         try
         {
+            _logger.LogInformation("Attempting to delete MbdCondition: {Id}", id);
             var container = _client.GetContainer(CosmosDbConstants.DatabaseName, CosmosDbConstants.Containers.MbdConditions);
             var response = await container.DeleteItemAsync<MbdCondition>(id, new PartitionKey(id));
 
+            _logger.LogInformation("Successfully deleted MbdCondition: {Id}. StatusCode: {StatusCode}", id, response.StatusCode);
             return new OkResult();
         }
         catch (CosmosException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
         {
-            _logger.LogError(message: ex.Message); // Log only message for NotFound
+            _logger.LogWarning("DeleteMbdCondition: MbdCondition with Id {Id} not found.", id);
             return new NotFoundResult();
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error deleting MbdCondition");
-            _logger.LogError(message: ex.Message);
+            _logger.LogError(ex, "Error deleting MbdCondition with ID {Id}.", id);
             return new StatusCodeResult(StatusCodes.Status500InternalServerError);
         }
     }

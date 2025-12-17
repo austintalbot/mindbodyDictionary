@@ -24,14 +24,14 @@ public class GetFaqs(ILogger<GetFaqs> logger, CosmosClient client)
             var faqs = await _client.QueryAsync<Faqs>(
                        databaseName: CosmosDbConstants.DatabaseName,
                        containerName: CosmosDbConstants.Containers.Faqs,
-                       query: "SELECT * FROM c"); // c is the alias for the document
+                       query: "SELECT * FROM c ORDER BY c[\"order\"] ASC"); // c is the alias for the document
 
+            _logger.LogInformation("Successfully retrieved {Count} FAQs.", faqs.Count);
             return new OkObjectResult(faqs);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error getting FAQs.");
-            _logger.LogError(message: ex.Message);
+            _logger.LogError(ex, "Error getting all FAQs.");
             return new StatusCodeResult(StatusCodes.Status500InternalServerError);
         }
     }

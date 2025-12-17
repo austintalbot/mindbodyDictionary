@@ -33,12 +33,20 @@ public class GetContact(ILogger<GetContact> logger, CosmosClient client)
                        query: "SELECT * FROM c",
                        itemSelector: x => x.Id == id);
 
-            return item != null ? new OkObjectResult(item) : new NotFoundResult();
+            if (item != null)
+            {
+                _logger.LogInformation("Successfully retrieved Contact: {Id} ({Email})", id, item.Email);
+                return new OkObjectResult(item);
+            }
+            else
+            {
+                _logger.LogWarning("GetContact: Contact with Id {Id} not found.", id);
+                return new NotFoundResult();
+            }
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error getting Contact");
-            _logger.LogError(message: ex.Message);
+            _logger.LogError(ex, "Error getting Contact with ID {Id}", id);
             return new StatusCodeResult(StatusCodes.Status500InternalServerError);
         }
     }
