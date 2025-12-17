@@ -82,29 +82,20 @@ public partial class MbdConditionHomePage : ContentPage
     }
   }
 
-
-  private async void TapGestureRecognizer_HomeMbdConditionTapped(object? sender, TappedEventArgs e) {
+  private async void OnConditionTapped(object? sender, TappedEventArgs e) {
     try
     {
-      var tappedElement = sender as VisualElement;
-      if (tappedElement == null)
-      {
-        _logger.LogWarning("Tapped element is null or not a VisualElement.");
-        return;
-      }
+      var border = sender as Border;
+      if (border == null) return;
 
-      var condition = tappedElement.BindingContext as MbdCondition;
-      if (condition == null)
-      {
-        _logger.LogWarning("Tapped element's BindingContext is not an MbdCondition.");
-        return;
-      }
+      var condition = border.BindingContext as MbdCondition;
+      if (condition == null || string.IsNullOrEmpty(condition.Id)) return;
+
       await Shell.Current.GoToAsync($"mbdcondition?id={condition.Id}");
     }
-    catch (Exception ex)
+    catch (Exception err)
     {
-      _logger.LogError(ex, "Error navigating to condition details");
-      // await DisplayAlertAsync("Navigation Error", $"An error occurred during navigation: {ex.Message}", "OK");
+      _logger.LogError(err, "Error in OnConditionTapped");
     }
   }
 }

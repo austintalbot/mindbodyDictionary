@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentView
     x:Class="MindBodyDictionaryMobile.Pages.MbdConditionDetailsAffirmationsView"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
@@ -10,6 +10,7 @@
     x:DataType="vm:MbdConditionDetailPageModel">
     <Grid HorizontalOptions="CenterAndExpand" VerticalOptions="StartAndExpand">
         <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
@@ -53,10 +54,6 @@
                                     x:DataType="{x:Type x:String}"
                                     Style="{StaticResource AffirmationCarouselLabelStyle}"
                                     Text="{x:Binding .}" />
-                                <Label
-                                    x:Name="CopyrightLabel"
-                                    Style="{StaticResource AffirmationCopyrightLabelStyle}"
-                                    Text="{x:Static local:App.CopyrightText}" />
                             </VerticalStackLayout>
                         </Frame>
                     </Grid>
@@ -88,6 +85,14 @@
 
 
         </HorizontalStackLayout>
+
+        <Label
+            Grid.Row="4"
+            Style="{StaticResource AffirmationCopyrightLabelStyle}"
+            HorizontalOptions="Center"
+            Margin="0,0,0,20"
+            Text="{x:Static local:App.CopyrightText}"
+            TextColor="{AppThemeBinding Light={StaticResource LabelTextColor}, Dark={StaticResource LabelTextColorDark}}" />
     </Grid>
 
 </ContentView>

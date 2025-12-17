@@ -1,6 +1,7 @@
 namespace MindBodyDictionaryMobile.Pages;
 
 using Microsoft.Extensions.Logging; // Add this
+using MindBodyDictionaryMobile.Models;
 using MindBodyDictionaryMobile.PageModels;
 
 public partial class SearchPage : ContentPage
@@ -16,6 +17,27 @@ public partial class SearchPage : ContentPage
     this._searchPageModel = searchPageModel;
     _logger = logger; // Assign injected logger
     GetConditions();
+  }
+
+  protected override void OnSizeAllocated(double width, double height) {
+    base.OnSizeAllocated(width, height);
+
+    if (width < 400)
+    {
+      if (CollectionViewGridItemLayout.Span != 2)
+      {
+        CollectionViewGridItemLayout.Span = 2;
+        ShimmerGridItemsLayout.Span = 2;
+      }
+    }
+    else
+    {
+      if (CollectionViewGridItemLayout.Span != 3)
+      {
+        CollectionViewGridItemLayout.Span = 3;
+        ShimmerGridItemsLayout.Span = 3;
+      }
+    }
   }
 
   private async void GetConditions() {
@@ -34,18 +56,20 @@ public partial class SearchPage : ContentPage
     }
   }
 
-  private async void TapGestureRecognizer_SearchMbdConditionTapped(object? sender, TappedEventArgs e) {
+  private async void OnConditionTapped(object? sender, TappedEventArgs e) {
     try
     {
-      var id = e.Parameter.ToString();
+      var border = sender as Border;
+      if (border == null) return;
 
-      if (string.IsNullOrEmpty(id))
-        return;
-      await Shell.Current.GoToAsync($"mbdcondition?id={id}");
+      var condition = border.BindingContext as MbdCondition;
+      if (condition == null || string.IsNullOrEmpty(condition.Id)) return;
+
+      await Shell.Current.GoToAsync($"mbdcondition?id={condition.Id}");
     }
     catch (Exception err)
     {
-      _logger.LogError(err, "Error in TapGestureRecognizer_SearchConditionTapped"); // Replace Logger.Error
+      _logger.LogError(err, "Error in OnConditionTapped");
     }
   }
 }

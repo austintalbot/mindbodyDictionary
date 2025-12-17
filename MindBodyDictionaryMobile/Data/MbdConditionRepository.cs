@@ -39,10 +39,7 @@ public class MbdConditionRepository(TaskRepository taskRepository, TagRepository
 
     try
     {
-      // Drop table to ensure schema update (breaking change allowed)
-      var dropCmd = connection.CreateCommand();
-      dropCmd.CommandText = "DROP TABLE IF EXISTS Condition";
-      await dropCmd.ExecuteNonQueryAsync();
+
 
       var createTableCmd = connection.CreateCommand();
       createTableCmd.CommandText = @"

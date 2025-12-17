@@ -38,9 +38,9 @@
                         </CollectionView.ItemsLayout>
                         <CollectionView.ItemTemplate>
                             <DataTemplate x:DataType="model:MbdCondition">
-                                <Border Style="{StaticResource MbdHomePageConditionCard}">
+                                <Border Style="{StaticResource MbdHomePageConditionCard}" InputTransparent="False">
                                     <Border.GestureRecognizers>
-                                        <TapGestureRecognizer Tapped="TapGestureRecognizer_HomeMbdConditionTapped" />
+                                        <TapGestureRecognizer Tapped="OnConditionTapped" />
                                     </Border.GestureRecognizers>
                                     <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,*">
                                         <!--  Name  -->

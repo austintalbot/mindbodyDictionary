@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentView
     x:Class="MindBodyDictionaryMobile.Pages.MbdConditionDetailsFoodView"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
@@ -8,29 +8,42 @@
     xmlns:vm="clr-namespace:MindBodyDictionaryMobile.PageModels"
     x:Name="this"
     x:DataType="vm:MbdConditionDetailPageModel">
-    <CollectionView
-        x:Name="FoodCollectionView"
-        EmptyView="There are no corresponding foods for this Condition"
-        HeightRequest="{Binding FoodListHeight}"
-        ItemsSource="{Binding FoodList}"
-        Style="{StaticResource VerticalCollectionView}">
+    <Grid RowDefinitions="*">
+        <CollectionView
+            x:Name="FoodCollectionView"
+            Grid.Row="1"
+            EmptyView="There are no corresponding foods for this Condition"
+            ItemsSource="{Binding FoodList}"
+            SelectionMode="None">
 
-        <CollectionView.ItemTemplate>
-            <DataTemplate>
-                <Border x:DataType="model:Recommendation" Style="{StaticResource FoodItemBorder}">
-                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
-                        <Label
-                            Grid.Column="0"
-                            x:DataType="{x:Type model:Recommendation}"
-                            Style="{StaticResource FoodItemLabel}"
-                            Text="{Binding Name}" />
-                        <Image
-                            x:Name="CheckMarkImage"
-                            Grid.Column="1"
-                            Style="{StaticResource FoodCheckmarkImageStyle}" />
-                    </Grid>
-                </Border>
-            </DataTemplate>
-        </CollectionView.ItemTemplate>
-    </CollectionView>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="model:Recommendation">
+                    <Border
+                        Background="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource DarkSecondaryBackground}}"
+                        Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}"
+                        StrokeThickness="1"
+                        StrokeShape="RoundRectangle 8"
+                        Padding="12"
+                        Margin="8"
+                        MinimumHeightRequest="100">
+                        <VerticalStackLayout Spacing="10" VerticalOptions="Fill">
+                            <Label
+                                FontSize="14"
+                                FontAttributes="Bold"
+                                Text="{Binding Name}"
+                                LineBreakMode="WordWrap"
+                                TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+                            <Button
+                                Command="{Binding AddToMyListCommand}"
+                                CommandParameter="{Binding .}"
+                                Text="Add to List"
+                                Style="{StaticResource PrimaryButton}"
+                                Margin="0"
+                                VerticalOptions="End" />
+                        </VerticalStackLayout>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
 </ContentView>

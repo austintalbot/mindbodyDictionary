@@ -1,87 +1,84 @@
-import React, { useState } from 'react';
-import './App.css'; // Keep the existing App.css for now
-import {
-  ADMIN_API_URL,
-  IMAGE_BASE_URL,
-  AILMENTS_TABLE_CODE,
-  AILMENT_CODE,
-  DELETE_AILMENT_CODE,
-  UPSERT_AILMENT_CODE,
-  IMAGES_TABLE_CODE,
-  DELETE_IMAGE_CODE,
-  CONTACTS_TABLE_CODE,
-  DELETE_CONTACT_CODE,
-  SEND_PUSH_NOTIFICATION_CODE,
-  CREATE_BACKUP_CODE,
-  RESTORE_DATABASE_CODE
-} from './constants';
+import { useState } from 'react';
+import './App.css';
+import { ThemeProvider } from './theme/ThemeProvider';
+import { useTheme } from './theme/useTheme';
+import AilmentsTab from './components/AilmentsTab';
+import ImagesTab from './components/ImagesTab';
+import ThemeToggle from './components/ThemeToggle';
 
-function App() {
-  const [activeTab, setActiveTab] = useState('ailments'); // 'ailments', 'images', 'contacts', 'notifications', 'database'
+function AppContent() {
+  const { colors } = useTheme();
+  const [activeTab, setActiveTab] = useState('ailments');
 
   const renderContent = () => {
     switch (activeTab) {
       case 'ailments':
-        return <div>Ailments Content (Coming Soon)</div>;
+        return <AilmentsTab />;
       case 'images':
-        return <div>Images Content (Coming Soon)</div>;
-      case 'contacts':
-        return <div>Contacts Content (Coming Soon)</div>;
-      case 'notifications':
-        return <div>Notifications Content (Coming Soon)</div>;
-      case 'database':
-        return <div>Database Content (Coming Soon)</div>;
+        return <ImagesTab />;
       default:
-        return <div>Select a tab</div>;
+        return <p style={{ color: colors.foreground }}>Tab content for {activeTab} not yet implemented</p>;
     }
   };
 
   return (
-    <div className="container">
-      <div><h1 className="text-center">MBD Admin Portal</h1></div>
-      <nav className="mt-3 mb-3">
-        <div className="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
-          <a
-            className={`nav-item nav-link ${activeTab === 'ailments' ? 'active' : ''}`}
-            onClick={() => setActiveTab('ailments')}
-            href="#"
-          >
-            Ailments
-          </a>
-          <a
-            className={`nav-item nav-link ${activeTab === 'images' ? 'active' : ''}`}
-            onClick={() => setActiveTab('images')}
-            href="#"
-          >
-            Images
-          </a>
-          <a
-            className={`nav-item nav-link ${activeTab === 'contacts' ? 'active' : ''}`}
-            onClick={() => setActiveTab('contacts')}
-            href="#"
-          >
-            Contacts
-          </a>
-          <a
-            className={`nav-item nav-link ${activeTab === 'notifications' ? 'active' : ''}`}
-            onClick={() => setActiveTab('notifications')}
-            href="#"
-          >
-            Notifications
-          </a>
-          <a
-            className={`nav-item nav-link ${activeTab === 'database' ? 'active' : ''}`}
-            onClick={() => setActiveTab('database')}
-            href="#"
-          >
-            Database
-          </a>
+    <div style={{ minHeight: '100vh', backgroundColor: colors.backgroundSecondary, color: colors.foreground }}>
+      {/* Header */}
+      <div style={{ backgroundColor: colors.background, borderBottom: `1px solid ${colors.border}`, padding: '30px 20px' }}>
+        <div style={{ maxWidth: '1400px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+          <div>
+            <h1 style={{ fontSize: '28px', fontWeight: '700', margin: '0 0 8px 0', color: colors.foreground }}>
+              MBD Admin Portal
+            </h1>
+            <p style={{ fontSize: '14px', color: colors.mutedText, margin: 0 }}>
+              Manage your Mind-Body Dictionary content
+            </p>
+          </div>
+          <ThemeToggle />
         </div>
-      </nav>
-      <div className="tab-content" id="nav-tabContent">
-        {renderContent()}
+      </div>
+
+      {/* Navigation */}
+      <div style={{ backgroundColor: colors.background, borderBottom: `1px solid ${colors.border}`, padding: '0 20px' }}>
+        <div style={{ maxWidth: '1400px', margin: '0 auto', display: 'flex', gap: '2px' }}>
+          {['ailments', 'images', 'contacts', 'notifications', 'database'].map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              style={{
+                padding: '16px 20px',
+                fontSize: '14px',
+                fontWeight: activeTab === tab ? '600' : '500',
+                textTransform: 'capitalize',
+                background: 'none',
+                border: 'none',
+                borderBottom: activeTab === tab ? `3px solid ${colors.primary}` : '3px solid transparent',
+                color: activeTab === tab ? colors.primary : colors.mutedText,
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+              }}
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Content */}
+      <div style={{ padding: '30px 20px' }}>
+        <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
+          {renderContent()}
+        </div>
       </div>
     </div>
+  );
+}
+
+function App() {
+  return (
+    <ThemeProvider>
+      <AppContent />
+    </ThemeProvider>
   );
 }
 

@@ -6,6 +6,7 @@ namespace MindBodyDictionaryMobile.PageModels
   using Microsoft.Extensions.Logging;
   using Microsoft.Maui.ApplicationModel; // For Launcher
   using Microsoft.Maui.Controls;
+  using MindBodyDictionaryMobile.Enums;
   using MindBodyDictionaryMobile.Models;
   using MindBodyDictionaryMobile.Services; // For ModalErrorHandler
 
@@ -19,12 +20,6 @@ namespace MindBodyDictionaryMobile.PageModels
     private MbdCondition _condition; // To be set by MbdConditionDetailPageModel
 
     [ObservableProperty]
-    private string _selectedInnerTab = "Foods"; // Default inner tab
-
-    [ObservableProperty]
-    private ContentView _currentInnerView;
-
-    [ObservableProperty]
     private List<Recommendation> _foodList = [];
 
     [ObservableProperty]
@@ -32,6 +27,15 @@ namespace MindBodyDictionaryMobile.PageModels
 
     [ObservableProperty]
     private List<Recommendation> _booksResourcesList = [];
+
+    [ObservableProperty]
+    private int _foodCount = 0;
+
+    [ObservableProperty]
+    private int _productCount = 0;
+
+    [ObservableProperty]
+    private int _booksResourcesCount = 0;
 
 
 
@@ -42,48 +46,45 @@ namespace MindBodyDictionaryMobile.PageModels
       _errorHandler = errorHandler;
     }
 
-    // Method to initialize tabs, called by MbdConditionDetailPageModel after setting Condition
-    public void InitializeTabs() {
-      // Ensure condition is set before initializing views
-      if (Condition == null)
-      {
-        _logger.LogWarning("Condition is null in MbdConditionDetailsRecommendationsPageModel, cannot initialize tabs.");
-        return;
-      }
-      // Set initial view
-      CurrentInnerView = _serviceProvider.GetRequiredService<MbdConditionDetailsFoodView>();
-      CurrentInnerView.BindingContext = this; // Bind to this ViewModel
-      ((MbdConditionDetailsFoodView)CurrentInnerView).MbdCondition = Condition; // Set the MbdCondition property
+    // Populate recommendation lists when Condition changes
+    partial void OnConditionChanged(MbdCondition value) {
+      PopulateRecommendationLists();
     }
 
-    partial void OnSelectedInnerTabChanged(string value) {
-      if (Condition == null)
+    private void PopulateRecommendationLists() {
+      if (Condition?.Recommendations == null)
       {
-        _logger.LogWarning("Condition is null when changing inner tab in RecommendationsPageModel.");
+        FoodList = [];
+        ProductList = [];
+        BooksResourcesList = [];
+        FoodCount = 0;
+        ProductCount = 0;
+        BooksResourcesCount = 0;
+        _logger.LogWarning("Condition or Recommendations is null");
         return;
       }
 
-      switch (value)
+      _logger.LogInformation($"Total recommendations: {Condition.Recommendations.Count}");
+      foreach (var rec in Condition.Recommendations)
       {
-        case "Foods":
-          CurrentInnerView = _serviceProvider.GetRequiredService<MbdConditionDetailsFoodView>();
-          CurrentInnerView.BindingContext = this; // Bind to this ViewModel
-          ((MbdConditionDetailsFoodView)CurrentInnerView).MbdCondition = Condition;
-          break;
-        case "Products":
-          CurrentInnerView = _serviceProvider.GetRequiredService<MbdConditionDetailsProductsView>();
-          CurrentInnerView.BindingContext = this; // Bind to this ViewModel
-          ((MbdConditionDetailsProductsView)CurrentInnerView).MbdCondition = Condition;
-          break;
-        case "Resources":
-          CurrentInnerView = _serviceProvider.GetRequiredService<MbdConditionDetailsResourcesView>();
-          CurrentInnerView.BindingContext = this; // Bind to this ViewModel
-          ((MbdConditionDetailsResourcesView)CurrentInnerView).MbdCondition = Condition;
-          break;
-        default:
-          _logger.LogWarning($"Unknown inner tab selected: {value}");
-          break;
+        _logger.LogInformation($"Recommendation: {rec.Name}, Type: {rec.RecommendationType}");
       }
+
+      var foods = Condition.Recommendations.Where(r => r.RecommendationType == (int)RecommendationType.Food).ToList();
+      var products = Condition.Recommendations.Where(r => r.RecommendationType == (int)RecommendationType.Product).ToList();
+      var resources = Condition.Recommendations.Where(r => r.RecommendationType == (int)RecommendationType.Book).ToList();
+
+
+      // Put all recommendations in Foods to test rendering
+      FoodList = foods;
+      ProductList = products;
+      BooksResourcesList = resources;
+
+      FoodCount = FoodList.Count;
+      ProductCount = ProductList.Count;
+      BooksResourcesCount = BooksResourcesList.Count;
+
+      _logger.LogInformation($"Counts - Foods: {FoodCount}, Products: {ProductCount}, Resources: {BooksResourcesCount}");
     }
 
     [RelayCommand]
@@ -122,11 +123,6 @@ namespace MindBodyDictionaryMobile.PageModels
     private async Task AddToMyList(Recommendation recommendation) {
       // This will eventually add the item to a persistent list, but for now, just show a message.
       await AppShell.DisplayToastAsync($"Adding '{recommendation.Name}' to your list!");
-    }
-
-    [RelayCommand]
-    private void SelectInnerTab(string tabName) {
-      SelectedInnerTab = tabName;
     }
   }
 }

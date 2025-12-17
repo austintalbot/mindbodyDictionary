@@ -39,7 +39,7 @@
 
 
     <Style x:Key="MbdIconImage" TargetType="Image">
-        <Setter Property="Source" Value="mbd_icon.png" />
+        <Setter Property="Source" Value="mbdicon.svg" />
         <Setter Property="MaximumHeightRequest" Value="100" />
     </Style>
 

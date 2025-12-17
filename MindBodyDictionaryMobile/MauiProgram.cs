@@ -39,6 +39,7 @@ public static class MauiProgram
     builder.Services.AddSingleton<CategoryRepository>();
     builder.Services.AddSingleton<TagRepository>();
     builder.Services.AddSingleton<MbdConditionRepository>();
+    builder.Services.AddSingleton<UserListRepository>();
     builder.Services.AddSingleton<ImageCacheRepository>();
     builder.Services.AddSingleton<ImageCacheService>();
     builder.Services.AddSingleton<IImageCacheHelper, ImageCacheHelper>();
@@ -99,18 +100,19 @@ public static class MauiProgram
     // Register Sub-Views for Condition Details
     builder.Services.AddTransient<MbdConditionDetailsProblemView>();
     builder.Services.AddTransient<MbdConditionDetailsAffirmationsView>();
-    builder.Services.AddTransient<MbdConditionDetailsRecommendationsView>();
     builder.Services.AddTransient<MbdConditionDetailsFoodView>();
     builder.Services.AddTransient<MbdConditionDetailsProductsView>();
     builder.Services.AddTransient<MbdConditionDetailsResourcesView>();
-
-    // Register PageModels for Sub-Views
-    builder.Services.AddTransient<RecommendationsPageModel>();
 
     var app = builder.Build();
     var logger = app.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Startup");
     logger.LogInformation("App startup log test");
     Services = app.Services;
+
+    // Load images into cache on startup
+    var imageCacheService = Services.GetRequiredService<ImageCacheService>();
+    imageCacheService.LoadImagesFromResourcesAsync().FireAndForgetSafeAsync(app.Services.GetRequiredService<ModalErrorHandler>());
+
     return app;
   }
 }

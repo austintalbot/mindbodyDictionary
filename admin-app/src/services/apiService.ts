@@ -2,8 +2,6 @@
 
 import {
   ADMIN_API_URL,
-  AILMENTS_TABLE_CODE,
-  AILMENT_CODE,
   DELETE_AILMENT_CODE,
   UPSERT_AILMENT_CODE,
   IMAGES_TABLE_CODE,
@@ -12,8 +10,16 @@ import {
   DELETE_CONTACT_CODE,
   SEND_PUSH_NOTIFICATION_CODE,
   CREATE_BACKUP_CODE,
-  RESTORE_DATABASE_CODE
+  RESTORE_DATABASE_CODE,
+  GET_MBD_CONDITIONS_TABLE_CODE,
+  GET_MBD_CONDITIONS_CODE,
+  GET_MBD_IMAGES_CODE,
 } from '../constants';
+import { MbdCondition } from '../types'; // Import from barrel file
+
+// In-memory caches
+let mbdConditionsCache: any[] | null = null;
+let imagesCache: any[] | null = null;
 
 // Helper for making API requests
 async function makeApiRequest<T>(
@@ -52,39 +58,133 @@ async function makeApiRequest<T>(
 
   // Check if the response has content before parsing as JSON
   const responseText = await response.text();
-  return responseText ? JSON.parse(responseText) : ({} as T);
+  console.log('API Raw Response Text:', endpoint, responseText); // Added log
+  const responseData = responseText ? JSON.parse(responseText) : ({} as T);
+
+  if (method === 'GET') {
+    let count = 0;
+    if (Array.isArray(responseData)) {
+      count = responseData.length;
+    } else if (responseData && (responseData as any).data && Array.isArray((responseData as any).data)) {
+      count = (responseData as any).data.length;
+    } else if (responseData && Object.keys(responseData).length > 0) {
+      count = 1; // Assume a single object if not an array and not empty
+    }
+    console.log(`[API] GET ${endpoint} returned ${count} items.`);
+  }
+
+  return responseData;
 }
 
-// --- Ailment API Calls ---
-export const fetchAilmentsTable = async (): Promise<any[]> => {
-  return makeApiRequest<any[]>(`AilmentsTable?code=${AILMENTS_TABLE_CODE}`);
+// --- Cache Management Functions ---
+export const clearMbdConditionsCache = () => {
+  mbdConditionsCache = null;
+  console.log('MBD Conditions Cache cleared.');
 };
 
-export const fetchAilment = async (id: string, name: string): Promise<any> => {
-  // Original JS replaced single quote with 'paranthesis' - we need to reverse that for the actual API call
+export const clearImagesCache = () => {
+  imagesCache = null;
+  console.log('Images Cache cleared.');
+};
+
+
+// --- MbdCondition API Calls ---
+export const fetchMbdConditions = async (): Promise<any> => {
+  if (mbdConditionsCache) {
+    console.log('Returning MBD Conditions from cache.');
+    return mbdConditionsCache;
+  }
+  const response = await makeApiRequest<any>(`GetMbdConditions?code=${GET_MBD_CONDITIONS_CODE}`);
+  const data = (response as any).data || response; // Handle { data: [...] } or direct array
+  mbdConditionsCache = data;
+  return data;
+};
+
+export const fetchMbdCondition = async (requestedId: string, name: string): Promise<MbdCondition> => {
+  console.log("fetchMbdCondition called with - requestedId:", requestedId, "name:", name);
   const decodedName = name.replace("paranthesis", "'");
-  return makeApiRequest<any>(`Ailment?code=${AILMENT_CODE}&id=${id}&name=${encodeURIComponent(decodedName)}`);
+
+  // Attempt 1: Fetch all conditions and perform client-side filtering.
+  // This is for scenarios where GetMbdConditions (plural) is used as primary data source,
+  // but doesn't filter server-side effectively by ID/Name.
+  try {
+    const responseAll = await makeApiRequest<MbdCondition[]>(`GetMbdConditions?code=${GET_MBD_CONDITIONS_CODE}&id=${requestedId}&name=${encodeURIComponent(decodedName)}`);
+    console.log("API response from GetMbdConditions (plural):", responseAll.slice(0, 5)); // Log first few items
+    console.log("All IDs in GetMbdConditions response:", responseAll.map(a => a.id));
+
+    if (responseAll && Array.isArray(responseAll)) {
+      const foundAilmentById = responseAll.find(apiAilment => {
+        console.log(`(Attempt 1 - ID) Comparing requested ID "${requestedId}" with API ailment ID "${apiAilment.id}"`);
+        return apiAilment.id === requestedId;
+      });
+      if (foundAilmentById) {
+        console.log("Client-side foundAilment (by ID) from GetMbdConditions:", foundAilmentById);
+        return foundAilmentById;
+      }
+
+      const foundAilmentByName = responseAll.find(apiAilment => {
+        console.log(`(Attempt 1 - Name) Comparing requested NAME "${name}" with API ailment NAME "${apiAilment.name}"`);
+        return apiAilment.name === name;
+      });
+      if (foundAilmentByName) {
+        console.log("Client-side foundAilment (by Name) from GetMbdConditions:", foundAilmentByName);
+        return foundAilmentByName;
+      }
+    }
+  } catch (error) {
+    console.warn("Client-side filtering from GetMbdConditions failed:", error);
+  }
+
+  // Attempt 2: If client-side filtering fails, leverage the singular GetMbdCondition endpoint.
+  // This assumes AILMENT_CODE corresponds to a specific GetMbdCondition endpoint.
+  try {
+    console.log("Attempt 2: Falling back to singular GetMbdCondition endpoint for ID:", requestedId);
+    // Note: The `name` parameter is typically not needed for a singular endpoint by ID.
+    const singularAilment = await makeApiRequest<MbdCondition>(`GetMbdCondition?code=${GET_MBD_CONDITION_CODE}&id=${requestedId}`);
+    console.log("Response from singular GetMbdCondition:", singularAilment);
+    return singularAilment;
+  } catch (error) {
+    console.warn("Fallback to singular GetMbdCondition endpoint failed:", error);
+  }
+
+  // If both attempts fail, return a default empty MbdCondition object.
+  return {
+    id: '', name: '', subscriptionOnly: false, summaryNegative: '', summaryPositive: '',
+    affirmations: [], physicalConnections: [], searchTags: [], tags: [], recommendations: []
+  };
 };
 
-export const upsertAilment = async (ailment: any): Promise<any> => {
-  return makeApiRequest<any>(`UpsertAilment?code=${UPSERT_AILMENT_CODE}`, 'POST', ailment);
+export const upsertAilment = async (ailment: MbdCondition): Promise<MbdCondition> => {
+  clearMbdConditionsCache(); // Clear cache on data modification
+  return makeApiRequest<MbdCondition>(`UpsertAilment?code=${UPSERT_AILMENT_CODE}`, 'POST', ailment);
 };
 
 export const deleteAilment = async (id: string, name: string): Promise<void> => {
+  clearMbdConditionsCache(); // Clear cache on data modification
   const decodedName = name.replace("paranthesis", "'");
   return makeApiRequest<void>(`DeleteAilment?code=${DELETE_AILMENT_CODE}&id=${id}&name=${encodeURIComponent(decodedName)}`, 'POST');
 };
 
 // --- Image API Calls ---
 export const fetchImagesTable = async (): Promise<any[]> => {
-  return makeApiRequest<any[]>(`ImagesTable?code=${IMAGES_TABLE_CODE}`);
+  if (imagesCache) {
+    console.log('Returning Images from cache.');
+    return imagesCache;
+  }
+  const response = await makeApiRequest<any[]>(`GetMbdImages?code=${GET_MBD_IMAGES_CODE}`);
+  const data = (response as any).data || response; // Handle { data: [...] } or direct array
+  imagesCache = data;
+  return data;
 };
 
 export const deleteImage = async (imageName: string): Promise<void> => {
-  return makeApiRequest<void>(`DeleteImage?code=${DELETE_IMAGE_CODE}&name=${encodeURIComponent(imageName)}`, 'POST');
+  clearImagesCache(); // Clear cache on data modification
+  const url = `deletembdimage?code=${DELETE_IMAGE_CODE}&name=${encodeURIComponent(imageName)}`;
+  return makeApiRequest<void>(url, 'POST');
 };
 
 export const uploadImage = async (ailmentName: string, imageType: string, file: File): Promise<any> => {
+  clearImagesCache(); // Clear cache on data modification
   const name = `${ailmentName}${imageType}.png`;
   const formData = new FormData();
   formData.append('file', file);
@@ -101,7 +201,14 @@ export const deleteContact = async (id: string, email: string): Promise<void> =>
 };
 
 // --- Notification API Calls ---
-export const sendPushNotification = async (notification: { Title: string; Body: string; SubscribersOnly: string; AilmentId: string }): Promise<void> => {
+export interface NotificationPayload {
+  Title: string;
+  Body: string;
+  SubscribersOnly: string;
+  AilmentId: string;
+}
+
+export const sendPushNotification = async (notification: NotificationPayload): Promise<void> => {
   return makeApiRequest<void>(`SendPushNotification?code=${SEND_PUSH_NOTIFICATION_CODE}`, 'POST', notification);
 };
 
@@ -115,7 +222,3 @@ export const restoreDatabase = async (file: File): Promise<void> => {
   formData.append('File', file);
   return makeApiRequest<void>(`RestoreDatabase?code=${RESTORE_DATABASE_CODE}`, 'POST', formData);
 };
-
-// Expose image base URL for direct use in image src attributes
-export const getImageBaseUrl = (): string => IMAGE_BASE_URL;
-

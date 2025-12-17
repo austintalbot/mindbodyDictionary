@@ -308,8 +308,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Lung-Problems-Negative.png",
-        "imagePositive": "Lung-Problems-Positive.png"
+        "imageNegative": "lungProblemsNegative.png",
+        "imagePositive": "lungProblemsPositive.png"
     },
     {
         "id": "e31c147a-b7e8-498d-95a0-4bccfb445f8a",
@@ -558,8 +558,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Fear-Negative.png",
-        "imagePositive": "Fear-Positive.png"
+        "imageNegative": "fearNegative.png",
+        "imagePositive": "fearPositive.png"
     },
     {
         "id": "dd80fda4-69dd-4943-b647-9c6fad06fc07",
@@ -838,8 +838,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Carpal-Tunnel-Syndrome-Negative.png",
-        "imagePositive": "Carpal-Tunnel-Syndrome-Positive.png"
+        "imageNegative": "carpalTunnelSyndromeNegative.png",
+        "imagePositive": "carpalTunnelSyndromePositive.png"
     },
     {
         "id": "56532698-0205-42be-a7b1-fac97cc26633",
@@ -999,8 +999,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Blisters-Negative.png",
-        "imagePositive": "Blisters-Positive.png"
+        "imageNegative": "blistersNegative.png",
+        "imagePositive": "blistersPositive.png"
     },
     {
         "id": "43e53c28-5b5b-49c5-9cf5-e8a197cb6c57",
@@ -1201,8 +1201,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Cramps-Negative.png",
-        "imagePositive": "Cramps-Positive.png"
+        "imageNegative": "crampsNegative.png",
+        "imagePositive": "crampsPositive.png"
     },
     {
         "id": "c0eb9c04-0413-453b-b062-b9c64b1c8a6b",
@@ -1433,8 +1433,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Gallbladder-Negative.png",
-        "imagePositive": "Gallbladder-Positive.png"
+        "imageNegative": "gallbladderNegative.png",
+        "imagePositive": "gallbladderPositive.png"
     },
     {
         "id": "4bc27b0e-4746-41b1-ad6e-ed4e4a963a21",
@@ -1564,8 +1564,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Alzheimer-Disease-Negative.png",
-        "imagePositive": "Alzheimer-Disease-Positive.png"
+        "imageNegative": "alzheimerSDiseaseNegative.png",
+        "imagePositive": "alzheimerSDiseasePositive.png"
     },
     {
         "id": "e6a69b7a-57be-4dad-9abf-49d002163c8b",
@@ -1626,8 +1626,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Hiccups-Negative.png",
-        "imagePositive": "Hiccups-Positive.png"
+        "imageNegative": "hiccupsNegative.png",
+        "imagePositive": "hiccupsPositive.png"
     },
     {
         "id": "9bf2265f-4734-4d34-857e-f5bdfd2df742",
@@ -1831,8 +1831,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Motion-Sickness-Negative.png",
-        "imagePositive": "Motion-Sickness-Positive.png"
+        "imageNegative": "motionSicknessNegative.png",
+        "imagePositive": "motionSicknessPositive.png"
     },
     {
         "id": "118dead8-8787-44e8-804e-42ee05255ef8",
@@ -1925,8 +1925,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": null,
-        "imagePositive": null
+        "imageNegative": "swellingEdemaNegative.png",
+        "imagePositive": "swellingEdemaPositive.png"
     },
     {
         "id": "4c2772df-8258-4453-862f-21298f7f5158",
@@ -2110,8 +2110,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Adrenal-Problems-Negative.png",
-        "imagePositive": "Adrenal-Problems-Positive.png"
+        "imageNegative": "adrenalProblemsNegative.png",
+        "imagePositive": "adrenalProblemsPositive.png"
     },
     {
         "id": "ac029bf4-98a3-4a4d-be81-bbb885f6a7a3",
@@ -2248,8 +2248,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Dizziness-(Vertigo)-Negative.png",
-        "imagePositive": "Dizziness-(Vertigo)-Positive.png"
+        "imageNegative": "dizzinessVertigoNegative.png",
+        "imagePositive": "dizzinessVertigoPositive.png"
     },
     {
         "id": "602c98ef-bb58-4868-aef4-dc3f816e0471",
@@ -2391,8 +2391,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Ankle-Problems-Negative.png",
-        "imagePositive": "Ankle-Problems-Positive.png"
+        "imageNegative": "ankleProblemsNegative.png",
+        "imagePositive": "ankleProblemsPositive.png"
     },
     {
         "id": "77edb9d2-33d9-4c23-8ed3-e716c3e31eeb",
@@ -2566,8 +2566,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Fatigue-Negative.png",
-        "imagePositive": "Fatigue-Positive.png"
+        "imageNegative": "fatigueNegative.png",
+        "imagePositive": "fatiguePositive.png"
     },
     {
         "id": "6ea9fa3f-0faf-4329-92ab-f5925aca4dd3",
@@ -2700,8 +2700,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Underweight-Negative.png",
-        "imagePositive": "Underweight-Positive.png"
+        "imageNegative": "underweightNegative.png",
+        "imagePositive": "underweightPositive.png"
     },
     {
         "id": "2e68489f-679f-462b-b712-bf8813b7f411",
@@ -2887,8 +2887,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Endometriosis-Negative.png",
-        "imagePositive": "Endometriosis-Positive.png"
+        "imageNegative": "endometriosisNegative.png",
+        "imagePositive": "endometriosisPositive.png"
     },
     {
         "id": "c592e39f-5430-41cd-a48a-25603b30156d",
@@ -3061,8 +3061,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Craving--Breads-Negative.png",
-        "imagePositive": "Craving--Breads-Positive.png"
+        "imageNegative": "cravingBreadsNegative.png",
+        "imagePositive": "cravingBreadsPositive.png"
     },
     {
         "id": "c64534c8-6943-4f16-ad42-149a89c19a10",
@@ -3178,8 +3178,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Thyroid-Negative.png",
-        "imagePositive": "Thyroid-Positive.png"
+        "imageNegative": "thyroidNegative.png",
+        "imagePositive": "thyroidPositive.png"
     },
     {
         "id": "b00fa908-3de9-4369-b2be-084cd9cefee1",
@@ -3383,8 +3383,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Abdominal-Pain-Negative.png",
-        "imagePositive": "Abdominal-Pain-Positive.png"
+        "imageNegative": "abdominalPainNegative.png",
+        "imagePositive": "abdominalPainPositive.png"
     },
     {
         "id": "3627d1e2-56d3-4e91-aa1a-8cf149f09672",
@@ -3599,8 +3599,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Infection-Negative.png",
-        "imagePositive": "Infection-Positive.png"
+        "imageNegative": "infectionNegative.png",
+        "imagePositive": "infectionPositive.png"
     },
     {
         "id": "879088a6-d377-42c1-bf25-24ac82de4c82",
@@ -3719,8 +3719,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Phobias-Negative.png",
-        "imagePositive": "Phobias-Positive.png"
+        "imageNegative": "phobiasNegative.png",
+        "imagePositive": "phobiasPositive.png"
     },
     {
         "id": "7bf2def2-bca1-43bc-a40f-d0e6151e3ec6",
@@ -3833,8 +3833,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": null,
-        "imagePositive": null
+        "imageNegative": "recedingGumsNegative.png",
+        "imagePositive": "recedingGumsPositive.png"
     },
     {
         "id": "66e06375-f64e-4daf-875c-04e0bc633d9c",
@@ -4043,8 +4043,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": null,
-        "imagePositive": null
+        "imageNegative": "lowerBackPainNegative.png",
+        "imagePositive": "lowerBackPainPositive.png"
     },
     {
         "id": "fdc3afbf-2a07-49ae-bf98-da108cce742c",
@@ -4207,8 +4207,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Cough-Negative.png",
-        "imagePositive": "Cough-Positive.png"
+        "imageNegative": "coughNegative.png",
+        "imagePositive": "coughPositive.png"
     },
     {
         "id": "9d599386-6afb-4593-9157-7397a90fbc89",
@@ -4300,8 +4300,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Throat-Problems-Negative.png",
-        "imagePositive": "Throat-Problems-Positive.png"
+        "imageNegative": "throatProblemsNegative.png",
+        "imagePositive": "throatProblemsPositive.png"
     },
     {
         "id": "04a3c537-b14d-493c-9c58-56ff7ac8af6c",
@@ -4526,8 +4526,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Memory-Negative.png",
-        "imagePositive": "Memory-Positive.png"
+        "imageNegative": "memoryNegative.png",
+        "imagePositive": "memoryPositive.png"
     },
     {
         "id": "ed74b4ab-7320-40d0-83c6-4be3c7c73eec",
@@ -4681,8 +4681,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Addictions-Negative.png",
-        "imagePositive": "Addictions-Positive.png"
+        "imageNegative": "addictionsNegative.png",
+        "imagePositive": "addictionsPositive.png"
     },
     {
         "id": "c0f9a67c-bfba-46cb-a08c-b6b151261e3b",
@@ -4883,8 +4883,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Acne-Negative.png",
-        "imagePositive": "Acne-Positive.png"
+        "imageNegative": "acneNegative.png",
+        "imagePositive": "acnePositive.png"
     },
     {
         "id": "61a57797-02ad-4b8a-9803-eb9721568bde",
@@ -5059,8 +5059,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Head-Negative.png",
-        "imagePositive": "Head-Positive.png"
+        "imageNegative": "headNegative.png",
+        "imagePositive": "headPositive.png"
     },
     {
         "id": "a03915af-b664-4b5f-9a4f-371da13b05dc",
@@ -5194,8 +5194,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": null,
-        "imagePositive": null
+        "imageNegative": "skinEczemaNegative.png",
+        "imagePositive": "skinEczemaPositive.png"
     },
     {
         "id": "0981ff57-ba09-465e-8fd1-0a0681433625",
@@ -5411,8 +5411,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Flu-(Influenza)-Negative.png",
-        "imagePositive": "Flu-(Influenza)-Positive.png"
+        "imageNegative": "fluInfluenzaNegative.png",
+        "imagePositive": "fluInfluenzaPositive.png"
     },
     {
         "id": "23129734-3224-4166-8642-a4913e42ef2d",
@@ -5641,8 +5641,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Incontinence-Negative.png",
-        "imagePositive": "Incontinence-Positive.png"
+        "imageNegative": "incontinenceNegative.png",
+        "imagePositive": "incontinencePositive.png"
     },
     {
         "id": "82076c4a-ddcd-4026-a1d7-27dc00b5ae71",
@@ -5831,8 +5831,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Constipation-Negative.png",
-        "imagePositive": "Constipation-Positive.png"
+        "imageNegative": "constipationNegative.png",
+        "imagePositive": "constipationPositive.png"
     },
     {
         "id": "bd5b93ee-b00f-4d42-afac-8b8dba630c13",
@@ -5957,8 +5957,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Appetite,-Excessive-Negative.png",
-        "imagePositive": "Appetite,-Excessive-Positive.png"
+        "imageNegative": "appetiteExcessiveNegative.png",
+        "imagePositive": "appetiteExcessivePositive.png"
     },
     {
         "id": "37850dec-3969-4233-ae02-2481bcdc7184",
@@ -6170,8 +6170,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Skin--Issues-Negative.png",
-        "imagePositive": "Skin--Issues-Positive.png"
+        "imageNegative": "skinIssuesNegative.png",
+        "imagePositive": "skinIssuesPositive.png"
     },
     {
         "id": "cff40972-62eb-4f0c-a54e-d34366cf31a5",
@@ -6272,8 +6272,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Sciatica-Negative.png",
-        "imagePositive": "Sciatica-Positive.png"
+        "imageNegative": "sciaticaNegative.png",
+        "imagePositive": "sciaticaPositive.png"
     },
     {
         "id": "f6d34c09-8075-408f-af12-c3154c6cbaa4",
@@ -6405,8 +6405,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Arm-Problems-Negative.png",
-        "imagePositive": "Arm-Problems-Positive.png"
+        "imageNegative": "armProblemsNegative.png",
+        "imagePositive": "armProblemsPositive.png"
     },
     {
         "id": "de6bbea0-cf8d-4714-981b-c69caa5c5c71",
@@ -6515,8 +6515,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": null,
-        "imagePositive": null
+        "imageNegative": "stutteringNegative.png",
+        "imagePositive": "stutteringPositive.png"
     },
     {
         "id": "c8fe848b-7e18-441f-b1a3-98a67f78b21f",
@@ -6752,8 +6752,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Kidney-Stones-Negative.png",
-        "imagePositive": "Kidney-Stones-Positive.png"
+        "imageNegative": "kidneyStonesNegative.png",
+        "imagePositive": "kidneyStonesPositive.png"
     },
     {
         "id": "787afa7e-4432-46a2-9f63-a381c86e2abf",
@@ -6900,8 +6900,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Blood-Clots-Negative.png",
-        "imagePositive": "Blood-Clots-Positive.png"
+        "imageNegative": "bloodClotsNegative.png",
+        "imagePositive": "bloodClotsPositive.png"
     },
     {
         "id": "9ed9a5fd-badd-4b32-9862-ba6c1dfb456c",
@@ -7089,8 +7089,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Jaw-Problems-Negative.png",
-        "imagePositive": "Jaw-Problems-Positive.png"
+        "imageNegative": "jawProblemsNegative.png",
+        "imagePositive": "jawProblemsPositive.png"
     },
     {
         "id": "50a06eb9-52a3-4d5c-bcb3-68f4e0d99e0b",
@@ -7278,8 +7278,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": null,
-        "imagePositive": null
+        "imageNegative": "sprainsNegative.png",
+        "imagePositive": "sprainsPositive.png"
     },
     {
         "id": "a1e4f861-82c2-4fbb-a8d1-7236635841e9",
@@ -7479,8 +7479,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Candida-Negative.png",
-        "imagePositive": "Candida-Positive.png"
+        "imageNegative": "candidaNegative.png",
+        "imagePositive": "candidaPositive.png"
     },
     {
         "id": "d9a60977-754c-4954-af60-dfdf439c7010",
@@ -7662,8 +7662,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Migraine-Negative.png",
-        "imagePositive": "Migraine-Positive.png"
+        "imageNegative": "migraineNegative.png",
+        "imagePositive": "migrainePositive.png"
     },
     {
         "id": "7a523d90-9e62-4aba-a2ad-930c83c42dbd",
@@ -7813,8 +7813,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Tailbone-Negative.png",
-        "imagePositive": "Tailbone-Positive.png"
+        "imageNegative": "tailboneNegative.png",
+        "imagePositive": "tailbonePositive.png"
     },
     {
         "id": "4791b6e5-5d8b-4647-b771-6b3b57da99a6",
@@ -7912,8 +7912,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Urinary-Tract-Infections-(UTI)-Negative.png",
-        "imagePositive": "Urinary-Tract-Infections-(UTI)-Positive.png"
+        "imageNegative": "urinaryTractInfectionsUtiNegative.png",
+        "imagePositive": "urinaryTractInfectionsUtiPositive.png"
     },
     {
         "id": "505f58ab-ae01-4171-a05c-207dcc872d57",
@@ -8054,8 +8054,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": null,
-        "imagePositive": null
+        "imageNegative": "burnoutNegative.png",
+        "imagePositive": "burnoutPositive.png"
     },
     {
         "id": "2eed44e0-ff11-4744-abc5-9648f8e9ffb4",
@@ -8223,8 +8223,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Premenstrual-Syndrome-(PMS)-Negative.png",
-        "imagePositive": "Premenstrual-Syndrome-(PMS)-Positive.png"
+        "imageNegative": "premenstrualSyndromePmsNegative.png",
+        "imagePositive": "premenstrualSyndromePmsPositive.png"
     },
     {
         "id": "9852d6a4-6823-4f80-8a6d-b130f52ae35c",
@@ -8362,8 +8362,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Varicose-Veins-Negative.png",
-        "imagePositive": "Varicose-Veins-Positive.png"
+        "imageNegative": "varicoseVeinsNegative.png",
+        "imagePositive": "varicoseVeinsPositive.png"
     },
     {
         "id": "e72695ff-7448-49df-b4cf-1805f33246b2",
@@ -8503,8 +8503,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Toothache-Negative.png",
-        "imagePositive": "Toothache-Positive.png"
+        "imageNegative": "toothacheNegative.png",
+        "imagePositive": "toothachePositive.png"
     },
     {
         "id": "8a13c9e7-b996-4418-86e4-99489ddf9594",
@@ -8676,8 +8676,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Numbness-Negative.png",
-        "imagePositive": "Numbness-Positive.png"
+        "imageNegative": "numbnessNegative.png",
+        "imagePositive": "numbnessPositive.png"
     },
     {
         "id": "007b98ae-7d18-492e-a259-c91dc87c9630",
@@ -8805,8 +8805,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Cervix-Negative.png",
-        "imagePositive": "Cervix-Positive.png"
+        "imageNegative": "cervixNegative.png",
+        "imagePositive": "cervixPositive.png"
     },
     {
         "id": "549ec779-cc2c-40ab-aebb-8cbb83286f4c",
@@ -8976,8 +8976,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Dehydration-Negative.png",
-        "imagePositive": "Dehydration-Positive.png"
+        "imageNegative": "dehydrationNegative.png",
+        "imagePositive": "dehydrationPositive.png"
     },
     {
         "id": "c3ab5276-2cfd-4196-bef3-97617d3c42eb",
@@ -9099,8 +9099,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": null,
-        "imagePositive": null
+        "imageNegative": "tinnitusRingingInTheEarNegative.png",
+        "imagePositive": "tinnitusRingingInTheEarPositive.png"
     },
     {
         "id": "6164f86f-1d09-42ee-97b4-7c4aedf15bca",
@@ -9330,8 +9330,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Duodenum-Problems-Negative.png",
-        "imagePositive": "Duodenum-Problems-Positive.png"
+        "imageNegative": "duodenumProblemsNegative.png",
+        "imagePositive": "duodenumProblemsPositive.png"
     },
     {
         "id": "fc166d98-c4a3-476b-8097-9b5e8eff8562",
@@ -9470,8 +9470,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Suicidal-Negative.png",
-        "imagePositive": "Suicidal-Positive.png"
+        "imageNegative": "suicidalNegative.png",
+        "imagePositive": "suicidalPositive.png"
     },
     {
         "id": "68e82b5e-7a3d-4c29-b68c-a583a1db0366",
@@ -9538,8 +9538,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": null,
-        "imagePositive": null
+        "imageNegative": "skinRashesNegative.png",
+        "imagePositive": "skinRashesPositive.png"
     },
     {
         "id": "9235ea7a-2b91-48af-bfb4-03c8876cc992",
@@ -9761,8 +9761,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": null,
-        "imagePositive": null
+        "imageNegative": "nosebleedsNegative.png",
+        "imagePositive": "nosebleedsPositive.png"
     },
     {
         "id": "58e07941-e375-4369-9588-1849dd1c9609",
@@ -9880,8 +9880,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": null,
-        "imagePositive": null
+        "imageNegative": "copdChronicObstructivePulmonaryDiseaseNegative.png",
+        "imagePositive": "copdChronicObstructivePulmonaryDiseasePositive.png"
     },
     {
         "id": "09e27560-00b9-455c-99cb-fad5c5913174",
@@ -9953,8 +9953,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Corns-Negative.png",
-        "imagePositive": "Corns-Positive.png"
+        "imageNegative": "cornsNegative.png",
+        "imagePositive": "cornsPositive.png"
     },
     {
         "id": "e0766f67-6edc-4130-9902-28158c9e21f7",
@@ -10086,8 +10086,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Back-Upper-Negative.png",
-        "imagePositive": "Back-Upper-Positive.png"
+        "imageNegative": "backUpperNegative.png",
+        "imagePositive": "backUpperPositive.png"
     },
     {
         "id": "c8d91eb1-7594-407f-b2e0-d49f79299adf",
@@ -10215,8 +10215,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Sleepwalking-Negative.png",
-        "imagePositive": "Sleepwalking-Positive.png"
+        "imageNegative": "sleepwalkingNegative.png",
+        "imagePositive": "sleepwalkingPositive.png"
     },
     {
         "id": "cf93a1cf-5e4a-4178-a929-7ea75b7449d5",
@@ -10439,8 +10439,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Fungus-Negative.png",
-        "imagePositive": "Fungus-Positive.png"
+        "imageNegative": "fungusNegative.png",
+        "imagePositive": "fungusPositive.png"
     },
     {
         "id": "ed86f3d6-88d2-4fc4-94fd-7c07a499277f",
@@ -10658,8 +10658,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Fibromyalgia-Negative.png",
-        "imagePositive": "Fibromyalgia-Positive.png"
+        "imageNegative": "fibromyalgiaNegative.png",
+        "imagePositive": "fibromyalgiaPositive.png"
     },
     {
         "id": "3e16b28e-36d6-4cb9-b3d7-802c04cf0aff",
@@ -10955,8 +10955,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": null,
-        "imagePositive": null
+        "imageNegative": "immuneIssuesNegative.png",
+        "imagePositive": "immuneIssuesPositive.png"
     },
     {
         "id": "93812311-47e5-4f8d-881a-6bf030c02e76",
@@ -11088,8 +11088,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Hatred-Negative.png",
-        "imagePositive": "Hatred-Positive.png"
+        "imageNegative": "hatredNegative.png",
+        "imagePositive": "hatredPositive.png"
     },
     {
         "id": "9e375370-f851-4be1-8c9f-e926a9b2b6fa",
@@ -11265,8 +11265,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Cold-Sores-Negative.png",
-        "imagePositive": "Cold-Sores-Positive.png"
+        "imageNegative": "coldSoresNegative.png",
+        "imagePositive": "coldSoresPositive.png"
     },
     {
         "id": "05659a7c-bf18-46f2-86d3-04fb6ca18a5d",
@@ -11493,8 +11493,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": null,
-        "imagePositive": null
+        "imageNegative": "chestPainNegative.png",
+        "imagePositive": "chestPainPositive.png"
     },
     {
         "id": "ce1b8883-9854-4d59-bb83-e68de3277210",
@@ -11661,8 +11661,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Restless-Leg-Syndrome-Negative.png",
-        "imagePositive": "Restless-Leg-Syndrome-Positive.png"
+        "imageNegative": "restlessLegSyndromeNegative.png",
+        "imagePositive": "restlessLegSyndromePositive.png"
     },
     {
         "id": "6e5d9217-9527-4304-ba8c-ce7da3931fdd",
@@ -11924,8 +11924,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": null,
-        "imagePositive": null
+        "imageNegative": "kidneysNegative.png",
+        "imagePositive": "kidneysPositive.png"
     },
     {
         "id": "aa547377-0f22-4feb-9f8e-233cf0c0111a",
@@ -11971,8 +11971,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Toes-Negative.png",
-        "imagePositive": "Toes-Positive.png"
+        "imageNegative": "toesNegative.png",
+        "imagePositive": "toesPositive.png"
     },
     {
         "id": "1320d876-9975-40a2-aac9-ff7d730bc35d",
@@ -12102,8 +12102,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Bad-Breath---Halitosis-Negative.png",
-        "imagePositive": "Bad-Breath---Halitosis-Positive.png"
+        "imageNegative": "badBreathHalitosisNegative.png",
+        "imagePositive": "badBreathHalitosisPositive.png"
     },
     {
         "id": "01055d47-a009-485f-aea6-f24079cf2bdf",
@@ -12179,8 +12179,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Pancreas-Negative.png",
-        "imagePositive": "Pancreas-Positive.png"
+        "imageNegative": "pancreasNegative.png",
+        "imagePositive": "pancreasPositive.png"
     },
     {
         "id": "b0672a4a-a377-44ee-9818-0b0c9235a3a4",
@@ -12333,8 +12333,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Hyper-Activity-Negative.png",
-        "imagePositive": "Hyper-Activity-Positive.png"
+        "imageNegative": "hyperActivityNegative.png",
+        "imagePositive": "hyperActivityPositive.png"
     },
     {
         "id": "29585c37-3355-4a63-ab06-b3d1d4fa7399",
@@ -12495,8 +12495,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Hernia-Negative.png",
-        "imagePositive": "Hernia-Positive.png"
+        "imageNegative": "herniaNegative.png",
+        "imagePositive": "herniaPositive.png"
     },
     {
         "id": "71bde5d7-6f75-473c-a12d-b08e77c24973",
@@ -12645,8 +12645,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": null,
-        "imagePositive": null
+        "imageNegative": "chronicFatigueSyndromeNegative.png",
+        "imagePositive": "chronicFatigueSyndromePositive.png"
     },
     {
         "id": "b66891c7-486b-4f69-9637-735feab7f552",
@@ -12784,8 +12784,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Rheumatism-Negative.png",
-        "imagePositive": "Rheumatism-Positive.png"
+        "imageNegative": "rheumatismNegative.png",
+        "imagePositive": "rheumatismPositive.png"
     },
     {
         "id": "e23b6904-053f-4c41-9f93-5dd66793740a",
@@ -12938,8 +12938,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Worry-Negative.png",
-        "imagePositive": "Worry-Positive.png"
+        "imageNegative": "worryNegative.png",
+        "imagePositive": "worryPositive.png"
     },
     {
         "id": "0cdab6c2-100f-4b0c-a9d2-ed965bbc776b",
@@ -13116,8 +13116,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Wrist-Problems-Negative.png",
-        "imagePositive": "Wrist-Problems-Positive.png"
+        "imageNegative": "wristProblemsNegative.png",
+        "imagePositive": "wristProblemsPositive.png"
     },
     {
         "id": "0e87250d-c4a4-4fe1-a0a0-917d3fe59581",
@@ -13437,8 +13437,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": null,
-        "imagePositive": null
+        "imageNegative": "lymeDiseaseNegative.png",
+        "imagePositive": "lymeDiseasePositive.png"
     },
     {
         "id": "424f0ce9-29da-42ea-bc72-00165a2eee1c",
@@ -13624,8 +13624,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Impotence-Negative.png",
-        "imagePositive": "Impotence-Positive.png"
+        "imageNegative": "impotenceNegative.png",
+        "imagePositive": "impotencePositive.png"
     },
     {
         "id": "a9a17ec1-e5b3-4397-95b4-e15d32d618c6",
@@ -13846,8 +13846,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Greed-Negative.png",
-        "imagePositive": "Greed-Positive.png"
+        "imageNegative": "greedNegative.png",
+        "imagePositive": "greedPositive.png"
     },
     {
         "id": "93471891-6730-4342-977e-e5b42b75f1aa",
@@ -14017,8 +14017,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Hay-Fever-Negative.png",
-        "imagePositive": "Hay-Fever-Positive.png"
+        "imageNegative": "hayFeverNegative.png",
+        "imagePositive": "hayFeverPositive.png"
     },
     {
         "id": "b9c81a94-825c-4cf9-ab45-c63d4b0c7e60",
@@ -14227,8 +14227,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Itching-Negative.png",
-        "imagePositive": "Itching-Positive.png"
+        "imageNegative": "itchingNegative.png",
+        "imagePositive": "itchingPositive.png"
     },
     {
         "id": "2190f91b-ef7b-41d4-813d-0afe873c75c5",
@@ -14356,8 +14356,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Vitiligo-Negative.png",
-        "imagePositive": "Vitiligo-Positive.png"
+        "imageNegative": "vitiligoNegative.png",
+        "imagePositive": "vitiligoPositive.png"
     },
     {
         "id": "7a756855-3a51-4c99-994c-414153ed612a",
@@ -14565,8 +14565,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Allergies-Negative.png",
-        "imagePositive": "Allergies-Positive.png"
+        "imageNegative": "allergiesNegative.png",
+        "imagePositive": "allergiesPositive.png"
     },
     {
         "id": "4eef6973-c4fe-44a3-834d-92c57b66a402",
@@ -14636,8 +14636,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": null,
-        "imagePositive": null
+        "imageNegative": "throatProblemsSpecificNegative.png",
+        "imagePositive": "throatProblemsSpecificPositive.png"
     },
     {
         "id": "c78d634b-dc75-4862-b997-b18b973c24dd",
@@ -14785,8 +14785,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": null,
-        "imagePositive": null
+        "imageNegative": "gasFlatulenceNegative.png",
+        "imagePositive": "gasFlatulencePositive.png"
     },
     {
         "id": "4698485f-224c-4d06-9cfe-0dbc1ca0ba3b",
@@ -14932,8 +14932,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Tonsillitis-Negative.png",
-        "imagePositive": "Tonsillitis-Positive.png"
+        "imageNegative": "tonsillitisNegative.png",
+        "imagePositive": "tonsillitisPositive.png"
     },
     {
         "id": "defe4822-194c-4287-adde-abef59797932",
@@ -15083,8 +15083,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Hodgkin-Disease-Negative.png",
-        "imagePositive": "Hodgkin-Disease-Positive.png"
+        "imageNegative": "hodgkinSDiseaseNegative.png",
+        "imagePositive": "hodgkinSDiseasePositive.png"
     },
     {
         "id": "3faf4657-e891-481b-87a6-05df15fe0c24",
@@ -15286,8 +15286,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": null,
-        "imagePositive": null
+        "imageNegative": "colonProblemsSmallIntestineNegative.png",
+        "imagePositive": "colonProblemsSmallIntestinePositive.png"
     },
     {
         "id": "e2daf443-7a9a-48e3-a3d3-a6a1b0976b8e",
@@ -15492,8 +15492,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Depression-Negative.png",
-        "imagePositive": "Depression-Positive.png"
+        "imageNegative": "depressionNegative.png",
+        "imagePositive": "depressionPositive.png"
     },
     {
         "id": "28dc98fb-cbc0-4f4a-8ccc-ef9032dae5df",
@@ -15717,8 +15717,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Meningitis-Negative.png",
-        "imagePositive": "Meningitis-Positive.png"
+        "imageNegative": "meningitisNegative.png",
+        "imagePositive": "meningitisPositive.png"
     },
     {
         "id": "f61a48ce-69cd-4381-af3d-15a85f69fe60",
@@ -15847,8 +15847,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Bloated-(body-wide-water-retention)-Negative.png",
-        "imagePositive": "Bloated-(body-wide-water-retention)-Positive.png"
+        "imageNegative": "bloatedBodyWideWaterRetentionNegative.png",
+        "imagePositive": "bloatedBodyWideWaterRetentionPositive.png"
     },
     {
         "id": "d845844e-bf05-4261-80da-5ab12f678e6a",
@@ -16043,8 +16043,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Nose-Negative.png",
-        "imagePositive": "Nose-Positive.png"
+        "imageNegative": "noseNegative.png",
+        "imagePositive": "nosePositive.png"
     },
     {
         "id": "b3e36039-47f1-4b07-86e6-37eee741a519",
@@ -16173,8 +16173,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Ribs-Negative.png",
-        "imagePositive": "Ribs-Positive.png"
+        "imageNegative": "ribsNegative.png",
+        "imagePositive": "ribsPositive.png"
     },
     {
         "id": "7705c874-b0ab-41f1-9720-5e1148a8fbda",
@@ -16326,8 +16326,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Bulimia-Negative.png",
-        "imagePositive": "Bulimia-Positive.png"
+        "imageNegative": "bulimiaNegative.png",
+        "imagePositive": "bulimiaPositive.png"
     },
     {
         "id": "d4be70ab-e3da-4da1-b022-3bec500acae1",
@@ -16539,8 +16539,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Morning-Sickness-Negative.png",
-        "imagePositive": "Morning-Sickness-Positive.png"
+        "imageNegative": "morningSicknessNegative.png",
+        "imagePositive": "morningSicknessPositive.png"
     },
     {
         "id": "fdb1de29-79a4-4bc7-8c8c-56802fd48856",
@@ -16683,8 +16683,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Hair-Loss-Negative.png",
-        "imagePositive": "Hair-Loss-Positive.png"
+        "imageNegative": "hairLossNegative.png",
+        "imagePositive": "hairLossPositive.png"
     },
     {
         "id": "7b7a9c5d-9eca-4303-879a-c6d39d2e1deb",
@@ -16802,8 +16802,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Prostate-Negative.png",
-        "imagePositive": "Prostate-Positive.png"
+        "imageNegative": "prostateNegative.png",
+        "imagePositive": "prostatePositive.png"
     },
     {
         "id": "568e4d5f-722a-4007-b7bb-a052983b9b25",
@@ -17052,8 +17052,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Joint-Pain-Negative.png",
-        "imagePositive": "Joint-Pain-Positive.png"
+        "imageNegative": "jointPainNegative.png",
+        "imagePositive": "jointPainPositive.png"
     },
     {
         "id": "3e0b7f0f-a533-42a8-8485-5bfd85886451",
@@ -17192,8 +17192,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Arm-Right-Negative.png",
-        "imagePositive": "Arm-Right-Positive.png"
+        "imageNegative": "armRightNegative.png",
+        "imagePositive": "armRightPositive.png"
     },
     {
         "id": "1e7b0940-185a-440a-86f7-2b34fd7abe41",
@@ -17515,8 +17515,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Stomach-Problems-(Digestive)-Negative.png",
-        "imagePositive": "Stomach-Problems-(Digestive)-Positive.png"
+        "imageNegative": "stomachProblemsDigestiveNegative.png",
+        "imagePositive": "stomachProblemsDigestivePositive.png"
     },
     {
         "id": "7731926f-616e-4863-b197-293bcc0375ce",
@@ -17604,8 +17604,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Sneezing-Negative.png",
-        "imagePositive": "Sneezing-Positive.png"
+        "imageNegative": "sneezingNegative.png",
+        "imagePositive": "sneezingPositive.png"
     },
     {
         "id": "6508bf92-b40f-4519-a844-294d64661428",
@@ -17759,8 +17759,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Shoulder-Pain---Tension-Negative.png",
-        "imagePositive": "Shoulder-Pain---Tension-Positive.png"
+        "imageNegative": "shoulderPainTensionNegative.png",
+        "imagePositive": "shoulderPainTensionPositive.png"
     },
     {
         "id": "deed38fa-ce00-4ecb-8c86-7b6fc0aa4330",
@@ -17942,8 +17942,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Jaundice-Negative.png",
-        "imagePositive": "Jaundice-Positive.png"
+        "imageNegative": "jaundiceNegative.png",
+        "imagePositive": "jaundicePositive.png"
     },
     {
         "id": "9a5ae3bf-4494-4c2e-be53-d704069335e0",
@@ -18073,8 +18073,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Shame-Negative.png",
-        "imagePositive": "Shame-Positive.png"
+        "imageNegative": "shameNegative.png",
+        "imagePositive": "shamePositive.png"
     },
     {
         "id": "06747343-5cc7-4a05-a680-e6fa1bacf8b7",
@@ -18158,8 +18158,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Post-Nasal-Drip-Negative.png",
-        "imagePositive": "Post-Nasal-Drip-Positive.png"
+        "imageNegative": "postNasalDripNegative.png",
+        "imagePositive": "postNasalDripPositive.png"
     },
     {
         "id": "3e295685-644f-422b-881c-c0ba3d627885",
@@ -18421,8 +18421,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Diabetes-Negative.png",
-        "imagePositive": "Diabetes-Positive.png"
+        "imageNegative": "diabetesNegative.png",
+        "imagePositive": "diabetesPositive.png"
     },
     {
         "id": "032936fe-4c5b-44d9-951c-3fb1f8eb7419",
@@ -18600,8 +18600,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Stiffness-Negative.png",
-        "imagePositive": "Stiffness-Positive.png"
+        "imageNegative": "stiffnessNegative.png",
+        "imagePositive": "stiffnessPositive.png"
     },
     {
         "id": "8d2f4c7f-5d7e-4b7b-8a46-f492352c1a26",
@@ -18803,8 +18803,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Tendon-Negative.png",
-        "imagePositive": "Tendon-Positive.png"
+        "imageNegative": "tendonNegative.png",
+        "imagePositive": "tendonPositive.png"
     },
     {
         "id": "20bda7f7-caf1-49ad-a19a-e6a8c36ae0f3",
@@ -18969,8 +18969,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Accidents-Negative.png",
-        "imagePositive": "Accidents-Positive.png"
+        "imageNegative": "accidentsNegative.png",
+        "imagePositive": "accidentsPositive.png"
     },
     {
         "id": "9c7081fe-4f8a-42bb-8948-56119ce72e15",
@@ -19132,8 +19132,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": null,
-        "imagePositive": null
+        "imageNegative": "guiltNegative.png",
+        "imagePositive": "guiltPositive.png"
     },
     {
         "id": "cda2507d-87a9-4552-acdc-22f4195a5345",
@@ -19320,8 +19320,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Buttocks-Problems-Negative.png",
-        "imagePositive": "Buttocks-Problems-Positive.png"
+        "imageNegative": "buttocksProblemsNegative.png",
+        "imagePositive": "buttocksProblemsPositive.png"
     },
     {
         "id": "18274b55-d443-4f37-8d74-9f6b92a1c32a",
@@ -19549,8 +19549,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Ear-Negative.png",
-        "imagePositive": "Ear-Positive.png"
+        "imageNegative": "earNegative.png",
+        "imagePositive": "earPositive.png"
     },
     {
         "id": "fb8dab91-38bb-4664-9ca7-4c7630df4ed6",
@@ -19675,8 +19675,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Bed-Wetting-(nocturnal-enuresis)-Negative.png",
-        "imagePositive": "Bed-Wetting-(nocturnal-enuresis)-Positive.png"
+        "imageNegative": "bedWettingNocturnalEnuresisNegative.png",
+        "imagePositive": "bedWettingNocturnalEnuresisPositive.png"
     },
     {
         "id": "224710cc-b557-42a2-b26f-8e693d2832ae",
@@ -19801,8 +19801,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Biting-Fingernails-Negative.png",
-        "imagePositive": "Biting-Fingernails-Positive.png"
+        "imageNegative": "bitingFingernailsNegative.png",
+        "imagePositive": "bitingFingernailsPositive.png"
     },
     {
         "id": "34e45f58-51b6-4e47-ae43-3c28afc2c384",
@@ -20046,8 +20046,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Indigestion-Negative.png",
-        "imagePositive": "Indigestion-Positive.png"
+        "imageNegative": "indigestionNegative.png",
+        "imagePositive": "indigestionPositive.png"
     },
     {
         "id": "73bbc2aa-fbdf-415e-950f-0ad9f14f507d",
@@ -20234,8 +20234,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": null,
-        "imagePositive": null
+        "imageNegative": "drugAddictionNegative.png",
+        "imagePositive": "drugAddictionPositive.png"
     },
     {
         "id": "7e96ec64-1e45-4ea1-85a9-d930b525be82",
@@ -20417,8 +20417,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Epilepsy-Negative.png",
-        "imagePositive": "Epilepsy-Positive.png"
+        "imageNegative": "epilepsyNegative.png",
+        "imagePositive": "epilepsyPositive.png"
     },
     {
         "id": "74b12543-34cb-409f-a7fb-a3717214863c",
@@ -20693,8 +20693,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Cancer-Negative.png",
-        "imagePositive": "Cancer-Positive.png"
+        "imageNegative": "cancerNegative.png",
+        "imagePositive": "cancerPositive.png"
     },
     {
         "id": "6b22d0d9-b6f9-4302-93a2-b7499e89d3c3",
@@ -20924,8 +20924,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Anxiety-Negative.png",
-        "imagePositive": "Anxiety-Positive.png"
+        "imageNegative": "anxietyNegative.png",
+        "imagePositive": "anxietyPositive.png"
     },
     {
         "id": "490f74b6-a7cd-46ed-aa59-b6d9ce133a33",
@@ -21049,8 +21049,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Addison-Disease-Negative.png",
-        "imagePositive": "Addison-Disease-Positive.png"
+        "imageNegative": "addisonSDiseaseNegative.png",
+        "imagePositive": "addisonSDiseasePositive.png"
     },
     {
         "id": "7235f2a5-b1bf-4605-8a68-8c1b1c533440",
@@ -21177,8 +21177,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Abscesses-Negative.png",
-        "imagePositive": "Abscesses-Positive.png"
+        "imageNegative": "abscessesNegative.png",
+        "imagePositive": "abscessesPositive.png"
     },
     {
         "id": "bc3b889f-747b-4854-999e-2ea4122fbd96",
@@ -21351,8 +21351,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Viruses-Negative.png",
-        "imagePositive": "Viruses-Positive.png"
+        "imageNegative": "virusesNegative.png",
+        "imagePositive": "virusesPositive.png"
     },
     {
         "id": "a159409f-91df-4ae5-a626-b42d5138a619",
@@ -21511,8 +21511,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Hepatitis-Negative.png",
-        "imagePositive": "Hepatitis-Positive.png"
+        "imageNegative": "hepatitisNegative.png",
+        "imagePositive": "hepatitisPositive.png"
     },
     {
         "id": "c24324d5-a9f5-435b-b46f-2287d3b0a2c3",
@@ -21655,8 +21655,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": null,
-        "imagePositive": null
+        "imageNegative": "mastCellDiseaseNegative.png",
+        "imagePositive": "mastCellDiseasePositive.png"
     },
     {
         "id": "a95937aa-c560-4867-8e5a-6983288da7ac",
@@ -21750,8 +21750,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Stroke-Negative.png",
-        "imagePositive": "Stroke-Positive.png"
+        "imageNegative": "strokeNegative.png",
+        "imagePositive": "strokePositive.png"
     },
     {
         "id": "b75b9898-e33c-44b1-9ade-ea8fe99411ea",
@@ -22019,8 +22019,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Bones-Negative.png",
-        "imagePositive": "Bones-Positive.png"
+        "imageNegative": "bonesNegative.png",
+        "imagePositive": "bonesPositive.png"
     },
     {
         "id": "d6de4ccf-37ee-4d3d-801d-29b1586167ff",
@@ -22175,8 +22175,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Claustrophobia-Negative.png",
-        "imagePositive": "Claustrophobia-Positive.png"
+        "imageNegative": "claustrophobiaNegative.png",
+        "imagePositive": "claustrophobiaPositive.png"
     },
     {
         "id": "5e0305fc-2b92-4843-b211-e6fb96071898",
@@ -22291,8 +22291,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Shin-Negative.png",
-        "imagePositive": "Shin-Positive.png"
+        "imageNegative": "shinNegative.png",
+        "imagePositive": "shinPositive.png"
     },
     {
         "id": "48dcd6f3-eeb6-4867-b269-0c532aa4675f",
@@ -22403,8 +22403,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Adenoids-Negative.png",
-        "imagePositive": "Adenoids-Positive.png"
+        "imageNegative": "adenoidsNegative.png",
+        "imagePositive": "adenoidsPositive.png"
     },
     {
         "id": "2b318dbe-7da7-4a33-8a3f-c22ef6d10e49",
@@ -22484,8 +22484,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": null,
-        "imagePositive": null
+        "imageNegative": "kleptomaniaStealingNegative.png",
+        "imagePositive": "kleptomaniaStealingPositive.png"
     },
     {
         "id": "55b9e1b9-7631-4beb-ab97-e566e3421100",
@@ -22783,8 +22783,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Emphysema-Negative.png",
-        "imagePositive": "Emphysema-Positive.png"
+        "imageNegative": "emphysemaNegative.png",
+        "imagePositive": "emphysemaPositive.png"
     },
     {
         "id": "187d2cc9-78e8-4703-81b6-a17a0669a8b0",
@@ -22946,8 +22946,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Burn-Negative.png",
-        "imagePositive": "Burn-Positive.png"
+        "imageNegative": "burnNegative.png",
+        "imagePositive": "burnPositive.png"
     },
     {
         "id": "b8223b3a-3b73-4d9d-94a9-a4b03b057daa",
@@ -23110,8 +23110,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Dry-Lips-Negative.png",
-        "imagePositive": "Dry-Lips-Positive.png"
+        "imageNegative": "dryLipsNegative.png",
+        "imagePositive": "dryLipsPositive.png"
     },
     {
         "id": "d3ec6e28-9ee7-4c32-bc5b-575f11a41763",
@@ -23311,8 +23311,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Heart-Problems-Negative.png",
-        "imagePositive": "Heart-Problems-Positive.png"
+        "imageNegative": "heartProblemsNegative.png",
+        "imagePositive": "heartProblemsPositive.png"
     },
     {
         "id": "b58859c0-43ef-4761-932c-748fc0231670",
@@ -23509,8 +23509,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Fainting-Negative.png",
-        "imagePositive": "Fainting-Positive.png"
+        "imageNegative": "faintingNegative.png",
+        "imagePositive": "faintingPositive.png"
     },
     {
         "id": "fe027097-506f-4af5-822f-6b3ac05db825",
@@ -23639,8 +23639,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Heartburn-Negative.png",
-        "imagePositive": "Heartburn-Positive.png"
+        "imageNegative": "heartburnNegative.png",
+        "imagePositive": "heartburnPositive.png"
     },
     {
         "id": "13ddd07a-7f14-415f-8606-06df3101c548",
@@ -23832,8 +23832,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Face-Negative.png",
-        "imagePositive": "Face-Positive.png"
+        "imageNegative": "faceNegative.png",
+        "imagePositive": "facePositive.png"
     },
     {
         "id": "c76ff096-2b70-41c2-8014-8babf7c86117",
@@ -24040,8 +24040,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Hives-Negative.png",
-        "imagePositive": "Hives-Positive.png"
+        "imageNegative": "hivesNegative.png",
+        "imagePositive": "hivesPositive.png"
     },
     {
         "id": "3acb0a9c-99bd-4187-806b-e070c55f07a9",
@@ -24143,8 +24143,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Warts-Negative.png",
-        "imagePositive": "Warts-Positive.png"
+        "imageNegative": "wartsNegative.png",
+        "imagePositive": "wartsPositive.png"
     },
     {
         "id": "b46b55c4-e7b3-42bd-934f-87169c362e94",
@@ -24286,8 +24286,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Bladder-problems-Negative.png",
-        "imagePositive": "Bladder-problems-Positive.png"
+        "imageNegative": "bladderProblemsNegative.png",
+        "imagePositive": "bladderProblemsPositive.png"
     },
     {
         "id": "06288785-313a-4d05-bc7a-bd7ec43da93b",
@@ -24447,8 +24447,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Menstrual-Problems-Negative.png",
-        "imagePositive": "Menstrual-Problems-Positive.png"
+        "imageNegative": "menstrualProblemsNegative.png",
+        "imagePositive": "menstrualProblemsPositive.png"
     },
     {
         "id": "6598c184-b058-420c-b249-5f47c24c20c1",
@@ -24654,8 +24654,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Cholesterol-Negative.png",
-        "imagePositive": "Cholesterol-Positive.png"
+        "imageNegative": "cholesterolNegative.png",
+        "imagePositive": "cholesterolPositive.png"
     },
     {
         "id": "c18c64f8-201d-4c36-8f1a-3a2efe16e345",
@@ -24866,8 +24866,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Eyes--Red---Blood-Shot-Negative.png",
-        "imagePositive": "Eyes--Red---Blood-Shot-Positive.png"
+        "imageNegative": "eyesRedBloodShotNegative.png",
+        "imagePositive": "eyesRedBloodShotPositive.png"
     },
     {
         "id": "22476ab8-34d0-4d81-aa9e-e70dbcb0150c",
@@ -25016,8 +25016,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Parasites-Negative.png",
-        "imagePositive": "Parasites-Positive.png"
+        "imageNegative": "parasitesNegative.png",
+        "imagePositive": "parasitesPositive.png"
     },
     {
         "id": "d2d772fa-985f-4524-87a0-36f2d41fd9e5",
@@ -25232,8 +25232,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Dyslexia-Negative.png",
-        "imagePositive": "Dyslexia-Positive.png"
+        "imageNegative": "dyslexiaNegative.png",
+        "imagePositive": "dyslexiaPositive.png"
     },
     {
         "id": "087abd47-7970-42ed-b75f-02c12ed9a76d",
@@ -25366,8 +25366,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Thymus-Gland-Negative.png",
-        "imagePositive": "Thymus-Gland-Positive.png"
+        "imageNegative": "thymusGlandNegative.png",
+        "imagePositive": "thymusGlandPositive.png"
     },
     {
         "id": "743c12b2-9a65-40be-a706-65f51d50c5b0",
@@ -25570,8 +25570,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Mouth-Negative.png",
-        "imagePositive": "Mouth-Positive.png"
+        "imageNegative": "mouthNegative.png",
+        "imagePositive": "mouthPositive.png"
     },
     {
         "id": "f6ca58f2-f288-4692-bf25-ebd348e0d65e",
@@ -25702,8 +25702,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Craving--Chocolate-Negative.png",
-        "imagePositive": "Craving--Chocolate-Positive.png"
+        "imageNegative": "cravingChocolateNegative.png",
+        "imagePositive": "cravingChocolatePositive.png"
     },
     {
         "id": "fe0c1ea1-1a91-4f61-bf0a-cba53c40099e",
@@ -25831,8 +25831,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": null,
-        "imagePositive": null
+        "imageNegative": "shinglesNegative.png",
+        "imagePositive": "shinglesPositive.png"
     },
     {
         "id": "07c96345-5598-4622-9d85-2887295b6285",
@@ -25972,8 +25972,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "AIDS-Negative.png",
-        "imagePositive": "AIDS-Positive.png"
+        "imageNegative": "aidsNegative.png",
+        "imagePositive": "aidsPositive.png"
     },
     {
         "id": "327938d1-429f-4488-b1bb-4e67db5d522e",
@@ -26149,8 +26149,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Arthritis-Negative.png",
-        "imagePositive": "Arthritis-Positive.png"
+        "imageNegative": "arthritisNegative.png",
+        "imagePositive": "arthritisPositive.png"
     },
     {
         "id": "f8cbf8e8-7e4a-4156-a082-f9d14a600f88",
@@ -26266,8 +26266,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Anus-Negative.png",
-        "imagePositive": "Anus-Positive.png"
+        "imageNegative": "anusNegative.png",
+        "imagePositive": "anusPositive.png"
     },
     {
         "id": "cbff7dbb-5161-4e1e-a0d6-a0dcdb474685",
@@ -26374,8 +26374,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Sinuses-Negative.png",
-        "imagePositive": "Sinuses-Positive.png"
+        "imageNegative": "sinusesNegative.png",
+        "imagePositive": "sinusesPositive.png"
     },
     {
         "id": "3c09fb1f-41cf-40e0-b56c-b68b4d7f89be",
@@ -26504,8 +26504,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Bruises-Negative.png",
-        "imagePositive": "Bruises-Positive.png"
+        "imageNegative": "bruisesNegative.png",
+        "imagePositive": "bruisesPositive.png"
     },
     {
         "id": "6774717a-efcd-4b68-b8d8-fb7c3a8012bf",
@@ -26689,8 +26689,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Nausea-Negative.png",
-        "imagePositive": "Nausea-Positive.png"
+        "imageNegative": "nauseaNegative.png",
+        "imagePositive": "nauseaPositive.png"
     },
     {
         "id": "418f5877-42ce-4f52-b62d-4c49892bc757",
@@ -26914,8 +26914,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Liver-Negative.png",
-        "imagePositive": "Liver-Positive.png"
+        "imageNegative": "liverNegative.png",
+        "imagePositive": "liverPositive.png"
     },
     {
         "id": "9f395446-5b21-4bb4-b2a2-90fe800500b4",
@@ -27024,8 +27024,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Dandruff-Negative.png",
-        "imagePositive": "Dandruff-Positive.png"
+        "imageNegative": "dandruffNegative.png",
+        "imagePositive": "dandruffPositive.png"
     },
     {
         "id": "983ac20a-4e2d-4591-8420-86b2d0b41a51",
@@ -27129,8 +27129,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Ulcers-Negative.png",
-        "imagePositive": "Ulcers-Positive.png"
+        "imageNegative": "ulcersNegative.png",
+        "imagePositive": "ulcersPositive.png"
     },
     {
         "id": "058f8b20-79e3-46ee-9190-e8203f3cc2ba",
@@ -27286,8 +27286,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Bitter-Negative.png",
-        "imagePositive": "Bitter-Positive.png"
+        "imageNegative": "bitterNegative.png",
+        "imagePositive": "bitterPositive.png"
     },
     {
         "id": "8493f139-0f53-4786-86f2-576a6ef069f2",
@@ -27406,8 +27406,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": null,
-        "imagePositive": null
+        "imageNegative": "ulcerativeColitisOrColitisNegative.png",
+        "imagePositive": "ulcerativeColitisOrColitisPositive.png"
     },
     {
         "id": "da5f9bca-5556-43bd-99fc-c7f196ec907f",
@@ -27609,8 +27609,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Breast-Problems-Negative.png",
-        "imagePositive": "Breast-Problems-Positive.png"
+        "imageNegative": "breastProblemsNegative.png",
+        "imagePositive": "breastProblemsPositive.png"
     },
     {
         "id": "e811e32d-2fbb-4391-aea2-d4a2af5ea076",
@@ -27698,8 +27698,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": null,
-        "imagePositive": null
+        "imageNegative": "hipProblemsNegative.png",
+        "imagePositive": "hipProblemsPositive.png"
     },
     {
         "id": "bc576ce9-a340-4174-946d-6fdf8a8342ef",
@@ -27878,8 +27878,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": null,
-        "imagePositive": null
+        "imageNegative": "eyesStyeSufferingNegative.png",
+        "imagePositive": "eyesStyeSufferingPositive.png"
     },
     {
         "id": "e88e26b5-5fb6-45ac-9e0b-9ce15ee20588",
@@ -28075,8 +28075,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": null,
-        "imagePositive": null
+        "imageNegative": "handsNegative.png",
+        "imagePositive": "handsPositive.png"
     },
     {
         "id": "8a3e8973-0142-44e2-9762-fe1411ffa76a",
@@ -28307,8 +28307,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": null,
-        "imagePositive": null
+        "imageNegative": "irritationNegative.png",
+        "imagePositive": "irritationPositive.png"
     },
     {
         "id": "1587522c-e3e2-4ed8-a7b4-fb64a81685ca",
@@ -28466,8 +28466,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Neck-Problems-Negative.png",
-        "imagePositive": "Neck-Problems-Positive.png"
+        "imageNegative": "neckProblemsNegative.png",
+        "imagePositive": "neckProblemsPositive.png"
     },
     {
         "id": "9d6af796-e125-4080-8abf-5d9fbca6345f",
@@ -28582,8 +28582,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Miscarriage-Negative.png",
-        "imagePositive": "Miscarriage-Positive.png"
+        "imageNegative": "miscarriageNegative.png",
+        "imagePositive": "miscarriagePositive.png"
     },
     {
         "id": "1b5fca5d-9aba-447c-87b8-306ba0a772dd",
@@ -28685,8 +28685,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Craving--Sex-Negative.png",
-        "imagePositive": "Craving--Sex-Positive.png"
+        "imageNegative": "cravingSexNegative.png",
+        "imagePositive": "cravingSexPositive.png"
     },
     {
         "id": "d08ed51e-91a9-4c6d-aad6-e0583449be10",
@@ -28856,8 +28856,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Aging-Problems-Negative.png",
-        "imagePositive": "Aging-Problems-Positive.png"
+        "imageNegative": "agingProblemsNegative.png",
+        "imagePositive": "agingProblemsPositive.png"
     },
     {
         "id": "84764b4a-4938-41c0-9408-ad95ab97a433",
@@ -29032,8 +29032,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": null,
-        "imagePositive": null
+        "imageNegative": "scoliosisCurvatureOfTheSpineNegative.png",
+        "imagePositive": "scoliosisCurvatureOfTheSpinePositive.png"
     },
     {
         "id": "31d4bb53-252f-490f-94ad-5cc228fea883",
@@ -29216,8 +29216,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": null,
-        "imagePositive": null
+        "imageNegative": "nerveProblemsNegative.png",
+        "imagePositive": "nerveProblemsPositive.png"
     },
     {
         "id": "2f812d93-d8c4-4aec-a80e-c1a5dbe66d88",
@@ -29360,8 +29360,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Craving--Cold-Dairy-Negative.png",
-        "imagePositive": "Craving--Cold-Dairy-Positive.png"
+        "imageNegative": "cravingColdDairyNegative.png",
+        "imagePositive": "cravingColdDairyPositive.png"
     },
     {
         "id": "e45ab169-ab45-4833-bba6-cb5e872ac94b",
@@ -29511,8 +29511,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Gangrene-Negative.png",
-        "imagePositive": "Gangrene-Positive.png"
+        "imageNegative": "gangreneNegative.png",
+        "imagePositive": "gangrenePositive.png"
     },
     {
         "id": "5d669273-1196-431e-b549-55de3d150278",
@@ -29634,8 +29634,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Feet-Negative.png",
-        "imagePositive": "Feet-Positive.png"
+        "imageNegative": "feetNegative.png",
+        "imagePositive": "feetPositive.png"
     },
     {
         "id": "6bb8ed5d-e43e-421f-b013-af51162ab72a",
@@ -29849,8 +29849,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": null,
-        "imagePositive": null
+        "imageNegative": "cravingSugarNegative.png",
+        "imagePositive": "cravingSugarPositive.png"
     },
     {
         "id": "a77f53ce-6ab2-4aa6-a879-487d6dfa3e2f",
@@ -30059,8 +30059,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Asthma-Negative.png",
-        "imagePositive": "Asthma-Positive.png"
+        "imageNegative": "asthmaNegative.png",
+        "imagePositive": "asthmaPositive.png"
     },
     {
         "id": "d3cd2f10-53c2-4a57-ae63-b8b170d392aa",
@@ -30317,8 +30317,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": null,
-        "imagePositive": null
+        "imageNegative": "colonProblemsLargeIntestineNegative.png",
+        "imagePositive": "colonProblemsLargeIntestinePositive.png"
     },
     {
         "id": "5ea9860a-9ed0-44b4-ba58-611684a89427",
@@ -30440,8 +30440,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Craving--Spicy-Foods-Negative.png",
-        "imagePositive": "Craving--Spicy-Foods-Positive.png"
+        "imageNegative": "cravingSpicyFoodsNegative.png",
+        "imagePositive": "cravingSpicyFoodsPositive.png"
     },
     {
         "id": "d4df3433-2c07-4407-abf0-7ea18e5eba64",
@@ -30574,8 +30574,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": null,
-        "imagePositive": null
+        "imageNegative": "sleepApneaNegative.png",
+        "imagePositive": "sleepApneaPositive.png"
     },
     {
         "id": "7d281dec-222a-4d50-ab72-6e4b131dc739",
@@ -30839,8 +30839,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Leg-Problems-Negative.png",
-        "imagePositive": "Leg-Problems-Positive.png"
+        "imageNegative": "legProblemsNegative.png",
+        "imagePositive": "legProblemsPositive.png"
     },
     {
         "id": "7b2dd3c6-2c63-4dda-97e2-8a3f1c83ce5b",
@@ -31031,8 +31031,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Craving--Ice-Cream-Negative.png",
-        "imagePositive": "Craving--Ice-Cream-Positive.png"
+        "imageNegative": "cravingIceCreamNegative.png",
+        "imagePositive": "cravingIceCreamPositive.png"
     },
     {
         "id": "ac2ff475-bfc8-41fa-bcd9-041d18e46830",
@@ -31183,8 +31183,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": null,
-        "imagePositive": null
+        "imageNegative": "virusCoronaNegative.png",
+        "imagePositive": "virusCoronaPositive.png"
     },
     {
         "id": "4b8cc73a-6577-4a66-b087-f67e1b36556e",
@@ -31376,8 +31376,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Amnesia-Negative.png",
-        "imagePositive": "Amnesia-Positive.png"
+        "imageNegative": "amnesiaNegative.png",
+        "imagePositive": "amnesiaPositive.png"
     },
     {
         "id": "dd920d67-95be-4ba7-9fd2-198174eac8db",
@@ -31512,8 +31512,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Arm-Left-Negative.png",
-        "imagePositive": "Arm-Left-Positive.png"
+        "imageNegative": "armLeftNegative.png",
+        "imagePositive": "armLeftPositive.png"
     },
     {
         "id": "4011e417-5e01-42d6-b3c6-2edd3fabccb2",
@@ -31637,8 +31637,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Back-Middle-Negative.png",
-        "imagePositive": "Back-Middle-Positive.png"
+        "imageNegative": "backMiddleNegative.png",
+        "imagePositive": "backMiddlePositive.png"
     },
     {
         "id": "c00e4605-b35f-4de7-9491-18e5bf61527b",
@@ -31826,8 +31826,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": null,
-        "imagePositive": null
+        "imageNegative": "bronchitisNegative.png",
+        "imagePositive": "bronchitisPositive.png"
     },
     {
         "id": "5b3be618-0b3b-46cb-aa49-51e4f6abd19f",
@@ -32083,8 +32083,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Inflammation-Negative.png",
-        "imagePositive": "Inflammation-Positive.png"
+        "imageNegative": "inflammationNegative.png",
+        "imagePositive": "inflammationPositive.png"
     },
     {
         "id": "9fe44fec-af0d-4380-95b7-a39dba46dfdc",
@@ -32232,8 +32232,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": null,
-        "imagePositive": null
+        "imageNegative": "skinCancerNegative.png",
+        "imagePositive": "skinCancerPositive.png"
     },
     {
         "id": "2b69ba02-3af9-4293-81f5-475e64dc8f91",
@@ -32434,8 +32434,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Hands-Chapped-Negative.png",
-        "imagePositive": "Hands-Chapped-Positive.png"
+        "imageNegative": "handsChappedNegative.png",
+        "imagePositive": "handsChappedPositive.png"
     },
     {
         "id": "e6f12137-fe55-46ef-bdb8-f78f54b73d5f",
@@ -32642,8 +32642,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Blood-Pressure-(low)-Negative.png",
-        "imagePositive": "Blood-Pressure-(low)-Positive.png"
+        "imageNegative": "bloodPressureLowNegative.png",
+        "imagePositive": "bloodPressureLowPositive.png"
     },
     {
         "id": "d9cedb4d-ac25-4ceb-abdc-6982b562271e",
@@ -32887,8 +32887,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Elbows-Negative.png",
-        "imagePositive": "Elbows-Positive.png"
+        "imageNegative": "elbowsNegative.png",
+        "imagePositive": "elbowsPositive.png"
     },
     {
         "id": "111a7f85-ab42-4f5f-add4-a651e9717706",
@@ -33106,8 +33106,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Hemorrhoids-Negative.png",
-        "imagePositive": "Hemorrhoids-Positive.png"
+        "imageNegative": "hemorrhoidsNegative.png",
+        "imagePositive": "hemorrhoidsPositive.png"
     },
     {
         "id": "2eec817a-8c06-401e-8e29-028f927ad665",
@@ -33275,8 +33275,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": null,
-        "imagePositive": null
+        "imageNegative": "skinDryIrritationsNegative.png",
+        "imagePositive": "skinDryIrritationsPositive.png"
     },
     {
         "id": "ac9f5d8d-6874-42d1-b3a5-ad6fe9ee51e0",
@@ -33402,8 +33402,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Brain-Problems-Negative.png",
-        "imagePositive": "Brain-Problems-Positive.png"
+        "imageNegative": "brainProblemsNegative.png",
+        "imagePositive": "brainProblemsPositive.png"
     },
     {
         "id": "0149fa2c-dadb-4851-b07c-3d87f973b0dd",
@@ -33599,8 +33599,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": null,
-        "imagePositive": null
+        "imageNegative": "parkinsonSDiseaseNegative.png",
+        "imagePositive": "parkinsonSDiseasePositive.png"
     },
     {
         "id": "a021540b-474e-4cf9-86d1-25359f312258",
@@ -33788,8 +33788,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": null,
-        "imagePositive": null
+        "imageNegative": "osteoporosisNegative.png",
+        "imagePositive": "osteoporosisPositive.png"
     },
     {
         "id": "5cbc3dd5-e902-4179-8e80-00adf0ee3725",
@@ -33892,8 +33892,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Teeth-Grinding-Negative.png",
-        "imagePositive": "Teeth-Grinding-Positive.png"
+        "imageNegative": "teethGrindingNegative.png",
+        "imagePositive": "teethGrindingPositive.png"
     },
     {
         "id": "86e904de-694a-48b3-bfbb-545d44b6ba06",
@@ -34041,8 +34041,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Boils,-Cuts,-Fevers,-Sores,-Inflammations-Negative.png",
-        "imagePositive": "Boils,-Cuts,-Fevers,-Sores,-Inflammations-Positive.png"
+        "imageNegative": "boilsCutsFeversSoresInflammationsNegative.png",
+        "imagePositive": "boilsCutsFeversSoresInflammationsPositive.png"
     },
     {
         "id": "54ef2b4e-bb73-4001-b51f-91aa4bfe31c3",
@@ -34195,8 +34195,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Arteries-Negative.png",
-        "imagePositive": "Arteries-Positive.png"
+        "imageNegative": "arteriesNegative.png",
+        "imagePositive": "arteriesPositive.png"
     },
     {
         "id": "60fc9bce-d8f1-4a46-8dbb-d7d4d486bdd9",
@@ -34369,8 +34369,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Anorexia-Negative.png",
-        "imagePositive": "Anorexia-Positive.png"
+        "imageNegative": "anorexiaNegative.png",
+        "imagePositive": "anorexiaPositive.png"
     },
     {
         "id": "a815f298-1da0-49e1-b880-b700356a4528",
@@ -34488,8 +34488,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Back-Lower-Negative.png",
-        "imagePositive": "Back-Lower-Positive.png"
+        "imageNegative": "backLowerNegative.png",
+        "imagePositive": "backLowerPositive.png"
     },
     {
         "id": "f2e6bd2a-7728-44f7-a095-e772139fff2e",
@@ -34671,8 +34671,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Headache-Negative.png",
-        "imagePositive": "Headache-Positive.png"
+        "imageNegative": "headacheNegative.png",
+        "imagePositive": "headachePositive.png"
     },
     {
         "id": "d3cacc46-d271-46e8-b4ea-9dd5f47970e5",
@@ -34815,8 +34815,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Back-problems-Negative.png",
-        "imagePositive": "Back-problems-Positive.png"
+        "imageNegative": "backProblemsNegative.png",
+        "imagePositive": "backProblemsPositive.png"
     },
     {
         "id": "7b928a0a-031f-4516-b008-80566064ed25",
@@ -34953,8 +34953,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Cysts-Negative.png",
-        "imagePositive": "Cysts-Positive.png"
+        "imageNegative": "cystsNegative.png",
+        "imagePositive": "cystsPositive.png"
     },
     {
         "id": "489810dd-3995-4466-95c3-57c6e674056e",
@@ -35121,8 +35121,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Chronic-Illnesses-Negative.png",
-        "imagePositive": "Chronic-Illnesses-Positive.png"
+        "imageNegative": "chronicIllnessesNegative.png",
+        "imagePositive": "chronicIllnessesPositive.png"
     },
     {
         "id": "97331664-d919-498d-8a52-42cea02656b4",
@@ -35259,8 +35259,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Canker-Sores-Negative.png",
-        "imagePositive": "Canker-Sores-Positive.png"
+        "imageNegative": "cankerSoresNegative.png",
+        "imagePositive": "cankerSoresPositive.png"
     },
     {
         "id": "40cf53d6-fd56-494f-bf67-7e20b8fc9a3f",
@@ -35368,8 +35368,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Appetite,-Loss-of-Negative.png",
-        "imagePositive": "Appetite,-Loss-of-Positive.png"
+        "imageNegative": "appetiteLossOfNegative.png",
+        "imagePositive": "appetiteLossOfPositive.png"
     },
     {
         "id": "0b116146-b598-45e1-99bb-8f980912a2a8",
@@ -35580,8 +35580,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Overweight---Weight-Issues-Negative.png",
-        "imagePositive": "Overweight---Weight-Issues-Positive.png"
+        "imageNegative": "overweightWeightIssuesNegative.png",
+        "imagePositive": "overweightWeightIssuesPositive.png"
     },
     {
         "id": "bf2ce74e-f0ea-45e3-861e-4843f9c3fa40",
@@ -35866,8 +35866,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": null,
-        "imagePositive": null
+        "imageNegative": "adhdNegative.png",
+        "imagePositive": "adhdPositive.png"
     },
     {
         "id": "09316187-8d89-49bd-9907-e535e83d9b90",
@@ -36089,8 +36089,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": null,
-        "imagePositive": null
+        "imageNegative": "anemiaNegative.png",
+        "imagePositive": "anemiaPositive.png"
     },
     {
         "id": "b3b85ce2-c662-4e4e-a200-cc5e4f8f7684",
@@ -36240,8 +36240,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": null,
-        "imagePositive": null
+        "imageNegative": "venerealDiseaseStdSNegative.png",
+        "imagePositive": "venerealDiseaseStdSPositive.png"
     },
     {
         "id": "17498f0b-6b64-4b03-b464-fa09a24c2c33",
@@ -36420,8 +36420,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": null,
-        "imagePositive": null
+        "imageNegative": "eyesNegative.png",
+        "imagePositive": "eyesPositive.png"
     },
     {
         "id": "0da4e951-3c98-4654-851a-77f88a90ec5b",
@@ -36681,8 +36681,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Cold-Negative.png",
-        "imagePositive": "Cold-Positive.png"
+        "imageNegative": "coldNegative.png",
+        "imagePositive": "coldPositive.png"
     },
     {
         "id": "79756c52-b315-4b4c-80f2-a1151f972e82",
@@ -36852,8 +36852,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Alcoholism-Negative.png",
-        "imagePositive": "Alcoholism-Positive.png"
+        "imageNegative": "alcoholismNegative.png",
+        "imagePositive": "alcoholismPositive.png"
     },
     {
         "id": "4927b7de-610b-40c2-8520-8e169fe36211",
@@ -37091,8 +37091,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Gallstones-Negative.png",
-        "imagePositive": "Gallstones-Positive.png"
+        "imageNegative": "gallstonesNegative.png",
+        "imagePositive": "gallstonesPositive.png"
     },
     {
         "id": "2446a59a-d3f4-45ad-8b51-d6bf960365b5",
@@ -37336,8 +37336,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Knee-Problems-Negative.png",
-        "imagePositive": "Knee-Problems-Positive.png"
+        "imageNegative": "kneeProblemsNegative.png",
+        "imagePositive": "kneeProblemsPositive.png"
     },
     {
         "id": "7c059eff-195a-4434-ad60-ca9c3fbac13e",
@@ -37442,8 +37442,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Cold-Extremities-Negative.png",
-        "imagePositive": "Cold-Extremities-Positive.png"
+        "imageNegative": "coldExtremitiesNegative.png",
+        "imagePositive": "coldExtremitiesPositive.png"
     },
     {
         "id": "5df2fb7b-337e-475d-a6e1-a420f6c18b0a",
@@ -37642,8 +37642,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Blood-Pressure-(high)-Negative.png",
-        "imagePositive": "Blood-Pressure-(high)-Positive.png"
+        "imageNegative": "bloodPressureHighNegative.png",
+        "imagePositive": "bloodPressureHighPositive.png"
     },
     {
         "id": "654c8f29-20d3-4c46-b0a1-a6ba5c2ca915",
@@ -37879,8 +37879,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Insomnia-Negative.png",
-        "imagePositive": "Insomnia-Positive.png"
+        "imageNegative": "insomniaNegative.png",
+        "imagePositive": "insomniaPositive.png"
     },
     {
         "id": "c3fcb73d-1bd0-4b71-8cf5-935e9cb32072",
@@ -38062,8 +38062,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": null,
-        "imagePositive": null
+        "imageNegative": "angerNegative.png",
+        "imagePositive": "angerPositive.png"
     },
     {
         "id": "c45a5252-c016-4a16-a956-0a41ccbe8ae0",
@@ -38192,8 +38192,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Anorectal-Bleeding-Negative.png",
-        "imagePositive": "Anorectal-Bleeding-Positive.png"
+        "imageNegative": "anorectalBleedingNegative.png",
+        "imagePositive": "anorectalBleedingPositive.png"
     },
     {
         "id": "72919de6-fc67-48a8-a3fe-10c6ea384e17",
@@ -38362,8 +38362,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Craving--Gluten-Negative.png",
-        "imagePositive": "Craving--Gluten-Positive.png"
+        "imageNegative": "cravingGlutenNegative.png",
+        "imagePositive": "cravingGlutenPositive.png"
     },
     {
         "id": "608e0f7e-c351-4aa2-990c-4ea148b778c0",
@@ -38542,8 +38542,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Pneumonia-Negative.png",
-        "imagePositive": "Pneumonia-Positive.png"
+        "imageNegative": "pneumoniaNegative.png",
+        "imagePositive": "pneumoniaPositive.png"
     },
     {
         "id": "e853b9d6-060d-4627-abb4-9a8843b65785",
@@ -38640,8 +38640,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Shortness-of-Breath-Negative.png",
-        "imagePositive": "Shortness-of-Breath-Positive.png"
+        "imageNegative": "shortnessOfBreathNegative.png",
+        "imagePositive": "shortnessOfBreathPositive.png"
     },
     {
         "id": "60af093d-12c3-439c-a003-1adfc0eedf86",
@@ -38907,8 +38907,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Spleen-Negative.png",
-        "imagePositive": "Spleen-Positive.png"
+        "imageNegative": "spleenNegative.png",
+        "imagePositive": "spleenPositive.png"
     },
     {
         "id": "9cead91b-25a1-41a5-a497-f426e6865ad4",
@@ -39020,8 +39020,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Body-Odor-Negative.png",
-        "imagePositive": "Body-Odor-Positive.png"
+        "imageNegative": "bodyOdorNegative.png",
+        "imagePositive": "bodyOdorPositive.png"
     },
     {
         "id": "4df6a1bd-e4b9-4872-8279-274a03d1c3b8",
@@ -39199,8 +39199,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Burning-Tears-Negative.png",
-        "imagePositive": "Burning-Tears-Positive.png"
+        "imageNegative": "burningTearsNegative.png",
+        "imagePositive": "burningTearsPositive.png"
     },
     {
         "id": "7db91029-d83e-4f15-b77d-a99096d0695d",
@@ -39333,8 +39333,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Fever-Negative.png",
-        "imagePositive": "Fever-Positive.png"
+        "imageNegative": "feverNegative.png",
+        "imagePositive": "feverPositive.png"
     },
     {
         "id": "67bddcf3-ea72-4a73-a44f-29f7de9abcc3",
@@ -39637,8 +39637,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Multiple-Sclerosis-Negative.png",
-        "imagePositive": "Multiple-Sclerosis-Positive.png"
+        "imageNegative": "multipleSclerosisNegative.png",
+        "imagePositive": "multipleSclerosisPositive.png"
     },
     {
         "id": "9a532de0-ec69-4f62-bd37-27096b52daab",
@@ -39821,8 +39821,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Tongue-Negative.png",
-        "imagePositive": "Tongue-Positive.png"
+        "imageNegative": "tongueNegative.png",
+        "imagePositive": "tonguePositive.png"
     },
     {
         "id": "4951b69a-3343-4431-ab09-9d549e46e1f2",
@@ -40020,8 +40020,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Hypoglycemia-Negative.png",
-        "imagePositive": "Hypoglycemia-Positive.png"
+        "imageNegative": "hypoglycemiaNegative.png",
+        "imagePositive": "hypoglycemiaPositive.png"
     },
     {
         "id": "cb997e32-daab-4695-b102-ce21084547f7",
@@ -40250,8 +40250,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Diarrhea-Negative.png",
-        "imagePositive": "Diarrhea-Positive.png"
+        "imageNegative": "diarrheaNegative.png",
+        "imagePositive": "diarrheaPositive.png"
     },
     {
         "id": "b300a511-d6e9-46a4-815f-765d215ad45c",
@@ -40445,8 +40445,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Manic-Negative.png",
-        "imagePositive": "Manic-Positive.png"
+        "imageNegative": "manicNegative.png",
+        "imagePositive": "manicPositive.png"
     },
     {
         "id": "b8826ff0-22d7-40bb-9165-fd44a121e3f8",
@@ -40594,8 +40594,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Bleeding-Gums-Negative.png",
-        "imagePositive": "Bleeding-Gums-Positive.png"
+        "imageNegative": "bleedingGumsNegative.png",
+        "imagePositive": "bleedingGumsPositive.png"
     },
     {
         "id": "bc2ab7e5-bc09-43fa-9728-b989e2c36021",
@@ -40804,8 +40804,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": null,
-        "imagePositive": null
+        "imageNegative": "bowelsNegative.png",
+        "imagePositive": "bowelsPositive.png"
     },
     {
         "id": "640822e6-ea5c-44eb-9c60-c54ead924ff3",
@@ -40876,8 +40876,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": "Snoring-Negative.png",
-        "imagePositive": "Snoring-Positive.png"
+        "imageNegative": "snoringNegative.png",
+        "imagePositive": "snoringPositive.png"
     },
     {
         "id": "c0b5458e-2517-473e-b670-0af80ae4e419",
@@ -41004,8 +41004,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": null,
-        "imagePositive": null
+        "imageNegative": "appendicitisNegative.png",
+        "imagePositive": "appendicitisPositive.png"
     },
     {
         "id": "29fdc5c2-20a4-4b4d-889a-cbc14443a760",
@@ -41150,8 +41150,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Craving--Salty-Foods-Negative.png",
-        "imagePositive": "Craving--Salty-Foods-Positive.png"
+        "imageNegative": "cravingSaltyFoodsNegative.png",
+        "imagePositive": "cravingSaltyFoodsPositive.png"
     },
     {
         "id": "1d5ca141-6118-4e9c-a0c2-82ee1686b5bd",
@@ -41334,8 +41334,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": null,
-        "imagePositive": null
+        "imageNegative": "tumorsNegative.png",
+        "imagePositive": "tumorsPositive.png"
     },
     {
         "id": "2a68856f-8c29-4808-993b-c07267daf541",
@@ -41491,8 +41491,8 @@
             }
         ],
         "subscriptionOnly": false,
-        "imageNegative": null,
-        "imagePositive": null
+        "imageNegative": "bloodNegative.png",
+        "imagePositive": "bloodPositive.png"
     },
     {
         "id": "1b3923fc-0ead-4a00-b4b7-8c168251bbde",
@@ -41764,8 +41764,8 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Laryngitis-Negative.png",
-        "imagePositive": "Laryngitis-Positive.png"
+        "imageNegative": "laryngitisNegative.png",
+        "imagePositive": "laryngitisPositive.png"
     },
     {
         "id": "b7ab1aad-e262-4a2f-82de-edafb00e67a0",
@@ -41853,7 +41853,7 @@
             }
         ],
         "subscriptionOnly": true,
-        "imageNegative": "Vomiting-Negative.png",
-        "imagePositive": "Vomiting-Positive.png"
+        "imageNegative": "vomitingNegative.png",
+        "imagePositive": "vomitingPositive.png"
     }
 ]
