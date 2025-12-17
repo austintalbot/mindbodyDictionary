@@ -5,29 +5,40 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:pages="clr-namespace:MindBodyDictionaryMobile.Pages"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-    Color="Transparent">
+    BackgroundColor="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource DarkBackground}}">
 
-    <toolkit:Popup.Resources>
-        <Style TargetType="{x:Type pages:DisclaimerPopup}">
-            <Setter Property="VerticalOptions" Value="Center" />
-            <Setter Property="HorizontalOptions" Value="Center" />
-        </Style>
-    </toolkit:Popup.Resources>
+    <Grid BackgroundColor="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource DarkBackground}}"
+          RowDefinitions="*, Auto"
+          HorizontalOptions="Fill"
+          VerticalOptions="Fill"
+          Margin="0">
+        
+        <VerticalStackLayout Grid.Row="0" 
+                             VerticalOptions="Fill" 
+                             HorizontalOptions="Fill"
+                             Spacing="30"
+                             Padding="30">
+            <VerticalStackLayout VerticalOptions="CenterAndExpand" Spacing="30">
+                <Image Style="{StaticResource AppLogoImage}" HeightRequest="100" HorizontalOptions="Center" />
+                
+                <Label Text="Disclaimer" 
+                       Style="{StaticResource Title1}" 
+                       HorizontalOptions="Center" />
+                
+                <Label Style="{StaticResource Body1}" 
+                       HorizontalTextAlignment="Center"
+                       Text="I understand that mbd is for informational purposes only. mbd does not diagnose, treat, prevent, or cure any illness. If you have any questions concerning your health please consult with your Doctor." />
+            </VerticalStackLayout>
+        </VerticalStackLayout>
 
-    <Border
-        BackgroundColor="{AppThemeBinding Light={StaticResource LightSecondaryBackground}, Dark={StaticResource DarkSecondaryBackground}}"
-        Padding="0"
-        StrokeShape="RoundRectangle 15"
-        StrokeThickness="0">
-        <VerticalStackLayout Style="{StaticResource DisclaimerPopupVerticalStackLayout}">
-            <Label Style="{StaticResource DisclaimerPopupMessageLabel}" Text="I understand that the Mind Body Dictionary is for informational purposes only. Mind Body Dictionary does not diagnose, treat, prevent, or cure any illness. If you have any questions concerning your health please consult with your Doctor." />
-            <Button
+        <Button Grid.Row="1"
                 AutomationId="DisclaimerUnderstandButton"
                 Clicked="OnYesButtonClicked"
-                Style="{StaticResource DisclaimerPopupButton}"
-                Text="I Understand" />
-        </VerticalStackLayout>
-    </Border>
+                Style="{StaticResource PrimaryButton}"
+                Text="I Understand"
+                HeightRequest="60"
+                Margin="30,0,30,40" />
+    </Grid>
 
 </toolkit:Popup>
 

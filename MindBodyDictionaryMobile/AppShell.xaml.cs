@@ -2,12 +2,19 @@ namespace MindBodyDictionaryMobile;
 
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
+using CommunityToolkit.Maui.Extensions;
+using CommunityToolkit.Maui.Views;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.DependencyInjection;
 using Font = Microsoft.Maui.Font;
 
 public partial class AppShell : Shell
 {
-  public AppShell() {
+  private readonly IServiceProvider _serviceProvider;
+
+  public AppShell(IServiceProvider serviceProvider) {
+    _serviceProvider = serviceProvider;
     InitializeComponent();
     BindingContext = this;
     var currentTheme = Application.Current!.RequestedTheme;
@@ -20,6 +27,19 @@ public partial class AppShell : Shell
 			ImageCacheContent.IsVisible = false;
 		}
 #endif
+  }
+
+  [RelayCommand]
+  private async Task ShowDisclaimer() {
+    var disclaimerPopup = _serviceProvider.GetRequiredService<MindBodyDictionaryMobile.Pages.DisclaimerPopup>();
+    await this.ShowPopupAsync(disclaimerPopup);
+  }
+
+  private async void OnMenuItemClicked(object sender, EventArgs e) {
+    if (sender is MenuItem menuItem && menuItem.CommandParameter is string url)
+    {
+      await OpenUrl(url);
+    }
   }
 
   [RelayCommand]

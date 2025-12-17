@@ -102,11 +102,8 @@
 
     <!--  New DisclaimerPopupVerticalStackLayout Style  -->
     <Style x:Key="DisclaimerPopupVerticalStackLayout" TargetType="VerticalStackLayout">
-        <Setter Property="VerticalOptions" Value="Center" />
-        <Setter Property="HorizontalOptions" Value="Center" />
-        <Setter Property="Padding" Value="20" />
-        <Setter Property="Spacing" Value="20" />
-        <Setter Property="WidthRequest" Value="320" />
+        <Setter Property="VerticalOptions" Value="Fill" />
+        <Setter Property="HorizontalOptions" Value="Fill" />
         <Setter Property="BackgroundColor" Value="Transparent" />
     </Style>
 
