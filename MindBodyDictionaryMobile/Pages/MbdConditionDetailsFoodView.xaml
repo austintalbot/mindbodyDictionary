@@ -8,10 +8,17 @@
     xmlns:vm="clr-namespace:MindBodyDictionaryMobile.PageModels"
     x:Name="this"
     x:DataType="vm:RecommendationsPageModel">
-    <Grid RowDefinitions="*">
+    <Grid RowDefinitions="auto,*">
+        <Label
+            Grid.Row="0"
+            Text="{Binding FoodCount, StringFormat='Foods: {0}'}"
+            FontSize="14"
+            FontAttributes="Bold"
+            Padding="12"
+            TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
         <CollectionView
             x:Name="FoodCollectionView"
-            Grid.Row="0"
+            Grid.Row="1"
             EmptyView="There are no corresponding foods for this Condition"
             ItemsSource="{Binding FoodList}"
             SelectionMode="None">
@@ -34,7 +41,7 @@
                                 LineBreakMode="WordWrap"
                                 TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
                             <Button
-                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RecommendationsPageModel}}, Path=AddToMyListCommand}"
+                                Command="{Binding AddToMyListCommand}"
                                 CommandParameter="{Binding .}"
                                 Text="Add to List"
                                 Style="{StaticResource PrimaryButton}"

@@ -163,12 +163,11 @@
                                     <tabView:SfTabItem Header="Products" Style="{StaticResource RecommendationsSubTabItem}">
                                         <tabView:SfTabItem.Content>
                                             <Grid Style="{StaticResource TabContentGrid}">
-                                                <pages:MbdConditionDetailsProductsView
-                                                    Grid.Row="0"
-                                                    InputTransparent="False"
-                                                    IsVisible="{Binding Condition.DisplayLock, Converter={StaticResource InverseBoolConverter}}"
-                                                    MbdCondition="{Binding Condition}" />
-
+                                                                                                    <pages:MbdConditionDetailsProductsView
+                                                                                                        Grid.Row="0"
+                                                                                                        InputTransparent="False"
+                                                                                                        IsVisible="{Binding Condition.DisplayLock, Converter={StaticResource InverseBoolConverter}}"
+                                                                                                        MbdCondition="{Binding Condition}" />
                                                 <!--  Lock Overlay for Products  -->
                                                 <Grid
                                                     Grid.Row="0"
@@ -191,13 +190,11 @@
                                     <tabView:SfTabItem Header="Resources" Style="{StaticResource RecommendationsSubTabItem}">
                                         <tabView:SfTabItem.Content>
                                             <Grid Style="{StaticResource TabContentGrid}">
-                                                <pages:MbdConditionDetailsResourcesView
-                                                    Grid.Row="0"
-                                                    InputTransparent="False"
-                                                    IsVisible="{Binding Condition.DisplayLock, Converter={StaticResource InverseBoolConverter}}"
-                                                    MbdCondition="{Binding Condition}" />
-
-                                                <!--  Lock Overlay for Resources  -->
+                                                                                                                                                        <pages:MbdConditionDetailsResourcesView
+                                                                                                                                                            Grid.Row="0"
+                                                                                                                                                            InputTransparent="False"
+                                                                                                                                                            IsVisible="{Binding Condition.DisplayLock, Converter={StaticResource InverseBoolConverter}}"
+                                                                                                                                                            MbdCondition="{Binding Condition}" />                                                <!--  Lock Overlay for Resources  -->
                                                 <Grid
                                                     Grid.Row="0"
                                                     IsVisible="{Binding Condition.DisplayLock}"

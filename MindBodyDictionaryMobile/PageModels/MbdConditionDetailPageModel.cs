@@ -34,7 +34,7 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
 
   private readonly ILogger<MbdConditionDetailPageModel> _logger; // Add this for logging
 
-  private readonly ImageCacheService _imageCacheService; // Add this
+  private readonly ImageCacheService _imageCacheService; // Assign injected service
 
   private readonly IBillingService _billingService;
 
@@ -42,6 +42,7 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
   private readonly MbdConditionDetailsProblemView _problemView;
   private readonly MbdConditionDetailsAffirmationsView _affirmationsView;
   private readonly MbdConditionDetailsRecommendationsView _recommendationsView;
+
   private readonly RecommendationsPageModel _recommendationsPageModel;
 
   [ObservableProperty]
@@ -142,25 +143,14 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
 
   ];
 
-
-
   [ObservableProperty]
-
   private List<Recommendation> _foodList = [];
 
-
-
   [ObservableProperty]
-
   private List<Recommendation> _productList = [];
 
-
-
   [ObservableProperty]
-
   private List<Recommendation> _booksResourcesList = [];
-
-
 
   private bool _canDelete;
 
@@ -293,6 +283,7 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
 
 
 
+
   partial void OnSelectedTabChanged(string value) {
     switch (value)
     {
@@ -309,10 +300,10 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
 
         CurrentView = _affirmationsView;
 
-        CurrentView.BindingContext = this;
-
-        break;
-
+                  CurrentView.BindingContext = this;
+        
+                break;
+        
       case "Recommendations":
 
         CurrentView = _recommendationsView;
@@ -323,14 +314,13 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
 
         {
 
-          _recommendationsPageModel.Condition = Condition; // Pass the condition to the inner ViewModel
+          _recommendationsPageModel.MbdCondition = Condition; // Pass the condition to the inner ViewModel
 
-          _recommendationsPageModel.InitializeTabs();
+          _recommendationsPageModel.InitializeTabs(); // Initialize tabs and load data
 
         }
 
         break;
-
     }
 
   }
@@ -465,7 +455,7 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
 
 
 
-      // Logging for Recommendations
+      // Logging for Recommendations (these logs can stay for debugging the raw data)
 
       _logger.LogInformation($"Condition ID: {Condition.Id}");
 
@@ -494,8 +484,6 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
         _logger.LogInformation("No recommendations found for this condition.");
 
       }
-
-
 
       // Populate FoodList, ProductList, and BooksResourcesList
 
@@ -548,15 +536,13 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
         }
 
       }
-      else if (CurrentView.BindingContext is RecommendationsPageModel recommendationsPageModel)
-
-      {
-
-        recommendationsPageModel.Condition = Condition;
-
-        recommendationsPageModel.InitializeTabs();
-
-      }
+      // The RecommendationsPageModel will be set by OnConditionChanged now.
+      // Removed the redundant manual setting here.
+      // else if (CurrentView.BindingContext is RecommendationsPageModel recommendationsPageModel)
+      // {
+      //   recommendationsPageModel.Condition = Condition;
+      //   recommendationsPageModel.LoadRecommendations();
+      // }
 
 
 
@@ -575,15 +561,10 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
     }
 
     finally
-
     {
-
       IsBusy = false;
-
       CanDelete = !Condition.IsNullOrNew();
-
       OnPropertyChanged(nameof(HasCompletedTasks));
-
     }
 
   }

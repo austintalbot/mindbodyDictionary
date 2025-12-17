@@ -6,11 +6,18 @@
     xmlns:model="clr-namespace:MindBodyDictionaryMobile.Models"
     xmlns:vm="clr-namespace:MindBodyDictionaryMobile.PageModels"
     x:Name="this"
-    x:DataType="vm:MbdConditionDetailPageModel">
-    <Grid RowDefinitions="*">
+    x:DataType="vm:RecommendationsPageModel">
+    <Grid RowDefinitions="auto,*">
+        <Label
+            Grid.Row="0"
+            Text="{Binding ProductCount, StringFormat='Products: {0}'}"
+            FontSize="14"
+            FontAttributes="Bold"
+            Padding="12"
+            TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
         <CollectionView
             x:Name="ProductCollectionView"
-            Grid.Row="0"
+            Grid.Row="1"
             EmptyView="There are no corresponding products for this Condition"
             ItemsSource="{Binding ProductList}"
             SelectionMode="None">
@@ -33,14 +40,14 @@
                                 TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
                             <Button
                                 IsEnabled="{Binding Url, Converter={StaticResource InverseBoolConverter}}"
-                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RecommendationsPageModel}}, Path=ProductClickedCommand}"
+                                Command="{Binding ProductClickedCommand}"
                                 CommandParameter="{Binding .}"
                                 Text="View Product"
                                 Style="{StaticResource PrimaryButton}"
                                 Margin="0,0,0,8"
                                 VerticalOptions="End" />
                             <Button
-                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RecommendationsPageModel}}, Path=AddToMyListCommand}"
+                                Command="{Binding AddToMyListCommand}"
                                 CommandParameter="{Binding .}"
                                 Text="Add to List"
                                 Style="{StaticResource SecondaryButton}"
