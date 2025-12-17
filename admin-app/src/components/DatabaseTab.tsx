@@ -1,8 +1,11 @@
 // admin-app/src/components/DatabaseTab.tsx
 import React, { useState } from 'react';
 import { createBackupUrl, restoreDatabase } from '../services/apiService';
+import { COSMOS_DB_CONTAINER_NAME } from '../constants';
+import { useTheme } from '../theme/useTheme';
 
 const DatabaseTab: React.FC = () => {
+  const { colors } = useTheme();
   const [databaseFile, setDatabaseFile] = useState<File | null>(null);
   const [fileLabel, setFileLabel] = useState('Choose file');
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
@@ -41,40 +44,122 @@ const DatabaseTab: React.FC = () => {
   };
 
   return (
-    <div className="tab-pane fade show active" id="nav-database" role="tabpanel" aria-labelledby="nav-database-tab">
-      <div className="card">
-        <div className="card-body">
-          <h5 className="card-title">Database</h5>
-          <div className="row">
-            <div className="form-control mb-3">
-              <a href={createBackupUrl()} download="mbd_backup.json">
-                <button className="btn btn-primary" id="getDatabaseBackupButton">
-                  Download Database
-                </button>
-              </a>
-              {/* The original iframe was used for download, an <a> tag with download attribute is more React-friendly */}
-            </div>
+    <div style={{ padding: '20px' }}>
+      <div style={{
+        backgroundColor: colors.background,
+        borderRadius: '8px',
+        border: `1px solid ${colors.border}`,
+        padding: '24px'
+      }}>
+        <h5 style={{ fontSize: '18px', fontWeight: '600', margin: '0 0 24px 0', color: colors.foreground }}>Database Management</h5>
+        
+        <div style={{ maxWidth: '600px' }}>
+          {/* Download Backup Section */}
+          <div style={{ marginBottom: '32px', paddingBottom: '24px', borderBottom: `1px solid ${colors.border}` }}>
+            <h6 style={{ fontSize: '15px', fontWeight: '600', marginBottom: '12px', color: colors.foreground }}>Backup Database</h6>
+            <p style={{ fontSize: '13px', color: colors.mutedText, marginBottom: '16px' }}>
+              Download a complete JSON backup of the {COSMOS_DB_CONTAINER_NAME} container.
+            </p>
+            <a href={createBackupUrl(COSMOS_DB_CONTAINER_NAME)} download={`${COSMOS_DB_CONTAINER_NAME}_backup.json`} style={{ textDecoration: 'none' }}>
+              <button 
+                style={{
+                  padding: '10px 20px',
+                  backgroundColor: colors.primary,
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  fontSize: '14px',
+                  fontWeight: '600',
+                  transition: 'all 0.2s',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.primaryHover}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.primary}
+              >
+                <span>⬇️</span> Download Database Backup
+              </button>
+            </a>
           </div>
-          <div className="input-group mt-3 mb-3">
-            <div className="custom-file">
-              <input type="file" className="custom-file-input" id="databaseFile" onChange={handleFileChange} />
-              <label className="custom-file-label" htmlFor="databaseFile">{fileLabel}</label>
+
+          {/* Restore Database Section */}
+          <div>
+            <h6 style={{ fontSize: '15px', fontWeight: '600', marginBottom: '12px', color: colors.foreground }}>Restore Database</h6>
+            <p style={{ fontSize: '13px', color: colors.mutedText, marginBottom: '16px' }}>
+              Restore the database from a JSON backup file. <strong style={{ color: colors.danger }}>Warning: This will overwrite existing data.</strong>
+            </p>
+            
+            <div style={{ marginBottom: '16px' }}>
+              <div style={{ position: 'relative', overflow: 'hidden', display: 'inline-block', width: '100%' }}>
+                <input
+                  type="file"
+                  id="databaseFile"
+                  onChange={handleFileChange}
+                  style={{
+                    position: 'absolute',
+                    left: 0,
+                    top: 0,
+                    opacity: 0,
+                    width: '100%',
+                    height: '100%',
+                    cursor: 'pointer'
+                  }}
+                />
+                <div style={{
+                  padding: '10px 12px',
+                  fontSize: '14px',
+                  border: `1px solid ${colors.inputBorder}`,
+                  borderRadius: '6px',
+                  backgroundColor: colors.inputBackground,
+                  color: colors.mutedText,
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between'
+                }}>
+                  <span>{fileLabel}</span>
+                  <span style={{ fontSize: '12px', padding: '2px 8px', backgroundColor: colors.neutral, borderRadius: '4px', color: colors.lightText }}>Browse</span>
+                </div>
+              </div>
             </div>
+
+            <button 
+              onClick={submitBackup}
+              disabled={!databaseFile}
+              style={{
+                padding: '10px 20px',
+                backgroundColor: colors.danger,
+                color: '#fff',
+                border: 'none',
+                borderRadius: '6px',
+                cursor: !databaseFile ? 'not-allowed' : 'pointer',
+                fontSize: '14px',
+                fontWeight: '600',
+                transition: 'all 0.2s',
+                opacity: !databaseFile ? 0.6 : 1
+              }}
+              onMouseEnter={(e) => { if (databaseFile) e.currentTarget.style.backgroundColor = colors.dangerHover; }}
+              onMouseLeave={(e) => { if (databaseFile) e.currentTarget.style.backgroundColor = colors.danger; }}
+            >
+              Restore Database
+            </button>
           </div>
-          <button className="btn btn-danger" onClick={submitBackup}>
-            Restore Database
-          </button>
-          {alertMessage && (
-            <div className="alert alert-success mt-3" role="alert">
-              {alertMessage}
-            </div>
-          )}
-          {error && (
-            <div className="alert alert-danger mt-3" role="alert">
-              Error: {error}
-            </div>
-          )}
         </div>
+
+        {alertMessage && (
+          <div style={{ marginTop: '20px', padding: '12px', backgroundColor: colors.successLight, color: colors.success, borderRadius: '6px' }}>
+            {alertMessage}
+          </div>
+        )}
+        {error && (
+          <div style={{ marginTop: '20px', padding: '12px', backgroundColor: colors.dangerLight, color: colors.danger, borderRadius: '6px' }}>
+            Error: {error}
+          </div>
+        )}
       </div>
     </div>
   );

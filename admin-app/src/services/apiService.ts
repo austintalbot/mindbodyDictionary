@@ -14,6 +14,7 @@ import {
   GET_MBD_IMAGES_CODE,
   MBD_CONDITION_CODE,
   FAQ_FUNCTION_CODE,
+  COSMOS_DB_CONTAINER_NAME,
 } from '../constants';
 import { MbdCondition, Faq } from '../types'; // Import from barrel file
 
@@ -213,8 +214,8 @@ export const sendPushNotification = async (notification: NotificationPayload): P
 };
 
 // --- Database API Calls ---
-export const createBackupUrl = (): string => {
-    return `${ADMIN_API_URL}/api/CreateBackup?code=${CREATE_BACKUP_CODE}`;
+export const createBackupUrl = (databaseName: string = COSMOS_DB_CONTAINER_NAME): string => {
+    return `${ADMIN_API_URL}/api/CreateBackup?code=${CREATE_BACKUP_CODE}&databaseName=${encodeURIComponent(databaseName)}`;
 };
 
 export const restoreDatabase = async (file: File): Promise<void> => {

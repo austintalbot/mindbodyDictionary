@@ -4,13 +4,12 @@ import { fetchMbdConditions, upsertMbdCondition, deleteMbdCondition, fetchMbdCon
 import { MbdCondition } from '../types';
 import { getImageBaseUrl } from '../constants';
 import { useTheme } from '../theme/useTheme';
-import MbdConditionsSearch from './MbdConditionsSearch';
 import MbdConditionsTable from './MbdConditionsTable';
-import StyledButton from './StyledButton';
 import MbdConditionModal from './MbdConditionModal';
 import ErrorModal from './ErrorModal';
 
 const MbdConditionsTab: React.FC = () => {
+  const { colors } = useTheme();
   const [mbdConditions, setMbdConditions] = useState<MbdCondition[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [loading, setLoading] = useState(true);
@@ -149,27 +148,88 @@ const MbdConditionsTab: React.FC = () => {
     );
   });
 
-  const { colors } = useTheme();
-
   if (loading) return <div style={{ padding: '20px', color: colors.mutedText }}>Loading Conditions...</div>;
 
 
   return (
-    <div>
-      {/* Search Bar */}
-      <MbdConditionsSearch searchTerm={searchTerm} onChange={(value) => handleSearchChange({ target: { value } } as React.ChangeEvent<HTMLInputElement>)} />
+    <div style={{ padding: '20px' }}>
+      <div style={{
+        backgroundColor: colors.background,
+        borderRadius: '8px',
+        border: `1px solid ${colors.border}`,
+        padding: '24px'
+      }}>
+        {/* Header with Refresh Button */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+          <h5 style={{ fontSize: '18px', fontWeight: '600', margin: 0, color: colors.foreground }}>Conditions</h5>
+          <button
+            onClick={handleRefreshMbdConditions}
+            style={{
+              padding: '8px 16px',
+              backgroundColor: colors.primary,
+              color: '#fff',
+              border: 'none',
+              borderRadius: '6px',
+              cursor: 'pointer',
+              fontWeight: '600',
+              fontSize: '14px',
+              transition: 'all 0.2s'
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.primaryHover}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.primary}
+          >
+            Refresh Conditions
+          </button>
+        </div>
 
-      {/* Table */}
-      <MbdConditionsTable mbdConditions={filteredMbdConditions} onEdit={selectMbdCondition} onDelete={deleteMbdConditionConfirm} />
+        {/* Search Bar */}
+        <div style={{ marginBottom: '20px' }}>
+            <input
+                type="text"
+                placeholder="Search by Name, Physical Connections, or Tags..."
+                value={searchTerm}
+                onChange={handleSearchChange}
+                style={{
+                    width: '100%',
+                    padding: '10px 12px',
+                    fontSize: '14px',
+                    border: `1px solid ${colors.inputBorder}`,
+                    borderRadius: '6px',
+                    backgroundColor: colors.inputBackground,
+                    color: colors.foreground,
+                    outline: 'none',
+                }}
+            />
+        </div>
 
-      {/* Add Button */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
-        <StyledButton variant="secondary" size="md" onClick={handleRefreshMbdConditions}>
-          Refresh Conditions
-        </StyledButton>
-        <StyledButton variant="primary" size="md" onClick={addMbdCondition}>
+        {/* Total Count */}
+        <div style={{ marginBottom: '15px', fontSize: '14px', color: colors.mutedText }}>
+            Total Conditions: {filteredMbdConditions.length}
+        </div>
+
+        {/* Table */}
+        <MbdConditionsTable mbdConditions={filteredMbdConditions} onEdit={selectMbdCondition} onDelete={deleteMbdConditionConfirm} />
+
+        {/* Add Button */}
+        <button
+          onClick={addMbdCondition}
+          style={{
+            padding: '10px 20px',
+            backgroundColor: colors.primary,
+            color: '#fff',
+            border: 'none',
+            borderRadius: '6px',
+            cursor: 'pointer',
+            fontSize: '14px',
+            fontWeight: '600',
+            marginBottom: '20px',
+            transition: 'all 0.2s'
+          }}
+          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.primaryHover}
+          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.primary}
+        >
           + Add New Condition
-        </StyledButton>
+        </button>
       </div>
 
       {/* Condition Detail Modal */}
