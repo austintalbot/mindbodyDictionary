@@ -27,6 +27,7 @@
             AutomationId="AilmentDetailsTabview"
             IndicatorBackground="{StaticResource BarSelectedColor}"
             IndicatorPlacement="Fill"
+            SelectedIndex="{Binding SelectedTabIndex, Mode=TwoWay}"
             TabBarBackground="{StaticResource BarColor}"
             TabBarHeight="60"
             TabBarPlacement="Bottom">
