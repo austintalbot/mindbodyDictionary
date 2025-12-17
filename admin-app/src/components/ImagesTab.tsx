@@ -216,6 +216,7 @@ const ImagesTab: React.FC = () => {
             <thead>
               <tr style={{ backgroundColor: colors.backgroundSecondary, borderBottom: `2px solid ${colors.border}` }}>
                 <th style={{ padding: '12px', textAlign: 'left', fontWeight: '600', color: colors.mutedText }}>View</th>
+                <th style={{ padding: '12px', textAlign: 'left', fontWeight: '600', color: colors.mutedText }}>Thumbnail</th>
                 <th style={{ padding: '12px', textAlign: 'left', fontWeight: '600', color: colors.mutedText }}>Name</th>
                 <th style={{ padding: '12px', textAlign: 'left', fontWeight: '600', color: colors.mutedText }}>Default Condition</th>
                 <th style={{ padding: '12px', textAlign: 'left', fontWeight: '600', color: colors.mutedText }}>Delete</th>
@@ -258,6 +259,35 @@ const ImagesTab: React.FC = () => {
                     >
                       View
                     </button>
+                  </td>
+                  <td style={{ padding: '12px' }}>
+                    {image.uri ? (
+                        <img 
+                            src={image.uri} 
+                            alt={image.name} 
+                            style={{ 
+                                width: '50px', 
+                                height: '50px', 
+                                objectFit: 'contain', 
+                                borderRadius: '4px',
+                                border: `1px solid ${colors.border}`,
+                                backgroundColor: colors.background
+                            }} 
+                        />
+                    ) : (
+                        <div style={{
+                            width: '50px',
+                            height: '50px',
+                            borderRadius: '4px',
+                            border: `1px solid ${colors.border}`,
+                            backgroundColor: colors.backgroundSecondary,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontSize: '10px',
+                            color: colors.mutedText
+                        }}>No Img</div>
+                    )}
                   </td>
                   <td style={{ padding: '12px', color: colors.foreground }}>{image.name}</td>
                   <td style={{ padding: '12px', color: colors.foreground }}>{image.mbdCondition}</td>

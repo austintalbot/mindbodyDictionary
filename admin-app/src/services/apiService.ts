@@ -174,8 +174,14 @@ export const fetchImagesTable = async (): Promise<any[]> => {
   }
   const response = await makeApiRequest<any[]>(`GetMbdImages?code=${GET_MBD_IMAGES_CODE}`);
   const data = (response as any).data || response; // Handle { data: [...] } or direct array
-  imagesCache = data;
-  return data;
+  
+  const mappedData = Array.isArray(data) ? data.map((item: any) => ({
+      ...item,
+      mbdCondition: item.ailment || item.Ailment || item.mbdCondition
+  })) : [];
+
+  imagesCache = mappedData;
+  return mappedData;
 };
 
 export const deleteImage = async (imageName: string): Promise<void> => {
