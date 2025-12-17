@@ -464,7 +464,7 @@ tasks:
 
   functions:build:
     desc: Build .NET 10 Azure Functions project
-    dir: backend/src/MindBodyDictionary.AdminApi
+    dir: mbd/MindBodyDictionary.AdminApi
     cmds:
     - dotnet clean
     - dotnet build -c Release
@@ -475,7 +475,7 @@ tasks:
     cmds:
     - |
       echo "📦 Publishing Azure Functions..."
-      cd backend/src/MindBodyDictionary.AdminApi
+      cd mbd/MindBodyDictionary.AdminApi
       rm -rf publish
       dotnet publish -c Release -o publish
       echo "✅ Published to ./publish"

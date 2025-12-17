@@ -37,11 +37,12 @@
                             <Grid ColumnDefinitions="*, Auto" ColumnSpacing="10">
                                 <Label Grid.Column="0" 
                                        Text="{Binding Question}" 
-                                       Style="{StaticResource ParagraphLabel}" />
+                                       Style="{StaticResource ParagraphLabel}"
+                                       TextColor="{AppThemeBinding Light={StaticResource Tertiary}, Dark={StaticResource Secondary}}" />
                                 <Label Grid.Column="1" 
                                        Text="▼"
                                        FontSize="18"
-                                       TextColor="{AppThemeBinding Light={StaticResource SecondaryDarkText}, Dark={StaticResource Primary}}"
+                                       TextColor="{AppThemeBinding Light={StaticResource Tertiary}, Dark={StaticResource Secondary}}"
                                        VerticalOptions="Center" />
                             </Grid>
                         </Frame>

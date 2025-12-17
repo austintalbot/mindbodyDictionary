@@ -1,0 +1,976 @@
+<html>    
+<meta charset="UTF-8">
+    <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
+        <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script> 
+
+        <script src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script> 
+        <script src="https://editor.datatables.net/extensions/Editor/js/dataTables.editor.min.js"></script> 
+
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.6.1/css/buttons.dataTables.min.css">
+        <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script> 
+        <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script> 
+        <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script> 
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script> 
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        
+        <script src="https://use.fontawesome.com/releases/v5.12.1/js/all.js" data-auto-replace-svg="nest"></script>
+
+        <link rel="shortcut icon" href="/images/MBDIcon.png" />
+
+        <script>
+            var admin_api_url = 'https://mbd-admin-api-n8.azurewebsites.net';
+            var image_base_url = 'https://mbdstoragesa.blob.core.windows.net/mbd-images';
+
+            var ailmentsTableCode = 'YpgfFkdag1vd2IaHyJX_Eu1rJElv5KnCYZ6lGoyFkTq_AzFuKRthag==';
+            var ailmentCode = '-QxbZ76JRPSbLRxFb5gVFlqcng5BkN5e2LELzP9yY2ftAzFuLMg6sg==';
+            var deleteAilmentCode = '34tLFBYTgLV2980aHmjxpGcCr7KKIOtsH5iS6Ugpfg5-AzFukVhUmQ==';
+            var upsertAilmentCode = 'Gftp5OteBa5uiefWYik_Iy-Zcq7WDKqjMGxWM-Z_ZqQaAzFux3H9tQ==';
+            var imagesTableCode = '2q1kPKvaGlCcohh--1v6jg8FGsIs8q_zynou9844PFoEAzFuEjompQ==';
+            var deleteImageCode = 'e5tXirkCIUz66m9oCmW5aFAOvpVGVD6G1K1DjbyCUznMAzFu_bFRzA==';
+            var contactsTableCode = 'ICSLBExMU08K75eznvR6km7iqBXIwL22ZCxtfcZyD8Y9AzFuHgSaxQ==';
+            var deleteContactCode = 'fanOnFl6kkMMq0N23RDke8O2_GOvi2UpbjSGNb25xu-hAzFuWNTLHw==';
+            var sendPushNotificationCode = 'JNPSVNv2H8HcmzqoBS7DT2zh5mY__F5T8ip_ozJ3BbPbAzFu1ZpyJg==';
+            var createBackupCode = '1OyDMNUIEttfToEQL1RdwfRZuNO9C0OLO0kOcf0ZX_OjAzFudC2fMw==';
+            var restoreDatabaseCode = 'wddXUCimdNZb-BCooYbx0U-LV3_dVi0nCbqonNTHcj-cAzFujqU0Zg==';
+
+          
+            var affirmationEditor;
+
+            $(document).ready( function () 
+            {
+
+                $('#ailmentsTable').DataTable(
+                {
+                    "scrollX": true,
+                    "ajax": {
+                    "url": `${admin_api_url}/api/AilmentsTable?code=${ailmentsTableCode}`,
+                    },
+                    columns: [
+                    {
+                        data: 'id',
+                        name: 'View',
+                        render: function(data, type, row, meta) 
+                        {                            
+                            let name = row.name;
+                            if($(`#imageAilment option[value="${name}"]`).length == 0)
+                            {
+                                $("#imageAilment").append(new Option(`${name}`,`${name}`))
+                            }
+                            //Adding ailments to the Notifications select as well as the imageAilment above
+                            if($(`#notificationAilment option[value="${data}"]`).length == 0)
+                            {
+                                $("#notificationAilment").append(new Option(`${name}`,`${data}`))
+                            }
+                            
+                            name = name.replace("'","paranthesis");
+                            
+                            return `<div data-toggle="tooltip" data-placement="left" title="${data}" onClick="SelectAilment('${data}', '${name}')" class="flex-center d-flex"><a style="display:block; margin:auto" class="btn btn-outline-info" href="#ailmentDiv"><i class="fas fa-file-alt"></i></a></div>`;
+                        }
+                    },
+                    {
+                            data: 'id',
+                            name: 'Delete',
+                            render: function(data, type, row, meta) 
+                            {
+                                let name = row.name;
+                                if($(`#imageAilment option[value="${name}"]`).length == 0)
+                                {
+                                    $("#imageAilment").append(new Option(`${name}`,`${name}`))
+                                }
+                            
+                                name = name.replace("'","paranthesis"); 
+
+                                return `<button onClick="DeleteAilmentConfirm('${data}','${name}')" style="border:none; display:block; margin:auto" class="btn btn-outline-dark"><i class="fas fa-trash"></i></button>`;
+                            }
+                    }, 
+                    { data: 'name' },
+                    { data: 'physicalConnections'},
+                    { data: 'tags'},
+  
+                    ]                        
+                });
+
+                $('.custom-file-input').on('change',function(){
+                    $("#filelabel").html($(this).val())
+                    if(this.files[0].size > 100000)
+                    {
+                        alert("File to large, please keep it below 1mb or 1000kb")  
+                        this.files[0] == null;
+                        $("#filelabel").html("Please Select a new file")
+                    }                                          
+                })  
+
+               $('#notificationTitle').on("keydown change", function(){
+                    var value = $(this).val();                   
+                    $('#titleLength').text(value.length + '/65');
+                });                
+
+               $('#notificationBody').on("keydown change", function(){
+                    var value = $(this).val();                   
+                    $('#bodyLength').text(value.length + '/150');
+                });
+
+
+            });
+
+            function SelectAilment(id, name)
+            {
+                $("#ailmentDiv").show();
+                $.ajax({ datatype: "json", url: `${admin_api_url}/api/Ailment?code=${ailmentCode}&id=${id}&name=${name.replace("paranthesis","'")}`, success: function(data)
+                        {
+                            $("#alert").hide();
+                            showAilment(data);
+                        }
+                    });
+                    
+            } 
+
+            function DeleteAilmentConfirm(id, name)
+            {
+                let r = confirm("Are you sure you want to delete " + name.replace("paranthesis","'") + "!");
+                if(r == true)
+                {
+                    $.ajax({ 
+                        type: "POST",
+                        url: `${admin_api_url}/api/DeleteAilment?code=${deleteAilmentCode}&id=${id}&name=${name.replace("paranthesis","'")}`, 
+                        success: function(data)
+                        {                              
+                            $('#ailmentsTable').DataTable().ajax.reload();
+                            AddAilment();
+                        }
+                    });
+                }   
+            } 
+
+            function showAilment(data)
+            {                
+                currentAilment = data;                            
+                $("#id").val(data.id);
+                $("#id").attr("disabled", "disabled");
+                $("#name").val(data.name);
+                $("#name").attr("disabled", "disabled");                             
+                $("#SubscriptionOnly").prop('checked', data.subscriptionOnly);
+                $("#imageShare").val(data.imageShareOverrideAilmentName)
+                $("#summaryNegative").val(data.summaryNegative);
+                $("#summaryPositive").val(data.summaryPositive);
+                $("#ailmentImages").show();
+                SetImageUrls();
+                PrepAffirmationTable();
+                PrepPhysicalConnectionsTable();
+                PrepTagsTable()
+                PrepRecommendationsTable()
+            }
+
+            function SetImageUrls()
+            {                
+                if( $("#imageShare").val() == "")
+                {
+                    $("#negativeImage").attr("src", `${image_base_url}/${currentAilment.name}1.png`);
+                    $("#positiveImage").attr("src", `${image_base_url}/${currentAilment.name}2.png`);                    
+                }
+                else
+                {
+                    $("#negativeImage").attr("src", `${image_base_url}/${currentAilment.imageShareOverrideAilmentName}1.png`);
+                    $("#positiveImage").attr("src", `${image_base_url}/${currentAilment.imageShareOverrideAilmentName}2.png`); 
+                }
+            }
+
+            function PrepAffirmationTable()
+            {   
+                $("#affirmationsTable > tbody").html("");
+               for (var i = 0; i < currentAilment.affirmations.length; i++)
+                { 
+                    $("#affirmationsTable").find('tbody')
+                        .append($('<tr>')
+                            .append($('<td>')
+                                .append($('<textarea rows="2" class="sol-sm-12 form-control">')
+                                        .val(currentAilment.affirmations[i])
+                            )
+                        )
+                    );                  
+                }
+            }
+
+            function PrepPhysicalConnectionsTable()
+            {   
+            $("#physicalConnectionsTable > tbody").html("");
+               for (var i = 0; i < currentAilment.physicalConnections.length; i++)
+                { 
+                    $("#physicalConnectionsTable").find('tbody')
+                        .append($('<tr>')
+                            .append($('<td>')
+                                .append($('<input type="text" class="sol-sm-12 form-control">')
+                                        .val(currentAilment.physicalConnections[i])
+                            )
+                        )
+                    );                  
+                }
+            }           
+
+            function PrepTagsTable()
+            {   
+            $("#tagsTable > tbody").html("");
+               for (var i = 0; i < currentAilment.tags.length; i++)
+                { 
+                    $("#tagsTable").find('tbody')
+                        .append($('<tr>')
+                            .append($('<td>')
+                                .append($('<input type="text" class="sol-sm-12 form-control">')
+                                        .val(currentAilment.tags[i])
+                            )
+                        )
+                    );                  
+                }
+            }
+
+            function PrepRecommendationsTable()
+            {   
+            $("#recommendationsTable > tbody").html("");
+               for (var i = 0; i < currentAilment.recommendations.length; i++)
+                { 
+                    $("#recommendationsTable").find('tbody')
+                        .append($('<tr>')
+                            .append($('<td>')
+                                .append($('<input type="text" class="sol-sm-12 form-control rName">')
+                                        .val(currentAilment.recommendations[i].name)
+                                )
+                            )
+                            .append($('<td>')
+                            .append($('<input type="text" class="sol-sm-12 form-control rUrl">')
+                                        .val(currentAilment.recommendations[i].url)
+                                )  
+                            )
+                            .append($('<td>')
+                                .append($('<select class="form-control rType"><option value="0">Product</option><option value="1">Practitioner</option><option value="2">Book</option><option value="3">Food</option></select>')
+                                    .val(currentAilment.recommendations[i].recommendationType)
+                            )   
+                            )                      
+                        )
+                    ;                  
+                }
+            }
+
+            function AddAffirmation(){
+                $("#affirmationsTable").find('tbody')
+                        .append($('<tr>')
+                            .append($('<td>')
+                                .append($('<textarea rows="2" class="sol-sm-12 form-control">')
+                            )
+                        )
+                    );   
+            }
+
+            function AddPhysicalConnection(){
+                $("#physicalConnectionsTable").find('tbody')
+                        .append($('<tr>')
+                            .append($('<td>')
+                                .append($('<input type="text" class="sol-sm-12 form-control">')
+                            )
+                        )
+                    );   
+            }
+
+            function AddTag(){
+                $("#tagsTable").find('tbody')
+                        .append($('<tr>')
+                            .append($('<td>')
+                                .append($('<input type="text" class="sol-sm-12 form-control">')
+                            )
+                        )
+                    );   
+            }
+
+            function AddRecommendation(){
+                $("#recommendationsTable").find('tbody')
+                        .append($('<tr>')
+                            .append($('<td>')
+                                .append($('<input type="text" class="sol-sm-12 form-control rName">')
+                                )
+                            )
+                            .append($('<td>')
+                            .append($('<input type="text" class="sol-sm-12 form-control rUrl">')
+                                )  
+                            )
+                            .append($('<td>')
+                            .append($('<select class="form-control rType"><option value="0">Product</option><option value="1">Practitioner</option><option value="2">Book</option><option value="3">Food</option></select>')
+                            )  
+                            )                       
+                        )
+                    ;     
+            }
+
+            function AddAilment()
+            {
+                $("#alert").hide();
+                $("#ailmentDiv").show();
+                $("#id").val("");
+                $("#id").attr("disabled", "disabled");
+                $("#name").val("");
+                $("#name").removeAttr("disabled")
+                $("#SubscriptionOnly").prop('checked', false);
+                $("#imageShare").val("")
+                $("#ailmentImages").hide();
+                $("#summaryNegative").val("");
+                $("#summaryPositive").val("");
+                $("#recommendationsTable > tbody").html("");
+                $("#tagsTable > tbody").html("");
+                $("#physicalConnectionsTable > tbody").html("");
+                $("#affirmationsTable > tbody").html("");
+                $("#negativeImage").attr("src", "");
+                $("#positiveImage").attr("src", "");
+            }
+
+            function duplicateAilment()
+            {
+                $("#id").val("");
+                $("#id").attr("disabled", "disabled");
+                $("#name").val("");
+                $("#name").removeAttr("disabled")
+                $("#name").attr("placeholder","Input New Ailment Name")
+            }
+
+            function SaveAilment()
+            {
+                if($.trim($("#name").val()).length){
+                    currentAilment = {};
+
+                    currentAilment.id = $("#id").val();
+                    currentAilment.name = $("#name").val();
+                    currentAilment.subscriptionOnly = $("#SubscriptionOnly").prop('checked');
+                    currentAilment.ImageShareOverrideAilmentName = $("#imageShare").val();
+                    currentAilment.SummaryPositive = $("#summaryPositive").val();
+                    currentAilment.SummaryNegative = $("#summaryNegative").val();
+                    currentAilment.Affirmations = GetStringArrayFromAffirmationsTable("affirmationsTable");
+                    currentAilment.PhysicalConnections = GetStringArrayFromAffirmationsTable("physicalConnectionsTable");
+                    currentAilment.Tags = GetStringArrayFromAffirmationsTable("tagsTable");
+                    currentAilment.Recommendations = GetRecommendations();                
+
+                    $.ajax({ 
+                    type: "post", 
+                    datatype: "json",
+                    data: JSON.stringify(currentAilment), 
+                    url: `${admin_api_url}/api/UpsertAilment?code=${upsertAilmentCode}`,
+                    error: function(xhr, ajaxOptions, thrownError, data) {
+                        alert(thrownError + JSON.stringify(currentAilment));
+                    },
+                    success: function(data)
+                        {
+                            showAilment(data);
+                            $('#ailmentsTable').DataTable().ajax.reload();
+                            $("#alert").show();
+                            $("#alert").html("Saved!")
+                        }
+                    });
+
+                }
+                else
+                {
+                    alert("Mest Specify an Ailment name");
+                }
+               
+            }            
+
+            function GetStringArrayFromAffirmationsTable(tableId)
+            {                
+                var toReturn = [];
+                $("#"+ tableId + " > tbody > tr :input").each(function (){
+                    let value = $(this).val();
+                    if(value !== null && value != "")
+                    {
+                        toReturn.push($(this).val())
+                    }                    
+                })                
+                return toReturn;
+            }
+
+            function GetRecommendations()
+            {                
+                var toReturn = [];
+                $("#recommendationsTable > tbody > tr").each(function (){
+                    let rName = $(this).find(".rName").val();
+                    let rUrl = $(this).find(".rUrl").val();
+                    let rType = $(this).find(".rType").val();  
+                    if(rName !== null && rName != "")
+                    {
+                        toReturn.push({"name":rName,"url": rUrl,"recommendationType": parseInt(rType)}) 
+                    }                                    
+                }) 
+                return toReturn;
+            }
+
+            function BuildImageTable()
+            {
+                $("#getImagesButton").toggle();
+                $("#imagesInternalDiv").toggle();
+
+                $('#imagesTable').DataTable(
+                {
+                    "ajax": {
+                        "url": `${admin_api_url}/api/ImagesTable?code=${imagesTableCode}`,
+                        },
+                        columns: [  
+                            {
+                                data: 'name',
+                                name: 'Select',
+                                render: function(data, type, row, meta) 
+                                {
+                                    return `<button onClick="SelectImage('${row.uri}','${row.name}')" style="display:block; margin:auto" class="btn btn-outline-info"><i class="fas fa-image"></i></button>`;
+                                }
+                            },
+                            { data: 'name'},
+                            {
+                                data: 'ailment',
+                                Name: 'Default Ailment'
+                            },                 
+                            {
+                                data: 'name',
+                                name: 'Delete',
+                                render: function(data, type, row, meta) 
+                                {
+                                    return `<button onClick="DeleteImageConfirm('${data}')" style="border:none; display:block; margin:auto" class="btn btn-outline-dark"><i class="fas fa-trash"></i></button>`;
+                                }
+                            },                            
+                        ]                        
+                });
+            }
+
+            function SelectImage(imageUrl, imageName)
+            {                
+                $("#selectedImage").attr("src", imageUrl);
+                $("#selectedImageName").html(imageName)
+
+                $("#addImageButton").show();
+                $("#addImageDiv").hide();   
+            }
+
+            function DeleteImageConfirm(imageName){
+                
+                let r = confirm("Are you sure you want to delete " + imageName + "!");
+
+                if(r == true)
+                {
+                    $.ajax({
+                        type: "POST",
+                        url: `${admin_api_url}/api/DeleteImage?code=${deleteImageCode}&name=${imageName}`,
+                        processData: false,
+                        contentType: false,
+                        data: null,
+                        success: function(response){
+                            $('#imagesTable').DataTable().ajax.reload();
+                        },                               
+                    });
+                }
+            }
+
+            function AddImage()
+            {
+                //clear image src and label
+                $("#selectedImage").attr("src", "");
+                $("#selectedImageName").html("")
+
+                $("#addImageButton").toggle();
+                $("#addImageDiv").toggle();        
+            }
+
+            function SubmitImage()
+            {               
+                if($("#imageAilment").val() != "0")
+                {
+                    if($("#imageType").val() != "0")
+                    {
+                        if($("#imageFile")[0].files[0] != null){
+                            let name = $("#imageAilment").val() + $("#imageType").val() + ".png"
+
+                            data = new FormData();
+                            data.append('file',$("#imageFile")[0].files[0]) 
+
+                            $.ajax({
+                                type: "POST",
+                                url: `${admin_api_url}/api/Image?name=${name}`,
+                                processData: false,
+                                contentType: false,
+                                data: data,
+                                success: function(response){
+                                    $("#addImageButton").toggle();
+                                    $("#addImageDiv").toggle();
+                                    $("#imageFile")[0].files[0] == null;
+                                    $("#imageFile")[0].files == null;
+                                    $("#filelabel").html("Please Select a file")
+                                    $('#imagesTable').DataTable().ajax.reload();
+                                },                               
+                            });
+                        }
+                        else{
+                            alert("Must select a file");
+                        }
+                        
+                    }
+                    else{
+                        alert("Must Select Image Type");
+                    }                                      
+                }
+                else{
+                    alert("Must Select an Ailment");
+                }                                 
+            }
+
+            function SubmitBackup()
+            {
+                result = confirm("Are you sure you want to restore the database from backup?\nThis will overwrite data from the backup file!");
+
+                if (result == true) {
+                    if($("#databaseFile")[0].files[0] != null) {
+                        data = new FormData();
+                        data.append('File',$("#databaseFile")[0].files[0])
+
+                        $.ajax({
+                            type: "POST",
+                            url: `${admin_api_url}/api/RestoreDatabase?code=${restoreDatabaseCode}`,
+                            processData: false,
+                            contentType: false,
+                            data: data,
+                            success: function(response){
+                                alert('Database Successfuly restored!');
+                            },
+                            error: function (xhr, ajaxOptions, thrownError) {
+                                alert(`Failed to restore database!\n${xhr.responseText}`);
+                            }
+                        });
+                    }
+                    else {
+                        alert("Must select a file");
+                    }
+                }
+            }
+
+            function BuildContactsTable()
+            {
+                $("#getContactsButton").toggle();
+                $("#contactsInternalDiv").toggle();
+
+                $('#contactsTable').DataTable(
+                {                                         
+                    "ajax": {
+                        "url": `${admin_api_url}/api/ContactsTables?code=${contactsTableCode}`,  
+                        },
+                        dom: 'Bfrtip',
+                        buttons: [
+                        'excel'
+                        ],  
+                        columns: [                             
+                            { data: 'email'},
+                            {
+                                data: 'saveDateTime',
+                                name: 'saveDateTime',
+                                render: function(data, type, row, meta) 
+                                {
+                                    let d = new Date(data)
+                                    return d;
+                                }
+                            },
+                            {
+                                data: 'id',
+                                name: 'Delete',
+                                render: function(data, type, row, meta) 
+                                {
+                                    return `<button onClick="DeleteContactConfirm('${data}','${row.Email}')" style="border:none; display:block; margin:auto" class="btn btn-outline-dark"><i class="fas fa-trash"></i></button>`;
+                                }
+                        },                            
+                        ]                                              
+                });
+            }
+
+            function DeleteContactConfirm(id, name)
+            {
+                let r = confirm("Are you sure you want to delete " + name + "!");
+                if(r == true)
+                {
+                    $.ajax({ 
+                        type: "POST",
+                        url: `${admin_api_url}/api/DeleteContact?code=${deleteContactCode}&id=${id}&name=${name}`,
+                        success: function(data)
+                        {                        
+                            $('#contactsTable').DataTable().ajax.reload();
+                        }
+                    });
+                }   
+            } 
+
+            function SendNotification()
+            {
+                if($("#notificationTitle").val() != "")
+                {
+                    if($("#notificationBody").val() != "")
+                    {
+                        
+                        let ailmentId = $("#notificationAilment").val()              
+                        
+                        let notification = {};
+                        notification.Title = $("#notificationTitle").val();
+                        notification.Body = $("#notificationBody").val();
+                        notification.SubscribersOnly = "false";
+                        if($("#notificationTag").val() == 1)
+                        {
+                            notification.SubscribersOnly = "true";
+                        }
+                        notification.AilmentId = ailmentId;
+
+                        $.ajax({
+                            type: "POST",
+                            url: `${admin_api_url}/api/SendPushNotification?code=${sendPushNotificationCode}`,
+                            processData: false,
+                            contentType: false,
+                            data: JSON.stringify(notification),
+                            success: function(response){
+                                alert("Notification Sent");
+                                $("#notificationTitle").val("");
+                                $("#notificationBody").val("");                                
+                            },                               
+                        });                        
+                        
+                    }
+                    else{
+                        alert("Must Input a Body");
+                    }                                      
+                }
+                else{
+                    alert("Must Input a Title");
+                }                     
+            }
+            
+            function BackupDatabase()
+            {
+                document.getElementById('download_iframe').src = `${admin_api_url}/api/CreateBackup?code=${createBackupCode}`;
+            }
+
+        </script>
+
+        <style type="text/css">
+            .project-tab {
+                padding: 10%;
+                margin-top: -8%;
+            }
+            .project-tab #tabs{
+                background: #007b5e;
+                color: #eee;
+            }
+            .project-tab #tabs h6.section-title{
+                color: #eee;
+            }
+            .project-tab #tabs .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+                color: #79ACBF;
+                background-color: transparent;
+                border-color: transparent transparent #f3f3f3;
+                border-bottom: 3px solid !important;
+                font-size: 16px;
+                font-weight: bold;
+            }
+            .project-tab .nav-link {
+                border: 1px solid transparent;
+                border-top-left-radius: .25rem;
+                border-top-right-radius: .25rem;
+                color: #79ACBF;
+                font-size: 16px;
+                font-weight: 600;
+            }
+            .project-tab .nav-link:hover {
+                border: none;
+            }
+            .project-tab thead{
+                background: #f3f3f3;
+                color: #333;
+            }
+            .project-tab a{
+                text-decoration: none;
+                color: #333;
+                font-weight: 600;
+            }
+            .nav-item {
+                color: #6A7C92;
+            }
+        </style>
+    </head>
+    <body>       
+        <div class="container">
+            <div><h1 class="text-center">MBD Admin Portal</h1></div>
+            <nav class="mt-3 mb-3">
+                <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
+                    <a class="nav-item nav-link active" id="nav-ailments-tab" data-toggle="tab" href="#nav-ailments" role="tab" aria-controls="nav-home" aria-selected="true">Ailments</a>
+                    <a class="nav-item nav-link" id="nav-images-tab" data-toggle="tab" href="#nav-images" role="tab" aria-controls="nav-profile" aria-selected="false">Images</a>
+                    <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">Contacts</a>
+                    <a class="nav-item nav-link" id="nav-notifications-tab" data-toggle="tab" href="#nav-notifications" role="tab" aria-controls="nav-notifications" aria-selected="false">Notifications</a>
+                    <a class="nav-item nav-link" id="nav-database-tab" data-toggle="tab" href="#nav-database" role="tab" aria-controls="nav-database" aria-selected="false">Database</a>
+                </div>                
+            </nav>
+            <div class="tab-content" id="nav-tabContent"> 
+                <div class="tab-pane fade show active" id="nav-ailments" role="tabpanel" aria-labelledby="nav-ailments-tab">
+                    <div class="card">                
+                        <div class="card-body">
+                            <h5 class="card-title">Ailments</h5>
+                            <table id="ailmentsTable" class="display">
+                                <thead>
+                                    <th>View</th>
+                                    <th>Delete</th>
+                                    <th>Name</th>
+                                    <th>PhysicalConnections</th>
+                                    <th>Tags</th>
+                                </thead>                           
+                            </table>
+                            <button type="button" class="btn btn-sm btn-outline-primary" onclick="AddAilment()">Add</button>
+                        </div>
+                    </div>            
+                    <div class="card mt-3" id="ailmentDiv" style="display: none;">
+                        <div class="card-body">
+                            <h5 class="card-title">Basic Info</h5>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div id="ailmentInfo" class="mb-3">
+                                        <div class="form-group">
+                                            <label for="id">Id:</label>
+                                            <input type="text" class="form-control" id="id">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="name">Name:</label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" id="name">
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-outline-warning" onclick="duplicateAilment()" data-toggle="tooltip" title="Clears Name and when saved creates new ailment" type="button">Duplicate Ailment</button>
+                                                </div>
+                                            </div>                                            
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="ailmentImages" class="col-sm-6 text-center">
+                                    <i>Negative</i>
+                                    <img id="negativeImage" style="max-width: 120px;">
+                                    <i>Positive</i>
+                                    <img id="positiveImage" style="max-width: 120px;">
+                                </div>
+                            </div>
+                            <div id="ailmentEdit"> 
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="SubscriptionOnly">  
+                                    <label for="subscriptionOnly">Subscription Only</label>
+                                </div>                                
+                                <div class="form-group">
+                                    <label for="imageShare">Image Share Ailment Name:</label>
+                                    <input type="text" class="form-control" placeholder="Ailment with which it will share an image" id="imageShare">   
+                                </div>                                                  
+                                <div class="form-group">
+                                    <label for="summaryNegative">Summary Negative:</label>
+                                    <textarea class="form-control" rows="5" id="summaryNegative"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="summaryPositive">Summary Positive:</label>
+                                    <textarea class="form-control" rows="5" id="summaryPositive"></textarea>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-sm">                
+                                        <div class="">
+                                            <div class="row">
+                                                <h5 class="col">Affirmations</h5>
+                                                <div class="col">
+                                                    <button type="button" class="btn btn-sm btn-outline-primary" onclick="AddAffirmation()">Add</button>
+                                                </div>                                                
+                                            </div>                                            
+                                            <i style="display: block;">Statements of Affirmation</i> 
+                                            <hr />                                 
+                                            <table id="affirmationsTable" style="width:100%">                               
+                                                <tbody class="col-sm-12">    
+                                                </tbody>    
+                                            </table>                                            
+                                        </div>
+                                    </div>
+                                    <div class=" col-sm">                
+                                        <div class="">
+                                            <div class="row">
+                                                <h5 class="col">Physical Connections</h5>
+                                                <div class="col">
+                                                    <button type="button" class="btn btn-sm btn-outline-primary" onclick="AddPhysicalConnection()">Add</button>
+                                                </div>                                                
+                                            </div>                                              
+                                            <i style="display: block;">Locations on the body that can be referenced by this Ailment i.e Adrenal Problems linked to Kidney</i> 
+                                            <hr />                                   
+                                            <table id="physicalConnectionsTable" style="width:100%">                               
+                                                <tbody class="col-sm-12">    
+                                                </tbody>    
+                                            </table>                                            
+                                        </div>
+                                    </div>
+                                    <div class=" col-sm">                
+                                        <div class="">
+                                            <div class="row">
+                                                <h5 class="col">Tags</h5>
+                                                <div class="col">
+                                                    <button type="button" class="btn btn-sm btn-outline-primary" onclick="AddTag()">Add</button>
+                                                </div>                                                
+                                            </div>                                             
+                                            <i style="display: block;">Single words used for matching Ailment to search parameters</i> 
+                                            <hr />                               
+                                            <table id="tagsTable" style="width:100%">                               
+                                                <tbody class="col-sm-12">    
+                                                </tbody>    
+                                            </table>                                            
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 mt-3">                
+                                    <div class="">
+                                        <div class="row">
+                                            <h5 class="">Recommendations</h5> 
+                                            <div class="col">
+                                                <button type="button" class="btn btn-sm btn-outline-primary" onclick="AddRecommendation()">Add</button>
+                                            </div>                                                
+                                        </div>                                          
+                                        <table id="recommendationsTable" style="width:100%">
+                                        <thead>
+                                            <th>Name</th>
+                                            <th>URL</th>
+                                            <th>Type</th>
+                                        </thead>                               
+                                            <tbody class="col-sm-12">    
+                                            </tbody>    
+                                        </table>                                        
+                                    </div>
+                                </div> 
+                                <div id="alert" style="display: none;" class="alert alert-success mt-3" role="alert"></div>
+                                <button id="Save" class="btn btn-primary btn-lg btn-block btn-success mt-3" onclick="SaveAilment()">Save</button>                      
+                            </div>  
+                        </div>
+                    </div>    
+                </div>
+                <div class="tab-pane fade" id="nav-images" role="tabpanel" aria-labelledby="nav-images-tab">
+                    <div class="card">                
+                        <div class="card-body">
+                            <h5 class="card-title">Images</h5>
+                            <button class="btn btn-primary" id="getImagesButton" onclick="BuildImageTable()">Get Images</button>
+                            <div id="imagesInternalDiv" style="display: none;">                                
+                                <table id="imagesTable" class="display mt-3">
+                                    <thead>  
+                                        <th>View</th>                        
+                                        <th>Name</th>
+                                        <th>Default Ailment</th>
+                                        <th>Delete</th>                                      
+                                    </thead>                           
+                                </table>    
+                                <button type="button" id="addImageButton" class="btn btn-sm btn-outline-primary" onclick="AddImage()">Add</button>                            
+                            </div>                            
+                        </div>
+                        <div id="imageDiv" class="text-center mb-3">
+                            <div id="selectedImageName"></div>
+                            <img id="selectedImage" style="max-width: 120px;">
+                        </div>
+                        <div id="addImageDiv" class="row" style="display: none;">
+                            <div class="offset-sm-4 col-sm-4">
+                                <div class="form-group">                                    
+                                    <select class="form-control" id="imageAilment">
+                                        <option value="0">Select Ailment...</option>                                        
+                                    </select>
+                                </div>
+                                <div class="form-group">                                
+                                    <select class="form-control" id="imageType">
+                                        <option value="0">Select Image Type...</option>
+                                        <option value="1">Negative</option>
+                                        <option value="2">Positive</option>
+                                    </select>
+                                </div>                            
+                                <div class="input-group mb-3">
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="imageFile">
+                                        <label class="custom-file-label" id="filelabel" for="imageFile">Choose file</label>
+                                    </div>                                    
+                                </div> 
+                                <button class="btn btn-primary" onclick="SubmitImage()">Submit</button>                                
+                            </div>                                                                                
+                        </div>
+                    </div>
+                </div>                      
+                <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
+                    <div class="card">                
+                        <div class="card-body">
+                            <h5 class="card-title">Contacts</h5>
+                            <button class="btn btn-primary" id="getContactsButton" onclick="BuildContactsTable()">Get Contacts</button>
+                            <div id="contactsInternalDiv" style="display: none;">                                
+                                <table id="contactsTable" class="display mt-3">
+                                    <thead> 
+                                        <th>Email</th>
+                                        <th>SaveDateTime</th>  
+                                        <th>Delete</th>                                      
+                                    </thead>                           
+                                </table>                                                             
+                            </div>                            
+                        </div>                        
+                    </div>                   
+                </div>    
+                <div class="tab-pane fade" id="nav-notifications" role="tabpanel" aria-labelledby="nav-notifications-tab">                   
+                    <div class="card">                
+                        <div class="card-body">
+                            <h5 class="card-title">Push Notifications</h5>                            
+                            <div id="sendNotificationDiv">
+                                <div class="form-group">                                    
+                                    <select class="form-control" id="notificationTag">
+                                        <option value="0">Select Who To Notify...</option>
+                                        <option value="1">Subscribers Only</option>    
+                                        <option value="0">Everyone</option>                                      
+                                    </select>
+                                </div>                                 
+                                <div class="form-group">
+                                    <label for="notificationTitle">Title:</label>
+                                    <div class="input-group">                                    
+                                        <input type="text" class="form-control" placeholder="Notification Title" id="notificationTitle" maxlength="65">
+                                        <div class="input-group-append">
+                                          <span id="titleLength" class="input-group-text">0/65</span>
+                                        </div>
+                                    </div>                                       
+                                </div>    
+                                <div class="form-group">
+                                    <label for="notificationBody">Body:</label>
+                                    <div class="input-group">                                    
+                                        <textarea class="form-control maxedLength" rows="3" id="notificationBody" maxlength="150"></textarea>
+                                        <div class="input-group-append">
+                                          <span id="bodyLength" class="input-group-text">0/150</span>
+                                        </div>
+                                    </div>                                       
+                                </div>                                                               
+                                <div class="form-group">                                    
+                                    <select class="form-control" id="notificationAilment">
+                                        <option value="0">No Ailment... (Select Ailment If Applicable)</option>                                        
+                                    </select>
+                                </div>     
+                                <button class="btn btn-primary" onclick="SendNotification()">Send Notification</button>                                                 
+                            </div>                            
+                        </div>                        
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="nav-database" role="tabpanel" aria-labelledby="nav-database-tab">
+                     <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Database</h5>
+                            <div class="row">
+                                <div class="form-control mb-3">
+                                    <button class="btn btn-primary" id="getDatabaseBackupButton" onclick="BackupDatabase()">Downlad Database</button>
+                                <iframe id="download_iframe" style="display:none;"></iframe>
+                                </div>
+                            </div>
+                            <div class="input-group mt-3 mb-3">
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="databaseFile">
+                                    <label class="custom-file-label" id="filelabel" for="databaseFile">Choose file</label>
+                                </div>
+                            </div> 
+                            <button class="btn btn-danger" onclick="SubmitBackup()">Restore Database</button>
+                        </div>
+                    </div>
+                </div>
+           </div>
+        </div>
+    </body>
+</html>
