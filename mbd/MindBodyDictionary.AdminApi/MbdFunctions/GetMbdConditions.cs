@@ -34,5 +34,3 @@ public class GetMbdConditions(ILogger<GetMbdConditions> logger, CosmosClient cli
 		}
 	}
 }
-
-

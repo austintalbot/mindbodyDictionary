@@ -16,7 +16,7 @@ namespace MindBodyDictionary.Core.Entities
         public DateTime LastUpdated
         {
             get { return _lastUpdated; }
-            set { 
+            set {
                 SummaryNegative = value.ToString();
                 _lastUpdated = value;
              }

@@ -19,14 +19,14 @@ public class UpsertFaq(ILogger<UpsertFaq> logger, CosmosClient client)
         [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] HttpRequest req)
     {
         _logger.LogInformation("UpsertFaq processed a request.");
-        
+
         string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
         Faqs? faq;
 
         try
         {
             faq = JsonConvert.DeserializeObject<Faqs>(requestBody);
-            
+
             if (faq == null)
             {
                  return new BadRequestResult();
@@ -47,7 +47,7 @@ public class UpsertFaq(ILogger<UpsertFaq> logger, CosmosClient client)
         {
              var container = _client.GetContainer(CosmosDbConstants.DatabaseName, CosmosDbConstants.Containers.Faqs);
              var response = await container.UpsertItemAsync(faq, new PartitionKey(faq.Id));
-             
+
              return new OkObjectResult(response.Resource);
         }
         catch (Exception ex)

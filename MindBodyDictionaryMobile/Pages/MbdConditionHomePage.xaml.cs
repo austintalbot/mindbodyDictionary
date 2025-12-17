@@ -86,10 +86,12 @@ public partial class MbdConditionHomePage : ContentPage
     try
     {
       var border = sender as Border;
-      if (border == null) return;
+      if (border == null)
+        return;
 
       var condition = border.BindingContext as MbdCondition;
-      if (condition == null || string.IsNullOrEmpty(condition.Id)) return;
+      if (condition == null || string.IsNullOrEmpty(condition.Id))
+        return;
 
       await Shell.Current.GoToAsync($"mbdcondition?id={condition.Id}");
     }

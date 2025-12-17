@@ -43,7 +43,7 @@ public class CreateContact(ILogger<CreateContact> logger, CosmosClient client)
         {
             contact.Id = Guid.NewGuid().ToString();
         }
-        // Ensure SaveDateTime is set if missing? 
+        // Ensure SaveDateTime is set if missing?
         if (contact.SaveDateTime == default)
         {
             contact.SaveDateTime = DateTime.UtcNow;
@@ -53,7 +53,7 @@ public class CreateContact(ILogger<CreateContact> logger, CosmosClient client)
         {
             var container = _client.GetContainer(CosmosDbConstants.DatabaseName, CosmosDbConstants.Containers.Emails);
             var response = await container.CreateItemAsync(contact, new PartitionKey(contact.Id));
-            
+
             return new OkObjectResult(response.Resource);
         }
         catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.Conflict)

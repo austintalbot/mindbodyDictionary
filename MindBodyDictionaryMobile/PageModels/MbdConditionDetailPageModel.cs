@@ -7,9 +7,9 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging; // Add this for logging
 using Microsoft.Maui.Accessibility;
-using MindBodyDictionaryMobile.Models;
-using MindBodyDictionaryMobile.Enums; // Add this using statement
 using Microsoft.Maui.ApplicationModel; // For Launcher
+using MindBodyDictionaryMobile.Enums; // Add this using statement
+using MindBodyDictionaryMobile.Models;
 using MindBodyDictionaryMobile.Services.billing;
 
 public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttributable, IProjectTaskPageModel
@@ -329,9 +329,9 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
 
         CurrentView = _affirmationsView;
 
-                  CurrentView.BindingContext = this;
+        CurrentView.BindingContext = this;
 
-                break;
+        break;
 
       case "Recommendations":
         PopulateRecommendationLists();
@@ -345,35 +345,35 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
     PopulateRecommendationLists();
   }
 
-    private void PopulateRecommendationLists() {
-      if (Condition?.Recommendations == null)
-      {
-        FoodList = [];
-        ProductList = [];
-        BooksResourcesList = [];
-        FoodCount = 0;
-        ProductCount = 0;
-        BooksResourcesCount = 0;
-        _logger.LogWarning("Condition or Recommendations is null");
-        return;
-      }
-  
-      FoodList = Condition.Recommendations
-                      .Where(r => r.RecommendationType == (int)RecommendationType.Food)
-                      .ToList();
-      ProductList = Condition.Recommendations
-                      .Where(r => r.RecommendationType == (int)RecommendationType.Product)
-                      .ToList();
-      BooksResourcesList = Condition.Recommendations
-                      .Where(r => r.RecommendationType == (int)RecommendationType.Book)
-                      .ToList();
-  
-      FoodCount = FoodList.Count;
-      ProductCount = ProductList.Count;
-      BooksResourcesCount = BooksResourcesList.Count;
-      
-      _logger.LogInformation($"Counts - Foods: {FoodCount}, Products: {ProductCount}, Resources: {BooksResourcesCount}");
+  private void PopulateRecommendationLists() {
+    if (Condition?.Recommendations == null)
+    {
+      FoodList = [];
+      ProductList = [];
+      BooksResourcesList = [];
+      FoodCount = 0;
+      ProductCount = 0;
+      BooksResourcesCount = 0;
+      _logger.LogWarning("Condition or Recommendations is null");
+      return;
     }
+
+    FoodList = Condition.Recommendations
+                    .Where(r => r.RecommendationType == (int)RecommendationType.Food)
+                    .ToList();
+    ProductList = Condition.Recommendations
+                    .Where(r => r.RecommendationType == (int)RecommendationType.Product)
+                    .ToList();
+    BooksResourcesList = Condition.Recommendations
+                    .Where(r => r.RecommendationType == (int)RecommendationType.Book)
+                    .ToList();
+
+    FoodCount = FoodList.Count;
+    ProductCount = ProductList.Count;
+    BooksResourcesCount = BooksResourcesList.Count;
+
+    _logger.LogInformation($"Counts - Foods: {FoodCount}, Products: {ProductCount}, Resources: {BooksResourcesCount}");
+  }
   private void InitializeInnerTabs() {
     if (Condition == null)
     {
@@ -409,43 +409,43 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
   }
 
 
-    [RelayCommand]
-    private async Task ProductClicked(Recommendation recommendation) {
-      if (!string.IsNullOrEmpty(recommendation.Url))
+  [RelayCommand]
+  private async Task ProductClicked(Recommendation recommendation) {
+    if (!string.IsNullOrEmpty(recommendation.Url))
+    {
+      try
       {
-        try
-        {
-          await Launcher.OpenAsync(recommendation.Url);
-        }
-        catch (Exception ex)
-        {
-          _logger.LogError(ex, "Failed to open product URL: {Url}", recommendation.Url);
-          _errorHandler.HandleError(new Exception("Could not open product link."));
-        }
+        await Launcher.OpenAsync(recommendation.Url);
+      }
+      catch (Exception ex)
+      {
+        _logger.LogError(ex, "Failed to open product URL: {Url}", recommendation.Url);
+        _errorHandler.HandleError(new Exception("Could not open product link."));
       }
     }
+  }
 
-    [RelayCommand]
-    private async Task ResourceClicked(Recommendation recommendation) {
-      if (!string.IsNullOrEmpty(recommendation.Url))
+  [RelayCommand]
+  private async Task ResourceClicked(Recommendation recommendation) {
+    if (!string.IsNullOrEmpty(recommendation.Url))
+    {
+      try
       {
-        try
-        {
-          await Launcher.OpenAsync(recommendation.Url);
-        }
-        catch (Exception ex)
-        {
-          _logger.LogError(ex, "Failed to open resource URL: {Url}", recommendation.Url);
-          _errorHandler.HandleError(new Exception("Could not open resource link."));
-        }
+        await Launcher.OpenAsync(recommendation.Url);
+      }
+      catch (Exception ex)
+      {
+        _logger.LogError(ex, "Failed to open resource URL: {Url}", recommendation.Url);
+        _errorHandler.HandleError(new Exception("Could not open resource link."));
       }
     }
+  }
 
-    [RelayCommand]
-    private async Task AddToMyList(Recommendation recommendation) {
-      // This will eventually add the item to a persistent list, but for now, just show a message.
-      await AppShell.DisplayToastAsync($"Adding '{recommendation.Name}' to your list!");
-    }
+  [RelayCommand]
+  private async Task AddToMyList(Recommendation recommendation) {
+    // This will eventually add the item to a persistent list, but for now, just show a message.
+    await AppShell.DisplayToastAsync($"Adding '{recommendation.Name}' to your list!");
+  }
 
 
   private async Task LoadCategories() =>
@@ -496,13 +496,13 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
 
     try
     {
-     IsBusy = true;
+      IsBusy = true;
 
       Condition = await _mbdConditionRepository.GetAsync(id);
       _logger.LogInformation($"LoadData: Condition retrieved from repository. IsNull: {Condition == null}");
       if (Condition != null)
       {
-          _logger.LogInformation($"LoadData: Retrieved Condition Id: {Condition.Id}, Name: {Condition.Name}");
+        _logger.LogInformation($"LoadData: Retrieved Condition Id: {Condition.Id}, Name: {Condition.Name}");
       }
       if (Condition.IsNullOrNew())
       {

@@ -32,4 +32,3 @@
         public const string HubName = "mbdnotificationshub";
     }
 }
-

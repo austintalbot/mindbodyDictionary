@@ -10,7 +10,7 @@ namespace MindBodyDictionary_AdminApi.MbdFunctions;
 public class DeleteMbdImage(ILogger<DeleteMbdImage> logger)
 {
     private readonly ILogger<DeleteMbdImage> _logger = logger;
-    
+
     [Function("DeleteMbdImage")]
     public async Task<IActionResult> Run(
         [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] HttpRequest req)
@@ -24,7 +24,7 @@ public class DeleteMbdImage(ILogger<DeleteMbdImage> logger)
 
         _logger.LogInformation("DeleteMbdImage request for {Name}", name);
 
-        try 
+        try
         {
             var connectionString = Environment.GetEnvironmentVariable(StorageConstants.ConnectionStringSetting);
             var blobServiceClient = new BlobServiceClient(connectionString);

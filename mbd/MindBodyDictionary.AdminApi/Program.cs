@@ -15,7 +15,7 @@ var host = new HostBuilder()
             var connectionString = configuration["CONNECTION_COSMOSDB"];
             return new Microsoft.Azure.Cosmos.CosmosClient(connectionString);
         });
-    })    
+    })
     .Build();
 
 host.Run();

@@ -11,6 +11,8 @@ interface MbdConditionModalProps {
   onSave: () => void;
   onChange: (mbdCondition: MbdCondition) => void;
   getImageUrl: (type: 'negative' | 'positive') => string;
+  mbdConditionOptions?: { id?: string; name?: string }[];
+  onImageUpdate?: () => void;
 }
 
 const MbdConditionModal: React.FC<MbdConditionModalProps> = ({
@@ -20,18 +22,28 @@ const MbdConditionModal: React.FC<MbdConditionModalProps> = ({
   onSave,
   onChange,
   getImageUrl,
+  mbdConditionOptions = [],
+  onImageUpdate,
 }) => {
   const { colors } = useTheme();
   const [showImageActionModal, setShowImageActionModal] = React.useState(false);
   const [selectedImageForAction, setSelectedImageForAction] = React.useState<Image | null>(null);
+  const [activeTab, setActiveTab] = React.useState('basicInfo');
+
+  React.useEffect(() => {
+    if (isOpen) {
+      setActiveTab('basicInfo');
+    }
+  }, [isOpen]);
 
   if (!mbdCondition) return null;
-  console.log("Condition data in modal:", mbdCondition);
+  // console.log("Condition data in modal:", mbdCondition);
 
   const handleImageClick = (imageName: string | undefined) => {
     if (!imageName) return;
     const imageObj: Image = {
       name: imageName,
+      mbdCondition: mbdCondition.name // Associate with current condition name
     };
     setSelectedImageForAction(imageObj);
     setShowImageActionModal(true);
@@ -40,6 +52,20 @@ const MbdConditionModal: React.FC<MbdConditionModalProps> = ({
   // Log image URLs for debugging
   console.log("Image URL (negative):", getImageUrl('negative'));
   console.log("Image URL (positive):", getImageUrl('positive'));
+
+  const getTabStyle = (value: string) => ({
+    padding: '12px 16px',
+    borderRadius: 0,
+    backgroundColor: 'transparent',
+    border: 'none',
+    color: activeTab === value ? colors.foreground : colors.mutedText,
+    fontWeight: activeTab === value ? '600' : '500',
+    transition: 'all 0.2s',
+    borderBottom: activeTab === value ? `2px solid ${colors.primary}` : '2px solid transparent',
+    marginTop: '0',
+    marginBottom: '-2px', // Offset the parent's borderBottom
+    zIndex: activeTab === value ? 1 : 0
+  });
 
   return (
     <div style={{
@@ -108,44 +134,22 @@ const MbdConditionModal: React.FC<MbdConditionModalProps> = ({
 
         {/* Modal Body */}
         <div style={{ flex: 1, overflowY: 'auto', padding: '32px' }}>
-          <Tabs defaultValue="basicInfo" className="w-full">
+          <Tabs defaultValue="basicInfo" onValueChange={setActiveTab} className="w-full">
             <TabsList className="grid w-full grid-cols-5" style={{
               marginBottom: '20px',
               borderBottom: `2px solid ${colors.border}`,
               display: 'grid',
               gridTemplateColumns: 'repeat(5, 1fr)',
-              gap: '8px'
+              gap: '8px',
+              backgroundColor: 'transparent',
+              height: 'auto',
+              padding: 0
             }}>
-              <TabsTrigger value="basicInfo" style={{
-                padding: '12px 16px',
-                borderRadius: 0,
-                backgroundColor: 'transparent',
-                border: 'none'
-              }}>Basic Info</TabsTrigger>
-              <TabsTrigger value="affirmations" style={{
-                padding: '12px 16px',
-                borderRadius: 0,
-                backgroundColor: 'transparent',
-                border: 'none'
-              }}>Affirmations</TabsTrigger>
-              <TabsTrigger value="physicalConnections" style={{
-                padding: '12px 16px',
-                borderRadius: 0,
-                backgroundColor: 'transparent',
-                border: 'none'
-              }}>Physical Connections</TabsTrigger>
-              <TabsTrigger value="tags" style={{
-                padding: '12px 16px',
-                borderRadius: 0,
-                backgroundColor: 'transparent',
-                border: 'none'
-              }}>Tags</TabsTrigger>
-              <TabsTrigger value="recommendations" style={{
-                padding: '12px 16px',
-                borderRadius: 0,
-                backgroundColor: 'transparent',
-                border: 'none'
-              }}>Recommendations</TabsTrigger>
+              <TabsTrigger value="basicInfo" style={getTabStyle('basicInfo')}>Basic Info</TabsTrigger>
+              <TabsTrigger value="affirmations" style={getTabStyle('affirmations')}>Affirmations</TabsTrigger>
+              <TabsTrigger value="physicalConnections" style={getTabStyle('physicalConnections')}>Physical Connections</TabsTrigger>
+              <TabsTrigger value="tags" style={getTabStyle('tags')}>Tags</TabsTrigger>
+              <TabsTrigger value="recommendations" style={getTabStyle('recommendations')}>Recommendations</TabsTrigger>
             </TabsList>
 
             <TabsContent value="basicInfo">
@@ -317,7 +321,7 @@ const MbdConditionModal: React.FC<MbdConditionModalProps> = ({
                 </div>
                 <div style={{ marginTop: '32px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', padding: '32px', borderTop: `1px solid ${colors.border}` }}>
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
-                    <div 
+                    <div
                       onClick={() => handleImageClick(mbdCondition.imageNegative)}
                       style={{ cursor: 'pointer', width: '100%', position: 'relative' }}
                       title="Click to manage image"
@@ -327,7 +331,7 @@ const MbdConditionModal: React.FC<MbdConditionModalProps> = ({
                     <p style={{ fontSize: '12px', color: colors.mutedText, margin: 0 }}>Negative</p>
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
-                    <div 
+                    <div
                       onClick={() => handleImageClick(mbdCondition.imagePositive)}
                       style={{ cursor: 'pointer', width: '100%', position: 'relative' }}
                       title="Click to manage image"
@@ -772,15 +776,16 @@ const MbdConditionModal: React.FC<MbdConditionModalProps> = ({
             setSelectedImageForAction(null);
           }}
           image={selectedImageForAction}
+          mbdConditionOptions={mbdConditionOptions}
           onImageDeleted={() => {
             setShowImageActionModal(false);
             setSelectedImageForAction(null);
-            // Optionally refresh ailment or notify parent
+            if (onImageUpdate) onImageUpdate();
           }}
           onImageUploaded={() => {
             setShowImageActionModal(false);
             setSelectedImageForAction(null);
-            // Optionally refresh ailment or notify parent
+            if (onImageUpdate) onImageUpdate();
           }}
         />
       )}

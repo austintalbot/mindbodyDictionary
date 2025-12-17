@@ -52,7 +52,7 @@ const DatabaseTab: React.FC = () => {
         padding: '24px'
       }}>
         <h5 style={{ fontSize: '18px', fontWeight: '600', margin: '0 0 24px 0', color: colors.foreground }}>Database Management</h5>
-        
+
         <div style={{ maxWidth: '600px' }}>
           {/* Download Backup Section */}
           <div style={{ marginBottom: '32px', paddingBottom: '24px', borderBottom: `1px solid ${colors.border}` }}>
@@ -61,7 +61,7 @@ const DatabaseTab: React.FC = () => {
               Download a complete JSON backup of the {COSMOS_DB_CONTAINER_NAME} container.
             </p>
             <a href={createBackupUrl(COSMOS_DB_CONTAINER_NAME)} download={`${COSMOS_DB_CONTAINER_NAME}_backup.json`} style={{ textDecoration: 'none' }}>
-              <button 
+              <button
                 style={{
                   padding: '10px 20px',
                   backgroundColor: colors.primary,
@@ -90,7 +90,7 @@ const DatabaseTab: React.FC = () => {
             <p style={{ fontSize: '13px', color: colors.mutedText, marginBottom: '16px' }}>
               Restore the database from a JSON backup file. <strong style={{ color: colors.danger }}>Warning: This will overwrite existing data.</strong>
             </p>
-            
+
             <div style={{ marginBottom: '16px' }}>
               <div style={{ position: 'relative', overflow: 'hidden', display: 'inline-block', width: '100%' }}>
                 <input
@@ -127,7 +127,7 @@ const DatabaseTab: React.FC = () => {
               </div>
             </div>
 
-            <button 
+            <button
               onClick={submitBackup}
               disabled={!databaseFile}
               style={{

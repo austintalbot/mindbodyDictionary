@@ -344,6 +344,7 @@ tasks:
     desc: Run the iOS app on iPhone 17 Pro Max simulator
     dir: MindBodyDictionaryMobile
     cmds:
+    - task: clean
     - |
       # Get the UDID of the first available iPhone 17 Pro Max
       UDID=$(xcrun simctl list devices available | grep "iPhone 17 Pro Max" | head -1 | grep -o '([A-F0-9-]*)' | tr -d '()')

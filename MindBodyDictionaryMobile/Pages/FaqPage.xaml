@@ -13,7 +13,7 @@
             AutomationId="FaqCollectionView"
             ItemsSource="{Binding FaqItems}"
             SelectionMode="None">
-            
+
             <CollectionView.Header>
                 <VerticalStackLayout Padding="0,20,0,20">
                     <Image Style="{StaticResource AppLogoImage}" />
@@ -35,11 +35,11 @@
                                 <TapGestureRecognizer Command="{Binding ToggleExpandedCommand}" />
                             </Frame.GestureRecognizers>
                             <Grid ColumnDefinitions="*, Auto" ColumnSpacing="10">
-                                <Label Grid.Column="0" 
-                                       Text="{Binding Question}" 
+                                <Label Grid.Column="0"
+                                       Text="{Binding Question}"
                                        Style="{StaticResource ParagraphLabel}"
                                        TextColor="{AppThemeBinding Light={StaticResource Tertiary}, Dark={StaticResource Secondary}}" />
-                                <Label Grid.Column="1" 
+                                <Label Grid.Column="1"
                                        Text="▼"
                                        FontSize="18"
                                        TextColor="{AppThemeBinding Light={StaticResource Tertiary}, Dark={StaticResource Secondary}}"
@@ -57,11 +57,11 @@
                                BorderColor="Transparent"
                                MaximumWidthRequest="300">
                             <VerticalStackLayout Spacing="5">
-                                <Label Text="{Binding ShortAnswer}" 
+                                <Label Text="{Binding ShortAnswer}"
                                        Style="{StaticResource ParagraphLabel}"
                                        FontAttributes="Bold"
                                        TextColor="White" />
-                                <Label Text="{Binding Answer}" 
+                                <Label Text="{Binding Answer}"
                                        Style="{StaticResource ParagraphLabel}"
                                        TextColor="White" />
                             </VerticalStackLayout>
@@ -71,10 +71,9 @@
             </CollectionView.ItemTemplate>
         </CollectionView>
 
-        <ActivityIndicator IsRunning="{Binding IsBusy}" 
-                           IsVisible="{Binding IsBusy}" 
-                           HorizontalOptions="Center" 
+        <ActivityIndicator IsRunning="{Binding IsBusy}"
+                           IsVisible="{Binding IsBusy}"
+                           HorizontalOptions="Center"
                            VerticalOptions="Center" />
     </Grid>
 </ContentPage>
-
