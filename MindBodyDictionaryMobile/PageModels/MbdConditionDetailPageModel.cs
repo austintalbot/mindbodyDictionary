@@ -7,7 +7,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging; // Add this for logging
 using Microsoft.Maui.Accessibility;
-using Microsoft.Maui.Controls;
+using MindBodyDictionaryMobile.Models;
 using MindBodyDictionaryMobile.Enums; // Add this using statement
 using Microsoft.Maui.ApplicationModel; // For Launcher
 using MindBodyDictionaryMobile.Services.billing;
