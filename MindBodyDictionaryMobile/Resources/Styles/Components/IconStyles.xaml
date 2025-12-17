@@ -13,6 +13,46 @@
                                 Dark={StaticResource LightOnDarkBackground}}" />
 
     <FontImageSource
+        x:Key="IconHome"
+        FontFamily="{x:Static f:FluentUI.FontFamily}"
+        Glyph="{x:Static f:FluentUI.home_24_regular}"
+        Size="{StaticResource IconSize}"
+        Color="{AppThemeBinding Light={StaticResource DarkOnLightBackground},
+                                Dark={StaticResource LightOnDarkBackground}}" />
+
+    <FontImageSource
+        x:Key="IconSearch"
+        FontFamily="{x:Static f:FluentUI.FontFamily}"
+        Glyph="{x:Static f:FluentUI.search_24_regular}"
+        Size="{StaticResource IconSize}"
+        Color="{AppThemeBinding Light={StaticResource DarkOnLightBackground},
+                                Dark={StaticResource LightOnDarkBackground}}" />
+
+    <FontImageSource
+        x:Key="IconSettings"
+        FontFamily="{x:Static f:FluentUI.FontFamily}"
+        Glyph="{x:Static f:FluentUI.settings_24_regular}"
+        Size="{StaticResource IconSize}"
+        Color="{AppThemeBinding Light={StaticResource DarkOnLightBackground},
+                                Dark={StaticResource LightOnDarkBackground}}" />
+
+    <FontImageSource
+        x:Key="IconFaq"
+        FontFamily="{x:Static f:FluentUI.FontFamily}"
+        Glyph="{x:Static f:FluentUI.question_circle_24_regular}"
+        Size="{StaticResource IconSize}"
+        Color="{AppThemeBinding Light={StaticResource DarkOnLightBackground},
+                                Dark={StaticResource LightOnDarkBackground}}" />
+
+    <FontImageSource
+        x:Key="IconAbout"
+        FontFamily="{x:Static f:FluentUI.FontFamily}"
+        Glyph="{x:Static f:FluentUI.info_24_regular}"
+        Size="{StaticResource IconSize}"
+        Color="{AppThemeBinding Light={StaticResource DarkOnLightBackground},
+                                Dark={StaticResource LightOnDarkBackground}}" />
+
+    <FontImageSource
         x:Key="IconProjects"
         FontFamily="{x:Static f:FluentUI.FontFamily}"
         Glyph="{x:Static f:FluentUI.list_24_regular}"
