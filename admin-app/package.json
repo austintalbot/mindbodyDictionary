@@ -2,6 +2,9 @@
   "name": "admin-app",
   "private": true,
   "version": "0.0.1",
+  "description": "Mindbody Dictionary Admin Application",
+  "author": "Austin Talbot <austin@example.com>",
+  "homepage": "https://github.com/austintalbot/mindbodyDictionary",
   "type": "module",
   "scripts": {
     "dev": "vite",
