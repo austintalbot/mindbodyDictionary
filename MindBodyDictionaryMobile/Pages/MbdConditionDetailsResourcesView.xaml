@@ -10,43 +10,44 @@
     <Grid RowDefinitions="*">
         <CollectionView
             x:Name="ResourceCollectionView"
-            x:DataType="vm:MbdConditionDetailPageModel"
+            Grid.Row="0"
             EmptyView="There are no corresponding resources for this Condition"
-            InputTransparent="False"
             ItemsSource="{Binding BooksResourcesList}"
-            SelectionMode="None"
-            Style="{StaticResource HorizontalCollectionView}">
+            SelectionMode="None">
             <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <Grid
-                        x:DataType="model:Recommendation"
-                        HorizontalOptions="Fill"
-                        InputTransparent="False"
-                        VerticalOptions="Fill"
-                        Padding="5">
-                        <Border
-                            Background="White"
-                            InputTransparent="False"
-                            Style="{StaticResource RecommendationBorder}">
-                            <VerticalStackLayout Padding="10">
-                                <Label
-                                    Style="{StaticResource RecommendationNameLabel}"
-                                    Text="{Binding Name}"
-                                    Margin="0,0,0,5" />
-                                <Button
-                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RecommendationsPageModel}}, Path=ResourceClickedCommand}"
-                                    CommandParameter="{Binding .}"
-                                    Text="View Resource"
-                                    Style="{StaticResource AccentButton}"
-                                    Margin="0,5,0,5" />
-                                <Button
-                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RecommendationsPageModel}}, Path=AddToMyListCommand}"
-                                    CommandParameter="{Binding .}"
-                                    Text="Add to List"
-                                    Style="{StaticResource SecondaryButton}" />
-                            </VerticalStackLayout>
-                        </Border>
-                    </Grid>
+                <DataTemplate x:DataType="model:Recommendation">
+                    <Border
+                        Background="White"
+                        Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}"
+                        StrokeThickness="1"
+                        StrokeShape="RoundRectangle 8"
+                        Padding="12"
+                        Margin="8"
+                        MinimumHeightRequest="100">
+                        <VerticalStackLayout Spacing="10" VerticalOptions="Fill">
+                            <Label
+                                FontSize="14"
+                                FontAttributes="Bold"
+                                Text="{Binding Name}"
+                                LineBreakMode="WordWrap"
+                                TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+                            <Button
+                                IsEnabled="{Binding Url, Converter={StaticResource InverseBoolConverter}}"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RecommendationsPageModel}}, Path=ResourceClickedCommand}"
+                                CommandParameter="{Binding .}"
+                                Text="View Resource"
+                                Style="{StaticResource PrimaryButton}"
+                                Margin="0,0,0,8"
+                                VerticalOptions="End" />
+                            <Button
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RecommendationsPageModel}}, Path=AddToMyListCommand}"
+                                CommandParameter="{Binding .}"
+                                Text="Add to List"
+                                Style="{StaticResource SecondaryButton}"
+                                Margin="0"
+                                VerticalOptions="End" />
+                        </VerticalStackLayout>
+                    </Border>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
