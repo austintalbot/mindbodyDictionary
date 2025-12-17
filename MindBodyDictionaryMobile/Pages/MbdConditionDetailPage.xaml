@@ -53,6 +53,8 @@
                                 <TapGestureRecognizer />
                             </Grid.GestureRecognizers>
                             <VerticalStackLayout Style="{StaticResource LockOverlayVerticalStackLayout}">
+                                <Image Style="{StaticResource AppIconImage}" />
+                                <Label Style="{StaticResource SectionTitleLabel}" Text="{Binding Condition.Name}" HorizontalTextAlignment="Center" />
                                 <Image Style="{StaticResource LockOverlayImage}" />
                                 <Label Style="{StaticResource LockOverlayPremiumContentLabel}" />
                                 <Label Style="{StaticResource LockOverlayUpgradeLabel}" />
@@ -82,6 +84,8 @@
                                 <TapGestureRecognizer />
                             </Grid.GestureRecognizers>
                             <VerticalStackLayout Style="{StaticResource LockOverlayVerticalStackLayout}">
+                                <Image Style="{StaticResource AppIconImage}" />
+                                <Label Style="{StaticResource SectionTitleLabel}" Text="{Binding Condition.Name}" HorizontalTextAlignment="Center" />
                                 <Image Style="{StaticResource LockOverlayImage}" />
                                 <Label Style="{StaticResource LockOverlayPremiumContentLabel}" />
                                 <Label Style="{StaticResource LockOverlayUpgradeLabel}" />
@@ -159,6 +163,8 @@
                                 <TapGestureRecognizer />
                             </Grid.GestureRecognizers>
                             <VerticalStackLayout Style="{StaticResource LockOverlayVerticalStackLayout}">
+                                <Image Style="{StaticResource AppIconImage}" />
+                                <Label Style="{StaticResource SectionTitleLabel}" Text="{Binding Condition.Name}" HorizontalTextAlignment="Center" />
                                 <Image Style="{StaticResource LockOverlayImage}" />
                                 <Label Style="{StaticResource LockOverlayPremiumContentLabel}" />
                                 <Label Style="{StaticResource LockOverlayUpgradeLabel}" />
