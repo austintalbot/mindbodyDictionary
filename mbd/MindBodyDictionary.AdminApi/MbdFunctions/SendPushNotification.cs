@@ -72,7 +72,7 @@ public class SendPushNotification
 
             // Define target tags
             var tags = new List<string>();
-            if (payload.SubscribersOnly)
+            if (payload.SubscribersOnly != null && bool.TryParse(payload.SubscribersOnly, out bool subscribersOnly) && subscribersOnly)
             {
                 tags.Add("subscribers"); // Assuming "subscribers" tag is registered by subscribed users
             }
@@ -84,44 +84,25 @@ public class SendPushNotification
             // If no specific tags, send to all (broadcast)
             string? tagExpression = tags.Any() ? string.Join(" || ", tags) : null;
             
-            // Android (FCM) template
-            var androidPayload = new Dictionary<string, string>(notificationProperties)
-            {
-                { "data", JsonConvert.SerializeObject(notificationProperties) } // FCM data payload for Android
-            };
-            string androidTemplate = JsonConvert.SerializeObject(new { data = androidPayload });
-            
-            // iOS (APN) template
-            var apnPayload = new Dictionary<string, string>
-            {
-                { "aps", JsonConvert.SerializeObject(new { alert = new { title = payload.Title, body = payload.Body } }) }
-            };
-            if (!string.IsNullOrEmpty(payload.DeepLink))
-            {
-                apnPayload.Add("deep_link", payload.DeepLink); // Custom data for iOS
-            }
-            string apnTemplate = JsonConvert.SerializeObject(apnPayload);
-
-
             // Send to Notification Hub
             NotificationOutcome? outcome = null;
             if (string.IsNullOrEmpty(tagExpression))
             {
                 // Broadcast to all
-                _logger.LogInformation("Sending broadcast notification to all devices.");
+                _logger.LogInformation("Sending broadcast template notification to all devices.");
                 outcome = await _hubClient.SendTemplateNotificationAsync(notificationProperties);
             }
             else
             {
                 // Send to specific tags
-                _logger.LogInformation("Sending notification to tags: {TagExpression}", tagExpression);
+                _logger.LogInformation("Sending template notification to tags: {TagExpression}", tagExpression);
                 outcome = await _hubClient.SendTemplateNotificationAsync(notificationProperties, tagExpression);
             }
             
             _logger.LogInformation("Notification Hub send outcome: {State}. Success: {SuccessCount}, Failure: {FailureCount}", 
                 outcome?.State, outcome?.Success, outcome?.Failure);
 
-            return new OkObjectResult($"Notification sent. Outcome: {outcome?.State}");
+return new OkObjectResult(new { message = $"Notification sent. Outcome: {outcome?.State}", outcomeState = outcome?.State.ToString() });
         }
         catch (Exception ex)
         {
