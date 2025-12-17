@@ -195,6 +195,24 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
   // Tab Management Properties and Command
 
   [ObservableProperty]
+  private int _selectedTabIndex;
+
+  partial void OnSelectedTabIndexChanged(int value) {
+    switch (value)
+    {
+      case 0:
+        SelectedTab = "Problem";
+        break;
+      case 1:
+        SelectedTab = "Affirmations";
+        break;
+      case 2:
+        SelectedTab = "Recommendations";
+        break;
+    }
+  }
+
+  [ObservableProperty]
 
   private string _selectedTab = "Problem"; // Default to Problem tab
 

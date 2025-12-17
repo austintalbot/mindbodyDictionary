@@ -2,13 +2,13 @@ import React from 'react';
 import { useTheme } from '../theme/useTheme';
 import { MbdCondition } from '../types';
 
-interface AilmentsTableProps {
-  ailments: MbdCondition[];
-  onEdit: (ailment: MbdCondition) => void;
+interface MbdConditionsTableProps {
+  mbdConditions: MbdCondition[];
+  onEdit: (mbdCondition: MbdCondition) => void;
   onDelete: (id: string, name: string) => void;
 }
 
-const AilmentsTable: React.FC<AilmentsTableProps> = ({ ailments, onEdit, onDelete }) => {
+const MbdConditionsTable: React.FC<MbdConditionsTableProps> = ({ mbdConditions, onEdit, onDelete }) => {
   const { colors } = useTheme();
   return (
     <div style={{ backgroundColor: colors.background, borderRadius: '8px', border: `1px solid ${colors.border}`, overflow: 'hidden', marginBottom: '20px' }}>
@@ -23,9 +23,9 @@ const AilmentsTable: React.FC<AilmentsTableProps> = ({ ailments, onEdit, onDelet
             </tr>
           </thead>
           <tbody>
-            {ailments.map((ailment, index) => (
+            {mbdConditions.map((mbdCondition, index) => (
               <tr
-                key={ailment.id}
+                key={mbdCondition.id}
                 style={{
                   backgroundColor: index % 2 === 0 ? colors.background : colors.backgroundSecondary,
                   borderBottom: `1px solid ${colors.border}`,
@@ -40,7 +40,7 @@ const AilmentsTable: React.FC<AilmentsTableProps> = ({ ailments, onEdit, onDelet
               >
                 <td style={{ padding: '16px', whiteSpace: 'nowrap' }}>
                   <button
-                    onClick={() => onEdit(ailment)}
+                    onClick={() => onEdit(mbdCondition)}
                     style={{
                       padding: '6px 12px',
                       marginRight: '8px',
@@ -65,7 +65,7 @@ const AilmentsTable: React.FC<AilmentsTableProps> = ({ ailments, onEdit, onDelet
                     Edit
                   </button>
                   <button
-                    onClick={() => onDelete(ailment.id!, ailment.name!)}
+                    onClick={() => onDelete(mbdCondition.id!, mbdCondition.name!)}
                     style={{
                       padding: '6px 12px',
                       fontSize: '12px',
@@ -89,16 +89,16 @@ const AilmentsTable: React.FC<AilmentsTableProps> = ({ ailments, onEdit, onDelet
                     Delete
                   </button>
                 </td>
-                <td style={{ padding: '16px', fontWeight: '500', color: colors.foreground }}>{ailment.name}</td>
+                <td style={{ padding: '16px', fontWeight: '500', color: colors.foreground }}>{mbdCondition.name}</td>
                 <td style={{ padding: '16px', color: colors.mutedText, fontSize: '13px' }}>
-                  {(ailment.physicalConnections || []).length > 0
-                    ? (ailment.physicalConnections || []).join(', ')
+                  {(mbdCondition.physicalConnections || []).length > 0
+                    ? (mbdCondition.physicalConnections || []).join(', ')
                     : <span style={{ color: colors.placeholder }}>—</span>
                   }
                 </td>
                 <td style={{ padding: '16px', color: colors.mutedText, fontSize: '13px' }}>
-                  {(ailment.tags || []).length > 0
-                    ? (ailment.tags || []).map((tag: string, i: number) => (
+                  {(mbdCondition.tags || []).length > 0
+                    ? (mbdCondition.tags || []).map((tag: string, i: number) => (
                         <span key={i} style={{
                           display: 'inline-block',
                           backgroundColor: colors.primaryLight,
@@ -120,13 +120,13 @@ const AilmentsTable: React.FC<AilmentsTableProps> = ({ ailments, onEdit, onDelet
           </tbody>
         </table>
       </div>
-      {ailments.length === 0 && (
+      {mbdConditions.length === 0 && (
         <div style={{ padding: '40px 20px', textAlign: 'center', color: colors.placeholder }}>
-          No ailments found
+          No conditions found
         </div>
       )}
     </div>
   );
 };
 
-export default AilmentsTable;
+export default MbdConditionsTable;

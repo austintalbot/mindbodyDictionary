@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <Shell
     x:Class="MindBodyDictionaryMobile.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
@@ -19,21 +19,21 @@
         Title="Home"
         AutomationId="HomeShellContent"
         ContentTemplate="{DataTemplate pages:MbdConditionHomePage}"
-        Icon="{StaticResource IconDashboard}"
+        Icon="{StaticResource IconHome}"
         Route="home" />
 
     <ShellContent
         Title="Search"
         AutomationId="SearchShellContent"
         ContentTemplate="{DataTemplate pages:SearchPage}"
-        Icon="{StaticResource IconMeta}"
+        Icon="{StaticResource IconSearch}"
         Route="search" />
 
     <ShellContent
         Title="Manage Meta"
         AutomationId="ManageMetaShellContent"
         ContentTemplate="{DataTemplate pages:ManageMetaPage}"
-        Icon="{StaticResource IconMeta}"
+        Icon="{StaticResource IconSettings}"
         Route="manage" />
 
     <ShellContent
@@ -54,14 +54,14 @@
         Title="About"
         AutomationId="AboutShellContent"
         ContentTemplate="{DataTemplate pages:AboutPage}"
-        Icon="{StaticResource IconMeta}"
+        Icon="{StaticResource IconAbout}"
         Route="about" />
 
     <ShellContent
         Title="FAQ"
         AutomationId="FaqShellContent"
         ContentTemplate="{DataTemplate pages:FaqPage}"
-        Icon="{StaticResource IconMeta}"
+        Icon="{StaticResource IconFaq}"
         Route="faq" />
 
     <!--  Debug Pages  -->

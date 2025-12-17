@@ -2,18 +2,17 @@
 
 import {
   ADMIN_API_URL,
-  DELETE_AILMENT_CODE,
-  UPSERT_AILMENT_CODE,
-  IMAGES_TABLE_CODE,
+  DELETE_MBD_CONDITION_CODE,
+  UPSERT_MBD_CONDITION_CODE,
   DELETE_IMAGE_CODE,
   CONTACTS_TABLE_CODE,
   DELETE_CONTACT_CODE,
   SEND_PUSH_NOTIFICATION_CODE,
   CREATE_BACKUP_CODE,
   RESTORE_DATABASE_CODE,
-  GET_MBD_CONDITIONS_TABLE_CODE,
   GET_MBD_CONDITIONS_CODE,
   GET_MBD_IMAGES_CODE,
+  MBD_CONDITION_CODE,
 } from '../constants';
 import { MbdCondition } from '../types'; // Import from barrel file
 
@@ -136,13 +135,13 @@ export const fetchMbdCondition = async (requestedId: string, name: string): Prom
   }
 
   // Attempt 2: If client-side filtering fails, leverage the singular GetMbdCondition endpoint.
-  // This assumes AILMENT_CODE corresponds to a specific GetMbdCondition endpoint.
+  // This assumes MBD_CONDITION_CODE corresponds to a specific GetMbdCondition endpoint.
   try {
     console.log("Attempt 2: Falling back to singular GetMbdCondition endpoint for ID:", requestedId);
     // Note: The `name` parameter is typically not needed for a singular endpoint by ID.
-    const singularAilment = await makeApiRequest<MbdCondition>(`GetMbdCondition?code=${GET_MBD_CONDITION_CODE}&id=${requestedId}`);
-    console.log("Response from singular GetMbdCondition:", singularAilment);
-    return singularAilment;
+    const singularMbdCondition = await makeApiRequest<MbdCondition>(`GetMbdCondition?code=${MBD_CONDITION_CODE}&id=${requestedId}`);
+    console.log("Response from singular GetMbdCondition:", singularMbdCondition);
+    return singularMbdCondition;
   } catch (error) {
     console.warn("Fallback to singular GetMbdCondition endpoint failed:", error);
   }
@@ -154,15 +153,15 @@ export const fetchMbdCondition = async (requestedId: string, name: string): Prom
   };
 };
 
-export const upsertAilment = async (ailment: MbdCondition): Promise<MbdCondition> => {
+export const upsertMbdCondition = async (mbdCondition: MbdCondition): Promise<MbdCondition> => {
   clearMbdConditionsCache(); // Clear cache on data modification
-  return makeApiRequest<MbdCondition>(`UpsertAilment?code=${UPSERT_AILMENT_CODE}`, 'POST', ailment);
+  return makeApiRequest<MbdCondition>(`UpsertAilment?code=${UPSERT_MBD_CONDITION_CODE}`, 'POST', mbdCondition);
 };
 
-export const deleteAilment = async (id: string, name: string): Promise<void> => {
+export const deleteMbdCondition = async (id: string, name: string): Promise<void> => {
   clearMbdConditionsCache(); // Clear cache on data modification
   const decodedName = name.replace("paranthesis", "'");
-  return makeApiRequest<void>(`DeleteAilment?code=${DELETE_AILMENT_CODE}&id=${id}&name=${encodeURIComponent(decodedName)}`, 'POST');
+  return makeApiRequest<void>(`DeleteAilment?code=${DELETE_MBD_CONDITION_CODE}&id=${id}&name=${encodeURIComponent(decodedName)}`, 'POST');
 };
 
 // --- Image API Calls ---

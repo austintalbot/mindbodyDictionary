@@ -1,28 +1,41 @@
 import React from 'react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from './components/ui/tabs';
 import { useTheme } from '../theme/useTheme';
-import { MbdCondition, Recommendation, RecommendationType } from '../types';
+import { MbdCondition, Recommendation, RecommendationType, Image } from '../types';
+import ImageActionModal from './ImageActionModal';
 
-interface AilmentModalProps {
+interface MbdConditionModalProps {
   isOpen: boolean;
-  ailment: MbdCondition | null;
+  mbdCondition: MbdCondition | null;
   onClose: () => void;
   onSave: () => void;
-  onChange: (ailment: MbdCondition) => void;
+  onChange: (mbdCondition: MbdCondition) => void;
   getImageUrl: (type: 'negative' | 'positive') => string;
 }
 
-const AilmentModal: React.FC<AilmentModalProps> = ({
+const MbdConditionModal: React.FC<MbdConditionModalProps> = ({
   isOpen,
-  ailment,
+  mbdCondition,
   onClose,
   onSave,
   onChange,
   getImageUrl,
 }) => {
   const { colors } = useTheme();
-  if (!ailment) return null;
-  console.log("Ailment data in modal:", ailment);
+  const [showImageActionModal, setShowImageActionModal] = React.useState(false);
+  const [selectedImageForAction, setSelectedImageForAction] = React.useState<Image | null>(null);
+
+  if (!mbdCondition) return null;
+  console.log("Condition data in modal:", mbdCondition);
+
+  const handleImageClick = (imageName: string | undefined) => {
+    if (!imageName) return;
+    const imageObj: Image = {
+      name: imageName,
+    };
+    setSelectedImageForAction(imageObj);
+    setShowImageActionModal(true);
+  };
 
   // Log image URLs for debugging
   console.log("Image URL (negative):", getImageUrl('negative'));
@@ -61,7 +74,7 @@ const AilmentModal: React.FC<AilmentModalProps> = ({
               alignItems: 'center'
             }}>
               <h2 style={{ margin: 0, fontSize: '20px', fontWeight: '700', color: colors.foreground }}>
-                {ailment?.id ? `Edit: ${ailment.name}` : 'Add New Ailment'}
+                {mbdCondition?.id ? `Edit: ${mbdCondition.name}` : 'Add New Condition'}
               </h2>
               <button
                 onClick={onClose}
@@ -146,7 +159,7 @@ const AilmentModal: React.FC<AilmentModalProps> = ({
                         type="text"
                         id="id"
                         disabled
-                        value={ailment.id || ''}
+                        value={mbdCondition.id || ''}
                         style={{
                           width: '100%',
                           padding: '10px 12px',
@@ -164,8 +177,8 @@ const AilmentModal: React.FC<AilmentModalProps> = ({
                       <input
                         type="text"
                         id="name"
-                        value={ailment.name}
-                        onChange={(e) => onChange({ ...ailment, name: e.target.value })}
+                        value={mbdCondition.name}
+                        onChange={(e) => onChange({ ...mbdCondition, name: e.target.value })}
                         style={{
                           width: '100%',
                           padding: '10px 12px',
@@ -193,8 +206,8 @@ const AilmentModal: React.FC<AilmentModalProps> = ({
                       <input
                         type="text"
                         id="imageNegative"
-                        value={ailment.imageNegative || ''}
-                        onChange={(e) => onChange({ ...ailment, imageNegative: e.target.value })}
+                        value={mbdCondition.imageNegative || ''}
+                        onChange={(e) => onChange({ ...mbdCondition, imageNegative: e.target.value })}
                         style={{
                           width: '100%',
                           padding: '10px 12px',
@@ -220,8 +233,8 @@ const AilmentModal: React.FC<AilmentModalProps> = ({
                       <input
                         type="text"
                         id="imagePositive"
-                        value={ailment.imagePositive || ''}
-                        onChange={(e) => onChange({ ...ailment, imagePositive: e.target.value })}
+                        value={mbdCondition.imagePositive || ''}
+                        onChange={(e) => onChange({ ...mbdCondition, imagePositive: e.target.value })}
                         style={{
                           width: '100%',
                           padding: '10px 12px',
@@ -248,8 +261,8 @@ const AilmentModal: React.FC<AilmentModalProps> = ({
                   <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '8px', color: colors.mutedText }} htmlFor="summaryNegative">Summary Negative</label>
                   <textarea
                     id="summaryNegative"
-                    value={ailment.summaryNegative}
-                    onChange={(e) => onChange({ ...ailment, summaryNegative: e.target.value })}
+                    value={mbdCondition.summaryNegative}
+                    onChange={(e) => onChange({ ...mbdCondition, summaryNegative: e.target.value })}
                     style={{
                       width: '100%',
                       padding: '10px 12px',
@@ -277,8 +290,8 @@ const AilmentModal: React.FC<AilmentModalProps> = ({
                   <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '8px', color: colors.mutedText }} htmlFor="summaryPositive">Summary Positive</label>
                   <textarea
                     id="summaryPositive"
-                    value={ailment.summaryPositive}
-                    onChange={(e) => onChange({ ...ailment, summaryPositive: e.target.value })}
+                    value={mbdCondition.summaryPositive}
+                    onChange={(e) => onChange({ ...mbdCondition, summaryPositive: e.target.value })}
                     style={{
                       width: '100%',
                       padding: '10px 12px',
@@ -302,13 +315,25 @@ const AilmentModal: React.FC<AilmentModalProps> = ({
                     }}
                   />
                 </div>
-                <div style={{ marginTop: '32px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', paddingTop: '32px', borderTop: `1px solid ${colors.border}` }}>
+                <div style={{ marginTop: '32px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', padding: '32px', borderTop: `1px solid ${colors.border}` }}>
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
-                    <img src={getImageUrl('negative')} alt="Negative" style={{ width: '100%', maxHeight: '250px', objectFit: 'contain', borderRadius: '6px', backgroundColor: colors.inputBackground, padding: '12px', border: `1px solid ${colors.border}` }} />
+                    <div 
+                      onClick={() => handleImageClick(mbdCondition.imageNegative)}
+                      style={{ cursor: 'pointer', width: '100%', position: 'relative' }}
+                      title="Click to manage image"
+                    >
+                      <img src={getImageUrl('negative')} alt="Negative" style={{ width: '100%',margin: "10px", maxHeight: '250px', objectFit: 'contain', borderRadius: '6px', backgroundColor: 'whitesmoke', padding: '12px', border: `1px solid ${colors.border}` }} />
+                    </div>
                     <p style={{ fontSize: '12px', color: colors.mutedText, margin: 0 }}>Negative</p>
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
-                    <img src={getImageUrl('positive')} alt="Positive" style={{ width: '100%', maxHeight: '250px', objectFit: 'contain', borderRadius: '6px', backgroundColor: colors.inputBackground, padding: '12px', border: `1px solid ${colors.border}` }} />
+                    <div 
+                      onClick={() => handleImageClick(mbdCondition.imagePositive)}
+                      style={{ cursor: 'pointer', width: '100%', position: 'relative' }}
+                      title="Click to manage image"
+                    >
+                      <img src={getImageUrl('positive')} alt="Positive" style={{ width: '100%',margin: "10px", maxHeight: '250px', objectFit: 'contain', borderRadius: '6px', backgroundColor: 'whitesmoke', padding: '12px', border: `1px solid ${colors.border}` }} />
+                    </div>
                     <p style={{ fontSize: '12px', color: colors.mutedText, margin: 0 }}>Positive</p>
                   </div>
                 </div>
@@ -319,14 +344,14 @@ const AilmentModal: React.FC<AilmentModalProps> = ({
               <div style={{ padding: '20px' }}>
                 <h5 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '20px', color: colors.foreground }}>Affirmations</h5>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                  {(ailment.affirmations || []).map((aff: string, idx: number) => (
+                  {(mbdCondition.affirmations || []).map((aff: string, idx: number) => (
                     <div key={idx} style={{ display: 'flex', gap: '8px' }}>
                       <textarea
                         value={aff}
                         onChange={(e) => {
-                          const newAffirmations = [...(ailment.affirmations || [])];
+                          const newAffirmations = [...(mbdCondition.affirmations || [])];
                           newAffirmations[idx] = e.target.value;
-                          onChange({ ...ailment, affirmations: newAffirmations });
+                          onChange({ ...mbdCondition, affirmations: newAffirmations });
                         }}
                         style={{
                           flex: 1,
@@ -351,8 +376,8 @@ const AilmentModal: React.FC<AilmentModalProps> = ({
                       />
                       <button
                         onClick={() => {
-                          const newAffirmations = ailment.affirmations?.filter((_: string, i: number) => i !== idx) || [];
-                          onChange({ ...ailment, affirmations: newAffirmations });
+                          const newAffirmations = mbdCondition.affirmations?.filter((_: string, i: number) => i !== idx) || [];
+                          onChange({ ...mbdCondition, affirmations: newAffirmations });
                         }}
                         style={{
                           padding: '8px 12px',
@@ -376,8 +401,8 @@ const AilmentModal: React.FC<AilmentModalProps> = ({
                   ))}
                   <button
                     onClick={() => {
-                      const newAffirmations = [...(ailment.affirmations || []), ''];
-                      onChange({ ...ailment, affirmations: newAffirmations });
+                      const newAffirmations = [...(mbdCondition.affirmations || []), ''];
+                      onChange({ ...mbdCondition, affirmations: newAffirmations });
                     }}
                     style={{
                       padding: '10px 20px',
@@ -404,15 +429,15 @@ const AilmentModal: React.FC<AilmentModalProps> = ({
               <div style={{ padding: '20px' }}>
                 <h5 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '20px', color: colors.foreground }}>Physical Connections</h5>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                  {(ailment.physicalConnections || []).map((conn: string, idx: number) => (
+                  {(mbdCondition.physicalConnections || []).map((conn: string, idx: number) => (
                     <div key={idx} style={{ display: 'flex', gap: '8px' }}>
                       <input
                         type="text"
                         value={conn}
                         onChange={(e) => {
-                          const newConnections = [...(ailment.physicalConnections || [])];
+                          const newConnections = [...(mbdCondition.physicalConnections || [])];
                           newConnections[idx] = e.target.value;
-                          onChange({ ...ailment, physicalConnections: newConnections });
+                          onChange({ ...mbdCondition, physicalConnections: newConnections });
                         }}
                         style={{
                           flex: 1,
@@ -435,8 +460,8 @@ const AilmentModal: React.FC<AilmentModalProps> = ({
                       />
                       <button
                         onClick={() => {
-                          const newConnections = ailment.physicalConnections?.filter((_: string, i: number) => i !== idx) || [];
-                          onChange({ ...ailment, physicalConnections: newConnections });
+                          const newConnections = mbdCondition.physicalConnections?.filter((_: string, i: number) => i !== idx) || [];
+                          onChange({ ...mbdCondition, physicalConnections: newConnections });
                         }}
                         style={{
                           padding: '8px 12px',
@@ -458,8 +483,8 @@ const AilmentModal: React.FC<AilmentModalProps> = ({
                   ))}
                   <button
                     onClick={() => {
-                      const newConnections = [...(ailment.physicalConnections || []), ''];
-                      onChange({ ...ailment, physicalConnections: newConnections });
+                      const newConnections = [...(mbdCondition.physicalConnections || []), ''];
+                      onChange({ ...mbdCondition, physicalConnections: newConnections });
                     }}
                     style={{
                       padding: '10px 20px',
@@ -486,15 +511,15 @@ const AilmentModal: React.FC<AilmentModalProps> = ({
               <div style={{ padding: '20px' }}>
                 <h5 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '20px', color: colors.foreground }}>Tags</h5>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                  {(ailment.tags || []).map((tag: string, idx: number) => (
+                  {(mbdCondition.tags || []).map((tag: string, idx: number) => (
                     <div key={idx} style={{ display: 'flex', gap: '8px' }}>
                       <input
                         type="text"
                         value={tag}
                         onChange={(e) => {
-                          const newTags = [...(ailment.tags || [])];
+                          const newTags = [...(mbdCondition.tags || [])];
                           newTags[idx] = e.target.value;
-                          onChange({ ...ailment, tags: newTags });
+                          onChange({ ...mbdCondition, tags: newTags });
                         }}
                         style={{
                           flex: 1,
@@ -517,8 +542,8 @@ const AilmentModal: React.FC<AilmentModalProps> = ({
                       />
                       <button
                         onClick={() => {
-                          const newTags = ailment.tags?.filter((_: string, i: number) => i !== idx) || [];
-                          onChange({ ...ailment, tags: newTags });
+                          const newTags = mbdCondition.tags?.filter((_: string, i: number) => i !== idx) || [];
+                          onChange({ ...mbdCondition, tags: newTags });
                         }}
                         style={{
                           padding: '8px 12px',
@@ -540,8 +565,8 @@ const AilmentModal: React.FC<AilmentModalProps> = ({
                   ))}
                   <button
                     onClick={() => {
-                      const newTags = [...(ailment.tags || []), ''];
-                      onChange({ ...ailment, tags: newTags });
+                      const newTags = [...(mbdCondition.tags || []), ''];
+                      onChange({ ...mbdCondition, tags: newTags });
                     }}
                     style={{
                       padding: '10px 20px',
@@ -568,19 +593,19 @@ const AilmentModal: React.FC<AilmentModalProps> = ({
               <div style={{ padding: '20px' }}>
                 <h5 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '20px', color: colors.foreground }}>Recommendations</h5>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                  {(ailment.recommendations || []).map((rec: Recommendation, idx: number) => (
+                  {(mbdCondition.recommendations || []).map((rec: Recommendation, idx: number) => (
                     <div key={idx} style={{ display: 'flex', flexDirection: 'column', gap: '8px', padding: '12px', backgroundColor: colors.backgroundSecondary, borderRadius: '6px' }}>
                       <div style={{ display: 'flex', gap: '8px' }}>
                         <textarea
                           value={typeof rec === 'string' ? rec : rec?.name || ''}
                           onChange={(e) => {
-                            const newRecommendations = [...(ailment.recommendations || [])];
+                            const newRecommendations = [...(mbdCondition.recommendations || [])];
                             if (typeof rec === 'string') {
                               newRecommendations[idx] = { name: e.target.value, url: '', recommendationType: 0 } as Recommendation;
                             } else {
                               newRecommendations[idx] = { ...rec, name: e.target.value };
                             }
-                            onChange({ ...ailment, recommendations: newRecommendations });
+                            onChange({ ...mbdCondition, recommendations: newRecommendations });
                           }}
                           placeholder="Recommendation name"
                           style={{
@@ -606,8 +631,8 @@ const AilmentModal: React.FC<AilmentModalProps> = ({
                         />
                         <button
                           onClick={() => {
-                            const newRecommendations = ailment.recommendations?.filter((_: Recommendation, i: number) => i !== idx) || [];
-                            onChange({ ...ailment, recommendations: newRecommendations });
+                            const newRecommendations = mbdCondition.recommendations?.filter((_: Recommendation, i: number) => i !== idx) || [];
+                            onChange({ ...mbdCondition, recommendations: newRecommendations });
                           }}
                           style={{
                             padding: '8px 12px',
@@ -631,14 +656,14 @@ const AilmentModal: React.FC<AilmentModalProps> = ({
                       <select
                         value={typeof rec === 'string' ? RecommendationType.Product : rec?.recommendationType || RecommendationType.Product}
                         onChange={(e) => {
-                          const newRecommendations = [...(ailment.recommendations || [])];
+                          const newRecommendations = [...(mbdCondition.recommendations || [])];
                           const typeValue = parseInt(e.target.value, 10);
                           if (typeof rec === 'string') {
                             newRecommendations[idx] = { name: '', url: '', recommendationType: typeValue } as Recommendation;
                           } else {
                             newRecommendations[idx] = { ...rec, recommendationType: typeValue };
                           }
-                          onChange({ ...ailment, recommendations: newRecommendations });
+                          onChange({ ...mbdCondition, recommendations: newRecommendations });
                         }}
                         style={{
                           padding: '8px 12px',
@@ -667,8 +692,8 @@ const AilmentModal: React.FC<AilmentModalProps> = ({
                   ))}
                   <button
                     onClick={() => {
-                      const newRecommendations = [...(ailment.recommendations || []), { name: '', url: '', recommendationType: 0 }];
-                      onChange({ ...ailment, recommendations: newRecommendations });
+                      const newRecommendations = [...(mbdCondition.recommendations || []), { name: '', url: '', recommendationType: 0 }];
+                      onChange({ ...mbdCondition, recommendations: newRecommendations });
                     }}
                     style={{
                       padding: '10px 20px',
@@ -735,12 +760,32 @@ const AilmentModal: React.FC<AilmentModalProps> = ({
             onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.primaryHover}
             onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.primary}
           >
-            Save Ailment
+            Save Condition
           </button>
         </div>
       </div>
+      {showImageActionModal && selectedImageForAction && (
+        <ImageActionModal
+          isOpen={showImageActionModal}
+          onClose={() => {
+            setShowImageActionModal(false);
+            setSelectedImageForAction(null);
+          }}
+          image={selectedImageForAction}
+          onImageDeleted={() => {
+            setShowImageActionModal(false);
+            setSelectedImageForAction(null);
+            // Optionally refresh ailment or notify parent
+          }}
+          onImageUploaded={() => {
+            setShowImageActionModal(false);
+            setSelectedImageForAction(null);
+            // Optionally refresh ailment or notify parent
+          }}
+        />
+      )}
     </div>
   );
 };
 
-export default AilmentModal;
+export default MbdConditionModal;

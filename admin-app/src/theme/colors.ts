@@ -19,6 +19,11 @@ export const lightTheme = {
   primaryLight: '#e3f2fd',
   primaryHover: '#0052a3',
   primaryDark: '#003d99',
+  buttonText: '#ffffff',
+
+  // Secondary/Accent colors
+  accent: '#6200ea',
+  accentHover: '#3700b3',
 
   // Success/Positive colors
   success: '#4caf50',
@@ -70,6 +75,11 @@ export const darkTheme = {
   primaryLight: '#1e3a5f',
   primaryHover: '#66b3ff',
   primaryDark: '#2e63a0',
+  buttonText: '#ffffff',
+
+  // Secondary/Accent colors
+  accent: '#b388ff',
+  accentHover: '#7c43bd',
 
   // Success/Positive colors
   success: '#66bb6a',

@@ -1,10 +1,9 @@
 // admin-app/src/components/NotificationsTab.tsx
 import React, { useState, useEffect } from 'react';
 import { sendPushNotification, fetchMbdConditions } from '../services/apiService';
-import { MbdCondition } from '../types'; // Import MbdCondition
+import { MbdCondition } from '../types';
 
-// AilmentOption now uses MbdCondition for name and id
-interface AilmentOption {
+interface MbdConditionOption {
     id?: string;
     name?: string;
 }
@@ -13,32 +12,32 @@ const NotificationsTab: React.FC = () => {
   const [notificationTitle, setNotificationTitle] = useState('');
   const [notificationBody, setNotificationBody] = useState('');
   const [notificationTag, setNotificationTag] = useState('0'); // '0' for Everyone, '1' for Subscribers Only
-  const [notificationAilment, setNotificationAilment] = useState('0'); // Ailment ID
-  const [ailmentOptions, setAilmentOptions] = useState<AilmentOption[]>([]);
-  const [loadingAilments, setLoadingAilments] = useState(true);
+  const [notificationMbdCondition, setNotificationMbdCondition] = useState('0');
+  const [mbdConditionOptions, setMbdConditionOptions] = useState<MbdConditionOption[]>([]);
+  const [loadingMbdConditions, setLoadingMbdConditions] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
 
   useEffect(() => {
-    loadAilmentOptions();
+    loadMbdConditionOptions();
   }, []);
 
-  const loadAilmentOptions = async () => {
-    setLoadingAilments(true);
+  const loadMbdConditionOptions = async () => {
+    setLoadingMbdConditions(true);
     try {
-        const response = await fetchMbdConditions(); // Changed to fetchMbdConditions
+        const response = await fetchMbdConditions();
         if (response && Array.isArray(response)) {
             const sorted = response
-          .map((ailment: MbdCondition) => ({ id: ailment.id, name: ailment.name }))
+          .map((mbdCondition: MbdCondition) => ({ id: mbdCondition.id, name: mbdCondition.name }))
           .sort((a, b) => (a.name || '').localeCompare(b.name || ''));
-            setAilmentOptions(sorted);
+            setMbdConditionOptions(sorted);
         } else {
             throw new Error('API response data for MbdConditions is not an array or is missing.');
         }
     } catch (err: any) {
-        setError(err.message || "Failed to load ailments for notifications");
+        setError(err.message || "Failed to load conditions for notifications");
     } finally {
-        setLoadingAilments(false);
+        setLoadingMbdConditions(false);
     }
   };
 
@@ -59,7 +58,7 @@ const NotificationsTab: React.FC = () => {
       Title: notificationTitle,
       Body: notificationBody,
       SubscribersOnly: notificationTag === '1' ? 'true' : 'false',
-      AilmentId: notificationAilment !== '0' ? notificationAilment : '', // Send empty string if no ailment selected
+      AilmentId: notificationMbdCondition !== '0' ? notificationMbdCondition : '', // Send empty string if no condition selected
     };
 
     try {
@@ -68,7 +67,7 @@ const NotificationsTab: React.FC = () => {
       setNotificationTitle('');
       setNotificationBody('');
       setNotificationTag('0');
-      setNotificationAilment('0');
+      setNotificationMbdCondition('0');
     } catch (err: any) {
       setError(err.message || 'Failed to send notification');
     }
@@ -130,23 +129,23 @@ const NotificationsTab: React.FC = () => {
               </div>
             </div>
             <div className="form-group">
-              <label htmlFor="notificationAilment">Associate with Ailment:</label>
+              <label htmlFor="notificationMbdCondition">Associate with Condition:</label>
               <select
                 className="form-control"
-                id="notificationAilment"
-                value={notificationAilment}
-                onChange={(e) => setNotificationAilment(e.target.value)}
-                disabled={loadingAilments}
+                id="notificationMbdCondition"
+                value={notificationMbdCondition}
+                onChange={(e) => setNotificationMbdCondition(e.target.value)}
+                disabled={loadingMbdConditions}
               >
-                <option value="0">No Ailment... (Select Ailment If Applicable)</option>
-                {ailmentOptions.map((ailment) => (
-                  <option key={ailment.id} value={ailment.id!}>
-                    {ailment.name}
+                <option value="0">No Condition... (Select Condition If Applicable)</option>
+                {mbdConditionOptions.map((mbdCondition) => (
+                  <option key={mbdCondition.id} value={mbdCondition.id!}>
+                    {mbdCondition.name}
                   </option>
                 ))}
               </select>
-              {loadingAilments && <span>Loading ailments...</span>}
-              {error && <div className="text-danger mt-1">Error loading ailments.</div>}
+              {loadingMbdConditions && <span>Loading conditions...</span>}
+              {error && <div className="text-danger mt-1">Error loading conditions.</div>}
             </div>
             <button className="btn btn-primary" onClick={sendNotification}>
               Send Notification

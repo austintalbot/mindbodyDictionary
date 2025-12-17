@@ -3,10 +3,10 @@
 export const ADMIN_API_URL = import.meta.env.VITE_ADMIN_API_URL || 'http://localhost:7071'; // Default to a local Azure Function host
 export const IMAGE_BASE_URL = import.meta.env.VITE_IMAGE_BASE_URL || 'https://mbdstoragesa.blob.core.windows.net/mbdconditionimages';
 
-export const AILMENTS_TABLE_CODE = import.meta.env.VITE_AILMENTS_TABLE_CODE || 'YOUR_AILMENTS_TABLE_CODE';
-export const AILMENT_CODE = import.meta.env.VITE_AILMENT_CODE || 'YOUR_AILMENT_CODE';
-export const DELETE_AILMENT_CODE = import.meta.env.VITE_DELETE_AILMENT_CODE || 'YOUR_DELETE_AILMENT_CODE';
-export const UPSERT_AILMENT_CODE = import.meta.env.VITE_UPSERT_AILMENT_CODE || 'YOUR_UPSERT_AILMENT_CODE';
+export const MBD_CONDITIONS_TABLE_CODE = import.meta.env.VITE_AILMENTS_TABLE_CODE || 'YOUR_AILMENTS_TABLE_CODE';
+export const MBD_CONDITION_CODE = import.meta.env.VITE_AILMENT_CODE || 'YOUR_AILMENT_CODE';
+export const DELETE_MBD_CONDITION_CODE = import.meta.env.VITE_DELETE_AILMENT_CODE || 'YOUR_DELETE_AILMENT_CODE';
+export const UPSERT_MBD_CONDITION_CODE = import.meta.env.VITE_UPSERT_AILMENT_CODE || 'YOUR_UPSERT_AILMENT_CODE';
 export const IMAGES_TABLE_CODE = import.meta.env.VITE_IMAGES_TABLE_CODE || 'YOUR_IMAGES_TABLE_CODE';
 export const DELETE_IMAGE_CODE = import.meta.env.VITE_DELETE_IMAGE_CODE || 'YOUR_DELETE_IMAGE_CODE';
 export const CONTACTS_TABLE_CODE = import.meta.env.VITE_CONTACTS_TABLE_CODE || 'YOUR_CONTACTS_TABLE_CODE';
