@@ -1,7 +1,8 @@
 import React from 'react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from './components/ui/tabs';
 import { useTheme } from '../theme/useTheme';
-import { MbdCondition, Recommendation, RecommendationType } from '../types';
+import { MbdCondition, Recommendation, RecommendationType, Image } from '../types';
+import ImageActionModal from './ImageActionModal';
 
 interface AilmentModalProps {
   isOpen: boolean;
@@ -21,8 +22,20 @@ const AilmentModal: React.FC<AilmentModalProps> = ({
   getImageUrl,
 }) => {
   const { colors } = useTheme();
+  const [showImageActionModal, setShowImageActionModal] = React.useState(false);
+  const [selectedImageForAction, setSelectedImageForAction] = React.useState<Image | null>(null);
+
   if (!ailment) return null;
   console.log("Ailment data in modal:", ailment);
+
+  const handleImageClick = (imageName: string | undefined) => {
+    if (!imageName) return;
+    const imageObj: Image = {
+      name: imageName,
+    };
+    setSelectedImageForAction(imageObj);
+    setShowImageActionModal(true);
+  };
 
   // Log image URLs for debugging
   console.log("Image URL (negative):", getImageUrl('negative'));
@@ -302,13 +315,25 @@ const AilmentModal: React.FC<AilmentModalProps> = ({
                     }}
                   />
                 </div>
-                <div style={{ marginTop: '32px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', paddingTop: '32px', borderTop: `1px solid ${colors.border}` }}>
+                <div style={{ marginTop: '32px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', padding: '32px', borderTop: `1px solid ${colors.border}` }}>
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
-                    <img src={getImageUrl('negative')} alt="Negative" style={{ width: '100%', maxHeight: '250px', objectFit: 'contain', borderRadius: '6px', backgroundColor: colors.inputBackground, padding: '12px', border: `1px solid ${colors.border}` }} />
+                    <div 
+                      onClick={() => handleImageClick(ailment.imageNegative)}
+                      style={{ cursor: 'pointer', width: '100%', position: 'relative' }}
+                      title="Click to manage image"
+                    >
+                      <img src={getImageUrl('negative')} alt="Negative" style={{ width: '100%',margin: "10px", maxHeight: '250px', objectFit: 'contain', borderRadius: '6px', backgroundColor: 'whitesmoke', padding: '12px', border: `1px solid ${colors.border}` }} />
+                    </div>
                     <p style={{ fontSize: '12px', color: colors.mutedText, margin: 0 }}>Negative</p>
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
-                    <img src={getImageUrl('positive')} alt="Positive" style={{ width: '100%', maxHeight: '250px', objectFit: 'contain', borderRadius: '6px', backgroundColor: colors.inputBackground, padding: '12px', border: `1px solid ${colors.border}` }} />
+                    <div 
+                      onClick={() => handleImageClick(ailment.imagePositive)}
+                      style={{ cursor: 'pointer', width: '100%', position: 'relative' }}
+                      title="Click to manage image"
+                    >
+                      <img src={getImageUrl('positive')} alt="Positive" style={{ width: '100%',margin: "10px", maxHeight: '250px', objectFit: 'contain', borderRadius: '6px', backgroundColor: 'whitesmoke', padding: '12px', border: `1px solid ${colors.border}` }} />
+                    </div>
                     <p style={{ fontSize: '12px', color: colors.mutedText, margin: 0 }}>Positive</p>
                   </div>
                 </div>
@@ -739,6 +764,26 @@ const AilmentModal: React.FC<AilmentModalProps> = ({
           </button>
         </div>
       </div>
+      {showImageActionModal && selectedImageForAction && (
+        <ImageActionModal
+          isOpen={showImageActionModal}
+          onClose={() => {
+            setShowImageActionModal(false);
+            setSelectedImageForAction(null);
+          }}
+          image={selectedImageForAction}
+          onImageDeleted={() => {
+            setShowImageActionModal(false);
+            setSelectedImageForAction(null);
+            // Optionally refresh ailment or notify parent
+          }}
+          onImageUploaded={() => {
+            setShowImageActionModal(false);
+            setSelectedImageForAction(null);
+            // Optionally refresh ailment or notify parent
+          }}
+        />
+      )}
     </div>
   );
 };
