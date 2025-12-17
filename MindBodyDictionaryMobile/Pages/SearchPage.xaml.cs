@@ -1,6 +1,7 @@
 namespace MindBodyDictionaryMobile.Pages;
 
 using Microsoft.Extensions.Logging; // Add this
+using MindBodyDictionaryMobile.Models;
 using MindBodyDictionaryMobile.PageModels;
 
 public partial class SearchPage : ContentPage
@@ -52,21 +53,6 @@ public partial class SearchPage : ContentPage
     catch (Exception err)
     {
       _logger.LogError(err, "Error in ConditionSearchBar_TextChanged"); // Replace Logger.Error
-    }
-  }
-
-  private async void TapGestureRecognizer_SearchMbdConditionTapped(object? sender, TappedEventArgs e) {
-    try
-    {
-      var id = e.Parameter.ToString();
-
-      if (string.IsNullOrEmpty(id))
-        return;
-      await Shell.Current.GoToAsync($"mbdcondition?id={id}");
-    }
-    catch (Exception err)
-    {
-      _logger.LogError(err, "Error in TapGestureRecognizer_SearchConditionTapped"); // Replace Logger.Error
     }
   }
 }

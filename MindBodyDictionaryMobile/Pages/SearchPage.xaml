@@ -92,7 +92,8 @@
                 AutomationId="ConditionCollectionView"
                 IsVisible="{Binding IsInitialized}"
                 ItemsSource="{Binding FilteredConditionCollection}"
-                SelectionMode="None">
+                SelectionMode="Single"
+                SelectedItem="{Binding SelectedCondition}">
                 <CollectionView.EmptyView>
                     <VerticalStackLayout
                         HorizontalOptions="Center"
@@ -115,15 +116,12 @@
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="model:MbdCondition">
                         <Border Style="{StaticResource SearchMbdConditionCard}">
-                            <Border.GestureRecognizers>
-                                <TapGestureRecognizer CommandParameter="{Binding Id}" Tapped="TapGestureRecognizer_SearchMbdConditionTapped" />
-                            </Border.GestureRecognizers>
-
-                            <Grid RowDefinitions="*,Auto">
+                            <Grid RowDefinitions="*,Auto" InputTransparent="False">
                                 <!--  Lock overlay  -->
                                 <Image
                                     Grid.Row="0"
                                     IsVisible="{Binding DisplayLock}"
+                                    InputTransparent="True"
                                     Opacity="1"
                                     Source="locked_icon.png"
                                     Style="{StaticResource SearchMbdConditionImage}"
@@ -132,12 +130,14 @@
                                 <!--  Condition image  -->
                                 <Image
                                     Grid.Row="0"
+                                    InputTransparent="True"
                                     Source="{Binding CachedImageOneSource}"
                                     Style="{StaticResource SearchMbdConditionImage}" />
 
                                 <!--  Condition name  -->
                                 <Label
                                     Grid.Row="1"
+                                    InputTransparent="True"
                                     Style="{StaticResource SearchMbdConditionLabel}"
                                     Text="{Binding Name}" />
                             </Grid>

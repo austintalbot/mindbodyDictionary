@@ -34,6 +34,9 @@ namespace MindBodyDictionaryMobile.PageModels
     [ObservableProperty]
     private ObservableCollection<MbdCondition> _randomConditionCollection;
 
+    [ObservableProperty]
+    private MbdCondition? _selectedCondition;
+
 
     public MbdConditionHomePageModel(MbdConditionRepository mbdConditionRepository, ModalErrorHandler errorHandler, ILogger<MbdConditionHomePageModel> logger, SeedDataService seedDataService, Services.billing.IBillingService billingService) // Modify constructor
     {
@@ -141,6 +144,28 @@ namespace MindBodyDictionaryMobile.PageModels
       catch (Exception ex)
       {
         _logger.LogError(ex, "Error navigating to condition details");
+      }
+    }
+
+    [RelayCommand]
+    private async Task SelectMbdCondition(MbdCondition condition) {
+#if DEBUG
+      await AppShell.DisplaySnackbarAsync($"Tapped: {condition.Name}");
+#endif
+      if (condition == null || string.IsNullOrEmpty(condition.Id))
+      {
+        _logger.LogWarning("SelectMbdCondition called with null or invalid condition.");
+        return;
+      }
+
+      await Shell.Current.GoToAsync($"mbdcondition?id={condition.Id}");
+    }
+
+    async partial void OnSelectedConditionChanged(MbdCondition? value) {
+      if (value is not null)
+      {
+        await SelectMbdCondition(value);
+        SelectedCondition = null;
       }
     }
 

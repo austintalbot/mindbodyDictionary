@@ -81,30 +81,4 @@ public partial class MbdConditionHomePage : ContentPage
       _logger.LogError(err, "Error in SearchBarButtonClicked"); // Replace Logger.Error
     }
   }
-
-
-  private async void TapGestureRecognizer_HomeMbdConditionTapped(object? sender, TappedEventArgs e) {
-    try
-    {
-      var tappedElement = sender as VisualElement;
-      if (tappedElement == null)
-      {
-        _logger.LogWarning("Tapped element is null or not a VisualElement.");
-        return;
-      }
-
-      var condition = tappedElement.BindingContext as MbdCondition;
-      if (condition == null)
-      {
-        _logger.LogWarning("Tapped element's BindingContext is not an MbdCondition.");
-        return;
-      }
-      await Shell.Current.GoToAsync($"mbdcondition?id={condition.Id}");
-    }
-    catch (Exception ex)
-    {
-      _logger.LogError(ex, "Error navigating to condition details");
-      // await DisplayAlertAsync("Navigation Error", $"An error occurred during navigation: {ex.Message}", "OK");
-    }
-  }
 }

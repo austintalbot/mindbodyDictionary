@@ -122,11 +122,15 @@ public partial class SearchPageModel : ObservableObject
 
   [RelayCommand]
   private async Task SelectMbdCondition(MbdCondition condition) {
+#if DEBUG
+    await AppShell.DisplaySnackbarAsync($"Tapped: {condition.Name}");
+#endif
     if (condition == null || string.IsNullOrEmpty(condition.Id))
     {
       // Log an error or handle the invalid condition appropriately
       return;
     }
+
     await Shell.Current.GoToAsync($"mbdcondition?id={condition.Id}");
   }
 
