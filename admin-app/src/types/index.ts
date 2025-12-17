@@ -21,6 +21,7 @@ export interface Image {
 export interface Faq {
   id?: string;
   question: string;
+  shortAnswer?: string;
   answer: string;
   order?: number;
 }

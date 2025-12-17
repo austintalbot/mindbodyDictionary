@@ -12,7 +12,7 @@
         <CollectionView
             AutomationId="FaqCollectionView"
             ItemsSource="{Binding FaqItems}"
-            SelectionMode="Single">
+            SelectionMode="None">
             
             <CollectionView.Header>
                 <VerticalStackLayout Padding="0,20,0,20">
@@ -22,17 +22,47 @@
 
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="models:FaqItem">
-                    <VerticalStackLayout Style="{StaticResource FaqItemVerticalStackLayout}">
-                        <Frame Style="{StaticResource FaqItemFrameStyle}">
-                            <VerticalStackLayout Style="{StaticResource FaqItemContentVerticalStackLayout}">
-                                <!--  Question Header  -->
-                                <Label Style="{StaticResource FaqQuestionLabelStyle}" Text="{Binding Question}" />
+                    <VerticalStackLayout Padding="10,5" Spacing="5">
+                        <!--  Question Header (Left)  -->
+                        <Frame HorizontalOptions="Start"
+                               BackgroundColor="{AppThemeBinding Light={StaticResource Secondary}, Dark={StaticResource Gray800}}"
+                               CornerRadius="20"
+                               Padding="15,12"
+                               HasShadow="False"
+                               BorderColor="Transparent"
+                               MaximumWidthRequest="300">
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ToggleExpandedCommand}" />
+                            </Frame.GestureRecognizers>
+                            <Grid ColumnDefinitions="*, Auto" ColumnSpacing="10">
+                                <Label Grid.Column="0" 
+                                       Text="{Binding Question}" 
+                                       Style="{StaticResource ParagraphLabel}" />
+                                <Label Grid.Column="1" 
+                                       Text="▼"
+                                       FontSize="18"
+                                       TextColor="{AppThemeBinding Light={StaticResource SecondaryDarkText}, Dark={StaticResource Primary}}"
+                                       VerticalOptions="Center" />
+                            </Grid>
+                        </Frame>
 
-                                <!--  Short Answer  -->
-                                <Label Style="{StaticResource FaqAnswerLabelStyle}" Text="{Binding ShortAnswer}" FontAttributes="Bold" Margin="0,5,0,0"/>
-
-                                <!--  Answer (Expandable)  -->
-                                <Label Style="{StaticResource FaqAnswerLabelStyle}" Text="{Binding Answer}" Margin="0,5,0,0" />
+                        <!--  Answer (Right)  -->
+                        <Frame HorizontalOptions="End"
+                               IsVisible="{Binding IsExpanded}"
+                               BackgroundColor="{StaticResource Primary}"
+                               CornerRadius="20"
+                               Padding="15,12"
+                               HasShadow="False"
+                               BorderColor="Transparent"
+                               MaximumWidthRequest="300">
+                            <VerticalStackLayout Spacing="5">
+                                <Label Text="{Binding ShortAnswer}" 
+                                       Style="{StaticResource ParagraphLabel}"
+                                       FontAttributes="Bold"
+                                       TextColor="White" />
+                                <Label Text="{Binding Answer}" 
+                                       Style="{StaticResource ParagraphLabel}"
+                                       TextColor="White" />
                             </VerticalStackLayout>
                         </Frame>
                     </VerticalStackLayout>
@@ -46,3 +76,4 @@
                            VerticalOptions="Center" />
     </Grid>
 </ContentPage>
+

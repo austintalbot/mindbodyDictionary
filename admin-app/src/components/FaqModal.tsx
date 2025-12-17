@@ -118,6 +118,37 @@ const FaqModal: React.FC<FaqModalProps> = ({
             />
           </div>
 
+          {/* Short Answer Field */}
+          <div>
+            <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '8px', color: colors.mutedText }} htmlFor="shortAnswer">Short Answer</label>
+            <textarea
+              id="shortAnswer"
+              value={faq.shortAnswer || ''}
+              onChange={(e) => onChange({ ...faq, shortAnswer: e.target.value })}
+              style={{
+                width: '100%',
+                padding: '10px 12px',
+                fontSize: '14px',
+                border: `1px solid ${colors.inputBorder}`,
+                borderRadius: '6px',
+                minHeight: '80px',
+                resize: 'vertical',
+                fontFamily: 'inherit',
+                transition: 'all 0.2s',
+                backgroundColor: colors.inputBackground,
+                color: colors.foreground
+              }}
+              onFocus={(e) => {
+                e.currentTarget.style.borderColor = colors.inputFocus;
+                e.currentTarget.style.boxShadow = `0 0 0 3px ${colors.inputFocusRing}`;
+              }}
+              onBlur={(e) => {
+                e.currentTarget.style.borderColor = colors.inputBorder;
+                e.currentTarget.style.boxShadow = 'none';
+              }}
+            />
+          </div>
+
           {/* Answer Field */}
           <div>
             <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '8px', color: colors.mutedText }} htmlFor="answer">Answer</label>

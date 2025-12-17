@@ -1,4 +1,5 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace MindBodyDictionaryMobile.Models;
 
@@ -11,4 +12,10 @@ public partial class FaqItem : ObservableObject
 
     [ObservableProperty]
     private bool _isExpanded;
+
+    [RelayCommand]
+    private void ToggleExpanded()
+    {
+        IsExpanded = !IsExpanded;
+    }
 }

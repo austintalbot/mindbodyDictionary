@@ -39,6 +39,7 @@ const FaqsTab: React.FC = () => {
   const handleAddFaq = () => {
     setSelectedFaq({
       question: '',
+      shortAnswer: '',
       answer: '',
       order: 0,
     });
@@ -64,8 +65,8 @@ const FaqsTab: React.FC = () => {
 
   const handleSaveFaq = async () => {
     if (!selectedFaq) return;
-    if (!selectedFaq.question.trim() || !selectedFaq.answer.trim()) {
-        alert("Question and Answer are required.");
+    if (!selectedFaq.question.trim() || !selectedFaq.answer.trim() || !selectedFaq.shortAnswer?.trim()) {
+        alert("Question, Short Answer, and Answer are required.");
         return;
     }
 

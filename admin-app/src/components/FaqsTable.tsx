@@ -19,6 +19,7 @@ const FaqsTable: React.FC<FaqsTableProps> = ({ faqs, onEdit, onDelete }) => {
             <tr style={{ backgroundColor: colors.backgroundSecondary, borderBottom: `2px solid ${colors.border}` }}>
               <th style={{ padding: '16px', textAlign: 'left', fontWeight: '600', color: colors.mutedText }}>Actions</th>
               <th style={{ padding: '16px', textAlign: 'left', fontWeight: '600', color: colors.mutedText }}>Question</th>
+              <th style={{ padding: '16px', textAlign: 'left', fontWeight: '600', color: colors.mutedText }}>Short Answer</th>
               <th style={{ padding: '16px', textAlign: 'left', fontWeight: '600', color: colors.mutedText }}>Answer</th>
               <th style={{ padding: '16px', textAlign: 'left', fontWeight: '600', color: colors.mutedText }}>Order</th>
             </tr>
@@ -91,6 +92,9 @@ const FaqsTable: React.FC<FaqsTableProps> = ({ faqs, onEdit, onDelete }) => {
                   </button>
                 </td>
                 <td style={{ padding: '16px', fontWeight: '500', color: colors.foreground }}>{faq.question}</td>
+                <td style={{ padding: '16px', color: colors.mutedText, maxWidth: '200px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  {faq.shortAnswer}
+                </td>
                 <td style={{ padding: '16px', color: colors.mutedText, maxWidth: '400px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                   {faq.answer}
                 </td>
