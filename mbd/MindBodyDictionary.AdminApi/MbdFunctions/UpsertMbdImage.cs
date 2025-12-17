@@ -17,7 +17,7 @@ public class UpsertMbdImage(ILogger<UpsertMbdImage> logger)
         [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequest req)
     {
         _logger.LogInformation("UpsertMbdImage execution started.");
-
+        string? name = null;
         try
         {
             var query = req.Query;
@@ -31,7 +31,7 @@ public class UpsertMbdImage(ILogger<UpsertMbdImage> logger)
             string extension = Path.GetExtension(originalName).ToLower();
             if (string.IsNullOrEmpty(extension)) extension = ".png";
 
-            string name = originalName.ToMbdImageName() + extension;
+            name = originalName.ToMbdImageName() + extension;
             _logger.LogInformation("Upserting image: {Name} (renamed from {Original})", name, originalName);
 
             if (!req.HasFormContentType)

@@ -16,9 +16,10 @@ public class GetMbdCondition(ILogger<GetMbdCondition> logger, CosmosClient clien
     public async Task<IActionResult> Run(
         [HttpTrigger(AuthorizationLevel.Function, "get", Route = null)] HttpRequest req)
     {
+        string? id = null;
         try
         {
-            string? id = req.Query["id"];
+            id = req.Query["id"];
             if (string.IsNullOrEmpty(id))
             {
                 return new BadRequestObjectResult("Please pass an id on the query string");
