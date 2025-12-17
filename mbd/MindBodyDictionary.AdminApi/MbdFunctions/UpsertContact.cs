@@ -51,7 +51,7 @@ public class UpsertContact(ILogger<UpsertContact> logger, CosmosClient client)
         {
             var container = _client.GetContainer(CosmosDbConstants.DatabaseName, CosmosDbConstants.Containers.Emails);
             var response = await container.UpsertItemAsync(contact, new PartitionKey(contact.Id));
-            
+
             return new OkObjectResult(response.Resource);
         }
         catch (Exception ex)

@@ -19,18 +19,18 @@ public class CreateFaq(ILogger<CreateFaq> logger, CosmosClient client)
         [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] HttpRequest req)
     {
         _logger.LogInformation("CreateFaq processed a request.");
-        
-        string requestBody;  
-        using (var reader = new StreamReader(req.Body))  
-        {  
-            requestBody = await reader.ReadToEndAsync();  
-        }  
+
+        string requestBody;
+        using (var reader = new StreamReader(req.Body))
+        {
+            requestBody = await reader.ReadToEndAsync();
+        }
         Faqs? faq;
 
         try
         {
             faq = JsonConvert.DeserializeObject<Faqs>(requestBody);
-            
+
             if (faq == null)
             {
                  return new BadRequestResult();
@@ -52,7 +52,7 @@ public class CreateFaq(ILogger<CreateFaq> logger, CosmosClient client)
         {
              var container = _client.GetContainer(CosmosDbConstants.DatabaseName, CosmosDbConstants.Containers.Faqs);
              var response = await container.CreateItemAsync(faq, new PartitionKey(faq.Id));
-             
+
              return new OkObjectResult(response.Resource);
         }
         catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.Conflict)

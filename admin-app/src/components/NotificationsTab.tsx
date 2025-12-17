@@ -84,7 +84,7 @@ const NotificationsTab: React.FC = () => {
         padding: '24px'
       }}>
         <h5 style={{ fontSize: '18px', fontWeight: '600', margin: '0 0 20px 0', color: colors.foreground }}>Push Notifications</h5>
-        
+
         <div style={{ maxWidth: '600px' }}>
           <div style={{ marginBottom: '16px' }}>
             <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '8px', color: colors.lightText }}>Who To Notify:</label>
@@ -191,7 +191,7 @@ const NotificationsTab: React.FC = () => {
             {error && <div style={{ fontSize: '12px', color: colors.danger, marginTop: '4px' }}>Error loading conditions.</div>}
           </div>
 
-          <button 
+          <button
             onClick={sendNotification}
             style={{
               padding: '10px 24px',

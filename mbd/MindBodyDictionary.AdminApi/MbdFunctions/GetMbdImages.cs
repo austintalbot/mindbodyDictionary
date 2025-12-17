@@ -11,13 +11,13 @@ namespace MindBodyDictionary_AdminApi.MbdFunctions;
 public class GetMbdImages(ILogger<GetMbdImages> logger)
 {
     private readonly ILogger<GetMbdImages> _logger = logger;
-    
+
     [Function("GetMbdImages")]
     public async Task<IActionResult> Run(
         [HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequest req)
     {
         _logger.LogInformation("GetMbdImages processed a request.");
-        
+
         try
         {
             var connectionString = Environment.GetEnvironmentVariable(StorageConstants.ConnectionStringSetting);
@@ -31,11 +31,11 @@ public class GetMbdImages(ILogger<GetMbdImages> logger)
             }
             _logger.LogInformation("Found {Count} images", list.Count);
 
-            var images = list.Select(i => 
+            var images = list.Select(i =>
             {
                 string nameOnly = i.Name.Replace($"{StorageConstants.ImageBasePath}/", "");
                 string ailmentName = Path.GetFileNameWithoutExtension(nameOnly);
-                
+
                 _logger.LogInformation("Processing blob: {BlobName}, nameOnly: {NameOnly}, ailmentName: {AilmentName}", i.Name, nameOnly, ailmentName);
 
                 ailmentName = ailmentName switch
@@ -54,7 +54,7 @@ public class GetMbdImages(ILogger<GetMbdImages> logger)
                     Ailment = ailmentName
                 };
             }).ToList(); // Force enumeration here
-            
+
             return new OkObjectResult(new { data = images });
         }
         catch (Exception ex)

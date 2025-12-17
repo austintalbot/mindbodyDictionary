@@ -31,14 +31,14 @@ public class CreateMbdBackup(ILogger<CreateMbdBackup> logger, CosmosClient clien
 
             await ExportContainer<MbdCondition>(dbTempExportDirectory, CosmosDbConstants.Containers.MbdConditions);
             await ExportContainer<EmailSubmission>(dbTempExportDirectory, CosmosDbConstants.Containers.Emails);
-            
+
             _logger.LogInformation("Create Archive File...");
             var archiveFileName = Path.Combine(Path.GetTempPath(), "mbd_database.zip");
             if (File.Exists(archiveFileName)) File.Delete(archiveFileName);
-            
+
             ZipFile.CreateFromDirectory(dbTempExportDirectory, archiveFileName, CompressionLevel.Optimal, includeBaseDirectory: true);
             var fileContents = await File.ReadAllBytesAsync(archiveFileName);
-            
+
             _logger.LogInformation("Cleanup...");
             File.Delete(archiveFileName);
             Directory.Delete(dbTempExportDirectory, recursive: true);
@@ -63,14 +63,14 @@ public class CreateMbdBackup(ILogger<CreateMbdBackup> logger, CosmosClient clien
          _logger.LogInformation("Exporting {ContainerName}...", containerName);
          var directory = Path.Combine(basePath, containerName);
          Directory.CreateDirectory(directory);
-         
+
          var items = await _client.QueryAsync<T>(
              databaseName: CosmosDbConstants.DatabaseName,
              containerName: containerName,
              query: "SELECT * FROM c");
-             
+
          _logger.LogInformation("Found {Count} items in {ContainerName}", items.Count, containerName);
-         
+
          int working = 0;
          foreach (var item in items)
          {
@@ -78,7 +78,7 @@ public class CreateMbdBackup(ILogger<CreateMbdBackup> logger, CosmosClient clien
              // Use reflection/dynamic to get ID since T is generic but we expect Id property
              dynamic dItem = item!;
              string id = dItem.Id ?? dItem.id ?? Guid.NewGuid().ToString();
-             
+
              var file = Path.Combine(directory, $"{id}.json");
              var json = JsonConvert.SerializeObject(item);
              await File.WriteAllTextAsync(file, json);

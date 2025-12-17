@@ -15,10 +15,10 @@ curl 'http://localhost:7071/api/Image?name=Acne1.png' \
 ```bash
 
 curl 'https://mbdstoragesa.blob.core.windows.net/mbd-images/Accidents2.png' \
-  -H 'Referer: https://mbdstoragesa.z14.web.core.windows.net/' 
+  -H 'Referer: https://mbdstoragesa.z14.web.core.windows.net/'
 ```
 
 ``` bash
-#fetch ailment 
+#fetch ailment
 curl http://localhost:7071/api/Ailment?&id=6e10e347-eab2-4b19-90e1-c4ddd9c9c845&name=test1 | jq
 ```

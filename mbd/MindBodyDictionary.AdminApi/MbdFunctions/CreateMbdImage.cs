@@ -58,8 +58,8 @@ public class CreateMbdImage(ILogger<CreateMbdImage> logger)
             var blobHttpHeaders = new BlobHttpHeaders { ContentType = file.ContentType ?? "image/png" };
 
             // Fail if the blob already exists
-            var options = new BlobUploadOptions 
-            { 
+            var options = new BlobUploadOptions
+            {
                 HttpHeaders = blobHttpHeaders,
                 Conditions = new BlobRequestConditions { IfNoneMatch = ETag.All }
             };

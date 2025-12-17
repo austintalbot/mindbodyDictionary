@@ -20,7 +20,7 @@ public class GetMbdImage(ILogger<GetMbdImage> logger)
         {
              return new BadRequestObjectResult("Please pass a name on the query string");
         }
-        
+
         // Normalize name logic similar to other endpoints
         string extension = Path.GetExtension(originalName).ToLower();
         if (string.IsNullOrEmpty(extension)) extension = ".png";

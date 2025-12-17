@@ -11,56 +11,52 @@ using MindBodyDictionaryMobile.Services;
 /// </summary>
 public partial class FaqPageModel : ObservableObject
 {
-    private readonly FaqApiService _faqApiService;
-    private readonly ILogger<FaqPageModel> _logger;
+  private readonly FaqApiService _faqApiService;
+  private readonly ILogger<FaqPageModel> _logger;
 
-    [ObservableProperty]
-    private ObservableCollection<FaqItem> faqItems = [];
+  [ObservableProperty]
+  private ObservableCollection<FaqItem> faqItems = [];
 
-    [ObservableProperty]
-    private bool isBusy;
+  [ObservableProperty]
+  private bool isBusy;
 
-    public FaqPageModel(FaqApiService faqApiService, ILogger<FaqPageModel> logger)
-    {
-        _faqApiService = faqApiService;
-        _logger = logger;
-        // Constructor no longer needs to call LoadFaqs if we call it from OnAppearing
-        // But keeping it doesn't hurt if we add a check.
-        // LoadFaqs(); 
-    }
+  public FaqPageModel(FaqApiService faqApiService, ILogger<FaqPageModel> logger) {
+    _faqApiService = faqApiService;
+    _logger = logger;
+    // Constructor no longer needs to call LoadFaqs if we call it from OnAppearing
+    // But keeping it doesn't hurt if we add a check.
+    // LoadFaqs();
+  }
 
-    public void LoadFaqs()
-    {
-        if (FaqItems.Count > 0) return; // Don't reload if we have data
+  public void LoadFaqs() {
+    if (FaqItems.Count > 0)
+      return; // Don't reload if we have data
 
-        Task.Run(async () =>
-        {
-            _logger.LogInformation("Starting to load FAQs...");
-            IsBusy = true;
-            try
-            {
-                var faqs = await _faqApiService.GetFaqsAsync();
-                _logger.LogInformation($"Fetched {faqs.Count} FAQs.");
-                MainThread.BeginInvokeOnMainThread(() =>
-                {
-                    FaqItems.Clear();
-                    foreach (var faq in faqs)
-                    {
-                        FaqItems.Add(faq);
-                    }
-                    _logger.LogInformation("FaqItems collection updated.");
-                });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error loading FAQs.");
-            }
-            finally
-            {
-                IsBusy = false;
-                _logger.LogInformation("Finished loading FAQs.");
-            }
+    Task.Run(async () => {
+      _logger.LogInformation("Starting to load FAQs...");
+      IsBusy = true;
+      try
+      {
+        var faqs = await _faqApiService.GetFaqsAsync();
+        _logger.LogInformation($"Fetched {faqs.Count} FAQs.");
+        MainThread.BeginInvokeOnMainThread(() => {
+          FaqItems.Clear();
+          foreach (var faq in faqs)
+          {
+            FaqItems.Add(faq);
+          }
+          _logger.LogInformation("FaqItems collection updated.");
         });
-    }
+      }
+      catch (Exception ex)
+      {
+        _logger.LogError(ex, "Error loading FAQs.");
+      }
+      finally
+      {
+        IsBusy = false;
+        _logger.LogInformation("Finished loading FAQs.");
+      }
+    });
+  }
 }
-

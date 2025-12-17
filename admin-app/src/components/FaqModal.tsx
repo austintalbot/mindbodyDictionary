@@ -88,7 +88,7 @@ const FaqModal: React.FC<FaqModalProps> = ({
 
         {/* Modal Body */}
         <div style={{ flex: 1, overflowY: 'auto', padding: '32px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          
+
           {/* Question Field */}
           <div>
             <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '8px', color: colors.mutedText }} htmlFor="question">Question</label>

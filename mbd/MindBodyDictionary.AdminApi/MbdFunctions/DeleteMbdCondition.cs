@@ -30,7 +30,7 @@ public class DeleteMbdCondition(ILogger<DeleteMbdCondition> logger, CosmosClient
         {
             var container = _client.GetContainer(CosmosDbConstants.DatabaseName, CosmosDbConstants.Containers.MbdConditions);
             var response = await container.DeleteItemAsync<MbdCondition>(id, new PartitionKey(id));
-            
+
             return new OkResult();
         }
         catch (CosmosException ex) when (ex.StatusCode == HttpStatusCode.NotFound)

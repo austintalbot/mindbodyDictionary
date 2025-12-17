@@ -317,7 +317,7 @@ const MbdConditionModal: React.FC<MbdConditionModalProps> = ({
                 </div>
                 <div style={{ marginTop: '32px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', padding: '32px', borderTop: `1px solid ${colors.border}` }}>
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
-                    <div 
+                    <div
                       onClick={() => handleImageClick(mbdCondition.imageNegative)}
                       style={{ cursor: 'pointer', width: '100%', position: 'relative' }}
                       title="Click to manage image"
@@ -327,7 +327,7 @@ const MbdConditionModal: React.FC<MbdConditionModalProps> = ({
                     <p style={{ fontSize: '12px', color: colors.mutedText, margin: 0 }}>Negative</p>
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
-                    <div 
+                    <div
                       onClick={() => handleImageClick(mbdCondition.imagePositive)}
                       style={{ cursor: 'pointer', width: '100%', position: 'relative' }}
                       title="Click to manage image"
