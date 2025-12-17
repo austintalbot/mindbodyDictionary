@@ -1,25 +1,33 @@
-﻿<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <toolkit:Popup
     x:Class="MindBodyDictionaryMobile.Pages.DisclaimerPopup"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:pages="clr-namespace:MindBodyDictionaryMobile.Pages"
-    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit">
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    Color="Transparent">
 
     <toolkit:Popup.Resources>
         <Style TargetType="{x:Type pages:DisclaimerPopup}">
-            <Setter Property="VerticalOptions" Value="Fill" />
-            <Setter Property="HorizontalOptions" Value="Fill" />
+            <Setter Property="VerticalOptions" Value="Center" />
+            <Setter Property="HorizontalOptions" Value="Center" />
         </Style>
     </toolkit:Popup.Resources>
 
-    <VerticalStackLayout Style="{StaticResource DisclaimerPopupVerticalStackLayout}">
-        <Label Style="{StaticResource DisclaimerPopupMessageLabel}" Text="I understand that the Mind Body Dictionary is for informational purposes only. Mind Body Dictionary does not diagnose, treat, prevent, or cure any illness. If you have any questions concerning your health please consult with your Doctor." />
-        <Button
-            AutomationId="DisclaimerUnderstandButton"
-            Clicked="OnYesButtonClicked"
-            Style="{StaticResource DisclaimerPopupButton}"
-            Text="I Understand" />
-    </VerticalStackLayout>
+    <Border
+        BackgroundColor="{AppThemeBinding Light={StaticResource LightSecondaryBackground}, Dark={StaticResource DarkSecondaryBackground}}"
+        Padding="0"
+        StrokeShape="RoundRectangle 15"
+        StrokeThickness="0">
+        <VerticalStackLayout Style="{StaticResource DisclaimerPopupVerticalStackLayout}">
+            <Label Style="{StaticResource DisclaimerPopupMessageLabel}" Text="I understand that the Mind Body Dictionary is for informational purposes only. Mind Body Dictionary does not diagnose, treat, prevent, or cure any illness. If you have any questions concerning your health please consult with your Doctor." />
+            <Button
+                AutomationId="DisclaimerUnderstandButton"
+                Clicked="OnYesButtonClicked"
+                Style="{StaticResource DisclaimerPopupButton}"
+                Text="I Understand" />
+        </VerticalStackLayout>
+    </Border>
 
 </toolkit:Popup>
+

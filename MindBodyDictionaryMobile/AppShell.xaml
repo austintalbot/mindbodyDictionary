@@ -50,6 +50,25 @@
         Icon="{StaticResource IconPremium}"
         Route="premium" />
 
+    <MenuItem
+        Title="Mindbody Movement"
+        Command="{Binding OpenUrlCommand}"
+        CommandParameter="https://mindbodymovements.com/"
+        IconImageSource="{StaticResource IconMovement}" />
+
+    <MenuItem
+        Title="Classes"
+        Command="{Binding OpenUrlCommand}"
+        CommandParameter="https://mindbodydictionary.com/mindbody-movement-program-events/"
+        IconImageSource="{StaticResource IconClasses}" />
+
+    <ShellContent
+        Title="Movement Resources"
+        AutomationId="MovementResourcesShellContent"
+        ContentTemplate="{DataTemplate pages:MovementLinksPage}"
+        Icon="{StaticResource IconLinks}"
+        Route="movementlinks" />
+
     <ShellContent
         Title="About"
         AutomationId="AboutShellContent"

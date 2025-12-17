@@ -11,5 +11,6 @@ public static class CosmosDbConstants
         public const string Emails = "Emails";
 		public const string Faqs = "Faqs";
         public const string System = "System";
+        public const string MbdMovementLinks = "MbdMovementLinks";
     }
 }
