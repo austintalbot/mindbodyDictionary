@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.1",
   "description": "Mindbody Dictionary Admin Application",
-  "author": "Austin Talbot <austin@example.com>",
+  "author": "Austin Talbot <austintalbot@gmail.com>",
   "homepage": "https://github.com/austintalbot/mindbodyDictionary",
   "type": "module",
   "scripts": {
