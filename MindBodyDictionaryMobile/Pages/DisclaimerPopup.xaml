@@ -7,18 +7,17 @@
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     BackgroundColor="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource DarkBackground}}">
 
-    <Grid BackgroundColor="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource DarkBackground}}"
+    <Grid x:Name="RootGrid"
+          BackgroundColor="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource DarkBackground}}"
           RowDefinitions="*, Auto"
           HorizontalOptions="Fill"
           VerticalOptions="Fill"
           Margin="0">
         
-        <VerticalStackLayout Grid.Row="0" 
-                             VerticalOptions="Fill" 
-                             HorizontalOptions="Fill"
-                             Spacing="30"
-                             Padding="30">
-            <VerticalStackLayout VerticalOptions="CenterAndExpand" Spacing="30">
+        <ScrollView Grid.Row="0">
+            <VerticalStackLayout VerticalOptions="Center" 
+                                 Spacing="30"
+                                 Padding="30">
                 <Image Style="{StaticResource AppLogoImage}" HeightRequest="100" HorizontalOptions="Center" />
                 
                 <Label Text="Disclaimer" 
@@ -29,7 +28,7 @@
                        HorizontalTextAlignment="Center"
                        Text="I understand that mbd is for informational purposes only. mbd does not diagnose, treat, prevent, or cure any illness. If you have any questions concerning your health please consult with your Doctor." />
             </VerticalStackLayout>
-        </VerticalStackLayout>
+        </ScrollView>
 
         <Button Grid.Row="1"
                 AutomationId="DisclaimerUnderstandButton"
@@ -37,7 +36,7 @@
                 Style="{StaticResource PrimaryButton}"
                 Text="I Understand"
                 HeightRequest="60"
-                Margin="30,0,30,40" />
+                Margin="30,0,30,60" />
     </Grid>
 
 </toolkit:Popup>
