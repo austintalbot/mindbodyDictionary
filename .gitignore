@@ -383,5 +383,7 @@ tofu/outputs.json
 tofu/terraform.tfvars.staging
 /CosmosDB
 20251112_064146_database.zip
+admin-app/dist-electron/*
 MindBodyDictionaryMobile/old_files
 old_code
+admin-app/dist-electron/main.js
