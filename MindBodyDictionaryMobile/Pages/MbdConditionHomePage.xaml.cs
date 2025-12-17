@@ -91,9 +91,6 @@ public partial class MbdConditionHomePage : ContentPage
       var condition = border.BindingContext as MbdCondition;
       if (condition == null || string.IsNullOrEmpty(condition.Id)) return;
 
-#if DEBUG
-      await AppShell.DisplaySnackbarAsync($"Tapped: {condition.Name}");
-#endif
       await Shell.Current.GoToAsync($"mbdcondition?id={condition.Id}");
     }
     catch (Exception err)
