@@ -84,23 +84,23 @@ const ImageActionModal: React.FC<ImageActionModalProps> = ({
 
   const parseImageNameForUpload = (imageName: string) => {
     const nameWithoutExtension = imageName.split('.').slice(0, -1).join('.'); // "lungProblemsNegative"
-    let ailmentName = '';
+    let mbdConditionName = '';
     let imageType = ''; // "1" for Negative, "2" for Positive
 
     if (nameWithoutExtension.endsWith('Negative')) {
-      ailmentName = nameWithoutExtension.replace('Negative', '');
+      mbdConditionName = nameWithoutExtension.replace('Negative', '');
       imageType = '1';
     } else if (nameWithoutExtension.endsWith('Positive')) {
-      ailmentName = nameWithoutExtension.replace('Positive', '');
+      mbdConditionName = nameWithoutExtension.replace('Positive', '');
       imageType = '2';
     } else {
       // Fallback or error handling if name doesn't match expected pattern
       console.warn('Image name does not match expected pattern for parsing type:', imageName);
       // For now, let's assume it's positive if not explicitly negative
-      ailmentName = nameWithoutExtension;
+      mbdConditionName = nameWithoutExtension;
       imageType = '2';
     }
-    return { ailmentName, imageType };
+    return { mbdConditionName, imageType };
   };
 
 
@@ -119,11 +119,11 @@ const ImageActionModal: React.FC<ImageActionModalProps> = ({
       // For simplicity, we'll assume replacing means deleting the old one first.
       await deleteImage(image.name);
 
-      // Parse ailmentName and imageType from the current image's name
-      const { ailmentName, imageType } = parseImageNameForUpload(image.name);
+      // Parse mbdConditionName and imageType from the current image's name
+      const { mbdConditionName, imageType } = parseImageNameForUpload(image.name);
 
       // Now, upload the new image using the parsed details
-      await uploadImage(ailmentName, imageType, imageFile);
+      await uploadImage(mbdConditionName, imageType, imageFile);
 
       alert("Image replaced successfully!");
       onImageUploaded(); // Refresh image list

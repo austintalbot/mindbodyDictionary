@@ -1,12 +1,12 @@
 import React from 'react';
 import { useTheme } from '../theme/useTheme';
 
-interface AilmentsSearchProps {
+interface MbdConditionsSearchProps {
   searchTerm: string;
   onChange: (value: string) => void;
 }
 
-const AilmentsSearch: React.FC<AilmentsSearchProps> = ({ searchTerm, onChange }) => {
+const MbdConditionsSearch: React.FC<MbdConditionsSearchProps> = ({ searchTerm, onChange }) => {
   const { colors } = useTheme();
   return (
     <div style={{ marginBottom: '24px' }}>
@@ -41,4 +41,4 @@ const AilmentsSearch: React.FC<AilmentsSearchProps> = ({ searchTerm, onChange })
   );
 };
 
-export default AilmentsSearch;
+export default MbdConditionsSearch;

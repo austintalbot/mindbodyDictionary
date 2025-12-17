@@ -1,20 +1,13 @@
 // admin-app/src/components/ImagesTab.tsx
 import React, { useEffect, useState } from 'react';
 import { fetchImagesTable, deleteImage, uploadImage, fetchMbdConditions, clearImagesCache } from '../services/apiService';
-import { MbdCondition } from '../types';
-import { getImageBaseUrl } from '../constants'; // Import directly from constants
+import { MbdCondition, Image } from '../types';
 import { useTheme } from '../theme/useTheme';
-import ErrorModal from './ErrorModal'; // Import ErrorModal
-import ImageActionModal from './ImageActionModal'; // Import ImageActionModal
+import ErrorModal from './ErrorModal';
+import ImageActionModal from './ImageActionModal';
 
-interface Image {
-  name: string;
-  uri: string;
-  ailment: string;
-}
-
-// AilmentOption now uses MbdCondition for name and id
-interface AilmentOption {
+// MbdConditionOption now uses MbdCondition for name and id
+interface MbdConditionOption {
     id?: string;
     name?: string;
 }
@@ -22,77 +15,72 @@ interface AilmentOption {
 const ImagesTab: React.FC = () => {
   const { colors } = useTheme();
   const [images, setImages] = useState<Image[]>([]);
-  const [ailmentOptions, setAilmentOptions] = useState<AilmentOption[]>([]);
+  const [mbdConditionOptions, setMbdConditionOptions] = useState<MbdConditionOption[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedImage, setSelectedImage] = useState<Image | null>(null);
   const [showAddImageDiv, setShowAddImageDiv] = useState(false);
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const [showErrorModal, setShowErrorModal] = useState(false); // New state for error modal visibility
-  const [modalErrorMessage, setModalErrorMessage] = useState(''); // New state for error modal message
-  const [showImageActionModal, setShowImageActionModal] = useState(false); // New state for image action modal visibility
-  const [selectedImageForAction, setSelectedImageForAction] = useState<Image | null>(null); // New state for image passed to action modal
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [modalErrorMessage, setModalErrorMessage] = useState('');
+  const [showImageActionModal, setShowImageActionModal] = useState(false);
+  const [selectedImageForAction, setSelectedImageForAction] = useState<Image | null>(null);
 
   // Form states for adding image
-  const [imageAilment, setImageAilment] = useState('0');
+  const [imageMbdCondition, setImageMbdCondition] = useState('0');
   const [imageType, setImageType] = useState('0'); // 1 for Negative, 2 for Positive
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [fileLabel, setFileLabel] = useState('Choose file');
 
   useEffect(() => {
     loadImages();
-    loadAilmentOptions();
+    loadMbdConditionOptions();
   }, []);
 
   const loadImages = async () => {
     setLoading(true);
-    // setError(null); // No longer needed directly for rendering
     try {
       const response = await fetchImagesTable();
-      // Handle the new response structure which is wrapped in a "data" property
-      // and ensure we fallback to an empty array if data is missing.
       const imageData = (response as any).data || response;
 
       if (Array.isArray(imageData)) {
           setImages(imageData);
       } else {
-          setImages([]); // Fallback to empty array if not an array
+          setImages([]);
           console.warn('Unexpected response format for images:', response);
       }
     } catch (err: any) {
-      setModalErrorMessage(err.message || 'Failed to fetch images'); // Set error message for modal
-      setShowErrorModal(true); // Show error modal
+      setModalErrorMessage(err.message || 'Failed to fetch images');
+      setShowErrorModal(true);
     } finally {
       setLoading(false);
     }
   };
 
-  const loadAilmentOptions = async () => {
+  const loadMbdConditionOptions = async () => {
     try {
-        const response = await fetchMbdConditions(); // Changed to fetchMbdConditions
+        const response = await fetchMbdConditions();
         if (response && Array.isArray(response)) {
-            setAilmentOptions(response.map((ailment: MbdCondition) => ({ id: ailment.id, name: ailment.name })));
+            setMbdConditionOptions(response.map((mbdCondition: MbdCondition) => ({ id: mbdCondition.id, name: mbdCondition.name })));
         } else {
             throw new Error('API response data for MbdConditions is not an array or is missing.');
         }
     } catch (err: any) {
-        console.error("Failed to load ailment options:", err);
-        setModalErrorMessage(err.message || "Failed to load ailment options"); // Set error message for modal
-        setShowErrorModal(true); // Show error modal
+        console.error("Failed to load condition options:", err);
+        setModalErrorMessage(err.message || "Failed to load condition options");
+        setShowErrorModal(true);
     }
   };
 
   const selectImage = (image: Image) => {
     setSelectedImageForAction(image);
     setShowImageActionModal(true);
-    setShowAddImageDiv(false); // Hide add image form when selecting an image
+    setShowAddImageDiv(false);
   };
 
   const deleteImageConfirm = async (imageName: string) => {
     if (window.confirm(`Are you sure you want to delete ${imageName}?`)) {
       try {
         await deleteImage(imageName);
-        loadImages(); // Reload table after deletion
-        // No longer need setSelectedImage(null) as inline image display is removed
+        loadImages();
       } catch (err: any) {
         setModalErrorMessage(err.message || 'Failed to delete image');
         setShowErrorModal(true);
@@ -100,13 +88,9 @@ const ImagesTab: React.FC = () => {
     }
   };
 
-
-
   const addImage = () => {
-    setSelectedImage(null); // Clear selected image when adding new
     setShowAddImageDiv(true);
-    // Reset form fields
-    setImageAilment('0');
+    setImageMbdCondition('0');
     setImageType('0');
     setImageFile(null);
     setFileLabel('Choose file');
@@ -115,11 +99,11 @@ const ImagesTab: React.FC = () => {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
-      if (file.size > 1000000) { // 1MB limit for example
+      if (file.size > 1000000) {
         alert("File too large, please keep it below 1MB (1000KB)");
         setImageFile(null);
         setFileLabel('Please Select a new file');
-        e.target.value = ''; // Clear input
+        e.target.value = '';
       } else {
         setImageFile(file);
         setFileLabel(file.name);
@@ -131,8 +115,8 @@ const ImagesTab: React.FC = () => {
   };
 
   const submitImage = async () => {
-    if (imageAilment === '0') {
-      alert("Must Select an Ailment");
+    if (imageMbdCondition === '0') {
+      alert("Must Select a Condition");
       return;
     }
     if (imageType === '0') {
@@ -145,17 +129,16 @@ const ImagesTab: React.FC = () => {
     }
 
     try {
-        // Need to get ailment name from id if imageAilment is an id, or use imageAilment directly if it's name
-        const selectedAilment = ailmentOptions.find(opt => opt.id === imageAilment);
-        const ailmentNameToUse = selectedAilment ? selectedAilment.name : imageAilment; // Fallback to id if name not found
+        const selectedMbdCondition = mbdConditionOptions.find(opt => opt.id === imageMbdCondition);
+        const conditionNameToUse = selectedMbdCondition ? selectedMbdCondition.name : imageMbdCondition;
 
-        await uploadImage(ailmentNameToUse!, imageType, imageFile);
+        await uploadImage(conditionNameToUse!, imageType, imageFile);
         alert("Image uploaded successfully!");
         setShowAddImageDiv(false);
-        loadImages(); // Reload images table
+        loadImages();
       } catch (err: any) {
-        setModalErrorMessage(err.message || 'Failed to upload image'); // Set error message for modal
-        setShowErrorModal(true); // Show error modal
+        setModalErrorMessage(err.message || 'Failed to upload image');
+        setShowErrorModal(true);
       }
   };
 
@@ -167,7 +150,7 @@ const ImagesTab: React.FC = () => {
     const lowerCaseSearchTerm = searchTerm.toLowerCase();
     return (
       image.name.toLowerCase().includes(lowerCaseSearchTerm) ||
-      image.ailment.toLowerCase().includes(lowerCaseSearchTerm)
+      (image.mbdCondition && image.mbdCondition.toLowerCase().includes(lowerCaseSearchTerm))
     );
   });
 
@@ -209,7 +192,7 @@ const ImagesTab: React.FC = () => {
         <div style={{ marginBottom: '20px' }}>
             <input
                 type="text"
-                placeholder="Search images by name or ailment..."
+                placeholder="Search images by name or condition..."
                 value={searchTerm}
                 onChange={handleSearchChange}
                 style={{
@@ -234,12 +217,12 @@ const ImagesTab: React.FC = () => {
               <tr style={{ backgroundColor: colors.backgroundSecondary, borderBottom: `2px solid ${colors.border}` }}>
                 <th style={{ padding: '12px', textAlign: 'left', fontWeight: '600', color: colors.mutedText }}>View</th>
                 <th style={{ padding: '12px', textAlign: 'left', fontWeight: '600', color: colors.mutedText }}>Name</th>
-                <th style={{ padding: '12px', textAlign: 'left', fontWeight: '600', color: colors.mutedText }}>Default Ailment</th>
+                <th style={{ padding: '12px', textAlign: 'left', fontWeight: '600', color: colors.mutedText }}>Default Condition</th>
                 <th style={{ padding: '12px', textAlign: 'left', fontWeight: '600', color: colors.mutedText }}>Delete</th>
               </tr>
             </thead>
             <tbody>
-              {filteredImages.map((image, index) => ( // Use filteredImages here
+              {filteredImages.map((image, index) => (
                 <tr
                   key={image.name}
                   style={{
@@ -277,7 +260,7 @@ const ImagesTab: React.FC = () => {
                     </button>
                   </td>
                   <td style={{ padding: '12px', color: colors.foreground }}>{image.name}</td>
-                  <td style={{ padding: '12px', color: colors.foreground }}>{image.ailment}</td>
+                  <td style={{ padding: '12px', color: colors.foreground }}>{image.mbdCondition}</td>
                   <td style={{ padding: '12px' }}>
                     <button
                       onClick={() => deleteImageConfirm(image.name)}
@@ -345,10 +328,10 @@ const ImagesTab: React.FC = () => {
             <h6 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '20px', color: colors.foreground }}>Upload New Image</h6>
 
             <div style={{ marginBottom: '16px' }}>
-              <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '8px', color: colors.lightText }}>Select Ailment</label>
+              <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '8px', color: colors.lightText }}>Select Condition</label>
               <select
-                value={imageAilment}
-                onChange={(e) => setImageAilment(e.target.value)}
+                value={imageMbdCondition}
+                onChange={(e) => setImageMbdCondition(e.target.value)}
                 style={{
                   width: '100%',
                   padding: '10px 12px',
@@ -361,8 +344,8 @@ const ImagesTab: React.FC = () => {
                   cursor: 'pointer'
                 }}
               >
-                <option value="0">Select Ailment...</option>
-                {ailmentOptions.map(opt => <option key={opt.id} value={opt.id!}>{opt.name}</option>)}
+                <option value="0">Select Condition...</option>
+                {mbdConditionOptions.map(opt => <option key={opt.id} value={opt.id!}>{opt.name}</option>)}
               </select>
             </div>
 
@@ -449,18 +432,18 @@ const ImagesTab: React.FC = () => {
           isOpen={showImageActionModal}
           onClose={() => {
             setShowImageActionModal(false);
-            setSelectedImageForAction(null); // Clear selected image
+            setSelectedImageForAction(null);
           }}
           image={selectedImageForAction}
           onImageDeleted={() => {
             setShowImageActionModal(false);
-            setSelectedImageForAction(null); // Clear selected image
-            loadImages(); // Reload table after deletion
+            setSelectedImageForAction(null);
+            loadImages();
           }}
           onImageUploaded={() => {
             setShowImageActionModal(false);
-            setSelectedImageForAction(null); // Clear selected image
-            loadImages(); // Reload table after upload
+            setSelectedImageForAction(null);
+            loadImages();
           }}
         />
       )}

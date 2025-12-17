@@ -2,20 +2,29 @@ import { useState } from 'react';
 import './App.css';
 import { ThemeProvider } from './theme/ThemeProvider';
 import { useTheme } from './theme/useTheme';
-import AilmentsTab from './components/AilmentsTab';
+import MbdConditionsTab from './components/MbdConditionsTab';
 import ImagesTab from './components/ImagesTab';
+import ContactsTab from './components/ContactsTab';
+import NotificationsTab from './components/NotificationsTab';
+import DatabaseTab from './components/DatabaseTab';
 import ThemeToggle from './components/ThemeToggle';
 
 function AppContent() {
   const { colors } = useTheme();
-  const [activeTab, setActiveTab] = useState('ailments');
+  const [activeTab, setActiveTab] = useState('conditions');
 
   const renderContent = () => {
     switch (activeTab) {
-      case 'ailments':
-        return <AilmentsTab />;
+      case 'conditions':
+        return <MbdConditionsTab />;
       case 'images':
         return <ImagesTab />;
+      case 'contacts':
+        return <ContactsTab />;
+      case 'notifications':
+        return <NotificationsTab />;
+      case 'database':
+        return <DatabaseTab />;
       default:
         return <p style={{ color: colors.foreground }}>Tab content for {activeTab} not yet implemented</p>;
     }
@@ -41,7 +50,7 @@ function AppContent() {
       {/* Navigation */}
       <div style={{ backgroundColor: colors.background, borderBottom: `1px solid ${colors.border}`, padding: '0 20px' }}>
         <div style={{ maxWidth: '1400px', margin: '0 auto', display: 'flex', gap: '2px' }}>
-          {['ailments', 'images', 'contacts', 'notifications', 'database'].map((tab) => (
+          {['conditions', 'images', 'contacts', 'notifications', 'database'].map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}

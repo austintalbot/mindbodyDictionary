@@ -15,7 +15,7 @@ export interface Recommendation {
 export interface Image {
   name: string;
   uri?: string;
-  ailment?: string;
+  mbdCondition?: string;
 }
 
 export interface MbdCondition {
