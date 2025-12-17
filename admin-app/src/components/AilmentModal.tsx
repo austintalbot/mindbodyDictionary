@@ -98,7 +98,7 @@ const AilmentModal: React.FC<AilmentModalProps> = ({
           <Tabs defaultValue="basicInfo" className="w-full">
             <TabsList className="grid w-full grid-cols-5" style={{
               marginBottom: '20px',
-              borderBottom: '2px solid #e9ecef',
+              borderBottom: `2px solid ${colors.border}`,
               display: 'grid',
               gridTemplateColumns: 'repeat(5, 1fr)',
               gap: '8px'
@@ -137,11 +137,11 @@ const AilmentModal: React.FC<AilmentModalProps> = ({
 
             <TabsContent value="basicInfo">
               <div style={{ padding: '20px' }}>
-                <h5 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '20px', color: '#1a1a1a' }}>Basic Information</h5>
+                <h5 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '20px', color: colors.foreground }}>Basic Information</h5>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
                   <div>
                     <div style={{ marginBottom: '20px' }}>
-                      <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '8px', color: '#495057' }} htmlFor="id">ID</label>
+                      <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '8px', color: colors.mutedText }} htmlFor="id">ID</label>
                       <input
                         type="text"
                         id="id"
@@ -151,16 +151,16 @@ const AilmentModal: React.FC<AilmentModalProps> = ({
                           width: '100%',
                           padding: '10px 12px',
                           fontSize: '14px',
-                          border: '1px solid #d0d0d0',
+                          border: `1px solid ${colors.border}`,
                           borderRadius: '6px',
-                          backgroundColor: '#f8f9fa',
-                          color: '#6c757d',
+                          backgroundColor: colors.backgroundSecondary,
+                          color: colors.mutedText,
                           cursor: 'not-allowed'
                         }}
                       />
                     </div>
                     <div>
-                      <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '8px', color: '#495057' }} htmlFor="name">Name</label>
+                      <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '8px', color: colors.mutedText }} htmlFor="name">Name</label>
                       <input
                         type="text"
                         id="name"
@@ -170,16 +170,18 @@ const AilmentModal: React.FC<AilmentModalProps> = ({
                           width: '100%',
                           padding: '10px 12px',
                           fontSize: '14px',
-                          border: '1px solid #d0d0d0',
+                          border: `1px solid ${colors.inputBorder}`,
                           borderRadius: '6px',
-                          transition: 'all 0.2s'
+                          transition: 'all 0.2s',
+                          backgroundColor: colors.inputBackground,
+                          color: colors.foreground
                         }}
                         onFocus={(e) => {
-                          e.currentTarget.style.borderColor = '#0066cc';
-                          e.currentTarget.style.boxShadow = '0 0 0 3px rgba(0,102,204,0.1)';
+                          e.currentTarget.style.borderColor = colors.inputFocus;
+                          e.currentTarget.style.boxShadow = `0 0 0 3px ${colors.inputFocusRing}`;
                         }}
                         onBlur={(e) => {
-                          e.currentTarget.style.borderColor = '#d0d0d0';
+                          e.currentTarget.style.borderColor = colors.inputBorder;
                           e.currentTarget.style.boxShadow = 'none';
                         }}
                       />
@@ -187,7 +189,7 @@ const AilmentModal: React.FC<AilmentModalProps> = ({
                   </div>
                   <div>
                     <div style={{ marginBottom: '20px' }}>
-                      <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '8px', color: '#495057' }} htmlFor="imageNegative">Image Negative</label>
+                      <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '8px', color: colors.mutedText }} htmlFor="imageNegative">Image Negative</label>
                       <input
                         type="text"
                         id="imageNegative"
@@ -197,9 +199,11 @@ const AilmentModal: React.FC<AilmentModalProps> = ({
                           width: '100%',
                           padding: '10px 12px',
                           fontSize: '14px',
-                          border: '1px solid #d0d0d0',
+                          border: `1px solid ${colors.inputBorder}`,
                           borderRadius: '6px',
-                          transition: 'all 0.2s'
+                          transition: 'all 0.2s',
+                          backgroundColor: colors.inputBackground,
+                          color: colors.foreground
                         }}
                         onFocus={(e) => {
                           e.currentTarget.style.borderColor = colors.inputFocus;
@@ -300,11 +304,11 @@ const AilmentModal: React.FC<AilmentModalProps> = ({
                 </div>
                 <div style={{ marginTop: '32px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', paddingTop: '32px', borderTop: `1px solid ${colors.border}` }}>
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
-                    <img src={getImageUrl('negative')} alt="Negative" style={{ width: '100%', maxHeight: '250px', objectFit: 'contain', borderRadius: '6px', backgroundColor: '#ffffff', padding: '12px', border: `1px solid ${colors.border}` }} />
+                    <img src={getImageUrl('negative')} alt="Negative" style={{ width: '100%', maxHeight: '250px', objectFit: 'contain', borderRadius: '6px', backgroundColor: colors.inputBackground, padding: '12px', border: `1px solid ${colors.border}` }} />
                     <p style={{ fontSize: '12px', color: colors.mutedText, margin: 0 }}>Negative</p>
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
-                    <img src={getImageUrl('positive')} alt="Positive" style={{ width: '100%', maxHeight: '250px', objectFit: 'contain', borderRadius: '6px', backgroundColor: '#ffffff', padding: '12px', border: `1px solid ${colors.border}` }} />
+                    <img src={getImageUrl('positive')} alt="Positive" style={{ width: '100%', maxHeight: '250px', objectFit: 'contain', borderRadius: '6px', backgroundColor: colors.inputBackground, padding: '12px', border: `1px solid ${colors.border}` }} />
                     <p style={{ fontSize: '12px', color: colors.mutedText, margin: 0 }}>Positive</p>
                   </div>
                 </div>
@@ -353,7 +357,7 @@ const AilmentModal: React.FC<AilmentModalProps> = ({
                         style={{
                           padding: '8px 12px',
                           backgroundColor: colors.danger,
-                          color: '#fff',
+                          color: colors.buttonText,
                           border: 'none',
                           borderRadius: '6px',
                           cursor: 'pointer',
@@ -378,7 +382,7 @@ const AilmentModal: React.FC<AilmentModalProps> = ({
                     style={{
                       padding: '10px 20px',
                       backgroundColor: colors.primary,
-                      color: '#fff',
+                      color: colors.buttonText,
                       border: 'none',
                       borderRadius: '6px',
                       cursor: 'pointer',
@@ -437,7 +441,7 @@ const AilmentModal: React.FC<AilmentModalProps> = ({
                         style={{
                           padding: '8px 12px',
                           backgroundColor: colors.danger,
-                          color: '#fff',
+                          color: colors.buttonText,
                           border: 'none',
                           borderRadius: '6px',
                           cursor: 'pointer',
@@ -460,7 +464,7 @@ const AilmentModal: React.FC<AilmentModalProps> = ({
                     style={{
                       padding: '10px 20px',
                       backgroundColor: colors.primary,
-                      color: '#fff',
+                      color: colors.buttonText,
                       border: 'none',
                       borderRadius: '6px',
                       cursor: 'pointer',
@@ -519,7 +523,7 @@ const AilmentModal: React.FC<AilmentModalProps> = ({
                         style={{
                           padding: '8px 12px',
                           backgroundColor: colors.danger,
-                          color: '#fff',
+                          color: colors.buttonText,
                           border: 'none',
                           borderRadius: '6px',
                           cursor: 'pointer',
@@ -542,7 +546,7 @@ const AilmentModal: React.FC<AilmentModalProps> = ({
                     style={{
                       padding: '10px 20px',
                       backgroundColor: colors.primary,
-                      color: '#fff',
+                      color: colors.buttonText,
                       border: 'none',
                       borderRadius: '6px',
                       cursor: 'pointer',
@@ -608,7 +612,7 @@ const AilmentModal: React.FC<AilmentModalProps> = ({
                           style={{
                             padding: '8px 12px',
                             backgroundColor: colors.danger,
-                            color: '#fff',
+                            color: colors.buttonText,
                             border: 'none',
                             borderRadius: '6px',
                             cursor: 'pointer',
@@ -669,7 +673,7 @@ const AilmentModal: React.FC<AilmentModalProps> = ({
                     style={{
                       padding: '10px 20px',
                       backgroundColor: colors.primary,
-                      color: '#fff',
+                      color: colors.buttonText,
                       border: 'none',
                       borderRadius: '6px',
                       cursor: 'pointer',
@@ -720,7 +724,7 @@ const AilmentModal: React.FC<AilmentModalProps> = ({
             style={{
               padding: '10px 24px',
               backgroundColor: colors.primary,
-              color: '#fff',
+              color: colors.buttonText,
               border: 'none',
               borderRadius: '6px',
               cursor: 'pointer',
