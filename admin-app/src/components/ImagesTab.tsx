@@ -465,6 +465,7 @@ const ImagesTab: React.FC = () => {
             setSelectedImageForAction(null);
           }}
           image={selectedImageForAction}
+          mbdConditionOptions={mbdConditionOptions}
           onImageDeleted={() => {
             setShowImageActionModal(false);
             setSelectedImageForAction(null);

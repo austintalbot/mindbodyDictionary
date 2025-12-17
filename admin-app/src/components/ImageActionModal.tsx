@@ -9,6 +9,7 @@ interface ImageActionModalProps {
   isOpen: boolean;
   onClose: () => void;
   image: Image | null;
+  mbdConditionOptions?: { id?: string; name?: string }[];
   onImageDeleted: () => void; // Callback to refresh images after deletion
   onImageUploaded: () => void; // Callback to refresh images after upload
 }
@@ -17,6 +18,7 @@ const ImageActionModal: React.FC<ImageActionModalProps> = ({
   isOpen,
   onClose,
   image,
+  mbdConditionOptions = [],
   onImageDeleted,
   onImageUploaded,
 }) => {
@@ -27,6 +29,10 @@ const ImageActionModal: React.FC<ImageActionModalProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [previewImageUrl, setPreviewImageUrl] = useState<string | null>(null); // New state for image preview
 
+  // State for changing association
+  const [selectedConditionId, setSelectedConditionId] = useState<string>('');
+  const [selectedImageType, setSelectedImageType] = useState<string>('0');
+
   useEffect(() => {
     if (!isOpen) {
       // Reset form when modal closes
@@ -34,12 +40,31 @@ const ImageActionModal: React.FC<ImageActionModalProps> = ({
       setFileLabel('Choose new image file');
       setError(null);
       setLoading(false);
+      setSelectedConditionId('');
+      setSelectedImageType('0');
       if (previewImageUrl) {
         URL.revokeObjectURL(previewImageUrl); // Clean up the old preview URL
         setPreviewImageUrl(null);
       }
+    } else if (image) {
+       // Try to pre-fill the association form based on current image name/condition
+       const { imageType } = parseImageNameForUpload(image.name);
+       setSelectedImageType(imageType);
+
+       // Pre-select condition if possible
+       // image.mbdCondition contains the name, but we need the ID for the select value if possible, 
+       // OR we can just use the name if that's what we upload with.
+       // The uploadImage function takes 'ailmentName' which corresponds to the condition NAME.
+       // However, the ImagesTab passes mbdConditionOptions which has ID and Name.
+       // Let's try to find the ID corresponding to image.mbdCondition (name).
+       if (image.mbdCondition) {
+           const found = mbdConditionOptions.find(opt => opt.name === image.mbdCondition);
+           if (found && found.id) {
+               setSelectedConditionId(found.id);
+           }
+       }
     }
-  }, [isOpen, previewImageUrl]);
+  }, [isOpen, previewImageUrl, image, mbdConditionOptions]);
 
   // Clean up object URL on component unmount
   useEffect(() => {
@@ -95,7 +120,7 @@ const ImageActionModal: React.FC<ImageActionModalProps> = ({
       imageType = '2';
     } else {
       // Fallback or error handling if name doesn't match expected pattern
-      console.warn('Image name does not match expected pattern for parsing type:', imageName);
+      // console.warn('Image name does not match expected pattern for parsing type:', imageName);
       // For now, let's assume it's positive if not explicitly negative
       mbdConditionName = nameWithoutExtension;
       imageType = '2';
@@ -133,6 +158,50 @@ const ImageActionModal: React.FC<ImageActionModalProps> = ({
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleMoveImage = async () => {
+      if (!selectedConditionId || selectedImageType === '0') {
+          alert("Please select both a condition and an image type.");
+          return;
+      }
+
+      setLoading(true);
+      setError(null);
+
+      try {
+          const selectedCondition = mbdConditionOptions.find(opt => opt.id === selectedConditionId);
+          if (!selectedCondition || !selectedCondition.name) {
+              throw new Error("Invalid condition selected.");
+          }
+
+          // 1. Download the current image as a Blob
+          const imageUrl = getImageBaseUrl() + '/' + image.name;
+          const response = await fetch(imageUrl);
+          if (!response.ok) {
+              throw new Error(`Failed to fetch original image: ${response.statusText}`);
+          }
+          const blob = await response.blob();
+
+          // 2. Create a File object from the Blob
+          // We need a filename for the File constructor, though the backend renames it.
+          const file = new File([blob], image.name, { type: blob.type });
+
+          // 3. Upload the image with the NEW name (derived from new condition and type)
+          await uploadImage(selectedCondition.name, selectedImageType, file);
+
+          // 4. Delete the OLD image
+          await deleteImage(image.name);
+
+          alert("Image re-associated successfully!");
+          onImageUploaded(); // Refresh
+          onClose();
+
+      } catch (err: any) {
+          setError(err.message || 'Failed to re-associate image.');
+      } finally {
+          setLoading(false);
+      }
   };
 
   const handleImageDelete = async () => {
@@ -260,6 +329,9 @@ const ImageActionModal: React.FC<ImageActionModalProps> = ({
               alt={image.name}
               style={{ maxWidth: '100%', maxHeight: '300px', objectFit: 'contain', border: `1px solid ${colors.border}`, borderRadius: '4px' }}
             />
+            <div style={{ marginTop: '10px', fontSize: '14px', color: colors.foreground }}>
+                <strong>Associated Condition:</strong> {image.mbdCondition || 'None'}
+            </div>
           </div>
 
           {/* Download Button */}
@@ -285,9 +357,82 @@ const ImageActionModal: React.FC<ImageActionModalProps> = ({
             {loading ? 'Processing...' : 'Download Current Image'}
           </button>
 
+          {/* Change Association Section */}
+          <div style={{ borderTop: `1px solid ${colors.border}`, paddingTop: '20px', marginTop: '20px' }}>
+              <h6 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '15px', color: colors.foreground }}>Change Association (Rename/Move)</h6>
+              <div style={{ display: 'flex', gap: '10px', marginBottom: '15px' }}>
+                  <div style={{ flex: 2 }}>
+                      <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '8px', color: colors.lightText }}>New Condition</label>
+                      <select
+                          value={selectedConditionId}
+                          onChange={(e) => setSelectedConditionId(e.target.value)}
+                          style={{
+                              width: '100%',
+                              padding: '10px 12px',
+                              fontSize: '14px',
+                              border: `1px solid ${colors.inputBorder}`,
+                              borderRadius: '6px',
+                              backgroundColor: colors.inputBackground,
+                              color: colors.foreground,
+                              outline: 'none',
+                              cursor: 'pointer'
+                          }}
+                      >
+                          <option value="">Select Condition...</option>
+                          {mbdConditionOptions.map(opt => (
+                              <option key={opt.id} value={opt.id!}>{opt.name}</option>
+                          ))}
+                      </select>
+                  </div>
+                  <div style={{ flex: 1 }}>
+                      <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '8px', color: colors.lightText }}>Type</label>
+                      <select
+                          value={selectedImageType}
+                          onChange={(e) => setSelectedImageType(e.target.value)}
+                          style={{
+                              width: '100%',
+                              padding: '10px 12px',
+                              fontSize: '14px',
+                              border: `1px solid ${colors.inputBorder}`,
+                              borderRadius: '6px',
+                              backgroundColor: colors.inputBackground,
+                              color: colors.foreground,
+                              outline: 'none',
+                              cursor: 'pointer'
+                          }}
+                      >
+                          <option value="0">Select...</option>
+                          <option value="1">Negative</option>
+                          <option value="2">Positive</option>
+                      </select>
+                  </div>
+              </div>
+              <button
+                  onClick={handleMoveImage}
+                  disabled={loading || !selectedConditionId || selectedImageType === '0'}
+                  style={{
+                      width: '100%',
+                      padding: '12px',
+                      backgroundColor: colors.accent,
+                      color: '#fff',
+                      border: 'none',
+                      borderRadius: '6px',
+                      cursor: (loading || !selectedConditionId || selectedImageType === '0') ? 'not-allowed' : 'pointer',
+                      fontSize: '14px',
+                      fontWeight: '600',
+                      transition: 'all 0.2s',
+                      opacity: (loading || !selectedConditionId || selectedImageType === '0') ? 0.7 : 1,
+                  }}
+                  onMouseEnter={(e) => { if (!loading && selectedConditionId && selectedImageType !== '0') e.currentTarget.style.backgroundColor = colors.accentHover; }}
+                  onMouseLeave={(e) => { if (!loading && selectedConditionId && selectedImageType !== '0') e.currentTarget.style.backgroundColor = colors.accent; }}
+              >
+                  {loading ? 'Moving...' : 'Update Association'}
+              </button>
+          </div>
+
           {/* Image Upload Form */}
           <div style={{ borderTop: `1px solid ${colors.border}`, paddingTop: '20px', marginTop: '20px' }}>
-            <h6 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '15px', color: colors.foreground }}>Replace Image</h6>
+            <h6 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '15px', color: colors.foreground }}>Replace Image File (Same Name)</h6>
             {previewImageUrl && (
               <div style={{ textAlign: 'center', marginBottom: '15px' }}>
                 <img
