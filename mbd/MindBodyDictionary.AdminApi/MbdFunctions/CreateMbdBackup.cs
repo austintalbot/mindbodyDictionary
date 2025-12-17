@@ -23,8 +23,11 @@ public class CreateMbdBackup(ILogger<CreateMbdBackup> logger, CosmosClient clien
         {
             _logger.LogInformation("--Start Creation of MbdBackup--");
             var dbTempExportDirectory = Path.Combine(Path.GetTempPath(), "CosmosDB_Mbd");
+            _logger.LogInformation("Using temp directory for export: {Path}", dbTempExportDirectory);
+
             if (Directory.Exists(dbTempExportDirectory))
             {
+                 _logger.LogInformation("Cleaning up existing temp directory.");
                  Directory.Delete(dbTempExportDirectory, true);
             }
             Directory.CreateDirectory(dbTempExportDirectory);
@@ -32,17 +35,25 @@ public class CreateMbdBackup(ILogger<CreateMbdBackup> logger, CosmosClient clien
             await ExportContainer<MbdCondition>(dbTempExportDirectory, CosmosDbConstants.Containers.MbdConditions);
             await ExportContainer<EmailSubmission>(dbTempExportDirectory, CosmosDbConstants.Containers.Emails);
 
-            _logger.LogInformation("Create Archive File...");
+            _logger.LogInformation("Creating Archive File...");
             var archiveFileName = Path.Combine(Path.GetTempPath(), "mbd_database.zip");
-            if (File.Exists(archiveFileName)) File.Delete(archiveFileName);
+            if (File.Exists(archiveFileName))
+            {
+                _logger.LogInformation("Deleting existing archive file: {Path}", archiveFileName);
+                File.Delete(archiveFileName);
+            }
 
             ZipFile.CreateFromDirectory(dbTempExportDirectory, archiveFileName, CompressionLevel.Optimal, includeBaseDirectory: true);
+            _logger.LogInformation("Archive created: {Path}", archiveFileName);
+            
             var fileContents = await File.ReadAllBytesAsync(archiveFileName);
+            _logger.LogInformation("Read {Size} bytes from archive.", fileContents.Length);
 
-            _logger.LogInformation("Cleanup...");
+            _logger.LogInformation("Cleanup temp files and directory...");
             File.Delete(archiveFileName);
             Directory.Delete(dbTempExportDirectory, recursive: true);
 
+             _logger.LogInformation("--MbdBackup Creation Completed Successfully--");
              return new FileContentResult(
                 fileContents: fileContents,
                 contentType: "application/octet-stream")
@@ -52,8 +63,7 @@ public class CreateMbdBackup(ILogger<CreateMbdBackup> logger, CosmosClient clien
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error in CreateMbdBackup");
-            _logger.LogError(message: ex.Message);
+            _logger.LogError(ex, "Error in CreateMbdBackup during execution.");
             return new StatusCodeResult(StatusCodes.Status500InternalServerError);
         }
     }

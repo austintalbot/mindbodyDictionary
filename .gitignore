@@ -386,4 +386,4 @@ tofu/terraform.tfvars.staging
 admin-app/dist-electron/*
 MindBodyDictionaryMobile/old_files
 old_code
-admin-app/dist-electron/main.js
+admin-app/dist-electron/
