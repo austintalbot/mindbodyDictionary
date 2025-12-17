@@ -271,7 +271,7 @@ const ImagesTab: React.FC = () => {
                                 objectFit: 'contain', 
                                 borderRadius: '4px',
                                 border: `1px solid ${colors.border}`,
-                                backgroundColor: colors.background
+                                backgroundColor: 'whitesmoke'
                             }} 
                         />
                     ) : (
@@ -280,7 +280,7 @@ const ImagesTab: React.FC = () => {
                             height: '50px',
                             borderRadius: '4px',
                             border: `1px solid ${colors.border}`,
-                            backgroundColor: colors.backgroundSecondary,
+                            backgroundColor: 'whitesmoke',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',

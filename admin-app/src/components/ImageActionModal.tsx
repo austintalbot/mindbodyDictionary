@@ -327,7 +327,7 @@ const ImageActionModal: React.FC<ImageActionModalProps> = ({
             <img
               src={getImageBaseUrl() + '/' + image.name}
               alt={image.name}
-              style={{ maxWidth: '100%', maxHeight: '300px', objectFit: 'contain', border: `1px solid ${colors.border}`, borderRadius: '4px' }}
+              style={{ maxWidth: '100%', maxHeight: '300px', objectFit: 'contain', border: `1px solid ${colors.border}`, borderRadius: '4px', backgroundColor: 'whitesmoke', padding: '10px' }}
             />
             <div style={{ marginTop: '10px', fontSize: '14px', color: colors.foreground }}>
                 <strong>Associated Condition:</strong> {image.mbdCondition || 'None'}
@@ -438,7 +438,7 @@ const ImageActionModal: React.FC<ImageActionModalProps> = ({
                 <img
                   src={previewImageUrl}
                   alt="New Image Preview"
-                  style={{ maxWidth: '100%', maxHeight: '200px', objectFit: 'contain', border: `1px solid ${colors.border}`, borderRadius: '4px' }}
+                  style={{ maxWidth: '100%', maxHeight: '200px', objectFit: 'contain', border: `1px solid ${colors.border}`, borderRadius: '4px', backgroundColor: 'whitesmoke', padding: '10px' }}
                 />
                 <p style={{ fontSize: '12px', color: colors.mutedText, marginTop: '8px' }}>Preview of new image</p>
               </div>
