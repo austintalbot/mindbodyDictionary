@@ -18,6 +18,14 @@ export interface Image {
   mbdCondition?: string;
 }
 
+export interface Faq {
+  id?: string;
+  question: string;
+  shortAnswer?: string;
+  answer: string;
+  order?: number;
+}
+
 export interface MbdCondition {
   id?: string;
   name?: string;

@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { sendPushNotification, fetchMbdConditions } from '../services/apiService';
 import { MbdCondition } from '../types';
+import { useTheme } from '../theme/useTheme';
 
 interface MbdConditionOption {
     id?: string;
@@ -9,6 +10,7 @@ interface MbdConditionOption {
 }
 
 const NotificationsTab: React.FC = () => {
+  const { colors } = useTheme();
   const [notificationTitle, setNotificationTitle] = useState('');
   const [notificationBody, setNotificationBody] = useState('');
   const [notificationTag, setNotificationTag] = useState('0'); // '0' for Everyone, '1' for Subscribers Only
@@ -74,94 +76,151 @@ const NotificationsTab: React.FC = () => {
   };
 
   return (
-    <div className="tab-pane fade show active" id="nav-notifications" role="tabpanel" aria-labelledby="nav-notifications-tab">
-      <div className="card">
-        <div className="card-body">
-          <h5 className="card-title">Push Notifications</h5>
-          <div id="sendNotificationDiv">
-            <div className="form-group">
-              <label htmlFor="notificationTag">Who To Notify:</label>
-              <select
-                className="form-control"
-                id="notificationTag"
-                value={notificationTag}
-                onChange={(e) => setNotificationTag(e.target.value)}
-              >
-                <option value="0">Everyone</option>
-                <option value="1">Subscribers Only</option>
-              </select>
-            </div>
-            <div className="form-group">
-              <label htmlFor="notificationTitle">Title:</label>
-              <div className="input-group">
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Notification Title"
-                  id="notificationTitle"
-                  maxLength={65}
-                  value={notificationTitle}
-                  onChange={(e) => setNotificationTitle(e.target.value)}
-                />
-                <div className="input-group-append">
-                  <span id="titleLength" className="input-group-text">
-                    {notificationTitle.length}/65
-                  </span>
-                </div>
-              </div>
-            </div>
-            <div className="form-group">
-              <label htmlFor="notificationBody">Body:</label>
-              <div className="input-group">
-                <textarea
-                  className="form-control maxedLength"
-                  rows={3}
-                  id="notificationBody"
-                  maxLength={150}
-                  value={notificationBody}
-                  onChange={(e) => setNotificationBody(e.target.value)}
-                ></textarea>
-                <div className="input-group-append">
-                  <span id="bodyLength" className="input-group-text">
-                    {notificationBody.length}/150
-                  </span>
-                </div>
-              </div>
-            </div>
-            <div className="form-group">
-              <label htmlFor="notificationMbdCondition">Associate with Condition:</label>
-              <select
-                className="form-control"
-                id="notificationMbdCondition"
-                value={notificationMbdCondition}
-                onChange={(e) => setNotificationMbdCondition(e.target.value)}
-                disabled={loadingMbdConditions}
-              >
-                <option value="0">No Condition... (Select Condition If Applicable)</option>
-                {mbdConditionOptions.map((mbdCondition) => (
-                  <option key={mbdCondition.id} value={mbdCondition.id!}>
-                    {mbdCondition.name}
-                  </option>
-                ))}
-              </select>
-              {loadingMbdConditions && <span>Loading conditions...</span>}
-              {error && <div className="text-danger mt-1">Error loading conditions.</div>}
-            </div>
-            <button className="btn btn-primary" onClick={sendNotification}>
-              Send Notification
-            </button>
+    <div style={{ padding: '20px' }}>
+      <div style={{
+        backgroundColor: colors.background,
+        borderRadius: '8px',
+        border: `1px solid ${colors.border}`,
+        padding: '24px'
+      }}>
+        <h5 style={{ fontSize: '18px', fontWeight: '600', margin: '0 0 20px 0', color: colors.foreground }}>Push Notifications</h5>
+        
+        <div style={{ maxWidth: '600px' }}>
+          <div style={{ marginBottom: '16px' }}>
+            <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '8px', color: colors.lightText }}>Who To Notify:</label>
+            <select
+              value={notificationTag}
+              onChange={(e) => setNotificationTag(e.target.value)}
+              style={{
+                width: '100%',
+                padding: '10px 12px',
+                fontSize: '14px',
+                border: `1px solid ${colors.inputBorder}`,
+                borderRadius: '6px',
+                backgroundColor: colors.inputBackground,
+                color: colors.foreground,
+                outline: 'none',
+                cursor: 'pointer'
+              }}
+            >
+              <option value="0">Everyone</option>
+              <option value="1">Subscribers Only</option>
+            </select>
           </div>
-          {alertMessage && (
-            <div className="alert alert-success mt-3" role="alert">
-              {alertMessage}
+
+          <div style={{ marginBottom: '16px' }}>
+            <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '8px', color: colors.lightText }}>Title:</label>
+            <div style={{ position: 'relative' }}>
+              <input
+                type="text"
+                placeholder="Notification Title"
+                maxLength={65}
+                value={notificationTitle}
+                onChange={(e) => setNotificationTitle(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '10px 12px',
+                  fontSize: '14px',
+                  border: `1px solid ${colors.inputBorder}`,
+                  borderRadius: '6px',
+                  backgroundColor: colors.inputBackground,
+                  color: colors.foreground,
+                  outline: 'none'
+                }}
+              />
+              <span style={{ position: 'absolute', right: '10px', top: '10px', fontSize: '12px', color: colors.mutedText }}>
+                {notificationTitle.length}/65
+              </span>
             </div>
-          )}
-          {error && (
-            <div className="alert alert-danger mt-3" role="alert">
-              Error: {error}
+          </div>
+
+          <div style={{ marginBottom: '16px' }}>
+            <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '8px', color: colors.lightText }}>Body:</label>
+            <div style={{ position: 'relative' }}>
+              <textarea
+                rows={3}
+                maxLength={150}
+                value={notificationBody}
+                onChange={(e) => setNotificationBody(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '10px 12px',
+                  fontSize: '14px',
+                  border: `1px solid ${colors.inputBorder}`,
+                  borderRadius: '6px',
+                  backgroundColor: colors.inputBackground,
+                  color: colors.foreground,
+                  outline: 'none',
+                  resize: 'vertical',
+                  fontFamily: 'inherit'
+                }}
+              ></textarea>
+              <span style={{ position: 'absolute', right: '10px', bottom: '10px', fontSize: '12px', color: colors.mutedText }}>
+                {notificationBody.length}/150
+              </span>
             </div>
-          )}
+          </div>
+
+          <div style={{ marginBottom: '24px' }}>
+            <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '8px', color: colors.lightText }}>Associate with Condition:</label>
+            <select
+              value={notificationMbdCondition}
+              onChange={(e) => setNotificationMbdCondition(e.target.value)}
+              disabled={loadingMbdConditions}
+              style={{
+                width: '100%',
+                padding: '10px 12px',
+                fontSize: '14px',
+                border: `1px solid ${colors.inputBorder}`,
+                borderRadius: '6px',
+                backgroundColor: colors.inputBackground,
+                color: colors.foreground,
+                outline: 'none',
+                cursor: loadingMbdConditions ? 'not-allowed' : 'pointer',
+                opacity: loadingMbdConditions ? 0.7 : 1
+              }}
+            >
+              <option value="0">No Condition... (Select Condition If Applicable)</option>
+              {mbdConditionOptions.map((mbdCondition) => (
+                <option key={mbdCondition.id} value={mbdCondition.id!}>
+                  {mbdCondition.name}
+                </option>
+              ))}
+            </select>
+            {loadingMbdConditions && <span style={{ fontSize: '12px', color: colors.mutedText, marginTop: '4px', display: 'block' }}>Loading conditions...</span>}
+            {error && <div style={{ fontSize: '12px', color: colors.danger, marginTop: '4px' }}>Error loading conditions.</div>}
+          </div>
+
+          <button 
+            onClick={sendNotification}
+            style={{
+              padding: '10px 24px',
+              backgroundColor: colors.primary,
+              color: '#fff',
+              border: 'none',
+              borderRadius: '6px',
+              cursor: 'pointer',
+              fontSize: '14px',
+              fontWeight: '600',
+              transition: 'all 0.2s'
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.primaryHover}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.primary}
+          >
+            Send Notification
+          </button>
         </div>
+
+        {alertMessage && (
+          <div style={{ marginTop: '20px', padding: '12px', backgroundColor: colors.successLight, color: colors.success, borderRadius: '6px' }}>
+            {alertMessage}
+          </div>
+        )}
+        {error && (
+          <div style={{ marginTop: '20px', padding: '12px', backgroundColor: colors.dangerLight, color: colors.danger, borderRadius: '6px' }}>
+            Error: {error}
+          </div>
+        )}
       </div>
     </div>
   );

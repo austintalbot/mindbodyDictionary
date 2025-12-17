@@ -1,0 +1,22 @@
+version: '3'
+
+tasks:
+  build:
+    desc: Build the Azure Function project for release
+    dir: MindBodyDictionary.AdminApi
+    cmds:
+    - dotnet publish MindBodyDictionary_AdminApi.csproj --configuration Release --output ./bin/publish
+
+  publish:staging:
+    desc: Publish to Azure Functions Staging Slot
+    deps: [ build ]
+    dir: MindBodyDictionary.AdminApi/bin/publish
+    cmds:
+    - func azure functionapp publish mbd-admin-api --slot staging --dotnet-isolated
+
+  start:
+    desc: Run Azure Functions locally
+    dir: MindBodyDictionary.AdminApi
+    cmds:
+    - dotnet build MindBodyDictionary_AdminApi.csproj
+    - cd bin/Debug/net8.0 && func start --verbose

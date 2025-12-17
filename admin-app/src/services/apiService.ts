@@ -13,8 +13,10 @@ import {
   GET_MBD_CONDITIONS_CODE,
   GET_MBD_IMAGES_CODE,
   MBD_CONDITION_CODE,
+  FAQ_FUNCTION_CODE,
+  COSMOS_DB_CONTAINER_NAME,
 } from '../constants';
-import { MbdCondition } from '../types'; // Import from barrel file
+import { MbdCondition, Faq } from '../types'; // Import from barrel file
 
 // In-memory caches
 let mbdConditionsCache: any[] | null = null;
@@ -212,12 +214,26 @@ export const sendPushNotification = async (notification: NotificationPayload): P
 };
 
 // --- Database API Calls ---
-export const createBackupUrl = (): string => {
-    return `${ADMIN_API_URL}/api/CreateBackup?code=${CREATE_BACKUP_CODE}`;
+export const createBackupUrl = (databaseName: string = COSMOS_DB_CONTAINER_NAME): string => {
+    return `${ADMIN_API_URL}/api/CreateBackup?code=${CREATE_BACKUP_CODE}&databaseName=${encodeURIComponent(databaseName)}`;
 };
 
 export const restoreDatabase = async (file: File): Promise<void> => {
   const formData = new FormData();
   formData.append('File', file);
   return makeApiRequest<void>(`RestoreDatabase?code=${RESTORE_DATABASE_CODE}`, 'POST', formData);
+};
+
+// --- FAQ API Calls ---
+export const fetchFaqs = async (): Promise<Faq[]> => {
+  const response = await makeApiRequest<any>(`GetFaqs?code=${FAQ_FUNCTION_CODE}`);
+  return (response as any).data || response;
+};
+
+export const upsertFaq = async (faq: Faq): Promise<Faq> => {
+  return makeApiRequest<Faq>(`UpsertFaq?code=${FAQ_FUNCTION_CODE}`, 'POST', faq);
+};
+
+export const deleteFaq = async (id: string): Promise<void> => {
+  return makeApiRequest<void>(`DeleteFaq?code=${FAQ_FUNCTION_CODE}&id=${id}`, 'POST');
 };

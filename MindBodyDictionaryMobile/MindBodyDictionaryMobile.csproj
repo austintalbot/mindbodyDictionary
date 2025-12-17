@@ -44,6 +44,7 @@
 		<BuildIpa>true</BuildIpa>
 		<CodesignProvision>Automatic</CodesignProvision>
 		<MtouchEnableBitcode>false</MtouchEnableBitcode>
+		<RuntimeIdentifier>iossimulator-arm64</RuntimeIdentifier>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-ios|AnyCPU'">
 		<CreatePackage>false</CreatePackage>
@@ -58,6 +59,7 @@
 		<AndroidSigningStorePass>puckerUp@501</AndroidSigningStorePass>
 		<AndroidSigningKeyAlias>key0</AndroidSigningKeyAlias>
 		<AndroidSigningKeyPass>puckerUpLemon</AndroidSigningKeyPass>
+		<AndroidEnableMultiDex>true</AndroidEnableMultiDex>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-android|AnyCPU'">
 		<AndroidKeyStore>True</AndroidKeyStore>
@@ -65,6 +67,7 @@
 		<AndroidSigningStorePass>puckerUp@501</AndroidSigningStorePass>
 		<AndroidSigningKeyAlias>key0</AndroidSigningKeyAlias>
 		<AndroidSigningKeyPass>puckerUpLemon</AndroidSigningKeyPass>
+		<AndroidEnableMultiDex>true</AndroidEnableMultiDex>
 	</PropertyGroup>
 	<ItemGroup>
 		<!-- App Icon -->

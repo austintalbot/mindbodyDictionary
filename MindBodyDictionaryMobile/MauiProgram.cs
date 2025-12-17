@@ -79,6 +79,10 @@ public static class MauiProgram
     builder.Services.AddSingleton<AboutPageModel>();
     builder.Services.AddSingleton<AboutPage>();
 
+    builder.Services.AddSingleton<FaqApiService>();
+    builder.Services.AddSingleton<FaqPageModel>();
+    builder.Services.AddSingleton<FaqPage>();
+
     builder.Services.AddTransientWithShellRoute<ProjectDetailPage, ProjectDetailPageModel>("project");
     builder.Services.AddTransientWithShellRoute<TaskDetailPage, TaskDetailPageModel>("task");
     builder.Services.AddTransientWithShellRoute<MbdConditionDetailPage, MbdConditionDetailPageModel>("mbdcondition");
