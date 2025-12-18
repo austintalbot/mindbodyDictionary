@@ -387,3 +387,4 @@ admin-app/dist-electron/*
 MindBodyDictionaryMobile/old_files
 old_code
 admin-app/dist-electron/
+admin-app/playwright-report

@@ -203,7 +203,7 @@ export const uploadImage = async (ailmentName: string, imageType: string, file: 
 
 // --- Contact API Calls ---
 export const fetchContactsTable = async (): Promise<any[]> => {
-  return makeApiRequest<any[]>(`ContactsTables?code=${CONTACTS_TABLE_CODE}`);
+  return makeApiRequest<any[]>(`GetContacts?code=${CONTACTS_TABLE_CODE}`);
 };
 
 export const deleteContact = async (id: string, email: string): Promise<void> => {
