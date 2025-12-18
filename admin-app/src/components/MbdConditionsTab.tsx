@@ -111,7 +111,6 @@ const MbdConditionsTab: React.FC = () => {
       try {
         await deleteMbdCondition(id, name);
         loadMbdConditions(); // Reload table after deletion
-        addMbdCondition(); // Reset form
       } catch (err) {
         setModalErrorMessage((err as Error).message || 'Failed to delete condition');
         setShowErrorModal(true);

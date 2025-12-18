@@ -168,6 +168,8 @@ test.describe('MBD Admin Portal Full Functionality Test', () => {
         console.log(`Deleting condition: ${testConditionName}`);
         await conditionRow.getByRole('button', { name: 'Delete' }).click();
         await expect(conditionRow).not.toBeVisible({ timeout: 10000 });
+        // Ensure modal did not open (Regression test for bug where delete opened the add modal)
+        await expect(page.getByText('Add New Condition')).not.toBeVisible();
     }
 
     console.log('Cleanup complete.');
