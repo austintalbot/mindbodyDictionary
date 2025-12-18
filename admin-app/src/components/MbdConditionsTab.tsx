@@ -71,7 +71,7 @@ const MbdConditionsTab: React.FC = () => {
       summaryPositive: '',
       affirmations: [],
       physicalConnections: [],
-      tags: [],
+      searchTags: [],
       recommendations: [],
     });
     setShowDetailModal(true);
@@ -109,7 +109,7 @@ const MbdConditionsTab: React.FC = () => {
   const deleteMbdConditionConfirm = async (id: string, name: string) => {
     if (window.confirm(`Are you sure you want to delete ${name}?`)) {
       try {
-        await deleteMbdCondition(id, name);
+        await deleteMbdCondition(id);
         loadMbdConditions(); // Reload table after deletion
       } catch (err) {
         setModalErrorMessage((err as Error).message || 'Failed to delete condition');
@@ -150,12 +150,29 @@ const MbdConditionsTab: React.FC = () => {
     setSearchTerm(event.target.value);
   };
 
+  const fuzzyMatch = (pattern: string, str: string): boolean => {
+    pattern = pattern.toLowerCase();
+    str = str.toLowerCase();
+    let patternIdx = 0;
+    let strIdx = 0;
+    while (patternIdx < pattern.length && strIdx < str.length) {
+      if (pattern[patternIdx] === str[strIdx]) {
+        patternIdx++;
+      }
+      strIdx++;
+    }
+    return patternIdx === pattern.length;
+  };
+
   const filteredMbdConditions = mbdConditions.filter((mbdCondition) => {
     const lowerCaseSearchTerm = searchTerm.toLowerCase();
+    // If search term is empty, return all
+    if (!lowerCaseSearchTerm) return true;
+
     return (
-      (mbdCondition.name?.toLowerCase().includes(lowerCaseSearchTerm)) ||
-      (mbdCondition.physicalConnections?.some((conn) => conn.toLowerCase().includes(lowerCaseSearchTerm))) ||
-      (mbdCondition.tags?.some((tag) => tag.toLowerCase().includes(lowerCaseSearchTerm)))
+      (mbdCondition.name && fuzzyMatch(lowerCaseSearchTerm, mbdCondition.name)) ||
+      (mbdCondition.physicalConnections?.some((conn) => fuzzyMatch(lowerCaseSearchTerm, conn))) ||
+      (mbdCondition.searchTags?.some((tag) => fuzzyMatch(lowerCaseSearchTerm, tag)))
     );
   });
 

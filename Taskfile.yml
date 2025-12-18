@@ -1,6 +1,5 @@
 version: '3'
 
-
 vars:
   PROJECT_NAME: mindbody-dictionary
   ANDROID_PACKAGE: com.mindbodydictionary.mindbodydictionarymobile
@@ -356,6 +355,29 @@ tasks:
       echo "Running on iPhone 17 Pro Max (UDID: $UDID)"
       dotnet build -f net10.0-ios -c Debug
       dotnet build -f net10.0-ios -c Debug -t:Run -p:_DeviceName=":v2:udid=$UDID"
+
+  run-ios13:
+    desc: Run the iOS app on iPhone 13 physical device
+    dir: MindBodyDictionaryMobile
+    cmds:
+    - task: clean
+    - |
+      echo "🔍 Detecting connected iPhone 13 device..."
+      UDID=$(xcrun xctrace list devices 2>/dev/null | grep -i "iPhone 13" | grep -oE '\([A-F0-9-]+\)' | head -1 | tr -d '()')
+      
+      if [ -z "$UDID" ]; then
+        echo "❌ No iPhone 13 connected. Available devices:"
+        xcrun xctrace list devices 2>/dev/null | grep iPhone || echo "No iOS devices found"
+        exit 1
+      fi
+      
+      echo "✅ Found iPhone 13 (UDID: $UDID)"
+      echo "📱 Building for physical device..."
+      dotnet build -f net10.0-ios -c Debug -p:RuntimeIdentifier=ios-arm64 -p:_DeviceName=":v2:udid=$UDID"
+      
+      echo ""
+      echo "🚀 Deploying to device..."
+      dotnet build -f net10.0-ios -c Debug -t:Run -p:RuntimeIdentifier=ios-arm64 -p:_DeviceName=":v2:udid=$UDID"
 
   run-ios-release:
     desc: Run the iOS app on iPhone 17 Pro Max simulator

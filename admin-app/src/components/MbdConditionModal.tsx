@@ -515,15 +515,15 @@ const MbdConditionModal: React.FC<MbdConditionModalProps> = ({
               <div style={{ padding: '20px' }}>
                 <h5 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '20px', color: colors.foreground }}>Tags</h5>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                  {(mbdCondition.tags || []).map((tag: string, idx: number) => (
+                  {(mbdCondition.searchTags || []).map((tag: string, idx: number) => (
                     <div key={idx} style={{ display: 'flex', gap: '8px' }}>
                       <input
                         type="text"
                         value={tag}
                         onChange={(e) => {
-                          const newTags = [...(mbdCondition.tags || [])];
+                          const newTags = [...(mbdCondition.searchTags || [])];
                           newTags[idx] = e.target.value;
-                          onChange({ ...mbdCondition, tags: newTags });
+                          onChange({ ...mbdCondition, searchTags: newTags });
                         }}
                         style={{
                           flex: 1,
@@ -546,8 +546,8 @@ const MbdConditionModal: React.FC<MbdConditionModalProps> = ({
                       />
                       <button
                         onClick={() => {
-                          const newTags = mbdCondition.tags?.filter((_: string, i: number) => i !== idx) || [];
-                          onChange({ ...mbdCondition, tags: newTags });
+                          const newTags = mbdCondition.searchTags?.filter((_: string, i: number) => i !== idx) || [];
+                          onChange({ ...mbdCondition, searchTags: newTags });
                         }}
                         style={{
                           padding: '8px 12px',
@@ -569,8 +569,8 @@ const MbdConditionModal: React.FC<MbdConditionModalProps> = ({
                   ))}
                   <button
                     onClick={() => {
-                      const newTags = [...(mbdCondition.tags || []), ''];
-                      onChange({ ...mbdCondition, tags: newTags });
+                      const newTags = [...(mbdCondition.searchTags || []), ''];
+                      onChange({ ...mbdCondition, searchTags: newTags });
                     }}
                     style={{
                       padding: '10px 20px',

@@ -12,7 +12,7 @@ const MbdConditionsSearch: React.FC<MbdConditionsSearchProps> = ({ searchTerm, o
     <div style={{ marginBottom: '24px' }}>
       <input
         type="text"
-        placeholder="Search by Name, Physical Connections, or Tags"
+        placeholder="Search by Name, Physical Connections, or Search Tags"
         value={searchTerm}
         onChange={(e) => onChange(e.target.value)}
         style={{

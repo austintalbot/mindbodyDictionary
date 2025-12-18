@@ -163,7 +163,7 @@ export const upsertMbdCondition = async (mbdCondition: MbdCondition): Promise<Mb
   return makeApiRequest<MbdCondition>(`UpsertMbdCondition?code=${UPSERT_MBD_CONDITION_CODE}`, 'POST', data);
 };
 
-export const deleteMbdCondition = async (id: string, name: string): Promise<void> => {
+export const deleteMbdCondition = async (id: string): Promise<void> => {
   clearMbdConditionsCache(); // Clear cache on data modification
   // Use the newer DeleteMbdCondition function which targets the correct container
   return makeApiRequest<void>(`DeleteMbdCondition?code=${DELETE_MBD_CONDITION_CODE}&id=${id}`, 'POST');

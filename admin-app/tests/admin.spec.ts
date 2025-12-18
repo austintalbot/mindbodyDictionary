@@ -111,29 +111,41 @@ test.describe('MBD Admin Portal Full Functionality Test', () => {
     console.log('Step 2: Uploading images');
     await page.getByRole('button', { name: 'images', exact: true }).click();
 
-        // Helper to upload image
-        const uploadImage = async (typeLabel: string, typeValue: string) => {
-            console.log(`Uploading ${typeLabel} Image...`);
-            await page.getByRole('button', { name: '+ Add New Image' }).click();
-
-            // Wait for conditions to load in dropdown
-            await page.locator('select').first().selectOption({ label: testConditionName });
-            await page.locator('select').nth(1).selectOption(typeValue);
-            await page.setInputFiles('input[id="imageFile"]', path.join(__dirname, 'assets/test-image.png'));
-
-            await page.getByRole('button', { name: 'Upload Image' }).click();
-
-            // Wait for upload success or modal close
-            await expect(page.getByText('Uploading...')).not.toBeVisible({ timeout: 60000 });
-
-            // If there's a cancel/close button, click it to ensure modal is gone
-            const closeButton = page.getByRole('button', { name: 'Cancel' });
-            if (await closeButton.isVisible()) {
-                await closeButton.click();
-            }
-            await expect(page.getByText('Add New Image Metadata')).not.toBeVisible({ timeout: 5000 }).catch(() => {});
-        };
-    await uploadImage('Negative', '1');
+            // Helper to upload image
+            const uploadImage = async (typeLabel: string, typeValue: string) => {
+                console.log(`Uploading ${typeLabel} Image...`);
+                await page.getByRole('button', { name: '+ Add New Image' }).click();
+                
+                // Wait for modal to be stable
+                const modal = page.locator('div[role="dialog"]').filter({ hasText: 'Add New Image Metadata' });
+                await expect(modal).toBeVisible({ timeout: 10000 });
+                
+                // Wait for conditions to load in dropdown
+                const conditionSelect = modal.locator('select').first();
+                const typeSelect = modal.locator('select').nth(1);
+                
+                // Retry selection if it fails (sometimes list loads late)
+                await expect(async () => {
+                    await conditionSelect.selectOption({ label: testConditionName });
+                    await typeSelect.selectOption(typeValue);
+                }).toPass({ timeout: 15000 });
+        
+                await modal.locator('input[id="imageFile"]').setInputFiles(path.join(__dirname, 'assets/test-image.png'));
+                
+                const uploadBtn = modal.getByRole('button', { name: 'Upload Image' });
+                await uploadBtn.click();
+                
+                // Wait for upload success (the native dialog is auto-accepted by the page.on handler)
+                // We wait for the modal to be gone or the "Uploading..." state to finish
+                await expect(page.getByText('Uploading...')).not.toBeVisible({ timeout: 60000 });
+                
+                // Check if modal is still there (it should close on success, but if not, click cancel)
+                if (await modal.isVisible()) {
+                    console.log('Modal still visible after upload, clicking Cancel.');
+                    await modal.getByRole('button', { name: 'Cancel' }).click();
+                }
+                await expect(modal).not.toBeVisible({ timeout: 10000 });
+            };    await uploadImage('Negative', '1');
     await uploadImage('Positive', '2');
 
     // Verify images appear in the table
