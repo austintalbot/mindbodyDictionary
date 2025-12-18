@@ -262,17 +262,17 @@ const ImagesTab: React.FC = () => {
                   </td>
                   <td style={{ padding: '12px' }}>
                     {image.uri ? (
-                        <img 
-                            src={image.uri} 
-                            alt={image.name} 
-                            style={{ 
-                                width: '50px', 
-                                height: '50px', 
-                                objectFit: 'contain', 
+                        <img
+                            src={image.uri}
+                            alt={image.name}
+                            style={{
+                                width: '50px',
+                                height: '50px',
+                                objectFit: 'contain',
                                 borderRadius: '4px',
                                 border: `1px solid ${colors.border}`,
                                 backgroundColor: 'whitesmoke'
-                            }} 
+                            }}
                         />
                     ) : (
                         <div style={{

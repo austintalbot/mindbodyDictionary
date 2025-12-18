@@ -40,7 +40,7 @@ public partial class FaqPageModel : ObservableObject
       {
         var faqs = await _faqApiService.GetFaqsAsync();
         _logger.LogInformation($"Fetched {faqs.Count} FAQs.");
-        
+
         var sortedFaqs = faqs.OrderBy(f => f.Order ?? int.MaxValue).ToList();
 
         MainThread.BeginInvokeOnMainThread(() => {

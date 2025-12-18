@@ -45,7 +45,7 @@ public class CreateMbdBackup(ILogger<CreateMbdBackup> logger, CosmosClient clien
 
             ZipFile.CreateFromDirectory(dbTempExportDirectory, archiveFileName, CompressionLevel.Optimal, includeBaseDirectory: true);
             _logger.LogInformation("Archive created: {Path}", archiveFileName);
-            
+
             var fileContents = await File.ReadAllBytesAsync(archiveFileName);
             _logger.LogInformation("Read {Size} bytes from archive.", fileContents.Length);
 

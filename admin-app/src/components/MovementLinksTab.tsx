@@ -16,7 +16,7 @@ const MovementLinksTab: React.FC = () => {
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [isUpdatingOrder, setIsUpdatingOrder] = useState(false);
-  
+
   // Filtering state
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -55,8 +55,8 @@ const MovementLinksTab: React.FC = () => {
 
     if (searchTerm.trim()) {
       const lowerSearch = searchTerm.toLowerCase();
-      result = result.filter(link => 
-        link.title.toLowerCase().includes(lowerSearch) || 
+      result = result.filter(link =>
+        link.title.toLowerCase().includes(lowerSearch) ||
         link.url.toLowerCase().includes(lowerSearch)
       );
     }
@@ -118,7 +118,7 @@ const MovementLinksTab: React.FC = () => {
       ...link,
       order: index
     }));
-    
+
     setLinks(updatedLinks);
 
     try {
@@ -215,7 +215,7 @@ const MovementLinksTab: React.FC = () => {
           onDelete={handleDeleteLink}
           onReorder={handleReorder}
         />
-        
+
         {searchTerm.trim() === '' && links.length > 1 && (
           <div style={{ fontSize: '12px', color: colors.mutedText, textAlign: 'center', marginTop: '10px' }}>
             💡 Drag rows to reorder them permanently.

@@ -69,12 +69,12 @@ public class PushNotificationFirebaseMessagingService : FirebaseMessagingService
         // Prioritize data payload for title/body if notification payload was empty or not present
         if (string.IsNullOrEmpty(title))
         {
-            title = message.Data.ContainsKey("title") ? message.Data["title"] : title;
+          title = message.Data.ContainsKey("title") ? message.Data["title"] : title;
         }
         if (string.IsNullOrEmpty(body))
         {
-            body = message.Data.ContainsKey("body") ? message.Data["body"] :
-                   message.Data.ContainsKey("message") ? message.Data["message"] : "";
+          body = message.Data.ContainsKey("body") ? message.Data["body"] :
+                 message.Data.ContainsKey("message") ? message.Data["message"] : "";
         }
         deepLink = message.Data.ContainsKey("deep_link") ? message.Data["deep_link"] : "";
         global::Android.Util.Log.Info("FCM", $"deep_link extracted: {deepLink}");

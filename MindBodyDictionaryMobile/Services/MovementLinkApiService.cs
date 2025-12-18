@@ -9,7 +9,7 @@ public class MovementLinkApiService
 {
   private readonly HttpClient _httpClient;
   private readonly ILogger<MovementLinkApiService> _logger;
-  
+
   // NOTE: This URL might need a function key code in production/staging
   private const string LinksEndpoint = "https://mbd-admin-api-staging.azurewebsites.net/api/GetMbdMovementLinks";
 

@@ -24,7 +24,8 @@ public partial class MovementLinksPageModel : ObservableObject
   }
 
   public void LoadLinks() {
-    if (Links.Count > 0) return;
+    if (Links.Count > 0)
+      return;
 
     Task.Run(async () => {
       IsBusy = true;
@@ -54,7 +55,8 @@ public partial class MovementLinksPageModel : ObservableObject
 
   [RelayCommand]
   private async Task OpenLink(MovementLink link) {
-    if (link == null || string.IsNullOrEmpty(link.Url)) return;
+    if (link == null || string.IsNullOrEmpty(link.Url))
+      return;
     try
     {
       await Launcher.Default.OpenAsync(new Uri(link.Url));

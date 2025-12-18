@@ -83,7 +83,7 @@ public class SendPushNotification
 
             // If no specific tags, send to all (broadcast)
             string? tagExpression = tags.Any() ? string.Join(" || ", tags) : null;
-            
+
             // Send to Notification Hub
             NotificationOutcome? outcome = null;
             if (string.IsNullOrEmpty(tagExpression))
@@ -98,8 +98,8 @@ public class SendPushNotification
                 _logger.LogInformation("Sending template notification to tags: {TagExpression}", tagExpression);
                 outcome = await _hubClient.SendTemplateNotificationAsync(notificationProperties, tagExpression);
             }
-            
-            _logger.LogInformation("Notification Hub send outcome: {State}. Success: {SuccessCount}, Failure: {FailureCount}", 
+
+            _logger.LogInformation("Notification Hub send outcome: {State}. Success: {SuccessCount}, Failure: {FailureCount}",
                 outcome?.State, outcome?.Success, outcome?.Failure);
 
 return new OkObjectResult(new { message = $"Notification sent. Outcome: {outcome?.State}", outcomeState = outcome?.State.ToString() });

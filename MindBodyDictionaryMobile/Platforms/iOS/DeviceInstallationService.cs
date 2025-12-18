@@ -21,23 +21,26 @@ public class DeviceInstallationService : IDeviceInstallationService
   }
 
   public async Task<string> GetPushNotificationTokenAsync() {
-    if (!string.IsNullOrWhiteSpace(_cachedToken)) {
-        return _cachedToken;
+    if (!string.IsNullOrWhiteSpace(_cachedToken))
+    {
+      return _cachedToken;
     }
 
 #if DEBUG
-    if (Runtime.Arch == Arch.DEVICE) {
-        // On device, wait for the real token from AppDelegate
-        // With a timeout to avoid hanging forever if registration fails
-        var delayTask = Task.Delay(TimeSpan.FromSeconds(15));
-        var completedTask = await Task.WhenAny(_tokenTcs.Task, delayTask);
-        
-        if (completedTask == _tokenTcs.Task) {
-            return await _tokenTcs.Task;
-        }
-        
-        Debug.WriteLine("APNS Token timeout on device, using mock for debug build.");
-        return GenerateMockToken();
+    if (Runtime.Arch == Arch.DEVICE)
+    {
+      // On device, wait for the real token from AppDelegate
+      // With a timeout to avoid hanging forever if registration fails
+      var delayTask = Task.Delay(TimeSpan.FromSeconds(15));
+      var completedTask = await Task.WhenAny(_tokenTcs.Task, delayTask);
+
+      if (completedTask == _tokenTcs.Task)
+      {
+        return await _tokenTcs.Task;
+      }
+
+      Debug.WriteLine("APNS Token timeout on device, using mock for debug build.");
+      return GenerateMockToken();
     }
     // Simulator build: return mock token immediately
     _cachedToken = GenerateMockToken();
@@ -47,11 +50,11 @@ public class DeviceInstallationService : IDeviceInstallationService
     // We'll wait up to 30 seconds
     var delayTask = Task.Delay(TimeSpan.FromSeconds(30));
     var completedTask = await Task.WhenAny(_tokenTcs.Task, delayTask);
-    
+
     if (completedTask == _tokenTcs.Task) {
         return await _tokenTcs.Task;
     }
-    
+
     throw new Exception("APNS token registration timed out.");
 #endif
   }
@@ -78,4 +81,3 @@ public class DeviceInstallationService : IDeviceInstallationService
     return mockToken;
   }
 }
-

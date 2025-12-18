@@ -15,8 +15,9 @@ public class DeviceInstallationService : IDeviceInstallationService
     // Implement token retrieval for Android (FCM)
     // This typically involves getting the token from FirebaseMessaging.Instance
     var token = await Firebase.Messaging.FirebaseMessaging.Instance.GetToken();
-    if (string.IsNullOrWhiteSpace(token)) {
-        throw new Exception("Unable to resolve token for FCM.");
+    if (string.IsNullOrWhiteSpace(token))
+    {
+      throw new Exception("Unable to resolve token for FCM.");
     }
     return token;
   }
@@ -32,7 +33,7 @@ public class DeviceInstallationService : IDeviceInstallationService
     // which *will* call GetPushNotificationTokenAsync first.
     // This method mostly just populates the basic device installation info.
     // The actual token will be added by NotificationRegistrationService.
-    
+
     var installation = new DeviceInstallation
     {
       InstallationId = GetDeviceId(),

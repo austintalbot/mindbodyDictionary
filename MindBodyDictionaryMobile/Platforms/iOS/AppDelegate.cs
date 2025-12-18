@@ -151,8 +151,7 @@ public class AppDelegate : MauiUIApplicationDelegate, IUNUserNotificationCenterD
         if (!string.IsNullOrEmpty(deepLink))
         {
           System.Diagnostics.Debug.WriteLine($"Found deep link in notification: {deepLink}");
-          Microsoft.Maui.ApplicationModel.MainThread.BeginInvokeOnMainThread(async () =>
-          {
+          Microsoft.Maui.ApplicationModel.MainThread.BeginInvokeOnMainThread(async () => {
             await Shell.Current.GoToAsync($"//{deepLink}");
             System.Diagnostics.Debug.WriteLine($"Navigated to: //{deepLink}");
           });

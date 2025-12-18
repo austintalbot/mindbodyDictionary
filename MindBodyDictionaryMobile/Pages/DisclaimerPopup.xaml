@@ -13,18 +13,18 @@
           HorizontalOptions="Fill"
           VerticalOptions="Fill"
           Margin="0">
-        
+
         <ScrollView Grid.Row="0">
-            <VerticalStackLayout VerticalOptions="Center" 
+            <VerticalStackLayout VerticalOptions="Center"
                                  Spacing="30"
                                  Padding="30">
                 <Image Style="{StaticResource AppLogoImage}" HeightRequest="100" HorizontalOptions="Center" />
-                
-                <Label Text="Disclaimer" 
-                       Style="{StaticResource Title1}" 
+
+                <Label Text="Disclaimer"
+                       Style="{StaticResource Title1}"
                        HorizontalOptions="Center" />
-                
-                <Label Style="{StaticResource Body1}" 
+
+                <Label Style="{StaticResource Body1}"
                        HorizontalTextAlignment="Center"
                        Text="I understand that mbd is for informational purposes only. mbd does not diagnose, treat, prevent, or cure any illness. If you have any questions concerning your health please consult with your Doctor." />
             </VerticalStackLayout>
@@ -40,4 +40,3 @@
     </Grid>
 
 </toolkit:Popup>
-

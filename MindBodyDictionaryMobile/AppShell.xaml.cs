@@ -29,25 +29,24 @@ public partial class AppShell : Shell
 #endif
 
     // Initiate device registration with Notification Hubs
-    Task.Run(async () =>
-    {
-        try
+    Task.Run(async () => {
+      try
+      {
+        var notificationService = _serviceProvider.GetService<MindBodyDictionaryMobile.Services.INotificationRegistrationService>();
+        if (notificationService != null)
         {
-            var notificationService = _serviceProvider.GetService<MindBodyDictionaryMobile.Services.INotificationRegistrationService>();
-            if (notificationService != null)
-            {
-                await notificationService.RegisterDeviceAsync();
-                System.Diagnostics.Debug.WriteLine("AppShell: Successfully initiated device registration.");
-            }
-            else
-            {
-                System.Diagnostics.Debug.WriteLine("AppShell: INotificationRegistrationService not found.");
-            }
+          await notificationService.RegisterDeviceAsync();
+          System.Diagnostics.Debug.WriteLine("AppShell: Successfully initiated device registration.");
         }
-        catch (Exception ex)
+        else
         {
-            System.Diagnostics.Debug.WriteLine($"AppShell: Error during device registration: {ex.Message}");
+          System.Diagnostics.Debug.WriteLine("AppShell: INotificationRegistrationService not found.");
         }
+      }
+      catch (Exception ex)
+      {
+        System.Diagnostics.Debug.WriteLine($"AppShell: Error during device registration: {ex.Message}");
+      }
     });
   }
 
@@ -66,7 +65,8 @@ public partial class AppShell : Shell
 
   [RelayCommand]
   private async Task OpenUrl(string url) {
-    if (string.IsNullOrEmpty(url)) return;
+    if (string.IsNullOrEmpty(url))
+      return;
     try
     {
       await Launcher.Default.OpenAsync(new Uri(url));
