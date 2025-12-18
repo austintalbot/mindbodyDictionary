@@ -15,16 +15,30 @@ public class PushNotificationFirebaseMessagingService : FirebaseMessagingService
     try
     {
       // Update the token in DeviceInstallationService
-      var deviceInstallationService = IPlatformApplication.Current?.Services?.GetService<IDeviceInstallationService>();
+      var services = IPlatformApplication.Current?.Services;
+      var deviceInstallationService = services?.GetService<IDeviceInstallationService>();
+      
       if (deviceInstallationService is Platforms.Android.DeviceInstallationService)
       {
-        // The token is now retrieved via GetPushNotificationTokenAsync when needed
-        // No direct setting of a Token property on the service.
-        global::Android.Util.Log.Info("FCM", "✅ FCM token received. DeviceInstallationService will retrieve it when needed.");
+        global::Android.Util.Log.Info("FCM", "✅ FCM token received.");
+        
+        // Trigger a re-registration with the new token
+        var registrationService = services?.GetService<INotificationRegistrationService>();
+        if (registrationService != null)
+        {
+            _ = Task.Run(async () => {
+                try {
+                    await registrationService.RegisterDeviceAsync();
+                    global::Android.Util.Log.Info("FCM", "✅ Device re-registered with new token successfully.");
+                } catch (Exception ex) {
+                    global::Android.Util.Log.Error("FCM", $"❌ Failed to re-register with new token: {ex.Message}");
+                }
+            });
+        }
       }
       else
       {
-        global::Android.Util.Log.Warn("FCM", "⚠️ DeviceInstallationService not available");
+        global::Android.Util.Log.Warn("FCM", "⚠️ DeviceInstallationService not available or wrong type");
       }
     }
     catch (Exception ex)

@@ -58,7 +58,7 @@
                             <BoxView
                                 Grid.Column="2"
                                 Style="{StaticResource MetaColorBoxViewStyle}"
-                                Color="{Binding Text, Source={x:Reference ColorEntry}, x:DataType=Entry}" />
+                                Color="{Binding Text, Source={x:Reference ColorEntry}, x:DataType=Entry, Converter={StaticResource StringToColorConverter}}" />
 
                             <Button
                                 Grid.Column="3"
@@ -113,7 +113,7 @@
                             <BoxView
                                 Grid.Column="2"
                                 Style="{StaticResource MetaColorBoxViewStyle}"
-                                Color="{Binding Text, Source={x:Reference ColorEntry}, x:DataType=Entry}" />
+                                Color="{Binding Text, Source={x:Reference ColorEntry}, x:DataType=Entry, Converter={StaticResource StringToColorConverter}}" />
 
                             <Button
                                 Grid.Column="3"

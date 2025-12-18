@@ -45,6 +45,7 @@
 		<CodesignProvision>Automatic</CodesignProvision>
 		<MtouchEnableBitcode>false</MtouchEnableBitcode>
 		<RuntimeIdentifier>iossimulator-arm64</RuntimeIdentifier>
+		<CodesignEntitlements>Platforms\iOS\Entitlements.plist</CodesignEntitlements>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-ios|AnyCPU'">
 		<CreatePackage>false</CreatePackage>
@@ -52,6 +53,7 @@
 		<CodesignProvision>Automatic</CodesignProvision>
 		<CodesignKey>Apple Distribution: MindBody Dictionary, LLC (UMDRT97472)</CodesignKey>
 		<MtouchEnableBitcode>false</MtouchEnableBitcode>
+		<CodesignEntitlements>Platforms\iOS\Entitlements.plist</CodesignEntitlements>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net10.0-android|AnyCPU'">
 		<AndroidKeyStore>True</AndroidKeyStore>
