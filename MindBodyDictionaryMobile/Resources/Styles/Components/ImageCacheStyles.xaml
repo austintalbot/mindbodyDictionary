@@ -1,9 +1,8 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+﻿<?xml version="1.0" encoding="UTF-8" ?>
 <?xaml-comp compile="true" ?>
-<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
-    <!-- Styles for ImageCachePage -->
+    <!--  Styles for ImageCachePage  -->
 
     <Style x:Key="ImageCacheSummaryHeaderLabel" TargetType="Label">
         <Setter Property="Text" Value="Cache Statistics" />
@@ -48,7 +47,10 @@
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}" />
     </Style>
 
-    <Style x:Key="ImageCacheActionButton" TargetType="Button" BasedOn="{StaticResource Button}">
+    <Style
+        x:Key="ImageCacheActionButton"
+        BasedOn="{StaticResource Button}"
+        TargetType="Button">
         <Setter Property="Margin" Value="0" />
     </Style>
 
@@ -126,12 +128,18 @@
         <Setter Property="LineBreakMode" Value="WordWrap" />
     </Style>
 
-    <Style x:Key="ImageCacheDebugButton" TargetType="Button" BasedOn="{StaticResource Button}">
+    <Style
+        x:Key="ImageCacheDebugButton"
+        BasedOn="{StaticResource Button}"
+        TargetType="Button">
         <Setter Property="Margin" Value="0" />
         <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
     </Style>
 
-    <Style x:Key="ImageCacheDebugCopyButton" TargetType="Button" BasedOn="{StaticResource Button}">
+    <Style
+        x:Key="ImageCacheDebugCopyButton"
+        BasedOn="{StaticResource Button}"
+        TargetType="Button">
         <Setter Property="Margin" Value="0" />
         <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
     </Style>

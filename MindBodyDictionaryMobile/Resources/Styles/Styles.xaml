@@ -24,7 +24,7 @@
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Gray950}, Dark={StaticResource Gray200}}" />
     </Style>
 
-    <Style TargetType="Button" x:Key="Button">
+    <Style x:Key="Button" TargetType="Button">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource White}}" />
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Primary}}" />
         <Setter Property="FontFamily" Value="OpenSansRegular" />
@@ -432,9 +432,12 @@
         <Setter Property="WaveColor" Value="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource DarkBackground}}" />
     </Style>
 
-    <!-- New Style for NotificationTestLocalButton -->
-    <Style x:Key="NotificationTestLocalButton" TargetType="Button" BasedOn="{StaticResource Button}">
-        <!-- Inherits properties from the default Button style -->
+    <!--  New Style for NotificationTestLocalButton  -->
+    <Style
+        x:Key="NotificationTestLocalButton"
+        BasedOn="{StaticResource Button}"
+        TargetType="Button">
+        <!--  Inherits properties from the default Button style  -->
         <Setter Property="Margin" Value="0,10,0,0" />
     </Style>
 

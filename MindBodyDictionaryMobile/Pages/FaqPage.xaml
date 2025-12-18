@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+﻿<?xml version="1.0" encoding="UTF-8" ?>
 <ContentPage
     x:Class="MindBodyDictionaryMobile.Pages.FaqPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
@@ -24,46 +24,55 @@
                 <DataTemplate x:DataType="models:FaqItem">
                     <VerticalStackLayout Padding="10,5" Spacing="5">
                         <!--  Question Header (Left)  -->
-                        <Frame HorizontalOptions="Start"
-                               BackgroundColor="{AppThemeBinding Light={StaticResource Secondary}, Dark={StaticResource Gray800}}"
-                               CornerRadius="20"
-                               Padding="15,12"
-                               HasShadow="False"
-                               BorderColor="Transparent"
-                               MaximumWidthRequest="300">
+                        <Frame
+                            Padding="15,12"
+                            BackgroundColor="{AppThemeBinding Light={StaticResource Secondary},
+                                                              Dark={StaticResource Gray800}}"
+                            BorderColor="Transparent"
+                            CornerRadius="20"
+                            HasShadow="False"
+                            HorizontalOptions="Start"
+                            MaximumWidthRequest="300">
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding ToggleExpandedCommand}" />
                             </Frame.GestureRecognizers>
                             <Grid ColumnDefinitions="*, Auto" ColumnSpacing="10">
-                                <Label Grid.Column="0"
-                                       Text="{Binding Question}"
-                                       Style="{StaticResource ParagraphLabel}"
-                                       TextColor="{AppThemeBinding Light={StaticResource Tertiary}, Dark={StaticResource Secondary}}" />
-                                <Label Grid.Column="1"
-                                       Text="▼"
-                                       FontSize="18"
-                                       TextColor="{AppThemeBinding Light={StaticResource Tertiary}, Dark={StaticResource Secondary}}"
-                                       VerticalOptions="Center" />
+                                <Label
+                                    Grid.Column="0"
+                                    Style="{StaticResource ParagraphLabel}"
+                                    Text="{Binding Question}"
+                                    TextColor="{AppThemeBinding Light={StaticResource Tertiary},
+                                                                Dark={StaticResource Secondary}}" />
+                                <Label
+                                    Grid.Column="1"
+                                    FontSize="18"
+                                    Text="▼"
+                                    TextColor="{AppThemeBinding Light={StaticResource Tertiary},
+                                                                Dark={StaticResource Secondary}}"
+                                    VerticalOptions="Center" />
                             </Grid>
                         </Frame>
 
                         <!--  Answer (Right)  -->
-                        <Frame HorizontalOptions="End"
-                               IsVisible="{Binding IsExpanded}"
-                               BackgroundColor="{StaticResource Primary}"
-                               CornerRadius="20"
-                               Padding="15,12"
-                               HasShadow="False"
-                               BorderColor="Transparent"
-                               MaximumWidthRequest="300">
+                        <Frame
+                            Padding="15,12"
+                            BackgroundColor="{StaticResource Primary}"
+                            BorderColor="Transparent"
+                            CornerRadius="20"
+                            HasShadow="False"
+                            HorizontalOptions="End"
+                            IsVisible="{Binding IsExpanded}"
+                            MaximumWidthRequest="300">
                             <VerticalStackLayout Spacing="5">
-                                <Label Text="{Binding ShortAnswer}"
-                                       Style="{StaticResource ParagraphLabel}"
-                                       FontAttributes="Bold"
-                                       TextColor="White" />
-                                <Label Text="{Binding Answer}"
-                                       Style="{StaticResource ParagraphLabel}"
-                                       TextColor="White" />
+                                <Label
+                                    FontAttributes="Bold"
+                                    Style="{StaticResource ParagraphLabel}"
+                                    Text="{Binding ShortAnswer}"
+                                    TextColor="White" />
+                                <Label
+                                    Style="{StaticResource ParagraphLabel}"
+                                    Text="{Binding Answer}"
+                                    TextColor="White" />
                             </VerticalStackLayout>
                         </Frame>
                     </VerticalStackLayout>
@@ -71,9 +80,10 @@
             </CollectionView.ItemTemplate>
         </CollectionView>
 
-        <ActivityIndicator IsRunning="{Binding IsBusy}"
-                           IsVisible="{Binding IsBusy}"
-                           HorizontalOptions="Center"
-                           VerticalOptions="Center" />
+        <ActivityIndicator
+            HorizontalOptions="Center"
+            IsRunning="{Binding IsBusy}"
+            IsVisible="{Binding IsBusy}"
+            VerticalOptions="Center" />
     </Grid>
 </ContentPage>
