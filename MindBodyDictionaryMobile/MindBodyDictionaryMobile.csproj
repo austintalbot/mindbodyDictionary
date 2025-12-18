@@ -39,19 +39,18 @@
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net10.0-ios|AnyCPU'">
 		<CreatePackage>false</CreatePackage>
-		<CodesignKey>Apple Distribution: MindBody Dictionary, LLC (UMDRT97472)</CodesignKey>
+		<CodesignKey>iPhone Developer: Austin Talbot (DKN65RTHX9)</CodesignKey>
+		<CodesignProvision>MindBodyDictionary</CodesignProvision>
+		<CodesignEntitlements>Platforms\iOS\Entitlements.plist</CodesignEntitlements>
 		<MtouchLink>None</MtouchLink>
 		<BuildIpa>true</BuildIpa>
-		<CodesignProvision>Automatic</CodesignProvision>
 		<MtouchEnableBitcode>false</MtouchEnableBitcode>
-		<RuntimeIdentifier>iossimulator-arm64</RuntimeIdentifier>
-		<CodesignEntitlements>Platforms\iOS\Entitlements.plist</CodesignEntitlements>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-ios|AnyCPU'">
 		<CreatePackage>false</CreatePackage>
 		<MtouchLink>None</MtouchLink>
-		<CodesignProvision>Automatic</CodesignProvision>
-		<CodesignKey>Apple Distribution: MindBody Dictionary, LLC (UMDRT97472)</CodesignKey>
+		<CodesignKey>iPhone Developer: Austin Talbot (DKN65RTHX9)</CodesignKey>
+		<CodesignProvision>MindBodyDictionary</CodesignProvision>
 		<MtouchEnableBitcode>false</MtouchEnableBitcode>
 		<CodesignEntitlements>Platforms\iOS\Entitlements.plist</CodesignEntitlements>
 	</PropertyGroup>
