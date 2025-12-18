@@ -86,27 +86,22 @@ public partial class SearchPageModel : ObservableObject
   }
 
   private void ApplyFilter() {
-    FilteredConditionCollection.Clear();
+    List<MbdCondition> filteredList;
     if (string.IsNullOrWhiteSpace(SearchParam))
     {
-      foreach (var condition in _allConditions)
-      {
-        FilteredConditionCollection.Add(condition);
-      }
+      filteredList = _allConditions.ToList();
     }
     else
     {
       var lowerCaseSearchParam = SearchParam.ToLowerInvariant();
-      var filtered = _allConditions
-          .Where(c => c.Name.ToLowerInvariant().Contains(lowerCaseSearchParam) ||
-                      (c.MobileTags?.Any(tag => tag.Title.ToLowerInvariant().Contains(lowerCaseSearchParam)) == true))
+      filteredList = _allConditions
+          .Where(c => (c.Name != null && c.Name.ToLowerInvariant().Contains(lowerCaseSearchParam)) ||
+                      (c.MobileTags?.Any(tag => tag.Title != null && tag.Title.ToLowerInvariant().Contains(lowerCaseSearchParam)) == true))
           .ToList();
-
-      foreach (var condition in filtered)
-      {
-        FilteredConditionCollection.Add(condition);
-      }
     }
+
+    // Assign a new ObservableCollection to trigger only ONE update notification
+    FilteredConditionCollection = new ObservableCollection<MbdCondition>(filteredList);
     HasNoResults = FilteredConditionCollection.Count == 0 && !string.IsNullOrWhiteSpace(SearchParam);
   }
 

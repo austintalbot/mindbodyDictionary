@@ -35,11 +35,7 @@ public partial class MovementLinksPageModel : ObservableObject
         var sortedLinks = fetchedLinks.OrderBy(l => l.Order ?? int.MaxValue).ToList();
 
         MainThread.BeginInvokeOnMainThread(() => {
-          Links.Clear();
-          foreach (var link in sortedLinks)
-          {
-            Links.Add(link);
-          }
+          Links = new ObservableCollection<MovementLink>(sortedLinks);
         });
       }
       catch (Exception ex)
