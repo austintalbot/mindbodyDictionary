@@ -3,8 +3,8 @@ namespace MindBodyDictionaryMobile.Platforms.iOS;
 using System.Diagnostics;
 using MindBodyDictionaryMobile.Models;
 using MindBodyDictionaryMobile.Services;
-using UIKit;
 using ObjCRuntime;
+using UIKit;
 
 public class DeviceInstallationService : IDeviceInstallationService
 {

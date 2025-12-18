@@ -2,8 +2,8 @@ namespace MindBodyDictionaryMobile;
 
 using Foundation;
 using Microsoft.Maui.ApplicationModel;
-using UserNotifications;
 using UIKit;
+using UserNotifications;
 
 [Register("AppDelegate")]
 public class AppDelegate : MauiUIApplicationDelegate, IUNUserNotificationCenterDelegate

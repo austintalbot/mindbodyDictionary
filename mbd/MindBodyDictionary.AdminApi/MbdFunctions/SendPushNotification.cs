@@ -92,37 +92,39 @@ public class SendPushNotification
             return new ObjectResult(new { error = "Initialization failed", details = error }) { StatusCode = 500 };
         }
 
-                try
+        try
+        {
+            // Debug: Check if there are any registrations at all
+            var registrations = await _hubClient!.GetAllRegistrationsAsync(0);
+            var registrationList = registrations.ToList();
+            _logger.LogInformation("Hub Registration Check - Total Registrations: {Count}", registrationList.Count);
+            
+            if (registrationList.Count > 0)
+            {
+                var platformGroups = registrationList.GroupBy(r => r.GetType().Name).Select(g => $"{g.Key}: {g.Count()}");
+                _logger.LogInformation("Registrations by platform: {Platforms}", string.Join(", ", platformGroups));
+
+                // Log details of FCM v1 registrations to see what they look like
+                var fcmRegistrations = registrationList.Where(r => r.GetType().Name.Contains("FcmV1")).Take(10);
+                foreach (var reg in fcmRegistrations)
                 {
-                    // Debug: Check if there are any registrations at all
-                    var registrations = await _hubClient!.GetAllRegistrationsAsync(0);
-                    var registrationList = registrations.ToList();
-                    _logger.LogInformation("Hub Registration Check - Total Registrations: {Count}", registrationList.Count);
+                    _logger.LogInformation("FCM Registration: Type={Type}, Id={Id}, Tags=[{Tags}]", 
+                        reg.GetType().Name, reg.RegistrationId, string.Join(", ", reg.Tags ?? new HashSet<string>()));
                     
-                    if (registrationList.Count > 0)
+                    if (reg is FcmV1TemplateRegistrationDescription templateReg)
                     {
-                        var platformGroups = registrationList.GroupBy(r => r.GetType().Name).Select(g => $"{g.Key}: {g.Count()}");
-                        _logger.LogInformation("Registrations by platform: {Platforms}", string.Join(", ", platformGroups));
-        
-                        // Log details of FCM v1 registrations to see what they look like
-                        var fcmRegistrations = registrationList.Where(r => r.GetType().Name.Contains("FcmV1")).Take(5);
-                        foreach (var reg in fcmRegistrations)
-                        {
-                            _logger.LogInformation("FCM Registration: Type={Type}, Id={Id}, Tags=[{Tags}]", 
-                                reg.GetType().Name, reg.RegistrationId, string.Join(", ", reg.Tags ?? new HashSet<string>()));
-                            
-                            if (reg is FcmV1TemplateRegistrationDescription templateReg)
-                            {
-                                _logger.LogInformation("  Template Body: {Body}", templateReg.BodyTemplate);
-                            }
-                        }
+                        _logger.LogInformation("  Template Name: {Name}", templateReg.TemplateName);
+                        _logger.LogInformation("  Template Body: {Body}", templateReg.BodyTemplate);
                     }
                 }
-                catch (Exception ex)
-                {
-                    _logger.LogWarning("Failed to query registrations for debug: {Message}", ex.Message);
-                }
-                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning("Failed to query registrations for debug: {Message}", ex.Message);
+        }
+
+        string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
         _logger.LogInformation("Raw Request Body: {RequestBody}", requestBody);
 
         NotificationPayload? payload;
@@ -147,7 +149,7 @@ public class SendPushNotification
 
         try
         {
-            // Prepare common properties for templates
+            // 1. Try Template Send
             var notificationProperties = new Dictionary<string, string>
             {
                 { "title", payload.Title ?? string.Empty },
@@ -155,70 +157,60 @@ public class SendPushNotification
                 { "deep_link", payload.DeepLink ?? string.Empty }
             };
 
-            _logger.LogInformation("Template Properties for send:");
-            foreach (var prop in notificationProperties)
-            {
-                _logger.LogInformation("  {Key} = {Value}", prop.Key, prop.Value);
-            }
-
-            // Define target tags
             var tags = new List<string>();
-
-            if (!string.IsNullOrEmpty(payload.SubscribersOnly))
-            {
-                if (bool.TryParse(payload.SubscribersOnly, out bool isSubscribersOnly) && isSubscribersOnly)
-                {
-                    tags.Add("subscribers");
-                    _logger.LogInformation("Added 'subscribers' tag constraint.");
-                }
-            }
-
-            if (!string.IsNullOrEmpty(payload.AilmentId) && payload.AilmentId != "0")
-            {
-                var ailmentTag = $"ailment_{payload.AilmentId}";
-                tags.Add(ailmentTag);
-                _logger.LogInformation("Added '{AilmentTag}' tag constraint.", ailmentTag);
-            }
-
-            // Construct tag expression (Intersection if multiple tags provided)
+            if (bool.TryParse(payload.SubscribersOnly, out bool isSubscribersOnly) && isSubscribersOnly) tags.Add("subscribers");
+            if (!string.IsNullOrEmpty(payload.AilmentId) && payload.AilmentId != "0") tags.Add($"ailment_{payload.AilmentId}");
             string? tagExpression = tags.Any() ? string.Join(" && ", tags) : null;
-            _logger.LogInformation("Final Tag Expression: {TagExpression}", tagExpression ?? "(null - broadcasting to all)");
 
-            NotificationOutcome outcome;
-            if (string.IsNullOrEmpty(tagExpression))
-            {
-                _logger.LogInformation("Invoking SendTemplateNotificationAsync (Broadcast)");
-                outcome = await _hubClient!.SendTemplateNotificationAsync(notificationProperties);
-            }
-            else
-            {
-                _logger.LogInformation("Invoking SendTemplateNotificationAsync with TagExpression: {TagExpression}", tagExpression);
-                outcome = await _hubClient!.SendTemplateNotificationAsync(notificationProperties, tagExpression);
-            }
+            _logger.LogInformation("Attempting Template Send. TagExpression: {TagExpression}", tagExpression ?? "(broadcast)");
+            var templateOutcome = tagExpression == null 
+                ? await _hubClient!.SendTemplateNotificationAsync(notificationProperties)
+                : await _hubClient!.SendTemplateNotificationAsync(notificationProperties, tagExpression);
+            
+            _logger.LogInformation("Template Send Outcome: {State}, NotificationId: {Id}", templateOutcome.State, templateOutcome.NotificationId);
 
-            _logger.LogInformation("Notification Hub response received.");
-            _logger.LogInformation("Outcome State: {State}", outcome.State);
-            _logger.LogInformation("NotificationId: {NotificationId}", outcome.NotificationId);
-
-            if (outcome.TrackingId != null)
+            // 2. Try Native FCM v1 Send (Direct)
+            var nativeFcmPayload = new
             {
-                _logger.LogInformation("TrackingId: {TrackingId}", outcome.TrackingId);
-            }
+                message = new
+                {
+                    notification = new
+                    {
+                        title = payload.Title,
+                        body = payload.Body
+                    },
+                    data = new
+                    {
+                        title = payload.Title,
+                        body = payload.Body,
+                        deep_link = payload.DeepLink
+                    }
+                }
+            };
+            string nativeFcmJson = JsonConvert.SerializeObject(nativeFcmPayload);
+            _logger.LogInformation("Attempting Native FCM v1 Send. Payload: {Payload}", nativeFcmJson);
+            
+            var nativeOutcome = tagExpression == null
+                ? await _hubClient!.SendFcmV1NativeNotificationAsync(nativeFcmJson)
+                : await _hubClient!.SendFcmV1NativeNotificationAsync(nativeFcmJson, tagExpression);
 
-            return new OkObjectResult(new
-            {
-                message = "Notification request processed.",
-                outcomeState = outcome.State.ToString(),
-                notificationId = outcome.NotificationId,
-                trackingId = outcome.TrackingId
+            _logger.LogInformation("Native FCM v1 Outcome: {State}, Id: {Id}", nativeOutcome.State, nativeOutcome.NotificationId);
+
+            return new OkObjectResult(new 
+            { 
+                message = "Notification requests processed.", 
+                templateOutcome = templateOutcome.State.ToString(),
+                nativeOutcome = nativeOutcome.State.ToString(),
+                templateNotificationId = templateOutcome.NotificationId,
+                nativeNotificationId = nativeOutcome.NotificationId
             });
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Critical error during SendTemplateNotificationAsync.");
-            return new ObjectResult(new { error = "Internal server error sending notification.", details = ex.Message, stackTrace = ex.StackTrace })
-            {
-                StatusCode = 500
+            _logger.LogError(ex, "Critical error during SendPushNotification.");
+            return new ObjectResult(new { error = "Internal server error sending notification.", details = ex.Message, stackTrace = ex.StackTrace }) 
+            { 
+                StatusCode = 500 
             };
         }
     }

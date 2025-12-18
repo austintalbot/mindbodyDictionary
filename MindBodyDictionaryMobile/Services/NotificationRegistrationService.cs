@@ -50,9 +50,10 @@ public class NotificationRegistrationService : INotificationRegistrationService
       return;
     }
 
-    if (_deviceInstallationService == null) {
-        _logger.LogError("DeviceInstallationService is null");
-        throw new Exception("Registration service not properly initialized.");
+    if (_deviceInstallationService == null)
+    {
+      _logger.LogError("DeviceInstallationService is null");
+      throw new Exception("Registration service not properly initialized.");
     }
 
     var deviceId = _deviceInstallationService.GetDeviceId();
@@ -93,123 +94,165 @@ public class NotificationRegistrationService : INotificationRegistrationService
 
     _logger.LogInformation("RegisterDeviceAsync called with tags: {Tags}", string.Join(", ", tags ?? Array.Empty<string>()));
 
-          _logger.LogInformation("Attempting to register device with Notification Hub.");
+    _logger.LogInformation("Attempting to register device with Notification Hub.");
 
-    
 
-          try
 
-          {
+    try
 
-            var deviceInstallation = _deviceInstallationService.GetDeviceInstallation(tags ?? Array.Empty<string>());
+    {
 
-    
+      var deviceInstallation = _deviceInstallationService.GetDeviceInstallation(tags ?? Array.Empty<string>());
 
-            if (deviceInstallation == null)
 
-            {
 
-              _logger.LogError("DeviceInstallationService.GetDeviceInstallation returned null");
+      if (deviceInstallation == null)
 
-              throw new Exception("Unable to get device installation details.");
+      {
 
-            }
+        _logger.LogError("DeviceInstallationService.GetDeviceInstallation returned null");
 
-    
+        throw new Exception("Unable to get device installation details.");
 
-            // Get the push notification token using the new async method
+      }
 
-            string pushNotificationToken = await _deviceInstallationService.GetPushNotificationTokenAsync();
 
-            
 
-            if (string.IsNullOrWhiteSpace(pushNotificationToken))
+      // Get the push notification token using the new async method
 
-            {
+      string pushNotificationToken = await _deviceInstallationService.GetPushNotificationTokenAsync();
 
-              _logger.LogError("GetPushNotificationTokenAsync returned null or empty token");
 
-              throw new Exception("Unable to resolve push notification token.");
 
-            }
+      if (string.IsNullOrWhiteSpace(pushNotificationToken))
 
-    
+      {
 
-            deviceInstallation.PushChannel = pushNotificationToken; // Assign the retrieved token
+        _logger.LogError("GetPushNotificationTokenAsync returned null or empty token");
 
-    
+        throw new Exception("Unable to resolve push notification token.");
 
-            _logger.LogInformation("Device Installation Details:");
+      }
 
-            _logger.LogInformation("  InstallationId: {InstallationId}", deviceInstallation.InstallationId);
 
-            _logger.LogInformation("  Platform: {Platform}", deviceInstallation.Platform);
 
-            _logger.LogInformation("  PushChannel: {PushChannel}",
+      deviceInstallation.PushChannel = pushNotificationToken; // Assign the retrieved token
 
-                string.IsNullOrEmpty(deviceInstallation.PushChannel) ? "EMPTY/NULL" : $"{deviceInstallation.PushChannel[..Math.Min(20, deviceInstallation.PushChannel.Length)]}...");
 
-            _logger.LogInformation("  Tags: {Tags}", string.Join(", ", deviceInstallation.Tags ?? []));
 
-    
+      _logger.LogInformation("Device Installation Details:");
 
-            // Create Installation object for Azure Notification Hub
+      _logger.LogInformation("  InstallationId: {InstallationId}", deviceInstallation.InstallationId);
 
-            var installation = new Installation
+      _logger.LogInformation("  Platform: {Platform}", deviceInstallation.Platform);
 
-            {
+      _logger.LogInformation("  PushChannel: {PushChannel}",
 
-              InstallationId = deviceInstallation.InstallationId,
+          string.IsNullOrEmpty(deviceInstallation.PushChannel) ? "EMPTY/NULL" : $"{deviceInstallation.PushChannel[..Math.Min(20, deviceInstallation.PushChannel.Length)]}...");
 
-              PushChannel = deviceInstallation.PushChannel,
+      _logger.LogInformation("  Tags: {Tags}", string.Join(", ", deviceInstallation.Tags ?? []));
 
-              Tags = tags?.ToList() ?? new List<string>(),
 
-              Templates = new Dictionary<string, InstallationTemplate>()
 
-            };
+      // Create Installation object for Azure Notification Hub
+
+      var installation = new Installation
+
+      {
+
+        InstallationId = deviceInstallation.InstallationId,
+
+        PushChannel = deviceInstallation.PushChannel,
+
+        Tags = tags?.ToList() ?? new List<string>(),
+
+        Templates = new Dictionary<string, InstallationTemplate>()
+
+      };
 
 
 
       // Set platform-specific details and templates
 
+
+
 #if ANDROID
+
+
 
       installation.Platform = NotificationPlatform.FcmV1;
 
+
+
       _logger.LogInformation("Platform set to: FcmV1 (Android)");
 
-      // FCM template
+
+
+      // FCM v1 template - must be wrapped in "message"
+
+
 
       installation.Templates.Add("defaultTemplateFCM", new InstallationTemplate
 
+
+
       {
 
-        Body = "{\"data\":{\"title\":\"$(title)\",\"body\":\"$(body)\",\"deep_link\":\"$(deep_link)\"}}"
+
+
+        Body = "{\"message\":{\"notification\":{\"title\":\"$(title)\",\"body\":\"$(body)\"},\"data\":{\"title\":\"$(title)\",\"body\":\"$(body)\",\"deep_link\":\"$(deep_link)\"}}}"
+
+
 
       });
 
-      _logger.LogInformation("Added FCM template: defaultTemplateFCM");
+
+
+      _logger.LogInformation("Added FCM v1 template: defaultTemplateFCM");
+
+
 
 #elif IOS
 
-  			installation.Platform = NotificationPlatform.Apns;
 
-  			_logger.LogInformation("Platform set to: APNS (iOS)");
 
-        // APNS template
+        			installation.Platform = NotificationPlatform.Apns;
 
-        installation.Templates.Add("defaultTemplateAPNS", new InstallationTemplate
 
-        {
 
-            Body = "{\"aps\":{\"alert\":{\"title\":\"$(title)\",\"body\":\"$(body)\"},\"sound\":\"default\"},\"deep_link\":\"$(deep_link)\"}"
+        			_logger.LogInformation("Platform set to: APNS (iOS)");
 
-        });
 
-        _logger.LogInformation("Added APNS template: defaultTemplateAPNS");
+
+              // APNS template
+
+
+
+              installation.Templates.Add("defaultTemplateAPNS", new InstallationTemplate
+
+
+
+              {
+
+
+
+                  Body = "{\"aps\":{\"alert\":{\"title\":\"$(title)\",\"body\":\"$(body)\"},\"sound\":\"default\"},\"deep_link\":\"$(deep_link)\"}"
+
+
+
+              });
+
+
+
+              _logger.LogInformation("Added APNS template: defaultTemplateAPNS");
+
+
 
 #endif
+
+
+
+
 
 
 

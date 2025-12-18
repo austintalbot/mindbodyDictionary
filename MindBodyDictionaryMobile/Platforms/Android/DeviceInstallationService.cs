@@ -1,8 +1,8 @@
 namespace MindBodyDictionaryMobile.Platforms.Android;
 
+using global::Android.Gms.Extensions;
 using MindBodyDictionaryMobile.Models;
 using MindBodyDictionaryMobile.Services;
-using global::Android.Gms.Extensions;
 
 public class DeviceInstallationService : IDeviceInstallationService
 {
@@ -21,7 +21,7 @@ public class DeviceInstallationService : IDeviceInstallationService
     // This typically involves getting the token from FirebaseMessaging.Instance
     var tokenTask = Firebase.Messaging.FirebaseMessaging.Instance.GetToken();
     var token = (string)await tokenTask;
-    
+
     if (string.IsNullOrWhiteSpace(token))
     {
       throw new Exception("Unable to resolve token for FCM.");
