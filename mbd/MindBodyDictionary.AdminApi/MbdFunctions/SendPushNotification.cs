@@ -37,6 +37,8 @@ public class SendPushNotification
         var connectionString = _configuration["NotificationHubConnectionString"];
         var hubName = _configuration["NotificationHubName"];
 
+        _logger.LogInformation("Initializing Notification Hub client. HubName: {HubName}", hubName);
+
         if (string.IsNullOrEmpty(connectionString) || string.IsNullOrEmpty(hubName))
         {
             errorMessage = "Notification Hub configuration is missing. Ensure 'NotificationHubConnectionString' and 'NotificationHubName' are set in local.settings.json or App Settings.";
@@ -44,9 +46,30 @@ public class SendPushNotification
             return false;
         }
 
+        // Mask connection string for safe logging
+        string maskedConnectionString = "Invalid";
+        if (connectionString.Contains("SharedAccessKey="))
+        {
+            var parts = connectionString.Split(';');
+            for (int i = 0; i < parts.Length; i++)
+            {
+                if (parts[i].StartsWith("SharedAccessKey="))
+                {
+                    var keyParts = parts[i].Split('=');
+                    if (keyParts.Length > 1 && keyParts[1].Length > 8)
+                    {
+                        parts[i] = $"SharedAccessKey={keyParts[1].Substring(0, 4)}...{keyParts[1].Substring(keyParts[1].Length - 4)}";
+                    }
+                }
+            }
+            maskedConnectionString = string.Join(";", parts);
+        }
+        _logger.LogInformation("Using ConnectionString: {MaskedConnectionString}", maskedConnectionString);
+
         try
         {
             _hubClient = NotificationHubClient.CreateClientFromConnectionString(connectionString, hubName);
+            _logger.LogInformation("NotificationHubClient created successfully.");
             errorMessage = null;
             return true;
         }
@@ -62,7 +85,7 @@ public class SendPushNotification
     public async Task<IActionResult> Run(
         [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] HttpRequest req)
     {
-        _logger.LogInformation("SendPushNotification function processed a request.");
+        _logger.LogInformation("SendPushNotification function triggered.");
 
         if (!TryInitHubClient(out var error))
         {
@@ -70,25 +93,26 @@ public class SendPushNotification
         }
 
         string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-        NotificationPayload? payload;
+        _logger.LogInformation("Raw Request Body: {RequestBody}", requestBody);
 
+        NotificationPayload? payload;
         try
         {
             payload = JsonConvert.DeserializeObject<NotificationPayload>(requestBody);
 
             if (payload == null)
             {
-                _logger.LogWarning("Notification payload is null.");
+                _logger.LogWarning("Deserialized notification payload is null.");
                 return new BadRequestObjectResult("Please pass a valid notification payload in the request body.");
             }
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error parsing notification payload.");
+            _logger.LogError(ex, "Error parsing notification payload JSON.");
             return new BadRequestObjectResult($"Error parsing notification payload: {ex.Message}");
         }
 
-        _logger.LogInformation("Received notification: Title='{Title}', Body='{Body}', DeepLink='{DeepLink}', SubscribersOnly='{SubscribersOnly}', AilmentId='{AilmentId}'",
+        _logger.LogInformation("Parsed Payload - Title: '{Title}', Body: '{Body}', DeepLink: '{DeepLink}', SubscribersOnly: '{SubscribersOnly}', AilmentId: '{AilmentId}'",
             payload.Title, payload.Body, payload.DeepLink, payload.SubscribersOnly, payload.AilmentId);
 
         try
@@ -101,6 +125,12 @@ public class SendPushNotification
                 { "deep_link", payload.DeepLink ?? string.Empty }
             };
 
+            _logger.LogInformation("Template Properties for send:");
+            foreach (var prop in notificationProperties)
+            {
+                _logger.LogInformation("  {Key} = {Value}", prop.Key, prop.Value);
+            }
+
             // Define target tags
             var tags = new List<string>();
             
@@ -109,44 +139,54 @@ public class SendPushNotification
                 if (bool.TryParse(payload.SubscribersOnly, out bool isSubscribersOnly) && isSubscribersOnly)
                 {
                     tags.Add("subscribers");
+                    _logger.LogInformation("Added 'subscribers' tag constraint.");
                 }
             }
 
             if (!string.IsNullOrEmpty(payload.AilmentId) && payload.AilmentId != "0")
             {
-                tags.Add($"ailment_{payload.AilmentId}");
+                var ailmentTag = $"ailment_{payload.AilmentId}";
+                tags.Add(ailmentTag);
+                _logger.LogInformation("Added '{AilmentTag}' tag constraint.", ailmentTag);
             }
 
-            // Construct tag expression (Intersection if multiple tags provided, e.g., only subscribers interested in this ailment)
-            // Or Union (||) if you want to reach either group. Using intersection (&&) is safer for targeted sends.
+            // Construct tag expression (Intersection if multiple tags provided)
             string? tagExpression = tags.Any() ? string.Join(" && ", tags) : null;
+            _logger.LogInformation("Final Tag Expression: {TagExpression}", tagExpression ?? "(null - broadcasting to all)");
 
             NotificationOutcome outcome;
             if (string.IsNullOrEmpty(tagExpression))
             {
-                _logger.LogInformation("Sending broadcast template notification to all devices.");
+                _logger.LogInformation("Invoking SendTemplateNotificationAsync (Broadcast)");
                 outcome = await _hubClient!.SendTemplateNotificationAsync(notificationProperties);
             }
             else
             {
-                _logger.LogInformation("Sending template notification to tags: {TagExpression}", tagExpression);
+                _logger.LogInformation("Invoking SendTemplateNotificationAsync with TagExpression: {TagExpression}", tagExpression);
                 outcome = await _hubClient!.SendTemplateNotificationAsync(notificationProperties, tagExpression);
             }
 
-            _logger.LogInformation("Notification Hub send outcome: {State}. NotificationId: {NotificationId}",
-                outcome.State, outcome.NotificationId);
+            _logger.LogInformation("Notification Hub response received.");
+            _logger.LogInformation("Outcome State: {State}", outcome.State);
+            _logger.LogInformation("NotificationId: {NotificationId}", outcome.NotificationId);
+            
+            if (outcome.TrackingId != null)
+            {
+                _logger.LogInformation("TrackingId: {TrackingId}", outcome.TrackingId);
+            }
 
             return new OkObjectResult(new 
             { 
                 message = "Notification request processed.", 
                 outcomeState = outcome.State.ToString(),
-                notificationId = outcome.NotificationId
+                notificationId = outcome.NotificationId,
+                trackingId = outcome.TrackingId
             });
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error sending push notification.");
-            return new ObjectResult(new { error = "Internal server error sending notification.", details = ex.Message }) 
+            _logger.LogError(ex, "Critical error during SendTemplateNotificationAsync.");
+            return new ObjectResult(new { error = "Internal server error sending notification.", details = ex.Message, stackTrace = ex.StackTrace }) 
             { 
                 StatusCode = 500 
             };
