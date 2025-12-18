@@ -165,8 +165,8 @@ export const upsertMbdCondition = async (mbdCondition: MbdCondition): Promise<Mb
 
 export const deleteMbdCondition = async (id: string, name: string): Promise<void> => {
   clearMbdConditionsCache(); // Clear cache on data modification
-  const decodedName = name.replace("paranthesis", "'");
-  return makeApiRequest<void>(`DeleteAilment?code=${DELETE_MBD_CONDITION_CODE}&id=${id}&name=${encodeURIComponent(decodedName)}`, 'POST');
+  // Use the newer DeleteMbdCondition function which targets the correct container
+  return makeApiRequest<void>(`DeleteMbdCondition?code=${DELETE_MBD_CONDITION_CODE}&id=${id}`, 'POST');
 };
 
 // --- Image API Calls ---
@@ -189,7 +189,7 @@ export const fetchImagesTable = async (): Promise<any[]> => {
 
 export const deleteImage = async (imageName: string): Promise<void> => {
   clearImagesCache(); // Clear cache on data modification
-  const url = `deletembdimage?code=${DELETE_IMAGE_CODE}&name=${encodeURIComponent(imageName)}`;
+  const url = `DeleteMbdImage?code=${DELETE_IMAGE_CODE}&name=${encodeURIComponent(imageName)}`;
   return makeApiRequest<void>(url, 'POST');
 };
 
@@ -198,7 +198,7 @@ export const uploadImage = async (ailmentName: string, imageType: string, file: 
   const name = `${ailmentName}${imageType}.png`;
   const formData = new FormData();
   formData.append('file', file);
-  return makeApiRequest<any>(`Image?name=${encodeURIComponent(name)}`, 'POST', formData);
+  return makeApiRequest<any>(`UpsertMbdImage?name=${encodeURIComponent(name)}`, 'POST', formData);
 };
 
 // --- Contact API Calls ---

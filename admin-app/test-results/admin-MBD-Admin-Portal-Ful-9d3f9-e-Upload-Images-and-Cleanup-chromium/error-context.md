@@ -4296,7 +4296,8 @@
           - option "TestCondition1766077132965"
           - option "TestCondition1766077656844"
           - option "TestCondition1766080588420"
-          - option "TestCondition1766081041534" [selected]
+          - option "TestCondition1766081041534"
+          - option "TestCondition1766082144576" [selected]
           - option "Throat Problems"
           - 'option "Throat Problems: Specific"'
           - option "Thymus Gland"
