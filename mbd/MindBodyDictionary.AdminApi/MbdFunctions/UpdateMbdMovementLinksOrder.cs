@@ -61,6 +61,25 @@ public class UpdateMbdMovementLinksOrder(ILogger<UpdateMbdMovementLinksOrder> lo
                  }
              }
 
+             // Update LastUpdatedTime (best effort)
+            try
+            {
+                _logger.LogInformation("Updating LastUpdatedTime in LastUpdatedTime container.");
+                var containerLU = _client.GetContainer(CosmosDbConstants.DatabaseName, CosmosDbConstants.Containers.LastUpdatedTime);
+                var lastUpdatedTime = new LastUpdatedTime
+                {
+                    Id = CosmosDbConstants.LastUpdatedTimeID,
+                    LastUpdated = DateTime.UtcNow,
+                    Name = "lastUpdatedTime"
+                };
+                await containerLU.UpsertItemAsync(lastUpdatedTime, new PartitionKey(lastUpdatedTime.Id));
+                _logger.LogInformation("LastUpdatedTime updated successfully.");
+            }
+            catch (Exception metaEx)
+            {
+                _logger.LogWarning(metaEx, "Failed to update LastUpdatedTime metadata. Error: {Message}", metaEx.Message);
+            }
+
              return new OkResult();
         }
         catch (Exception ex)

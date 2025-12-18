@@ -58,20 +58,20 @@ public class CreateMbdCondition(ILogger<CreateMbdCondition> logger, CosmosClient
             // Update LastUpdatedTime (best effort)
             try
             {
-                _logger.LogInformation("Updating LastUpdatedTime in System container.");
-                var systemContainer = _client.GetContainer(CosmosDbConstants.DatabaseName, CosmosDbConstants.Containers.System);
+                _logger.LogInformation("Updating LastUpdatedTime in LastUpdatedTime container.");
+                var containerLU = _client.GetContainer(CosmosDbConstants.DatabaseName, CosmosDbConstants.Containers.LastUpdatedTime);
                 var lastUpdatedTime = new LastUpdatedTime
                 {
                     Id = CosmosDbConstants.LastUpdatedTimeID,
                     LastUpdated = DateTime.UtcNow,
                     Name = "lastUpdatedTime"
                 };
-                await systemContainer.UpsertItemAsync(lastUpdatedTime, new PartitionKey(lastUpdatedTime.Id));
+                await containerLU.UpsertItemAsync(lastUpdatedTime, new PartitionKey(lastUpdatedTime.Id));
                 _logger.LogInformation("LastUpdatedTime updated successfully.");
             }
             catch (Exception metaEx)
             {
-                _logger.LogWarning(metaEx, "Failed to update LastUpdatedTime metadata, but the condition was created.");
+                _logger.LogWarning(metaEx, "Failed to update LastUpdatedTime metadata, but the condition was created. Error: {Message}", metaEx.Message);
             }
 
             return new OkObjectResult(response.Resource);
@@ -83,7 +83,7 @@ public class CreateMbdCondition(ILogger<CreateMbdCondition> logger, CosmosClient
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error creating MbdCondition: {Name} (ID: {Id})", mbdCondition.Name, mbdCondition.Id);
+            _logger.LogError(ex, "Error creating MbdCondition: {Name} (ID: {Id}). Error: {Message}", mbdCondition.Name, mbdCondition.Id, ex.Message);
             return new StatusCodeResult(StatusCodes.Status500InternalServerError);
         }
     }

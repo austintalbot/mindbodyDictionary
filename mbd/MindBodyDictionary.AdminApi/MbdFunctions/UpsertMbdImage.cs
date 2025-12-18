@@ -1,16 +1,20 @@
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
+using backend.CosmosDB;
+using backend.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 using MindBodyDictionary.AdminApi;
 
 namespace MindBodyDictionary_AdminApi.MbdFunctions;
 
-public class UpsertMbdImage(ILogger<UpsertMbdImage> logger)
+public class UpsertMbdImage(ILogger<UpsertMbdImage> logger, CosmosClient client)
 {
     private readonly ILogger<UpsertMbdImage> _logger = logger;
+    private readonly CosmosClient _client = client;
 
     [Function("UpsertMbdImage")]
     public async Task<IActionResult> Run(
@@ -65,6 +69,26 @@ public class UpsertMbdImage(ILogger<UpsertMbdImage> logger)
             }
 
             _logger.LogInformation("File {Name} upserted successfully in blob storage.", name);
+
+            // Update LastUpdatedTime (best effort)
+            try
+            {
+                _logger.LogInformation("Updating LastUpdatedTime in LastUpdatedTime container.");
+                var containerLU = _client.GetContainer(CosmosDbConstants.DatabaseName, CosmosDbConstants.Containers.LastUpdatedTime);
+                var lastUpdatedTime = new LastUpdatedTime
+                {
+                    Id = CosmosDbConstants.LastUpdatedTimeID,
+                    LastUpdated = DateTime.UtcNow,
+                    Name = "lastUpdatedTime"
+                };
+                await containerLU.UpsertItemAsync(lastUpdatedTime, new PartitionKey(lastUpdatedTime.Id));
+                _logger.LogInformation("LastUpdatedTime updated successfully.");
+            }
+            catch (Exception metaEx)
+            {
+                _logger.LogWarning(metaEx, "Failed to update LastUpdatedTime metadata. Error: {Message}", metaEx.Message);
+            }
+
             return new OkResult();
         }
         catch (Exception ex)

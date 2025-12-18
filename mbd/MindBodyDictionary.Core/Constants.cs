@@ -14,7 +14,7 @@
 
     public static class CosmosDB
     {
-        public const string LastUpdatedTimeID = "cf60f2ba-8760-4fe7-a9b7-bf290f61b503";
+        public const string LastUpdatedTimeID = "LastUpdatedTime";
         public const string DatabaseName = "MindBodyDictionary";
 
         public const string ConnectionStringSetting = "CONNECTION_COSMOSDB";
@@ -24,6 +24,7 @@
             public const string Ailments = "Ailments";
             public const string Faqs = "Faqs";
             public const string Emails = "Emails";
+            public const string LastUpdatedTime = "LastUpdatedTime";
         }
     }
 
