@@ -3,13 +3,14 @@ namespace MindBodyDictionaryMobile;
 using Foundation;
 using Microsoft.Maui.ApplicationModel;
 using UserNotifications;
+using UIKit;
 
 [Register("AppDelegate")]
 public class AppDelegate : MauiUIApplicationDelegate, IUNUserNotificationCenterDelegate
 {
   protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
 
-  public override bool FinishedLaunching(UIKit.UIApplication application, NSDictionary? launchOptions) {
+  public override bool FinishedLaunching(UIApplication application, NSDictionary? launchOptions) {
     // Set this AppDelegate as the notification center delegate
     UNUserNotificationCenter.Current.Delegate = this;
 
@@ -19,15 +20,15 @@ public class AppDelegate : MauiUIApplicationDelegate, IUNUserNotificationCenterD
       {
         // Must be on main UI thread
         Microsoft.Maui.ApplicationModel.MainThread.BeginInvokeOnMainThread(() => {
-          UIKit.UIApplication.SharedApplication.RegisterForRemoteNotifications();
+          UIApplication.SharedApplication.RegisterForRemoteNotifications();
         });
       }
     });
 
     // Handle notification launched from background
-    if (launchOptions?.ContainsKey(UIKit.UIApplication.LaunchOptionsRemoteNotificationKey) == true)
+    if (launchOptions?.ContainsKey(UIApplication.LaunchOptionsRemoteNotificationKey) == true)
     {
-      if (launchOptions[UIKit.UIApplication.LaunchOptionsRemoteNotificationKey] is NSDictionary remoteNotification)
+      if (launchOptions[UIApplication.LaunchOptionsRemoteNotificationKey] is NSDictionary remoteNotification)
       {
         System.Diagnostics.Debug.WriteLine("=== App launched from remote notification ===");
         ProcessNotification(remoteNotification);
@@ -35,9 +36,9 @@ public class AppDelegate : MauiUIApplicationDelegate, IUNUserNotificationCenterD
     }
 
     // Handle local notification launched from background
-    if (launchOptions?.ContainsKey(UIKit.UIApplication.LaunchOptionsLocalNotificationKey) == true)
+    if (launchOptions?.ContainsKey(UIApplication.LaunchOptionsLocalNotificationKey) == true)
     {
-      if (launchOptions[UIKit.UIApplication.LaunchOptionsLocalNotificationKey] is UIKit.UILocalNotification localNotification)
+      if (launchOptions[UIApplication.LaunchOptionsLocalNotificationKey] is UILocalNotification localNotification)
       {
         System.Diagnostics.Debug.WriteLine("=== App launched from local notification ===");
         ProcessNotification(localNotification.UserInfo);
@@ -47,7 +48,8 @@ public class AppDelegate : MauiUIApplicationDelegate, IUNUserNotificationCenterD
     return base.FinishedLaunching(application, launchOptions);
   }
 
-  public override void RegisteredForRemoteNotifications(UIKit.UIApplication application, NSData deviceToken) {
+  [Export("application:didRegisterForRemoteNotificationsWithDeviceToken:")]
+  public void RegisteredForRemoteNotifications(UIApplication application, NSData deviceToken) {
     // Convert token to string
     var token = BitConverter.ToString(deviceToken.ToArray()).Replace("-", "").ToLower();
 
@@ -77,7 +79,8 @@ public class AppDelegate : MauiUIApplicationDelegate, IUNUserNotificationCenterD
     }
   }
 
-  public override void FailedToRegisterForRemoteNotifications(UIKit.UIApplication application, NSError error) {
+  [Export("application:didFailToRegisterForRemoteNotificationsWithError:")]
+  public void FailedToRegisterForRemoteNotifications(UIApplication application, NSError error) {
     System.Diagnostics.Debug.WriteLine($"Failed to register for remote notifications: {error}");
   }
 

@@ -4,11 +4,14 @@ using System.Diagnostics;
 using MindBodyDictionaryMobile.Models;
 using MindBodyDictionaryMobile.Services;
 using UIKit;
+using ObjCRuntime;
 
 public class DeviceInstallationService : IDeviceInstallationService
 {
   private readonly TaskCompletionSource<string> _tokenTcs = new();
   private string? _cachedToken;
+
+  public string? Token => _cachedToken;
 
   public bool NotificationsSupported => true;
 

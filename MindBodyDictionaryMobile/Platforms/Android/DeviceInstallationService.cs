@@ -2,9 +2,14 @@ namespace MindBodyDictionaryMobile.Platforms.Android;
 
 using MindBodyDictionaryMobile.Models;
 using MindBodyDictionaryMobile.Services;
+using global::Android.Gms.Extensions;
 
 public class DeviceInstallationService : IDeviceInstallationService
 {
+  private string? _cachedToken;
+
+  public string? Token => _cachedToken;
+
   public bool NotificationsSupported => true;
 
   public string GetDeviceId() => global::Android.Provider.Settings.Secure.GetString(
@@ -14,11 +19,15 @@ public class DeviceInstallationService : IDeviceInstallationService
   public async Task<string> GetPushNotificationTokenAsync() {
     // Implement token retrieval for Android (FCM)
     // This typically involves getting the token from FirebaseMessaging.Instance
-    var token = await Firebase.Messaging.FirebaseMessaging.Instance.GetToken();
+    var tokenTask = Firebase.Messaging.FirebaseMessaging.Instance.GetToken();
+    var token = (string)await tokenTask;
+    
     if (string.IsNullOrWhiteSpace(token))
     {
       throw new Exception("Unable to resolve token for FCM.");
     }
+
+    _cachedToken = token;
     return token;
   }
 

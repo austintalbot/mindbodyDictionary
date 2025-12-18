@@ -1,3 +1,4 @@
+#nullable enable
 namespace MindBodyDictionary.Core.Entities.PushNotifications;
 
 public class PushNotification

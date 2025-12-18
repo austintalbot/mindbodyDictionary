@@ -1,4 +1,4 @@
-namespace backend.Entities.PushNotifications;
+namespace MindBodyDictionary.AdminApi.Entities.PushNotifications;
 
 public class NotificationPayload
 {

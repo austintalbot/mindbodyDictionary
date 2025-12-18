@@ -1,8 +1,9 @@
-using backend.Entities.PushNotifications;
+using MindBodyDictionary.AdminApi.Entities.PushNotifications;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System;
 using System.IO;
@@ -11,21 +12,50 @@ using Microsoft.Azure.NotificationHubs;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MindBodyDictionary_AdminApi.MbdFunctions;
+namespace MindBodyDictionary.AdminApi.MbdFunctions;
 
 public class SendPushNotification
 {
     private readonly ILogger<SendPushNotification> _logger;
-    private readonly NotificationHubClient _hubClient;
+    private readonly IConfiguration _configuration;
+    private NotificationHubClient? _hubClient;
 
-    // Use a managed identity or environment variables for connection string in production
-    private const string NotificationHubConnectionString = "Endpoint=sb://nhn-mindbody.servicebus.windows.net/;SharedAccessKeyName=DefaultFullSharedAccessSignature;SharedAccessKey=nf7U1JEDZSxhaaD+h8g9Pul42JcATdzIxvHw2eKFGRo=";
-    private const string NotificationHubName = "nh-mindbody";
-
-    public SendPushNotification(ILogger<SendPushNotification> logger)
+    public SendPushNotification(ILogger<SendPushNotification> logger, IConfiguration configuration)
     {
         _logger = logger;
-        _hubClient = NotificationHubClient.CreateClientFromConnectionString(NotificationHubConnectionString, NotificationHubName);
+        _configuration = configuration;
+    }
+
+    private bool TryInitHubClient(out string? errorMessage)
+    {
+        if (_hubClient != null)
+        {
+            errorMessage = null;
+            return true;
+        }
+
+        var connectionString = _configuration["NotificationHubConnectionString"];
+        var hubName = _configuration["NotificationHubName"];
+
+        if (string.IsNullOrEmpty(connectionString) || string.IsNullOrEmpty(hubName))
+        {
+            errorMessage = "Notification Hub configuration is missing. Ensure 'NotificationHubConnectionString' and 'NotificationHubName' are set in local.settings.json or App Settings.";
+            _logger.LogError(errorMessage);
+            return false;
+        }
+
+        try
+        {
+            _hubClient = NotificationHubClient.CreateClientFromConnectionString(connectionString, hubName);
+            errorMessage = null;
+            return true;
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Failed to create Notification Hub client: {ex.Message}";
+            _logger.LogError(ex, errorMessage);
+            return false;
+        }
     }
 
     [Function("SendPushNotification")]
@@ -33,6 +63,11 @@ public class SendPushNotification
         [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] HttpRequest req)
     {
         _logger.LogInformation("SendPushNotification function processed a request.");
+
+        if (!TryInitHubClient(out var error))
+        {
+            return new ObjectResult(new { error = "Initialization failed", details = error }) { StatusCode = 500 };
+        }
 
         string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
         NotificationPayload? payload;
@@ -58,56 +93,64 @@ public class SendPushNotification
 
         try
         {
-            // Prepare common properties for notification
+            // Prepare common properties for templates
             var notificationProperties = new Dictionary<string, string>
             {
                 { "title", payload.Title ?? string.Empty },
                 { "body", payload.Body ?? string.Empty },
+                { "deep_link", payload.DeepLink ?? string.Empty }
             };
-
-            if (!string.IsNullOrEmpty(payload.DeepLink))
-            {
-                notificationProperties.Add("deep_link", payload.DeepLink);
-            }
 
             // Define target tags
             var tags = new List<string>();
-            if (payload.SubscribersOnly != null && bool.TryParse(payload.SubscribersOnly, out bool subscribersOnly) && subscribersOnly)
+            
+            if (!string.IsNullOrEmpty(payload.SubscribersOnly))
             {
-                tags.Add("subscribers"); // Assuming "subscribers" tag is registered by subscribed users
+                if (bool.TryParse(payload.SubscribersOnly, out bool isSubscribersOnly) && isSubscribersOnly)
+                {
+                    tags.Add("subscribers");
+                }
             }
+
             if (!string.IsNullOrEmpty(payload.AilmentId) && payload.AilmentId != "0")
             {
-                tags.Add($"ailment_{payload.AilmentId}"); // Assuming "ailment_ID" tag is registered for specific ailments
+                tags.Add($"ailment_{payload.AilmentId}");
             }
 
-            // If no specific tags, send to all (broadcast)
-            string? tagExpression = tags.Any() ? string.Join(" || ", tags) : null;
+            // Construct tag expression (Intersection if multiple tags provided, e.g., only subscribers interested in this ailment)
+            // Or Union (||) if you want to reach either group. Using intersection (&&) is safer for targeted sends.
+            string? tagExpression = tags.Any() ? string.Join(" && ", tags) : null;
 
-            // Send to Notification Hub
-            NotificationOutcome? outcome = null;
+            NotificationOutcome outcome;
             if (string.IsNullOrEmpty(tagExpression))
             {
-                // Broadcast to all
                 _logger.LogInformation("Sending broadcast template notification to all devices.");
-                outcome = await _hubClient.SendTemplateNotificationAsync(notificationProperties);
+                outcome = await _hubClient!.SendTemplateNotificationAsync(notificationProperties);
             }
             else
             {
-                // Send to specific tags
                 _logger.LogInformation("Sending template notification to tags: {TagExpression}", tagExpression);
-                outcome = await _hubClient.SendTemplateNotificationAsync(notificationProperties, tagExpression);
+                outcome = await _hubClient!.SendTemplateNotificationAsync(notificationProperties, tagExpression);
             }
 
-            _logger.LogInformation("Notification Hub send outcome: {State}. Success: {SuccessCount}, Failure: {FailureCount}",
-                outcome?.State, outcome?.Success, outcome?.Failure);
+            _logger.LogInformation("Notification Hub send outcome: {State}. NotificationId: {NotificationId}",
+                outcome.State, outcome.NotificationId);
 
-return new OkObjectResult(new { message = $"Notification sent. Outcome: {outcome?.State}", outcomeState = outcome?.State.ToString() });
+            return new OkObjectResult(new 
+            { 
+                message = "Notification request processed.", 
+                outcomeState = outcome.State.ToString(),
+                notificationId = outcome.NotificationId
+            });
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error sending push notification.");
-            return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+            return new ObjectResult(new { error = "Internal server error sending notification.", details = ex.Message }) 
+            { 
+                StatusCode = 500 
+            };
         }
     }
 }
+
