@@ -16,10 +16,11 @@ public class PushNotificationFirebaseMessagingService : FirebaseMessagingService
     {
       // Update the token in DeviceInstallationService
       var deviceInstallationService = IPlatformApplication.Current?.Services?.GetService<IDeviceInstallationService>();
-      if (deviceInstallationService is DeviceInstallationService androidService)
+      if (deviceInstallationService is Platforms.Android.DeviceInstallationService)
       {
-        androidService.Token = token;
-        global::Android.Util.Log.Info("FCM", "✅ Token updated in DeviceInstallationService");
+        // The token is now retrieved via GetPushNotificationTokenAsync when needed
+        // No direct setting of a Token property on the service.
+        global::Android.Util.Log.Info("FCM", "✅ FCM token received. DeviceInstallationService will retrieve it when needed.");
       }
       else
       {
@@ -75,8 +76,8 @@ public class PushNotificationFirebaseMessagingService : FirebaseMessagingService
             body = message.Data.ContainsKey("body") ? message.Data["body"] :
                    message.Data.ContainsKey("message") ? message.Data["message"] : "";
         }
-        deepLink = message.Data.ContainsKey("DeepLink") ? message.Data["DeepLink"] : "";
-        global::Android.Util.Log.Info("FCM", $"DeepLink extracted: {deepLink}");
+        deepLink = message.Data.ContainsKey("deep_link") ? message.Data["deep_link"] : "";
+        global::Android.Util.Log.Info("FCM", $"deep_link extracted: {deepLink}");
       }
       else
       {

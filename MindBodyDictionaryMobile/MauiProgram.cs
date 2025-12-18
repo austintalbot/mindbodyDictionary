@@ -68,7 +68,10 @@ public static class MauiProgram
     builder.Services.AddSingleton<INotificationActionServiceExtended, NotificationActionService>();
 
     // Direct Azure Notification Hub registration (no backend API)
-    builder.Services.AddSingleton<INotificationRegistrationService, NotificationRegistrationService>();
+    builder.Services.AddSingleton<INotificationRegistrationService>(s => new NotificationRegistrationService(
+        s.GetRequiredService<ILogger<NotificationRegistrationService>>(),
+        s.GetRequiredService<IDeviceInstallationService>()
+    ));
 
     builder.Services.AddTransient<NotificationSettingsPageModel>();
     builder.Services.AddTransient<NotificationSettingsPage>();

@@ -4,7 +4,7 @@ using MindBodyDictionaryMobile.Models;
 
 public interface IDeviceInstallationService
 {
-  string Token { get; set; }
+  Task<string> GetPushNotificationTokenAsync();
   bool NotificationsSupported { get; }
   string GetDeviceId();
   DeviceInstallation GetDeviceInstallation(params string[] tags);
