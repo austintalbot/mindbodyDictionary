@@ -158,7 +158,9 @@ export const fetchMbdCondition = async (requestedId: string, name: string): Prom
 
 export const upsertMbdCondition = async (mbdCondition: MbdCondition): Promise<MbdCondition> => {
   clearMbdConditionsCache(); // Clear cache on data modification
-  return makeApiRequest<MbdCondition>(`UpsertAilment?code=${UPSERT_MBD_CONDITION_CODE}`, 'POST', mbdCondition);
+  const data = { ...mbdCondition };
+  if (!data.id) delete data.id;
+  return makeApiRequest<MbdCondition>(`UpsertMbdCondition?code=${UPSERT_MBD_CONDITION_CODE}`, 'POST', data);
 };
 
 export const deleteMbdCondition = async (id: string, name: string): Promise<void> => {

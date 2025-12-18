@@ -31,6 +31,7 @@
                         <Button
                             Command="{Binding Source={RelativeSource AncestorType={x:Type pm:MovementLinksPageModel}}, Path=OpenLinkCommand}"
                             CommandParameter="{Binding .}"
+                            IsEnabled="{Binding Url, Converter={StaticResource IsNotNullOrEmptyConverter}}"
                             Style="{StaticResource PrimaryButton}"
                             Text="{Binding Title}" />
                     </VerticalStackLayout>

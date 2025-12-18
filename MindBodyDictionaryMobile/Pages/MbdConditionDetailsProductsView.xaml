@@ -36,15 +36,15 @@
                                                             Dark={StaticResource White}}" />
                             <Button
                                 Margin="0,0,0,8"
-                                Command="{Binding ProductClickedCommand}"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MbdConditionDetailPageModel}}, Path=ProductClickedCommand}"
                                 CommandParameter="{Binding .}"
-                                IsEnabled="{Binding Url, Converter={StaticResource InverseBoolConverter}}"
+                                IsEnabled="{Binding Url, Converter={StaticResource IsNotNullOrEmptyConverter}}"
                                 Style="{StaticResource PrimaryButton}"
                                 Text="View Product"
                                 VerticalOptions="End" />
                             <Button
                                 Margin="0"
-                                Command="{Binding AddToMyListCommand}"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MbdConditionDetailPageModel}}, Path=AddToMyListCommand}"
                                 CommandParameter="{Binding .}"
                                 Style="{StaticResource SecondaryButton}"
                                 Text="Add to List"

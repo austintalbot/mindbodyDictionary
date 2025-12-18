@@ -55,17 +55,24 @@ public class CreateMbdCondition(ILogger<CreateMbdCondition> logger, CosmosClient
             var response = await container.CreateItemAsync(mbdCondition, new PartitionKey(mbdCondition.Id));
             _logger.LogInformation("Successfully created MbdCondition: {Name} (ID: {Id})", mbdCondition.Name, response.Resource.Id);
 
-            // Update LastUpdatedTime
-            _logger.LogInformation("Updating LastUpdatedTime in System container.");
-            var systemContainer = _client.GetContainer(CosmosDbConstants.DatabaseName, CosmosDbConstants.Containers.System);
-            var lastUpdatedTime = new LastUpdatedTime
+            // Update LastUpdatedTime (best effort)
+            try
             {
-                Id = CosmosDbConstants.LastUpdatedTimeID,
-                LastUpdated = DateTime.UtcNow,
-                Name = "lastUpdatedTime"
-            };
-            await systemContainer.UpsertItemAsync(lastUpdatedTime, new PartitionKey(lastUpdatedTime.Id));
-            _logger.LogInformation("LastUpdatedTime updated successfully.");
+                _logger.LogInformation("Updating LastUpdatedTime in System container.");
+                var systemContainer = _client.GetContainer(CosmosDbConstants.DatabaseName, CosmosDbConstants.Containers.System);
+                var lastUpdatedTime = new LastUpdatedTime
+                {
+                    Id = CosmosDbConstants.LastUpdatedTimeID,
+                    LastUpdated = DateTime.UtcNow,
+                    Name = "lastUpdatedTime"
+                };
+                await systemContainer.UpsertItemAsync(lastUpdatedTime, new PartitionKey(lastUpdatedTime.Id));
+                _logger.LogInformation("LastUpdatedTime updated successfully.");
+            }
+            catch (Exception metaEx)
+            {
+                _logger.LogWarning(metaEx, "Failed to update LastUpdatedTime metadata, but the condition was created.");
+            }
 
             return new OkObjectResult(response.Resource);
         }
