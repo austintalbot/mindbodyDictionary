@@ -16,10 +16,10 @@ test.describe('MBD Admin Portal Full Functionality Test', () => {
     await page.goto('/');
     // Expand to "full screen"
     await page.setViewportSize({ width: 1920, height: 1080 });
-    
+
     // Initial load check
     await expect(page.getByRole('heading', { name: 'MBD Admin Portal' })).toBeVisible({ timeout: 15000 });
-    
+
     // Auto-accept all native dialogs (alerts, confirms)
     page.on('dialog', async dialog => {
         console.log(`Native Dialog message: ${dialog.message()}`);
@@ -32,7 +32,7 @@ test.describe('MBD Admin Portal Full Functionality Test', () => {
     for (const tab of tabs) {
       console.log(`Navigating to tab: ${tab}`);
       await page.getByRole('button', { name: tab, exact: true }).click();
-      
+
       // Basic verification for each tab
       switch (tab) {
         case 'conditions':
@@ -75,14 +75,14 @@ test.describe('MBD Admin Portal Full Functionality Test', () => {
 
     // Save
     console.log('Saving condition...');
-    // We expect a response, but it might be a 500 if the metadata update fails, 
+    // We expect a response, but it might be a 500 if the metadata update fails,
     // even if the condition is saved.
     await page.getByRole('button', { name: 'Save Condition' }).click();
-    
+
     // Handle potential error modal (the 500 error known in staging)
     const errorModal = page.getByText('Error Saving Condition');
     const okButton = page.getByRole('button', { name: 'OK' });
-    
+
     try {
         await expect(errorModal).toBeVisible({ timeout: 5000 });
         console.log('Detected error modal (likely the metadata update 500). Dismissing...');
@@ -110,19 +110,19 @@ test.describe('MBD Admin Portal Full Functionality Test', () => {
     // --- 2. UPLOAD IMAGES ---
     console.log('Step 2: Uploading images');
     await page.getByRole('button', { name: 'images', exact: true }).click();
-    
+
     // Helper to upload image
     const uploadImage = async (typeLabel: string, typeValue: string) => {
         console.log(`Uploading ${typeLabel} Image...`);
         await page.getByRole('button', { name: '+ Add New Image' }).click();
-        
+
         // Wait for conditions to load in dropdown
         await page.locator('select').first().selectOption({ label: testConditionName });
         await page.locator('select').nth(1).selectOption(typeValue);
         await page.setInputFiles('input[id="imageFile"]', path.join(__dirname, 'assets/test-image.png'));
-        
+
         await page.getByRole('button', { name: 'Upload Image' }).click();
-        
+
         // Wait for upload success or modal close
         await expect(page.getByText('Uploading...')).not.toBeVisible({ timeout: 30000 });
     };
@@ -156,14 +156,14 @@ test.describe('MBD Admin Portal Full Functionality Test', () => {
     await page.getByRole('button', { name: 'conditions', exact: true }).click();
     await page.getByPlaceholder('Search by Name, Physical Connections, or Tags...').clear();
     await page.getByPlaceholder('Search by Name, Physical Connections, or Tags...').fill(testConditionName);
-    
+
     const conditionRow = page.locator('tr').filter({ hasText: testConditionName }).first();
     if (await conditionRow.count() > 0) {
         console.log(`Deleting condition: ${testConditionName}`);
         await conditionRow.getByRole('button', { name: 'Delete' }).click();
         await expect(conditionRow).not.toBeVisible({ timeout: 10000 });
     }
-    
+
     console.log('Cleanup complete.');
   });
 });
