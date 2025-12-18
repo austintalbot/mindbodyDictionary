@@ -20,6 +20,7 @@ public partial class AppShell : Shell
     var currentTheme = Application.Current!.RequestedTheme;
     ThemeSegmentedControl.SelectedIndex = currentTheme == AppTheme.Light ? 0 : 1;
 
+/*
 #if !DEBUG
 		// Hide the Image Cache menu in release builds
 		if (ImageCacheContent != null)
@@ -27,6 +28,7 @@ public partial class AppShell : Shell
 			ImageCacheContent.IsVisible = false;
 		}
 #endif
+*/
 
     // Initiate device registration with Notification Hubs
     Task.Run(async () => {
