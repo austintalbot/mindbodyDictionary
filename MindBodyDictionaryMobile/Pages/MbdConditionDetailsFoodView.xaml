@@ -38,7 +38,7 @@
                                                             Dark={StaticResource White}}" />
                             <Button
                                 Margin="0"
-                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MbdConditionDetailPageModel}}, Path=AddToMyListCommand}"
+                                Clicked="OnAddToMyListClicked"
                                 CommandParameter="{Binding .}"
                                 Style="{StaticResource PrimaryButton}"
                                 Text="Add to List"
