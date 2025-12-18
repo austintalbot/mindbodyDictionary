@@ -82,6 +82,7 @@ public partial class MbdConditionListPageModel : ObservableObject
     try
     {
       var conditions = await _mbdConditionRepository.ListAsync();
+      // Assign a new ObservableCollection to trigger only ONE update notification
       MbdConditions = new ObservableCollection<MbdCondition>(conditions);
       ConditionCount = MbdConditions.Count;
       ConditionNamesDebug = string.Join(", ", conditions.Select(c => c.Name));

@@ -1,14 +1,16 @@
-namespace MindBodyDictionaryMobile.PageModels;
-
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using MindBodyDictionaryMobile.Models;
+using MindBodyDictionaryMobile.Models.Messaging;
 using MindBodyDictionaryMobile.Services.billing;
 
-public partial class SearchPageModel : ObservableObject
+namespace MindBodyDictionaryMobile.PageModels;
+
+public partial class SearchPageModel : ObservableObject, IRecipient<ConditionsUpdatedMessage>
 {
   private readonly MbdConditionRepository _mbdConditionRepository;
   private readonly MindBodyDictionaryMobile.Data.ImageCacheService _imageCacheService;
@@ -21,15 +23,15 @@ public partial class SearchPageModel : ObservableObject
   private string _searchParam = string.Empty;
 
   [ObservableProperty]
-  private bool _isBusy; // Renamed from IsSearching to match XAML
+  private bool _isBusy;
 
   [ObservableProperty]
   private bool _isInitialized;
 
-  private ObservableCollection<MbdCondition> _allConditions = new(); // Renamed from _allMbdConditions
+  private ObservableCollection<MbdCondition> _allConditions = new();
 
   [ObservableProperty]
-  private ObservableCollection<MbdCondition> _filteredConditionCollection = new(); // Renamed from FilteredConditions
+  private ObservableCollection<MbdCondition> _filteredConditionCollection = new();
 
   [ObservableProperty]
   private bool _hasNoResults;
@@ -38,46 +40,76 @@ public partial class SearchPageModel : ObservableObject
     _mbdConditionRepository = mbdConditionRepository;
     _imageCacheService = imageCacheService;
     _billingService = billingService;
+
+    // Register to listen for data updates
+    WeakReferenceMessenger.Default.Register(this);
   }
 
-  // Called when the page appears, analogous to InitializeAsync from old SearchPageModel
-  public async Task GetConditionShortList() {
-    if (IsBusy)
+  public void Receive(ConditionsUpdatedMessage message) {
+    // When the preloader finishes syncing/seeding, refresh the list if we're empty
+    if (_allConditions.Count == 0)
+    {
+      MainThread.BeginInvokeOnMainThread(async () => await GetConditionShortList(forceRefresh: true));
+    }
+  }
+
+  public async Task GetConditionShortList() => await GetConditionShortList(false);
+
+  public async Task GetConditionShortList(bool forceRefresh = false) {
+    // If already busy, or initialized with data, skip unless forced
+    if (IsBusy || (IsInitialized && _allConditions.Count > 0 && !forceRefresh))
       return;
 
     try
     {
-      IsBusy = true;
+      await MainThread.InvokeOnMainThreadAsync(() => IsBusy = true);
 
-      // Check subscription status
-      var purchasedProducts = await _billingService.GetPurchasedProductsAsync();
-      var hasSubscription = purchasedProducts.Contains("mbdpremiumyr") || purchasedProducts.Contains("MBDPremiumYr");
-
-      // Load images for search results
+      // 1. Fetch conditions from repository
       var conditions = await _mbdConditionRepository.ListAsync();
-      foreach (var c in conditions)
+      
+      await MainThread.InvokeOnMainThreadAsync(() => {
+        _allConditions = new ObservableCollection<MbdCondition>(conditions);
+        
+        // 2. Initialize UI with data immediately
+        ApplyFilter();
+        IsInitialized = true;
+        IsBusy = false;
+      });
+
+      // 3. Load metadata/images in the background if we actually have data
+      if (conditions.Any())
       {
-        if (!string.IsNullOrEmpty(c.ImageNegative))
-        {
-          c.CachedImageOneSource = await _imageCacheService.GetImageAsync(c.ImageNegative);
-        }
+        _ = Task.Run(async () => {
+          try
+          {
+            var purchasedProducts = await _billingService.GetPurchasedProductsAsync();
+            var hasSubscription = purchasedProducts.Contains("mbdpremiumyr") || purchasedProducts.Contains("MBDPremiumYr");
 
-        // Set lock display based on subscription
-        c.DisplayLock = c.SubscriptionOnly && !hasSubscription;
+            foreach (var c in _allConditions)
+            {
+              c.DisplayLock = c.SubscriptionOnly && !hasSubscription;
+
+              if (!string.IsNullOrEmpty(c.ImageNegative) && c.CachedImageOneSource == null)
+              {
+                var imageSource = await _imageCacheService.GetImageAsync(c.ImageNegative);
+                if (imageSource != null)
+                {
+                  await MainThread.InvokeOnMainThreadAsync(() => c.CachedImageOneSource = imageSource);
+                }
+              }
+            }
+          }
+          catch (Exception ex)
+          {
+            System.Diagnostics.Debug.WriteLine($"[SearchPageModel] Background load error: {ex.Message}");
+          }
+        });
       }
-
-      _allConditions = new ObservableCollection<MbdCondition>(conditions);
-      ApplyFilter(); // Apply initial filter based on SearchParam
-      IsInitialized = true;
     }
-    catch (Exception) // Catch-all for simplicity without explicit error handling service
+    catch (Exception ex)
     {
-      // Log error here if a logger is re-introduced, or show a simple alert.
-      // For now, silently fail or display empty list.
-    }
-    finally
-    {
-      IsBusy = false;
+      System.Diagnostics.Debug.WriteLine($"[SearchPageModel] Error: {ex.Message}");
+      await MainThread.InvokeOnMainThreadAsync(() => IsBusy = false);
     }
   }
 
@@ -100,28 +132,31 @@ public partial class SearchPageModel : ObservableObject
           .ToList();
     }
 
-    // Assign a new ObservableCollection to trigger only ONE update notification
+    if (MainThread.IsMainThread)
+    {
+        UpdateFilteredCollection(filteredList);
+    }
+    else
+    {
+        MainThread.BeginInvokeOnMainThread(() => UpdateFilteredCollection(filteredList));
+    }
+  }
+
+  private void UpdateFilteredCollection(List<MbdCondition> filteredList) {
     FilteredConditionCollection = new ObservableCollection<MbdCondition>(filteredList);
     HasNoResults = FilteredConditionCollection.Count == 0 && !string.IsNullOrWhiteSpace(SearchParam);
   }
 
   [RelayCommand]
   public async Task OnSearchButtonPressed() {
-    // For now, it just ensures the ViewModel is aware of the search action.
-    ApplyFilter(); // Re-apply filter on explicit search button press
+    ApplyFilter();
     await Task.CompletedTask;
   }
 
   [RelayCommand]
   private async Task SelectMbdCondition(MbdCondition condition) {
-#if DEBUG
-    await AppShell.DisplaySnackbarAsync($"Tapped: {condition.Name}");
-#endif
     if (condition == null || string.IsNullOrEmpty(condition.Id))
-    {
-      // Log an error or handle the invalid condition appropriately
       return;
-    }
 
     await Shell.Current.GoToAsync($"mbdcondition?id={condition.Id}");
   }

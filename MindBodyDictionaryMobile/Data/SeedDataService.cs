@@ -7,7 +7,7 @@ using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using MindBodyDictionaryMobile.Models;
 
-public class SeedDataService(ProjectRepository projectRepository, TaskRepository taskRepository, TagRepository tagRepository, CategoryRepository categoryRepository, MbdConditionRepository mbdConditionRepository, ImageCacheService imageCacheService, ILogger<SeedDataService> logger)
+public class SeedDataService(ProjectRepository projectRepository, TaskRepository taskRepository, TagRepository tagRepository, CategoryRepository categoryRepository, MbdConditionRepository mbdConditionRepository, ImageCacheService imageCacheService, MbdConditionApiService mbdConditionApiService, ILogger<SeedDataService> logger)
 {
   public string? RawApiConditionsJson { get; private set; }
   private readonly ProjectRepository _projectRepository = projectRepository;
@@ -16,6 +16,7 @@ public class SeedDataService(ProjectRepository projectRepository, TaskRepository
   private readonly CategoryRepository _categoryRepository = categoryRepository;
   private readonly MbdConditionRepository _mbdConditionRepository = mbdConditionRepository;
   private readonly ImageCacheService _imageCacheService = imageCacheService;
+  private readonly MbdConditionApiService _mbdConditionApiService = mbdConditionApiService;
   private readonly string _seedDataFilePath = "SeedData.json";
   private readonly ILogger<SeedDataService> _logger = logger;
 
@@ -207,101 +208,29 @@ public class SeedDataService(ProjectRepository projectRepository, TaskRepository
   }
 
   /// <summary>
-  /// Loads conditions from the Azure function API at http://localhost:7071/api/GetMbdConditions
+  /// Loads conditions from the Azure function API
   /// </summary>
   private async Task<bool> LoadConditionsFromApiAsync() {
     try
     {
-      using var httpClient = new HttpClient();
-      httpClient.Timeout = TimeSpan.FromSeconds(30); // Increase timeout for slower connections
+      _logger.LogInformation("Attempting to load conditions from MbdConditionApiService");
+      var conditions = await _mbdConditionApiService.GetMbdConditionsAsync();
 
-      // iOS simulator cannot reach localhost:7071 directly
-      // It needs to use the host machine's IP address
-      // Try multiple possible endpoints
-      var apiUrls = new[]
+      if (conditions != null && conditions.Count > 0)
       {
-        "https://mbd-admin-api-staging.azurewebsites.net/api/GetMbdConditions?code=QdxCTyJyLD418FuUxNkGK8-ECvMI7oekYqCQIMaIm2f1AzFuFvu1Dw==",
-        "http://127.0.0.1:7071/api/GetMbdConditions",  // Direct localhost
-        "http://localhost:7071/api/GetMbdConditions",  // Named localhost
-      };
-
-#if DEBUG
-      // In debug mode, also try to get the actual host IP from environment
-      // For iOS simulator, you typically need the machine's local IP
-      var hostIp = GetLocalIpAddress();
-      if (!string.IsNullOrEmpty(hostIp) && hostIp != "127.0.0.1")
-      {
-        apiUrls = [.. apiUrls.Prepend($"http://{hostIp}:7071/api/GetMbdConditions")];
-      }
-#endif
-
-      foreach (var apiUrl in apiUrls)
-      {
-        try
-        {
-          _logger.LogInformation($"Attempting to call API: {apiUrl}");
-          var response = await httpClient.GetAsync(apiUrl);
-
-          if (response.IsSuccessStatusCode)
-          {
-            _logger.LogInformation($"Successfully reached API at {apiUrl}");
-            var content = await response.Content.ReadAsStringAsync();
-            _logger.LogInformation($"API response length: {content.Length} bytes");
-            System.Diagnostics.Debug.WriteLine($"=== API response received: {content.Length} bytes ===");
-
-            // Store raw API data for future use
-            RawApiConditionsJson = content;
-
-            // Deserialize API response directly to mobile MbdCondition (backend and mobile use same schema now)
-            try
-            {
-              var conditions = JsonSerializer.Deserialize<List<MbdCondition>>(content,
-                  new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-
-              if (conditions == null || conditions.Count == 0)
-              {
-                _logger.LogWarning("No conditions returned from API");
-                System.Diagnostics.Debug.WriteLine("=== API returned no conditions ===");
-                continue;
-              }
-
-              _logger.LogInformation($"Successfully deserialized {conditions.Count} conditions from API");
-              System.Diagnostics.Debug.WriteLine($"=== Successfully deserialized {conditions.Count} conditions ===");
-              foreach (var c in conditions)
-              {
-                _logger.LogInformation($"  - Condition: id={c.Id}, name={c.Name}");
-              }
-
-              await SaveConditionsToDatabase(conditions);
-              _logger.LogInformation($"Successfully loaded {conditions.Count} conditions from API");
-              System.Diagnostics.Debug.WriteLine($"=== Successfully saved {conditions.Count} conditions to database ===");
-              return true;
-            }
-            catch (JsonException je)
-            {
-              _logger.LogError(je, "JSON deserialization error");
-              _logger.LogError($"Response content: {content.Substring(0, Math.Min(500, content.Length))}");
-              continue;
-            }
-          }
-          else
-          {
-            _logger.LogWarning($"API returned status code {response.StatusCode} for {apiUrl}");
-          }
-        }
-        catch (HttpRequestException e)
-        {
-          _logger.LogWarning(e, $"Failed to connect to API at {apiUrl}");
-          continue;
-        }
+        _logger.LogInformation($"Successfully retrieved {conditions.Count} conditions from API service");
+        // Note: MbdConditionApiService already syncs to local DB, 
+        // but we can call it again here if we want to ensure it's done or for logging
+        await SaveConditionsToDatabase(conditions);
+        return true;
       }
 
-      _logger.LogWarning("Failed to reach API on all attempted endpoints");
+      _logger.LogWarning("API service returned no conditions");
       return false;
     }
     catch (Exception e)
     {
-      _logger.LogError(e, "Error loading conditions from API");
+      _logger.LogError(e, "Error loading conditions from API service");
       return false;
     }
   }

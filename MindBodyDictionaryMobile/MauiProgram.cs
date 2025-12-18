@@ -48,8 +48,8 @@ public static class MauiProgram
     builder.Services.AddSingleton<ImageCacheRepository>();
     builder.Services.AddSingleton<ImageCacheService>();
     builder.Services.AddSingleton<IImageCacheHelper, ImageCacheHelper>();
-    builder.Services.AddSingleton<SeedDataService>();
     builder.Services.AddSingleton<MbdConditionApiService>();
+    builder.Services.AddSingleton<SeedDataService>();
     builder.Services.AddSingleton<AppDataPreloaderService>();
     builder.Services.AddSingleton<ModalErrorHandler>();
     builder.Services.AddSingleton<MainPageModel>();

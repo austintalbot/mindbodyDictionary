@@ -48,13 +48,22 @@ namespace MindBodyDictionaryMobile.PageModels
 
     [RelayCommand]
     public async Task GetConditionList() {
+      await FetchConditionsAsync(true);
+    }
+
+    public async Task InitialLoadAsync() {
+      await FetchConditionsAsync(false);
+    }
+
+    private async Task FetchConditionsAsync(bool showRefresh) {
       if (IsBusy)
         return;
 
       try
       {
         IsBusy = true;
-        IsRefreshing = true;
+        if (showRefresh) IsRefreshing = true;
+
         // Simulate loading or fetch data
         var allConditions = await _mbdConditionRepository.ListAsync();
 
@@ -82,7 +91,7 @@ namespace MindBodyDictionaryMobile.PageModels
         // For now, just taking a few random ones, or all if less than 5
         var random = new Random();
         var conditionsToShow = allConditions.OrderBy(x => random.Next()).Take(5).ToList();
-        RandomConditionCollection.Clear();
+        
         foreach (var condition in conditionsToShow)
         {
           condition.DisplayLock = condition.SubscriptionOnly && !isSubscribed;
@@ -95,8 +104,10 @@ namespace MindBodyDictionaryMobile.PageModels
           {
             condition.DisplayedAffirmation = "No affirmation available";
           }
-          RandomConditionCollection.Add(condition);
         }
+
+        // Assign a new ObservableCollection to trigger only ONE update notification
+        RandomConditionCollection = new ObservableCollection<MbdCondition>(conditionsToShow);
         IsInitialized = true;
       }
       catch (Exception ex)

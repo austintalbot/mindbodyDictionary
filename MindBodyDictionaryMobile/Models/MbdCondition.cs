@@ -1,15 +1,16 @@
-namespace MindBodyDictionaryMobile.Models;
-
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
-using Microsoft.Maui.Controls; // Add this
+using Microsoft.Maui.Controls;
 using Newtonsoft.Json;
+using CommunityToolkit.Mvvm.ComponentModel;
+
+namespace MindBodyDictionaryMobile.Models;
 
 /// <summary>
 /// Represents a mind-body condition with associated tags, recommendations, and metadata.
 /// Aligns with backend.Entities.MbdCondition schema.
 /// </summary>
-public class MbdCondition
+public partial class MbdCondition : ObservableObject
 {
   [JsonPropertyName("id")]
   [JsonProperty("id")]
@@ -27,14 +28,14 @@ public class MbdCondition
   [JsonProperty("imagePositive")]
   public string? ImagePositive { get; set; }
 
-  // Add these properties
+  // Use ObservableProperty to notify UI when images load
+  [ObservableProperty]
   [System.Text.Json.Serialization.JsonIgnore]
-  public ImageSource? CachedImageOneSource { get; set; }
+  private ImageSource? _cachedImageOneSource;
 
+  [ObservableProperty]
   [System.Text.Json.Serialization.JsonIgnore]
-  public ImageSource? CachedImageTwoSource { get; set; }
-
-
+  private ImageSource? _cachedImageTwoSource;
 
   [JsonPropertyName("summaryNegative")]
   [JsonProperty("summaryNegative")]
@@ -87,11 +88,13 @@ public class MbdCondition
   [System.Text.Json.Serialization.JsonIgnore]
   public List<Tag> MobileTags { get; set; } = [];
 
+  [ObservableProperty]
   [System.Text.Json.Serialization.JsonIgnore]
-  public bool DisplayLock { get; set; }
+  private bool _displayLock;
 
+  [ObservableProperty]
   [System.Text.Json.Serialization.JsonIgnore]
-  public string DisplayedAffirmation { get; set; } = string.Empty;
+  private string _displayedAffirmation = string.Empty;
 
   /// <summary>
   /// Gets accessibility description combining name and summaryPositive.
