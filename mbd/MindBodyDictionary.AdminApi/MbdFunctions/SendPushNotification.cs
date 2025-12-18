@@ -92,7 +92,37 @@ public class SendPushNotification
             return new ObjectResult(new { error = "Initialization failed", details = error }) { StatusCode = 500 };
         }
 
-        string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+                try
+                {
+                    // Debug: Check if there are any registrations at all
+                    var registrations = await _hubClient!.GetAllRegistrationsAsync(0);
+                    var registrationList = registrations.ToList();
+                    _logger.LogInformation("Hub Registration Check - Total Registrations: {Count}", registrationList.Count);
+                    
+                    if (registrationList.Count > 0)
+                    {
+                        var platformGroups = registrationList.GroupBy(r => r.GetType().Name).Select(g => $"{g.Key}: {g.Count()}");
+                        _logger.LogInformation("Registrations by platform: {Platforms}", string.Join(", ", platformGroups));
+        
+                        // Log details of FCM v1 registrations to see what they look like
+                        var fcmRegistrations = registrationList.Where(r => r.GetType().Name.Contains("FcmV1")).Take(5);
+                        foreach (var reg in fcmRegistrations)
+                        {
+                            _logger.LogInformation("FCM Registration: Type={Type}, Id={Id}, Tags=[{Tags}]", 
+                                reg.GetType().Name, reg.RegistrationId, string.Join(", ", reg.Tags ?? new HashSet<string>()));
+                            
+                            if (reg is FcmV1TemplateRegistrationDescription templateReg)
+                            {
+                                _logger.LogInformation("  Template Body: {Body}", templateReg.BodyTemplate);
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogWarning("Failed to query registrations for debug: {Message}", ex.Message);
+                }
+                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
         _logger.LogInformation("Raw Request Body: {RequestBody}", requestBody);
 
         NotificationPayload? payload;
@@ -133,7 +163,7 @@ public class SendPushNotification
 
             // Define target tags
             var tags = new List<string>();
-            
+
             if (!string.IsNullOrEmpty(payload.SubscribersOnly))
             {
                 if (bool.TryParse(payload.SubscribersOnly, out bool isSubscribersOnly) && isSubscribersOnly)
@@ -169,15 +199,15 @@ public class SendPushNotification
             _logger.LogInformation("Notification Hub response received.");
             _logger.LogInformation("Outcome State: {State}", outcome.State);
             _logger.LogInformation("NotificationId: {NotificationId}", outcome.NotificationId);
-            
+
             if (outcome.TrackingId != null)
             {
                 _logger.LogInformation("TrackingId: {TrackingId}", outcome.TrackingId);
             }
 
-            return new OkObjectResult(new 
-            { 
-                message = "Notification request processed.", 
+            return new OkObjectResult(new
+            {
+                message = "Notification request processed.",
                 outcomeState = outcome.State.ToString(),
                 notificationId = outcome.NotificationId,
                 trackingId = outcome.TrackingId
@@ -186,11 +216,10 @@ public class SendPushNotification
         catch (Exception ex)
         {
             _logger.LogError(ex, "Critical error during SendTemplateNotificationAsync.");
-            return new ObjectResult(new { error = "Internal server error sending notification.", details = ex.Message, stackTrace = ex.StackTrace }) 
-            { 
-                StatusCode = 500 
+            return new ObjectResult(new { error = "Internal server error sending notification.", details = ex.Message, stackTrace = ex.StackTrace })
+            {
+                StatusCode = 500
             };
         }
     }
 }
-
