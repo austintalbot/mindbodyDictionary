@@ -16,10 +16,11 @@ public class PushNotificationFirebaseMessagingService : FirebaseMessagingService
     {
       // Update the token in DeviceInstallationService
       var deviceInstallationService = IPlatformApplication.Current?.Services?.GetService<IDeviceInstallationService>();
-      if (deviceInstallationService is DeviceInstallationService androidService)
+      if (deviceInstallationService is Platforms.Android.DeviceInstallationService)
       {
-        androidService.Token = token;
-        global::Android.Util.Log.Info("FCM", "✅ Token updated in DeviceInstallationService");
+        // The token is now retrieved via GetPushNotificationTokenAsync when needed
+        // No direct setting of a Token property on the service.
+        global::Android.Util.Log.Info("FCM", "✅ FCM token received. DeviceInstallationService will retrieve it when needed.");
       }
       else
       {
@@ -43,6 +44,7 @@ public class PushNotificationFirebaseMessagingService : FirebaseMessagingService
     {
       string title = "Notification";
       string body = "";
+      string deepLink = ""; // Initialize deepLink
 
       // Check for notification payload
       if (message.GetNotification() != null)
@@ -56,7 +58,7 @@ public class PushNotificationFirebaseMessagingService : FirebaseMessagingService
         global::Android.Util.Log.Info("FCM", $"Notification payload - Title: {title}, Body: {body}");
       }
       // Check for data payload
-      else if (message.Data != null && message.Data.Count > 0)
+      if (message.Data != null && message.Data.Count > 0) // Changed to if, to allow data to augment notification payload
       {
         global::Android.Util.Log.Info("FCM", "Processing data payload:");
         foreach (var kvp in message.Data)
@@ -64,9 +66,18 @@ public class PushNotificationFirebaseMessagingService : FirebaseMessagingService
           global::Android.Util.Log.Info("FCM", $"  {kvp.Key} = {kvp.Value}");
         }
 
-        title = message.Data.ContainsKey("title") ? message.Data["title"] : title;
-        body = message.Data.ContainsKey("body") ? message.Data["body"] :
-               message.Data.ContainsKey("message") ? message.Data["message"] : "";
+        // Prioritize data payload for title/body if notification payload was empty or not present
+        if (string.IsNullOrEmpty(title))
+        {
+          title = message.Data.ContainsKey("title") ? message.Data["title"] : title;
+        }
+        if (string.IsNullOrEmpty(body))
+        {
+          body = message.Data.ContainsKey("body") ? message.Data["body"] :
+                 message.Data.ContainsKey("message") ? message.Data["message"] : "";
+        }
+        deepLink = message.Data.ContainsKey("deep_link") ? message.Data["deep_link"] : "";
+        global::Android.Util.Log.Info("FCM", $"deep_link extracted: {deepLink}");
       }
       else
       {
@@ -74,7 +85,7 @@ public class PushNotificationFirebaseMessagingService : FirebaseMessagingService
       }
 
       global::Android.Util.Log.Info("FCM", $"Showing notification: {title} - {body}");
-      SendNotification(title, body);
+      SendNotification(title, body, deepLink); // Pass deepLink to SendNotification
     }
     catch (Exception ex)
     {
@@ -83,10 +94,11 @@ public class PushNotificationFirebaseMessagingService : FirebaseMessagingService
     }
   }
 
-  void SendNotification(string title, string body) {
+  void SendNotification(string title, string body, string deepLink = "") { // Add deepLink parameter with default
     global::Android.Util.Log.Info("FCM", $"=== SendNotification called ===");
     global::Android.Util.Log.Info("FCM", $"Title: {title}");
     global::Android.Util.Log.Info("FCM", $"Body: {body}");
+    global::Android.Util.Log.Info("FCM", $"DeepLink: {deepLink}"); // Log deep link
 
     try
     {
@@ -94,6 +106,10 @@ public class PushNotificationFirebaseMessagingService : FirebaseMessagingService
       intent.AddFlags(global::Android.Content.ActivityFlags.ClearTop);
       intent.PutExtra("notification_title", title);
       intent.PutExtra("notification_body", body);
+      if (!string.IsNullOrEmpty(deepLink))
+      {
+        intent.PutExtra("deep_link", deepLink); // Add deep link to intent extras
+      }
 
       var pendingFlags = global::Android.App.PendingIntentFlags.UpdateCurrent;
       if (global::Android.OS.Build.VERSION.SdkInt >= global::Android.OS.BuildVersionCodes.M)

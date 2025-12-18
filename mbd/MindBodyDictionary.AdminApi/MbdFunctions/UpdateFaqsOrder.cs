@@ -45,9 +45,9 @@ public class UpdateFaqsOrder(ILogger<UpdateFaqsOrder> logger, CosmosClient clien
                 databaseName: CosmosDbConstants.DatabaseName,
                 containerName: CosmosDbConstants.Containers.Faqs,
                 query: "SELECT * FROM c");
-             
+
              var container = _client.GetContainer(CosmosDbConstants.DatabaseName, CosmosDbConstants.Containers.Faqs);
-             
+
              int updateCount = 0;
              foreach (var faqUpdate in faqs)
              {

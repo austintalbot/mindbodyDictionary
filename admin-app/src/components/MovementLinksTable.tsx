@@ -41,8 +41,8 @@ const SortableRow: React.FC<SortableRowProps> = ({ link, onEdit, onDelete, index
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
-    backgroundColor: isDragging 
-      ? colors.neutral 
+    backgroundColor: isDragging
+      ? colors.neutral
       : (index % 2 === 0 ? colors.background : colors.backgroundSecondary),
     borderBottom: `1px solid ${colors.border}`,
     zIndex: isDragging ? 1 : 0,
@@ -52,9 +52,9 @@ const SortableRow: React.FC<SortableRowProps> = ({ link, onEdit, onDelete, index
   return (
     <tr ref={setNodeRef} style={style}>
       <td style={{ padding: '16px', width: '40px' }}>
-        <div 
-          {...attributes} 
-          {...listeners} 
+        <div
+          {...attributes}
+          {...listeners}
           style={{ cursor: 'grab', display: 'flex', alignItems: 'center', color: colors.mutedText }}
         >
           <GripVertical size={18} />

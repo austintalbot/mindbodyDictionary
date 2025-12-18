@@ -52,7 +52,7 @@ const ImageActionModal: React.FC<ImageActionModalProps> = ({
        setSelectedImageType(imageType);
 
        // Pre-select condition if possible
-       // image.mbdCondition contains the name, but we need the ID for the select value if possible, 
+       // image.mbdCondition contains the name, but we need the ID for the select value if possible,
        // OR we can just use the name if that's what we upload with.
        // The uploadImage function takes 'ailmentName' which corresponds to the condition NAME.
        // However, the ImagesTab passes mbdConditionOptions which has ID and Name.

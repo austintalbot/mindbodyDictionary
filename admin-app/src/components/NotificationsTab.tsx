@@ -15,6 +15,7 @@ const NotificationsTab: React.FC = () => {
   const [notificationBody, setNotificationBody] = useState('');
   const [notificationTag, setNotificationTag] = useState('0'); // '0' for Everyone, '1' for Subscribers Only
   const [notificationMbdCondition, setNotificationMbdCondition] = useState('0');
+  const [notificationDeepLink, setNotificationDeepLink] = useState(''); // New state for deep link
   const [mbdConditionOptions, setMbdConditionOptions] = useState<MbdConditionOption[]>([]);
   const [loadingMbdConditions, setLoadingMbdConditions] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -61,6 +62,7 @@ const NotificationsTab: React.FC = () => {
       Body: notificationBody,
       SubscribersOnly: notificationTag === '1' ? 'true' : 'false',
       AilmentId: notificationMbdCondition !== '0' ? notificationMbdCondition : '', // Send empty string if no condition selected
+      DeepLink: notificationDeepLink.trim(), // Include DeepLink in the payload
     };
 
     try {
@@ -70,6 +72,7 @@ const NotificationsTab: React.FC = () => {
       setNotificationBody('');
       setNotificationTag('0');
       setNotificationMbdCondition('0');
+      setNotificationDeepLink(''); // Clear deep link after sending
     } catch (err: any) {
       setError(err.message || 'Failed to send notification');
     }
@@ -159,6 +162,28 @@ const NotificationsTab: React.FC = () => {
                 {notificationBody.length}/150
               </span>
             </div>
+          </div>
+
+          {/* New input field for Deep Link */}
+          <div style={{ marginBottom: '16px' }}>
+            <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '8px', color: colors.lightText }}>Deep Link (Optional):</label>
+            <input
+              type="text"
+              placeholder="e.g., ailments/some-id or faq/another-id"
+              maxLength={150}
+              value={notificationDeepLink}
+              onChange={(e) => setNotificationDeepLink(e.target.value)}
+              style={{
+                width: '100%',
+                padding: '10px 12px',
+                fontSize: '14px',
+                border: `1px solid ${colors.inputBorder}`,
+                borderRadius: '6px',
+                backgroundColor: colors.inputBackground,
+                color: colors.foreground,
+                outline: 'none'
+              }}
+            />
           </div>
 
           <div style={{ marginBottom: '24px' }}>

@@ -1,43 +1,52 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+﻿<?xml version="1.0" encoding="UTF-8" ?>
 <toolkit:Popup
     x:Class="MindBodyDictionaryMobile.Pages.DisclaimerPopup"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:pages="clr-namespace:MindBodyDictionaryMobile.Pages"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-    BackgroundColor="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource DarkBackground}}">
+    BackgroundColor="{AppThemeBinding Light={StaticResource LightBackground},
+                                      Dark={StaticResource DarkBackground}}">
 
-    <Grid x:Name="RootGrid"
-          BackgroundColor="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource DarkBackground}}"
-          RowDefinitions="*, Auto"
-          HorizontalOptions="Fill"
-          VerticalOptions="Fill"
-          Margin="0">
-        
+    <Grid
+        x:Name="RootGrid"
+        Margin="0"
+        BackgroundColor="{AppThemeBinding Light={StaticResource LightBackground},
+                                          Dark={StaticResource DarkBackground}}"
+        HorizontalOptions="Fill"
+        RowDefinitions="*, Auto"
+        VerticalOptions="Fill">
+
         <ScrollView Grid.Row="0">
-            <VerticalStackLayout VerticalOptions="Center" 
-                                 Spacing="30"
-                                 Padding="30">
-                <Image Style="{StaticResource AppLogoImage}" HeightRequest="100" HorizontalOptions="Center" />
-                
-                <Label Text="Disclaimer" 
-                       Style="{StaticResource Title1}" 
-                       HorizontalOptions="Center" />
-                
-                <Label Style="{StaticResource Body1}" 
-                       HorizontalTextAlignment="Center"
-                       Text="I understand that mbd is for informational purposes only. mbd does not diagnose, treat, prevent, or cure any illness. If you have any questions concerning your health please consult with your Doctor." />
+            <VerticalStackLayout
+                Padding="30"
+                Spacing="30"
+                VerticalOptions="Center">
+                <Image
+                    HeightRequest="100"
+                    HorizontalOptions="Center"
+                    Style="{StaticResource AppLogoImage}" />
+
+                <Label
+                    HorizontalOptions="Center"
+                    Style="{StaticResource Title1}"
+                    Text="Disclaimer" />
+
+                <Label
+                    HorizontalTextAlignment="Center"
+                    Style="{StaticResource Body1}"
+                    Text="I understand that mbd is for informational purposes only. mbd does not diagnose, treat, prevent, or cure any illness. If you have any questions concerning your health please consult with your Doctor." />
             </VerticalStackLayout>
         </ScrollView>
 
-        <Button Grid.Row="1"
-                AutomationId="DisclaimerUnderstandButton"
-                Clicked="OnYesButtonClicked"
-                Style="{StaticResource PrimaryButton}"
-                Text="I Understand"
-                HeightRequest="60"
-                Margin="30,0,30,60" />
+        <Button
+            Grid.Row="1"
+            Margin="30,0,30,60"
+            AutomationId="DisclaimerUnderstandButton"
+            Clicked="OnYesButtonClicked"
+            HeightRequest="60"
+            Style="{StaticResource PrimaryButton}"
+            Text="I Understand" />
     </Grid>
 
 </toolkit:Popup>
-

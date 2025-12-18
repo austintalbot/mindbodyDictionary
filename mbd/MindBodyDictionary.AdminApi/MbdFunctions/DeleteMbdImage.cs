@@ -31,7 +31,7 @@ public class DeleteMbdImage(ILogger<DeleteMbdImage> logger)
             var blobServiceClient = new BlobServiceClient(connectionString);
             var containerClient = blobServiceClient.GetBlobContainerClient(StorageConstants.Containers.Images);
             var blobClient = containerClient.GetBlobClient(name);
-            
+
             bool result = await blobClient.DeleteIfExistsAsync();
 
             if (result)

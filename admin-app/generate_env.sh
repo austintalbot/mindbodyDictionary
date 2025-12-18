@@ -19,8 +19,7 @@ declare -a FUNCTIONS=(
     "SendPushNotification"
     "CreateBackup"
     "RestoreDatabase"
-    "GetMbdConditions" # Added new function
-    "GetMbdConditions" # Added for fetching single MBD condition
+    "GetMbdConditions"
 )
 
 echo "Generating $ENV_FILE for staging Azure Function App: $FUNCTION_APP_NAME (Slot: $SLOT_NAME)"
@@ -66,25 +65,26 @@ ENV_CONTENT=""
 ENV_CONTENT+="VITE_ADMIN_API_URL=https://$ADMIN_API_URL\n"
 ENV_CONTENT+="VITE_IMAGE_BASE_URL=https://mbdstoragesa.blob.core.windows.net/mbdconditionimages\n" # Static URL
 
-# Retrieve the master key for the staging slot
-echo "Retrieving Master Key for staging slot..."
-MASTER_KEY_OUTPUT=$(az functionapp keys list --name "$FUNCTION_APP_NAME" --resource-group "$RESOURCE_GROUP" --slot "$SLOT_NAME" --query "masterKey" --output tsv 2>&1)
-MASTER_KEY=$(echo "$MASTER_KEY_OUTPUT" | head -n 1)
 
-if [ -z "$MASTER_KEY" ]; then
-    echo "Error: Could not retrieve Master Key for staging slot."
-    echo "Azure CLI Output (stderr/stdout):"
-    echo "$MASTER_KEY_OUTPUT"
-    echo "Please check function app name, resource group, slot name, and your Azure CLI permissions/login."
-    exit 1
-fi
-echo "Found MASTER_KEY: $MASTER_KEY"
 
-# Assign the MASTER_KEY to all function codes
+# Assign function-specific keys
 for func_name in "${FUNCTIONS[@]}"
 do
+    echo "Retrieving key for function: $func_name..."
+    FUNCTION_KEY_OUTPUT=$(az functionapp keys list --name "$FUNCTION_APP_NAME" --resource-group "$RESOURCE_GROUP" --slot "$SLOT_NAME" --function "$func_name" --query "functionKeys.default" --output tsv 2>&1)
+    FUNCTION_KEY=$(echo "$FUNCTION_KEY_OUTPUT" | head -n 1)
+
+    if [ -z "$FUNCTION_KEY" ]; then
+        echo "Error: Could not retrieve key for function '$func_name'."
+        echo "Azure CLI Output (stderr/stdout):"
+        echo "$FUNCTION_KEY_OUTPUT"
+        echo "Please ensure the function '$func_name' exists in the function app slot."
+        exit 1
+    fi
+    echo "Found key for $func_name"
+
     VAR_NAME="VITE_$(echo "$func_name" | sed 's/\([A-Z]\)/_\1/g' | cut -c 2- | tr '[:lower:]' '[:upper:]')_CODE"
-    ENV_CONTENT+="$VAR_NAME=$MASTER_KEY\n"
+    ENV_CONTENT+="$VAR_NAME=$FUNCTION_KEY\n"
 done
 
 # Write to .env file

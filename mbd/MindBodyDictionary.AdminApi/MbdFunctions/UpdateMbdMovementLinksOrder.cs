@@ -44,9 +44,9 @@ public class UpdateMbdMovementLinksOrder(ILogger<UpdateMbdMovementLinksOrder> lo
                 databaseName: CosmosDbConstants.DatabaseName,
                 containerName: CosmosDbConstants.Containers.MbdMovementLinks,
                 query: "SELECT * FROM c");
-             
+
              var container = _client.GetContainer(CosmosDbConstants.DatabaseName, CosmosDbConstants.Containers.MbdMovementLinks);
-             
+
              int updateCount = 0;
              foreach (var linkUpdate in links)
              {

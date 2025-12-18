@@ -16,18 +16,18 @@ const FaqsTab: React.FC = () => {
   const [showErrorModal, setShowErrorModal] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
     const [isUpdatingOrder, setIsUpdatingOrder] = useState(false);
-    
+
     // Filtering state
     const [searchTerm, setSearchTerm] = useState('');
-  
+
     useEffect(() => {
       loadFaqs();
     }, []);
-  
+
     useEffect(() => {
       applyFilters();
     }, [faqs, searchTerm]);
-  
+
     const loadFaqs = async () => {
       setLoading(true);
       try {
@@ -50,22 +50,22 @@ const FaqsTab: React.FC = () => {
         setLoading(false);
       }
     };
-  
+
     const applyFilters = () => {
       let result = [...faqs];
-  
+
       if (searchTerm.trim()) {
         const lowerSearch = searchTerm.toLowerCase();
-        result = result.filter(faq => 
-          faq.question.toLowerCase().includes(lowerSearch) || 
+        result = result.filter(faq =>
+          faq.question.toLowerCase().includes(lowerSearch) ||
           faq.answer.toLowerCase().includes(lowerSearch) ||
           (faq.shortAnswer && faq.shortAnswer.toLowerCase().includes(lowerSearch))
         );
       }
-  
+
       setFilteredFaqs(result);
     };
-  
+
     const handleAddFaq = () => {
       setSelectedFaq({
         question: '',
@@ -75,12 +75,12 @@ const FaqsTab: React.FC = () => {
       });
       setShowModal(true);
     };
-  
+
     const handleEditFaq = (faq: Faq) => {
       setSelectedFaq(faq);
       setShowModal(true);
     };
-  
+
     const handleDeleteFaq = async (id: string) => {
       if (window.confirm('Are you sure you want to delete this FAQ?')) {
         try {
@@ -92,14 +92,14 @@ const FaqsTab: React.FC = () => {
         }
       }
     };
-  
+
     const handleSaveFaq = async () => {
       if (!selectedFaq) return;
       if (!selectedFaq.question.trim() || !selectedFaq.answer.trim() || !selectedFaq.shortAnswer?.trim()) {
           alert("Question, Short Answer, and Answer are required.");
           return;
       }
-  
+
       try {
         await upsertFaq(selectedFaq);
         setShowModal(false);
@@ -109,24 +109,24 @@ const FaqsTab: React.FC = () => {
         setShowErrorModal(true);
       }
     };
-  
+
     const handleReorder = async (reorderedFaqs: Faq[]) => {
       if (searchTerm.trim()) {
         alert("Cannot reorder while searching. Please clear the search first.");
         return;
       }
-  
+
       setIsUpdatingOrder(true);
-      
+
       // 1. Assign new sequential orders
       const updatedFaqs = reorderedFaqs.map((faq, index) => ({
         ...faq,
         order: index
       }));
-      
+
       // 2. Update local state immediately for UI responsiveness
       setFaqs(updatedFaqs);
-  
+
       // 3. Persist to database in bulk
       try {
         await updateFaqsOrder(updatedFaqs);
@@ -140,9 +140,9 @@ const FaqsTab: React.FC = () => {
         setIsUpdatingOrder(false);
       }
     };
-  
+
     if (loading && faqs.length === 0) return <div style={{ padding: '20px', color: colors.mutedText }}>Loading FAQs...</div>;
-  
+
     return (
       <div style={{ padding: '20px' }}>
         <div style={{
@@ -199,7 +199,7 @@ const FaqsTab: React.FC = () => {
               </button>
             </div>
           </div>
-  
+
           {/* Filters */}
           <div style={{ display: 'flex', gap: '16px', marginBottom: '24px', flexWrap: 'wrap' }}>
             <div style={{ flex: 1, minWidth: '250px' }}>
@@ -222,14 +222,14 @@ const FaqsTab: React.FC = () => {
               />
             </div>
           </div>
-  
+
           <FaqsTable
             faqs={filteredFaqs}
             onEdit={handleEditFaq}
             onDelete={handleDeleteFaq}
             onReorder={handleReorder}
           />
-          
+
           {searchTerm.trim() === '' && faqs.length > 1 && (
             <div style={{ fontSize: '12px', color: colors.mutedText, textAlign: 'center', marginTop: '10px' }}>
               💡 Drag rows to reorder them permanently in the database.

@@ -3,11 +3,11 @@ namespace MindBodyDictionaryMobile;
 using CommunityToolkit.Maui;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using MindBodyDictionaryMobile.Services.billing;
-using MindBodyDictionaryMobile.Services;
 using MindBodyDictionaryMobile.Models;
 using MindBodyDictionaryMobile.PageModels;
 using MindBodyDictionaryMobile.Pages;
+using MindBodyDictionaryMobile.Services;
+using MindBodyDictionaryMobile.Services.billing;
 using Syncfusion.Maui.Core.Hosting;
 using Syncfusion.Maui.Toolkit.Hosting;
 
@@ -68,7 +68,10 @@ public static class MauiProgram
     builder.Services.AddSingleton<INotificationActionServiceExtended, NotificationActionService>();
 
     // Direct Azure Notification Hub registration (no backend API)
-    builder.Services.AddSingleton<INotificationRegistrationService, NotificationRegistrationService>();
+    builder.Services.AddSingleton<INotificationRegistrationService>(s => new NotificationRegistrationService(
+        s.GetRequiredService<ILogger<NotificationRegistrationService>>(),
+        s.GetRequiredService<IDeviceInstallationService>()
+    ));
 
     builder.Services.AddTransient<NotificationSettingsPageModel>();
     builder.Services.AddTransient<NotificationSettingsPage>();

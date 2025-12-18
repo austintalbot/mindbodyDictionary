@@ -175,7 +175,7 @@ export const fetchImagesTable = async (): Promise<any[]> => {
   }
   const response = await makeApiRequest<any[]>(`GetMbdImages?code=${GET_MBD_IMAGES_CODE}`);
   const data = (response as any).data || response; // Handle { data: [...] } or direct array
-  
+
   const mappedData = Array.isArray(data) ? data.map((item: any) => ({
       ...item,
       mbdCondition: item.ailment || item.Ailment || item.mbdCondition
@@ -214,6 +214,7 @@ export interface NotificationPayload {
   Body: string;
   SubscribersOnly: string;
   AilmentId: string;
+  DeepLink: string;
 }
 
 export const sendPushNotification = async (notification: NotificationPayload): Promise<void> => {

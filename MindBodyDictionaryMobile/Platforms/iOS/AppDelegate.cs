@@ -2,6 +2,7 @@ namespace MindBodyDictionaryMobile;
 
 using Foundation;
 using Microsoft.Maui.ApplicationModel;
+using UIKit;
 using UserNotifications;
 
 [Register("AppDelegate")]
@@ -9,7 +10,7 @@ public class AppDelegate : MauiUIApplicationDelegate, IUNUserNotificationCenterD
 {
   protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
 
-  public override bool FinishedLaunching(UIKit.UIApplication application, NSDictionary? launchOptions) {
+  public override bool FinishedLaunching(UIApplication application, NSDictionary? launchOptions) {
     // Set this AppDelegate as the notification center delegate
     UNUserNotificationCenter.Current.Delegate = this;
 
@@ -19,15 +20,15 @@ public class AppDelegate : MauiUIApplicationDelegate, IUNUserNotificationCenterD
       {
         // Must be on main UI thread
         Microsoft.Maui.ApplicationModel.MainThread.BeginInvokeOnMainThread(() => {
-          UIKit.UIApplication.SharedApplication.RegisterForRemoteNotifications();
+          UIApplication.SharedApplication.RegisterForRemoteNotifications();
         });
       }
     });
 
     // Handle notification launched from background
-    if (launchOptions?.ContainsKey(UIKit.UIApplication.LaunchOptionsRemoteNotificationKey) == true)
+    if (launchOptions?.ContainsKey(UIApplication.LaunchOptionsRemoteNotificationKey) == true)
     {
-      if (launchOptions[UIKit.UIApplication.LaunchOptionsRemoteNotificationKey] is NSDictionary remoteNotification)
+      if (launchOptions[UIApplication.LaunchOptionsRemoteNotificationKey] is NSDictionary remoteNotification)
       {
         System.Diagnostics.Debug.WriteLine("=== App launched from remote notification ===");
         ProcessNotification(remoteNotification);
@@ -35,9 +36,9 @@ public class AppDelegate : MauiUIApplicationDelegate, IUNUserNotificationCenterD
     }
 
     // Handle local notification launched from background
-    if (launchOptions?.ContainsKey(UIKit.UIApplication.LaunchOptionsLocalNotificationKey) == true)
+    if (launchOptions?.ContainsKey(UIApplication.LaunchOptionsLocalNotificationKey) == true)
     {
-      if (launchOptions[UIKit.UIApplication.LaunchOptionsLocalNotificationKey] is UIKit.UILocalNotification localNotification)
+      if (launchOptions[UIApplication.LaunchOptionsLocalNotificationKey] is UILocalNotification localNotification)
       {
         System.Diagnostics.Debug.WriteLine("=== App launched from local notification ===");
         ProcessNotification(localNotification.UserInfo);
@@ -48,7 +49,7 @@ public class AppDelegate : MauiUIApplicationDelegate, IUNUserNotificationCenterD
   }
 
   [Export("application:didRegisterForRemoteNotificationsWithDeviceToken:")]
-  public void DidRegisterForRemoteNotifications(UIKit.UIApplication application, NSData deviceToken) {
+  public void RegisteredForRemoteNotifications(UIApplication application, NSData deviceToken) {
     // Convert token to string
     var token = BitConverter.ToString(deviceToken.ToArray()).Replace("-", "").ToLower();
 
@@ -61,21 +62,14 @@ public class AppDelegate : MauiUIApplicationDelegate, IUNUserNotificationCenterD
       try
       {
         var service = currentApp.Services.GetService<IDeviceInstallationService>();
-        if (service is not null)
+        if (service is Platforms.iOS.DeviceInstallationService iosService)
         {
-          if (service is Platforms.iOS.DeviceInstallationService iosService)
-          {
-            iosService.Token = token;
-            System.Diagnostics.Debug.WriteLine("APNS Token successfully set in DeviceInstallationService");
-          }
-          else
-          {
-            System.Diagnostics.Debug.WriteLine($"Warning: Service is not iOS DeviceInstallationService, it's {service.GetType().Name}");
-          }
+          iosService.SetDeviceToken(token);
+          System.Diagnostics.Debug.WriteLine("APNS Token successfully set in DeviceInstallationService");
         }
         else
         {
-          System.Diagnostics.Debug.WriteLine("Warning: DeviceInstallationService not found. Device token will not be registered, and push notifications may not work.");
+          System.Diagnostics.Debug.WriteLine($"Warning: DeviceInstallationService not found or wrong type. Device token will not be registered.");
         }
       }
       catch (Exception ex)
@@ -83,16 +77,12 @@ public class AppDelegate : MauiUIApplicationDelegate, IUNUserNotificationCenterD
         System.Diagnostics.Debug.WriteLine($"Error setting APNS token: {ex.Message}");
       }
     }
-    else
-    {
-      System.Diagnostics.Debug.WriteLine("Warning: IPlatformApplication.Current is null. Device token will not be registered, and push notifications may not work.");
-    }
   }
 
   [Export("application:didFailToRegisterForRemoteNotificationsWithError:")]
-  public void DidFailToRegisterForRemoteNotifications(UIKit.UIApplication application, NSError error) =>
-      // Handle registration failure
-      System.Diagnostics.Debug.WriteLine($"Failed to register for remote notifications: {error}");
+  public void FailedToRegisterForRemoteNotifications(UIApplication application, NSError error) {
+    System.Diagnostics.Debug.WriteLine($"Failed to register for remote notifications: {error}");
+  }
 
   // MARK: UNUserNotificationCenterDelegate Methods
 
@@ -156,7 +146,27 @@ public class AppDelegate : MauiUIApplicationDelegate, IUNUserNotificationCenterD
 
     try
     {
-      // Get the notification action service
+      // Check for deep link first
+      NSString? deepLinkKey = (NSString?)"deep_link";
+      if (userInfo.TryGetValue(deepLinkKey, out var deepLinkValue))
+      {
+        var deepLink = deepLinkValue.ToString();
+        if (!string.IsNullOrEmpty(deepLink))
+        {
+          System.Diagnostics.Debug.WriteLine($"Found deep link in notification: {deepLink}");
+          Microsoft.Maui.ApplicationModel.MainThread.BeginInvokeOnMainThread(async () => {
+            await Shell.Current.GoToAsync($"//{deepLink}");
+            System.Diagnostics.Debug.WriteLine($"Navigated to: //{deepLink}");
+          });
+          return; // If deep link is handled, no need to process other actions for now
+        }
+      }
+      else
+      {
+        System.Diagnostics.Debug.WriteLine("No 'deep_link' key found in notification userInfo");
+      }
+
+      // If no deep link, proceed with existing action handling (if any)
       var currentApp = IPlatformApplication.Current;
       if (currentApp == null)
       {

@@ -22,7 +22,48 @@ public class MainActivity : MauiAppCompatActivity
 
     CreateNotificationChannel();
     RequestNotificationPermission();
-    RequestFirebaseToken();
+
+    // Handle deep link when app is launched from a notification
+    HandleIntent(Intent);
+  }
+
+  protected override void OnNewIntent(Android.Content.Intent? intent) {
+    base.OnNewIntent(intent);
+    // Handle deep link when app is already running and a new notification arrives
+    HandleIntent(intent);
+  }
+
+  private void HandleIntent(Android.Content.Intent? intent) {
+    if (intent == null)
+    {
+      Android.Util.Log.Warn("DeepLink", "⚠️ HandleIntent called with null intent.");
+      return;
+    }
+
+    if (intent.HasExtra("deep_link"))
+    {
+      var deepLink = intent.GetStringExtra("deep_link");
+      if (!string.IsNullOrEmpty(deepLink))
+      {
+        Android.Util.Log.Info("DeepLink", $"✅ Deep link received: {deepLink}");
+        // Use MainThread.BeginInvokeOnMainThread to ensure UI operations are on the main thread
+        MainThread.BeginInvokeOnMainThread(async () => {
+          // Navigate to the specified deep link route
+          // Assuming the deep links are structured as Shell routes (e.g., //ailments/some-id)
+          // You might need to adjust the format or add logic to map deep links to actual Shell routes
+          await Shell.Current.GoToAsync($"//{deepLink}");
+          Android.Util.Log.Info("DeepLink", $"Navigated to: //{deepLink}");
+        });
+      }
+      else
+      {
+        Android.Util.Log.Warn("DeepLink", "⚠️ Deep link extra found but value is empty.");
+      }
+    }
+    else
+    {
+      Android.Util.Log.Info("DeepLink", "No deep link extra found in intent.");
+    }
   }
 
   void CreateNotificationChannel() {
@@ -83,53 +124,6 @@ public class MainActivity : MauiAppCompatActivity
       else
       {
         Android.Util.Log.Warn("Permissions", "⚠️ Notification permission denied");
-      }
-    }
-  }
-
-  void RequestFirebaseToken() {
-    try
-    {
-      Android.Util.Log.Info("FCM", "Requesting Firebase token...");
-
-      FirebaseMessaging.Instance.GetToken().AddOnCompleteListener(new TokenCompleteListener(this));
-    }
-    catch (Exception ex)
-    {
-      Android.Util.Log.Error("FCM", $"Error requesting FCM token: {ex.Message}");
-    }
-  }
-
-  class TokenCompleteListener(MainActivity activity) : Java.Lang.Object, Android.Gms.Tasks.IOnCompleteListener
-  {
-    readonly MainActivity _activity = activity;
-
-    public void OnComplete(Android.Gms.Tasks.Task task) {
-      if (!task.IsSuccessful)
-      {
-        Android.Util.Log.Error("FCM", $"❌ Token request failed: {task.Exception?.Message}");
-        return;
-      }
-
-      var token = task.Result?.ToString();
-      if (string.IsNullOrEmpty(token))
-      {
-        Android.Util.Log.Error("FCM", "❌ Token is null or empty");
-        return;
-      }
-
-      Android.Util.Log.Info("FCM", $"✅ Token received: {token[..Math.Min(20, token.Length)]}...");
-
-      // Store token in DeviceInstallationService
-      var deviceInstallationService = IPlatformApplication.Current?.Services?.GetService<IDeviceInstallationService>();
-      if (deviceInstallationService is Platforms.Android.DeviceInstallationService androidService)
-      {
-        androidService.Token = token;
-        Android.Util.Log.Info("FCM", "✅ Token stored in DeviceInstallationService");
-      }
-      else
-      {
-        Android.Util.Log.Warn("FCM", "⚠️ Could not get DeviceInstallationService");
       }
     }
   }

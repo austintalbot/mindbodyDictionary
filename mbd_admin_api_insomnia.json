@@ -1,0 +1,440 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2025-12-17T00:00:00.000Z",
+  "__export_source": "insomnia.desktop.app:v8.6.1",
+  "resources": [
+    {
+      "_id": "wrk_mbd_admin",
+      "parentId": null,
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "MBD Admin API",
+      "description": "Comprehensive tests for all MBD Admin Functions",
+      "scope": "collection",
+      "_type": "workspace"
+    },
+    {
+      "_id": "env_mbd_local",
+      "parentId": "wrk_mbd_admin",
+      "modified": 1700000000000,
+      "created": 1700000000000,
+      "name": "Local Development",
+      "data": {
+        "base_url": "http://localhost:7071/api"
+      },
+      "color": null,
+      "isPrivate": false,
+      "metaSortKey": 1,
+      "_type": "environment"
+    },
+    {
+      "_id": "fld_notifications",
+      "parentId": "wrk_mbd_admin",
+      "name": "Notifications",
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_send_push",
+      "parentId": "fld_notifications",
+      "name": "Send Push Notification",
+      "method": "POST",
+      "url": "{{ _.base_url }}/SendPushNotification",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"Title\": \"Test Notification\",\n  \"Body\": \"This is a test body from Insomnia\",\n  \"DeepLink\": \"home\",\n  \"SubscribersOnly\": \"false\",\n  \"AilmentId\": \"0\"\n}"
+      },
+      "_type": "request"
+    },
+    {
+      "_id": "fld_mbd_conditions",
+      "parentId": "wrk_mbd_admin",
+      "name": "MBD Conditions",
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_get_mbd_conditions",
+      "parentId": "fld_mbd_conditions",
+      "name": "Get All Conditions",
+      "method": "GET",
+      "url": "{{ _.base_url }}/GetMbdConditions",
+      "_type": "request"
+    },
+    {
+      "_id": "req_get_mbd_condition",
+      "parentId": "fld_mbd_conditions",
+      "name": "Get Single Condition",
+      "method": "GET",
+      "url": "{{ _.base_url }}/GetMbdCondition",
+      "parameters": [
+        {
+          "name": "id",
+          "value": "ENTER_ID_HERE"
+        }
+      ],
+      "_type": "request"
+    },
+    {
+      "_id": "req_create_mbd_condition",
+      "parentId": "fld_mbd_conditions",
+      "name": "Create Condition",
+      "method": "POST",
+      "url": "{{ _.base_url }}/CreateMbdCondition",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"Name\": \"Test Ailment\",\n  \"Problem\": \"Root cause description\",\n  \"Affirmations\": \"I am healthy\",\n  \"Category\": \"General\"\n}"
+      },
+      "_type": "request"
+    },
+    {
+      "_id": "req_upsert_mbd_condition",
+      "parentId": "fld_mbd_conditions",
+      "name": "Upsert Condition",
+      "method": "POST",
+      "url": "{{ _.base_url }}/UpsertMbdCondition",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"Id\": \"OPTIONAL_EXISTING_ID\",\n  \"Name\": \"Updated Ailment\",\n  \"Problem\": \"Updated root cause\"\n}"
+      },
+      "_type": "request"
+    },
+    {
+      "_id": "req_delete_mbd_condition",
+      "parentId": "fld_mbd_conditions",
+      "name": "Delete Condition",
+      "method": "POST",
+      "url": "{{ _.base_url }}/DeleteMbdCondition",
+      "parameters": [
+        {
+          "name": "id",
+          "value": "ENTER_ID_HERE"
+        }
+      ],
+      "_type": "request"
+    },
+    {
+      "_id": "fld_images",
+      "parentId": "wrk_mbd_admin",
+      "name": "Images (Blob)",
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_get_mbd_images",
+      "parentId": "fld_images",
+      "name": "Get All Images",
+      "method": "GET",
+      "url": "{{ _.base_url }}/GetMbdImages",
+      "_type": "request"
+    },
+    {
+      "_id": "req_get_mbd_image",
+      "parentId": "fld_images",
+      "name": "Get Image Metadata",
+      "method": "GET",
+      "url": "{{ _.base_url }}/GetMbdImage",
+      "parameters": [
+        {
+          "name": "name",
+          "value": "test.png"
+        }
+      ],
+      "_type": "request"
+    },
+    {
+      "_id": "req_create_mbd_image",
+      "parentId": "fld_images",
+      "name": "Create Image",
+      "method": "POST",
+      "url": "{{ _.base_url }}/CreateMbdImage",
+      "parameters": [
+        {
+          "name": "name",
+          "value": "test.png"
+        }
+      ],
+      "body": {
+        "mimeType": "multipart/form-data",
+        "params": [
+          {
+            "name": "file",
+            "type": "file"
+          }
+        ]
+      },
+      "_type": "request"
+    },
+    {
+      "_id": "req_upsert_mbd_image",
+      "parentId": "fld_images",
+      "name": "Upsert Image",
+      "method": "POST",
+      "url": "{{ _.base_url }}/UpsertMbdImage",
+      "parameters": [
+        {
+          "name": "name",
+          "value": "test.png"
+        }
+      ],
+      "body": {
+        "mimeType": "multipart/form-data",
+        "params": [
+          {
+            "name": "file",
+            "type": "file"
+          }
+        ]
+      },
+      "_type": "request"
+    },
+    {
+      "_id": "req_delete_mbd_image",
+      "parentId": "fld_images",
+      "name": "Delete Image",
+      "method": "POST",
+      "url": "{{ _.base_url }}/DeleteMbdImage",
+      "parameters": [
+        {
+          "name": "name",
+          "value": "test.png"
+        }
+      ],
+      "_type": "request"
+    },
+    {
+      "_id": "fld_faqs",
+      "parentId": "wrk_mbd_admin",
+      "name": "FAQs",
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_get_faqs",
+      "parentId": "fld_faqs",
+      "name": "Get All FAQs",
+      "method": "GET",
+      "url": "{{ _.base_url }}/GetFaqs",
+      "_type": "request"
+    },
+    {
+      "_id": "req_get_faq",
+      "parentId": "fld_faqs",
+      "name": "Get Single FAQ",
+      "method": "GET",
+      "url": "{{ _.base_url }}/GetFaq",
+      "parameters": [
+        {
+          "name": "id",
+          "value": "ENTER_ID_HERE"
+        }
+      ],
+      "_type": "request"
+    },
+    {
+      "_id": "req_create_faq",
+      "parentId": "fld_faqs",
+      "name": "Create FAQ",
+      "method": "POST",
+      "url": "{{ _.base_url }}/CreateFaq",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"Question\": \"New Question?\",\n  \"Answer\": \"New Answer\",\n  \"Order\": 1\n}"
+      },
+      "_type": "request"
+    },
+    {
+      "_id": "req_upsert_faq",
+      "parentId": "fld_faqs",
+      "name": "Upsert FAQ",
+      "method": "POST",
+      "url": "{{ _.base_url }}/UpsertFaq",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"Id\": \"EXISTING_ID\",\n  \"Question\": \"Updated Question?\",\n  \"Answer\": \"Updated Answer\",\n  \"Order\": 1\n}"
+      },
+      "_type": "request"
+    },
+    {
+      "_id": "req_delete_faq",
+      "parentId": "fld_faqs",
+      "name": "Delete FAQ",
+      "method": "POST",
+      "url": "{{ _.base_url }}/DeleteFaq",
+      "parameters": [
+        {
+          "name": "id",
+          "value": "ENTER_ID_HERE"
+        }
+      ],
+      "_type": "request"
+    },
+    {
+      "_id": "req_update_faqs_order",
+      "parentId": "fld_faqs",
+      "name": "Update FAQs Order",
+      "method": "POST",
+      "url": "{{ _.base_url }}/UpdateFaqsOrder",
+      "body": {
+        "mimeType": "application/json",
+        "text": "[\n  { \"Id\": \"ID_1\", \"Order\": 1 },\n  { \"Id\": \"ID_2\", \"Order\": 2 }\n]"
+      },
+      "_type": "request"
+    },
+    {
+      "_id": "fld_contacts",
+      "parentId": "wrk_mbd_admin",
+      "name": "Contacts",
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_get_contacts",
+      "parentId": "fld_contacts",
+      "name": "Get All Contacts",
+      "method": "GET",
+      "url": "{{ _.base_url }}/GetContacts",
+      "_type": "request"
+    },
+    {
+      "_id": "req_get_contact",
+      "parentId": "fld_contacts",
+      "name": "Get Single Contact",
+      "method": "GET",
+      "url": "{{ _.base_url }}/GetContact",
+      "parameters": [
+        {
+          "name": "id",
+          "value": "ENTER_ID_HERE"
+        }
+      ],
+      "_type": "request"
+    },
+    {
+      "_id": "req_create_contact",
+      "parentId": "fld_contacts",
+      "name": "Create Contact",
+      "method": "POST",
+      "url": "{{ _.base_url }}/CreateContact",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"Email\": \"test@example.com\",\n  \"Name\": \"Tester\",\n  \"Message\": \"Hello\"\n}"
+      },
+      "_type": "request"
+    },
+    {
+      "_id": "req_upsert_contact",
+      "parentId": "fld_contacts",
+      "name": "Upsert Contact",
+      "method": "POST",
+      "url": "{{ _.base_url }}/UpsertContact",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"Id\": \"EXISTING_ID\",\n  \"Email\": \"updated@example.com\",\n  \"Name\": \"Updated Tester\"\n}"
+      },
+      "_type": "request"
+    },
+    {
+      "_id": "fld_movement_links",
+      "parentId": "wrk_mbd_admin",
+      "name": "Movement Links",
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_get_movement_links",
+      "parentId": "fld_movement_links",
+      "name": "Get Movement Links",
+      "method": "GET",
+      "url": "{{ _.base_url }}/GetMbdMovementLinks",
+      "_type": "request"
+    },
+    {
+      "_id": "req_upsert_movement_link",
+      "parentId": "fld_movement_links",
+      "name": "Upsert Movement Link",
+      "method": "POST",
+      "url": "{{ _.base_url }}/UpsertMbdMovementLink",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"Title\": \"Link Title\",\n  \"Url\": \"https://example.com\",\n  \"Order\": 1\n}"
+      },
+      "_type": "request"
+    },
+    {
+      "_id": "req_delete_movement_link",
+      "parentId": "fld_movement_links",
+      "name": "Delete Movement Link",
+      "method": "POST",
+      "url": "{{ _.base_url }}/DeleteMbdMovementLink",
+      "parameters": [
+        {
+          "name": "id",
+          "value": "ENTER_ID_HERE"
+        }
+      ],
+      "_type": "request"
+    },
+    {
+      "_id": "req_update_movement_links_order",
+      "parentId": "fld_movement_links",
+      "name": "Update Links Order",
+      "method": "POST",
+      "url": "{{ _.base_url }}/UpdateMbdMovementLinksOrder",
+      "body": {
+        "mimeType": "application/json",
+        "text": "[\n  { \"Id\": \"ID_1\", \"Order\": 1 },\n  { \"Id\": \"ID_2\", \"Order\": 2 }\n]"
+      },
+      "_type": "request"
+    },
+    {
+      "_id": "fld_system",
+      "parentId": "wrk_mbd_admin",
+      "name": "System & Backup",
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_create_mbd_backup",
+      "parentId": "fld_system",
+      "name": "Create Backup ZIP",
+      "method": "GET",
+      "url": "{{ _.base_url }}/CreateMbdBackup",
+      "_type": "request"
+    },
+    {
+      "_id": "req_restore_database",
+      "parentId": "fld_system",
+      "name": "Restore Database",
+      "method": "POST",
+      "url": "{{ _.base_url }}/RestoreDatabase",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{}"
+      },
+      "_type": "request"
+    },
+    {
+      "_id": "fld_legacy_ailments",
+      "parentId": "wrk_mbd_admin",
+      "name": "Legacy Ailments",
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_get_ailment_legacy",
+      "parentId": "fld_legacy_ailments",
+      "name": "Get Ailment (Legacy)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/Ailment",
+      "parameters": [
+        {
+          "name": "id",
+          "value": "ENTER_ID_HERE"
+        }
+      ],
+      "_type": "request"
+    },
+    {
+      "_id": "req_get_ailments_table",
+      "parentId": "fld_legacy_ailments",
+      "name": "Ailments Table (Legacy)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/AilmentsTable",
+      "_type": "request"
+    }
+  ]
+}
