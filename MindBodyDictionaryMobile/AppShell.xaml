@@ -28,13 +28,13 @@
         ContentTemplate="{DataTemplate pages:SearchPage}"
         Icon="{StaticResource IconSearch}"
         Route="search" />
-
+<!--
     <ShellContent
         Title="Manage Meta"
         AutomationId="ManageMetaShellContent"
         ContentTemplate="{DataTemplate pages:ManageMetaPage}"
         Icon="{StaticResource IconSettings}"
-        Route="manage" />
+        Route="manage" /> -->
 
     <ShellContent
         Title="Notifications"
@@ -50,20 +50,8 @@
         Icon="{StaticResource IconPremium}"
         Route="premium" />
 
-    <MenuItem
-        Clicked="OnMenuItemClicked"
-        CommandParameter="https://mindbodymovements.com/"
-        IconImageSource="{StaticResource IconMovement}"
-        Text="Mindbody Movement" />
-
-    <MenuItem
-        Clicked="OnMenuItemClicked"
-        CommandParameter="https://mindbodydictionary.com/mindbody-movement-program-events/"
-        IconImageSource="{StaticResource IconClasses}"
-        Text="Classes" />
-
     <ShellContent
-        Title="Movement Resources"
+        Title="Resources"
         AutomationId="MovementResourcesShellContent"
         ContentTemplate="{DataTemplate pages:MovementLinksPage}"
         Icon="{StaticResource IconLinks}"
@@ -89,20 +77,20 @@
         Text="Disclaimer" />
 
     <!--  Debug Pages  -->
-    <ShellContent
+    <!-- <ShellContent
         x:Name="ImageCacheContent"
         Title="Image Cache (Debug)"
         AutomationId="ImageCacheShellContent"
         ContentTemplate="{DataTemplate pages:ImageCachePage}"
         Icon="{StaticResource IconImageCache}"
-        Route="imagecache" />
+        Route="imagecache" /> -->
 
-    <ShellContent
+    <!-- <ShellContent
         Title="Notification Test (Debug)"
         AutomationId="NotificationTestShellContent"
         ContentTemplate="{DataTemplate pages:NotificationTestPage}"
         Icon="{StaticResource IconTest}"
-        Route="notificationtest" />
+        Route="notificationtest" /> -->
 
     <!--  Flyout Footer with Theme Selector  -->
     <Shell.FlyoutFooter>

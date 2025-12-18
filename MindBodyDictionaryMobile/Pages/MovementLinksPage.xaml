@@ -6,7 +6,7 @@
     xmlns:models="clr-namespace:MindBodyDictionaryMobile.Models"
     xmlns:pm="clr-namespace:MindBodyDictionaryMobile.PageModels"
     x:Name="Page"
-    Title="MindBody Movement"
+    Title="Resource links"
     x:DataType="pm:MovementLinksPageModel">
 
     <Grid>
@@ -22,7 +22,7 @@
                         Margin="0,10,0,0"
                         HorizontalOptions="Center"
                         Style="{StaticResource SubHeadline}"
-                        Text="MindBody Movement Resources" />
+                        Text="Resources" />
                 </VerticalStackLayout>
             </CollectionView.Header>
 

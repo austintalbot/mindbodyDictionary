@@ -36,13 +36,6 @@
                                 Text="{Binding Name}"
                                 TextColor="{AppThemeBinding Light={StaticResource Gray900},
                                                             Dark={StaticResource White}}" />
-                            <Button
-                                Margin="0"
-                                Clicked="OnAddToMyListClicked"
-                                CommandParameter="{Binding .}"
-                                Style="{StaticResource PrimaryButton}"
-                                Text="Add to List"
-                                VerticalOptions="End" />
                         </VerticalStackLayout>
                     </Border>
                 </DataTemplate>

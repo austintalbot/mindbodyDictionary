@@ -39,7 +39,7 @@
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net10.0-ios|AnyCPU'">
 		<CreatePackage>false</CreatePackage>
-		<CodesignKey>iPhone Developer: Austin Talbot (DKN65RTHX9)</CodesignKey>
+		<CodesignKey>Apple Development: Austin Talbot (DKN65RTHX9)</CodesignKey>
 		<CodesignProvision>MindBodyDictionary</CodesignProvision>
 		<CodesignEntitlements>Platforms\iOS\Entitlements.plist</CodesignEntitlements>
 		<MtouchLink>None</MtouchLink>

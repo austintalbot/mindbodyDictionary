@@ -54,7 +54,7 @@ public static class MauiProgram
     builder.Services.AddSingleton<ModalErrorHandler>();
     builder.Services.AddSingleton<MainPageModel>();
     builder.Services.AddSingleton<ProjectListPageModel>();
-    builder.Services.AddSingleton<ManageMetaPageModel>();
+    // builder.Services.AddSingleton<ManageMetaPageModel>();
     builder.Services.AddTransient<IBillingService, BillingService>();
 
 #if ANDROID
@@ -77,8 +77,8 @@ public static class MauiProgram
     builder.Services.AddTransient<NotificationSettingsPage>();
 
 #if DEBUG
-    builder.Services.AddTransient<ImageCachePageModel>();
-    builder.Services.AddTransient<ImageCachePage>();
+    // builder.Services.AddTransient<ImageCachePageModel>();
+    // builder.Services.AddTransient<ImageCachePage>();
 #endif
 
     builder.Services.AddSingleton<UpgradePremiumPageModel>();

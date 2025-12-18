@@ -362,19 +362,11 @@ tasks:
     cmds:
     - task: clean
     - |
-      echo "🔍 Detecting connected iPhone 13 device..."
-      UDID=$(xcrun xctrace list devices 2>/dev/null | grep -i "iPhone 13" | grep -oE '\([A-F0-9-]+\)' | head -1 | tr -d '()')
-      
-      if [ -z "$UDID" ]; then
-        echo "❌ No iPhone 13 connected. Available devices:"
-        xcrun xctrace list devices 2>/dev/null | grep iPhone || echo "No iOS devices found"
-        exit 1
-      fi
-      
-      echo "✅ Found iPhone 13 (UDID: $UDID)"
+      UDID="00008110-000E28EC0C7B801E"
+      echo "✅ iPhone 13: Austin Talbot's iPhone (UDID: $UDID)"
       echo "📱 Building for physical device..."
       dotnet build -f net10.0-ios -c Debug -p:RuntimeIdentifier=ios-arm64 -p:_DeviceName=":v2:udid=$UDID"
-      
+
       echo ""
       echo "🚀 Deploying to device..."
       dotnet build -f net10.0-ios -c Debug -t:Run -p:RuntimeIdentifier=ios-arm64 -p:_DeviceName=":v2:udid=$UDID"
