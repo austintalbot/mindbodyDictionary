@@ -9,8 +9,9 @@ public static class CosmosDbConstants
     {
         public const string MbdConditions = "MbdConditions";
         public const string Emails = "Emails";
-		public const string Faqs = "Faqs";
+		    public const string Faqs = "Faqs";
         public const string System = "System";
         public const string MbdMovementLinks = "MbdMovementLinks";
+        public const string LastUpdatedTime = "LastUpdatedTime";
     }
 }

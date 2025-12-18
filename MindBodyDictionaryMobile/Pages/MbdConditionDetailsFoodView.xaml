@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentView
     x:Class="MindBodyDictionaryMobile.Pages.MbdConditionDetailsFoodView"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
@@ -11,7 +11,6 @@
     <Grid RowDefinitions="*">
         <CollectionView
             x:Name="FoodCollectionView"
-            Grid.Row="1"
             EmptyView="There are no corresponding foods for this Condition"
             ItemsSource="{Binding FoodList}"
             SelectionMode="None">
@@ -23,12 +22,11 @@
                         Padding="12"
                         Background="{AppThemeBinding Light={StaticResource LightBackground},
                                                      Dark={StaticResource DarkSecondaryBackground}}"
-                        MinimumHeightRequest="100"
                         Stroke="{AppThemeBinding Light={StaticResource Gray200},
                                                  Dark={StaticResource Gray600}}"
                         StrokeShape="RoundRectangle 8"
                         StrokeThickness="1">
-                        <VerticalStackLayout Spacing="10" VerticalOptions="Fill">
+                        <VerticalStackLayout Spacing="10" VerticalOptions="Center">
                             <Label
                                 FontAttributes="Bold"
                                 FontSize="14"
@@ -36,13 +34,6 @@
                                 Text="{Binding Name}"
                                 TextColor="{AppThemeBinding Light={StaticResource Gray900},
                                                             Dark={StaticResource White}}" />
-                            <Button
-                                Margin="0"
-                                Command="{Binding AddToMyListCommand}"
-                                CommandParameter="{Binding .}"
-                                Style="{StaticResource PrimaryButton}"
-                                Text="Add to List"
-                                VerticalOptions="End" />
                         </VerticalStackLayout>
                     </Border>
                 </DataTemplate>

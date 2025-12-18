@@ -12,7 +12,7 @@ namespace MindBodyDictionary.Core.Entities
         [JsonProperty(PropertyName = "id", NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string id { get; set; }
 
-      [JsonProperty(PropertyName = "lastUpdatedTime", NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Ignore)]
+      [JsonProperty(PropertyName = "lastUpdate", NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Ignore)]
         public DateTime LastUpdated
         {
             get { return _lastUpdated; }

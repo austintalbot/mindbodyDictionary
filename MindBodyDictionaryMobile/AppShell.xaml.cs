@@ -122,11 +122,11 @@ public partial class AppShell : Shell
         bool answer = await DisplayAlertAsync("Exit App", "Do you want to close the app?", "Yes", "No");
         if (answer)
         {
-#if ANDROID
-          Android.OS.Process.KillProcess(Android.OS.Process.MyPid());
-#else
-					Application.Current!.Quit();
-#endif
+          // Manually tear down the Shell UI to prevent lifecycle crashes on Android
+          // where Fragments try to access the ServiceProvider after it's disposed.
+          Application.Current!.MainPage = new ContentPage();
+          await Task.Delay(100); 
+          Application.Current!.Quit();
         }
       });
       // Return true to prevent default behavior (exit)

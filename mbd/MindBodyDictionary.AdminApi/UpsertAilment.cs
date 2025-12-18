@@ -83,15 +83,25 @@ public class UpsertAilment
                 _logger?.LogInformation($"Upserted Ailment: {response.Resource}");
 
 
-                // Get the last updated time
-                var lastUpdatedTime = new Core.Entities.LastUpdatedTime
+                // Update LastUpdatedTime (best effort)
+                try
                 {
-                    id = Core.CosmosDB.LastUpdatedTimeID,
-                    LastUpdated = DateTime.UtcNow,
-                    name = "lastUpdatedTime"
-                };
-                _logger?.LogInformation($"Last Updated Time: {lastUpdatedTime.SummaryNegative}");
-                await container.UpsertItemAsync(lastUpdatedTime, partitionKey: new PartitionKey(lastUpdatedTime.id));
+                    var luContainer = client.GetContainer(Core.CosmosDB.DatabaseName, Core.CosmosDB.Containers.LastUpdatedTime);
+                    var lastUpdatedTime = new Core.Entities.LastUpdatedTime
+                    {
+                        id = Core.CosmosDB.LastUpdatedTimeID,
+                        LastUpdated = DateTime.UtcNow,
+                        name = "lastUpdatedTime"
+                    };
+                    _logger?.LogInformation($"Last Updated Time: {lastUpdatedTime.SummaryNegative}");
+                    await luContainer.UpsertItemAsync(lastUpdatedTime, partitionKey: new PartitionKey(lastUpdatedTime.id));
+                    _logger?.LogInformation("LastUpdatedTime updated successfully.");
+                }
+                catch (Exception metaEx)
+                {
+                    _logger?.LogWarning(metaEx, "Failed to update LastUpdatedTime metadata, but the ailment was saved.");
+                }
+
                 return new OkObjectResult(ailmentObject);
             }
             else

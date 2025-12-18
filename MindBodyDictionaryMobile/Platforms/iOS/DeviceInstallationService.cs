@@ -43,7 +43,7 @@ public class DeviceInstallationService : IDeviceInstallationService
     }
 
 #if DEBUG
-    // Only in debug mode, if we timeout, we can fallback to a mock token 
+    // Only in debug mode, if we timeout, we can fallback to a mock token
     // for local UI testing, but Azure delivery will NOT work with this.
     Debug.WriteLine("APNS Token registration timed out. Using mock token for UI testing only (Remote push will not work).");
     _cachedToken = GenerateMockToken();

@@ -127,7 +127,7 @@ public class SendPushNotification
 
             // Define target tags
             var tags = new List<string>();
-            
+
             if (bool.TryParse(payload.SubscribersOnly, out bool isSubscribersOnly) && isSubscribersOnly)
             {
                 tags.Add("subscribers");
@@ -151,10 +151,10 @@ public class SendPushNotification
                 : await _hubClient!.SendTemplateNotificationAsync(notificationProperties, tagExpression);
 
             _logger.LogInformation("Notification Hub response: State={State}, NotificationId={Id}", outcome.State, outcome.NotificationId);
-            
-            return new OkObjectResult(new 
-            { 
-                message = "Notification request processed.", 
+
+            return new OkObjectResult(new
+            {
+                message = "Notification request processed.",
                 outcomeState = outcome.State.ToString(),
                 notificationId = outcome.NotificationId,
                 trackingId = outcome.TrackingId
@@ -163,9 +163,9 @@ public class SendPushNotification
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error sending push notification.");
-            return new ObjectResult(new { error = "Internal server error sending notification.", details = ex.Message, stackTrace = ex.StackTrace }) 
-            { 
-                StatusCode = 500 
+            return new ObjectResult(new { error = "Internal server error sending notification.", details = ex.Message, stackTrace = ex.StackTrace })
+            {
+                StatusCode = 500
             };
         }
     }

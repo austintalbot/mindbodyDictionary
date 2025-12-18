@@ -97,8 +97,8 @@ const MbdConditionsTable: React.FC<MbdConditionsTableProps> = ({ mbdConditions, 
                   }
                 </td>
                 <td style={{ padding: '16px', color: colors.mutedText, fontSize: '13px' }}>
-                  {(mbdCondition.tags || []).length > 0
-                    ? (mbdCondition.tags || []).map((tag: string, i: number) => (
+                  {(mbdCondition.searchTags || []).length > 0
+                    ? (mbdCondition.searchTags || []).map((tag: string, i: number) => (
                         <span key={i} style={{
                           display: 'inline-block',
                           backgroundColor: colors.primaryLight,

@@ -10,6 +10,7 @@ using MindBodyDictionaryMobile.Services.billing;
 
 namespace MindBodyDictionaryMobile.PageModels;
 
+[QueryProperty(nameof(SearchParam), "SearchParam")]
 public partial class SearchPageModel : ObservableObject, IRecipient<ConditionsUpdatedMessage>
 {
   private readonly MbdConditionRepository _mbdConditionRepository;
@@ -66,10 +67,10 @@ public partial class SearchPageModel : ObservableObject, IRecipient<ConditionsUp
 
       // 1. Fetch conditions from repository
       var conditions = await _mbdConditionRepository.ListAsync();
-      
+
       await MainThread.InvokeOnMainThreadAsync(() => {
         _allConditions = new ObservableCollection<MbdCondition>(conditions);
-        
+
         // 2. Initialize UI with data immediately
         ApplyFilter();
         IsInitialized = true;
@@ -117,6 +118,23 @@ public partial class SearchPageModel : ObservableObject, IRecipient<ConditionsUp
     ApplyFilter();
   }
 
+  private bool FuzzyMatch(string pattern, string str) {
+    if (string.IsNullOrEmpty(pattern)) return true;
+    if (string.IsNullOrEmpty(str)) return false;
+
+    pattern = pattern.ToLowerInvariant();
+    str = str.ToLowerInvariant();
+    int patternIdx = 0;
+    int strIdx = 0;
+    while (patternIdx < pattern.Length && strIdx < str.Length) {
+      if (pattern[patternIdx] == str[strIdx]) {
+        patternIdx++;
+      }
+      strIdx++;
+    }
+    return patternIdx == pattern.Length;
+  }
+
   private void ApplyFilter() {
     List<MbdCondition> filteredList;
     if (string.IsNullOrWhiteSpace(SearchParam))
@@ -125,20 +143,19 @@ public partial class SearchPageModel : ObservableObject, IRecipient<ConditionsUp
     }
     else
     {
-      var lowerCaseSearchParam = SearchParam.ToLowerInvariant();
       filteredList = _allConditions
-          .Where(c => (c.Name != null && c.Name.ToLowerInvariant().Contains(lowerCaseSearchParam)) ||
-                      (c.MobileTags?.Any(tag => tag.Title != null && tag.Title.ToLowerInvariant().Contains(lowerCaseSearchParam)) == true))
+          .Where(c => (c.Name != null && FuzzyMatch(SearchParam, c.Name)) ||
+                      (c.SearchTags?.Any(tag => FuzzyMatch(SearchParam, tag)) == true))
           .ToList();
     }
 
     if (MainThread.IsMainThread)
     {
-        UpdateFilteredCollection(filteredList);
+      UpdateFilteredCollection(filteredList);
     }
     else
     {
-        MainThread.BeginInvokeOnMainThread(() => UpdateFilteredCollection(filteredList));
+      MainThread.BeginInvokeOnMainThread(() => UpdateFilteredCollection(filteredList));
     }
   }
 

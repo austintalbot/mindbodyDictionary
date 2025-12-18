@@ -14,6 +14,7 @@ public class MbdConditionApiService(MbdConditionRepository mbdConditionRepositor
 
   private const string BaseUrl = "https://mbd-admin-api-staging.azurewebsites.net/api";
   private const string MbdConditionsEndpoint = "GetMbdConditions";
+  private const string LastUpdateTimeEndpoint = "GetLastUpdateTime";
   private const string ApiKey = "p8_sBm-IGx0vcvseYZK_mGxL16_CYCbH7RgPb2p-YoIkAzFuiNtQ1Q==";
 
   /// <summary>
@@ -58,6 +59,34 @@ public class MbdConditionApiService(MbdConditionRepository mbdConditionRepositor
     }
   }
 
+  /// <summary>
+  /// Retrieves the last update time from the backend.
+  /// </summary>
+  public async Task<DateTime?> GetLastUpdateTimeAsync() {
+    try
+    {
+      var url = $"{BaseUrl}/{LastUpdateTimeEndpoint}?code={ApiKey}";
+      using var client = new HttpClient();
+      var response = await client.GetAsync(url);
+
+      if (response.IsSuccessStatusCode)
+      {
+        var json = await response.Content.ReadAsStringAsync();
+        var options = new System.Text.Json.JsonSerializerOptions
+        {
+          PropertyNameCaseInsensitive = true
+        };
+        var result = System.Text.Json.JsonSerializer.Deserialize<LastUpdateTimeDto>(json, options);
+        return result?.LastUpdated;
+      }
+    }
+    catch (Exception ex)
+    {
+      Debug.WriteLine($"[MbdConditionApiService] GetLastUpdateTimeAsync - Error: {ex.Message}");
+    }
+    return null;
+  }
+
   private List<MbdCondition> ParseApiResponse(string json) {
     try
     {
@@ -100,5 +129,10 @@ public class MbdConditionApiService(MbdConditionRepository mbdConditionRepositor
     public List<MbdCondition> Data { get; set; } = [];
     public int Count { get; set; }
     public DateTime Timestamp { get; set; }
+  }
+
+  private class LastUpdateTimeDto
+  {
+    public DateTime LastUpdated { get; set; }
   }
 }

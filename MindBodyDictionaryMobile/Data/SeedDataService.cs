@@ -219,7 +219,7 @@ public class SeedDataService(ProjectRepository projectRepository, TaskRepository
       if (conditions != null && conditions.Count > 0)
       {
         _logger.LogInformation($"Successfully retrieved {conditions.Count} conditions from API service");
-        // Note: MbdConditionApiService already syncs to local DB, 
+        // Note: MbdConditionApiService already syncs to local DB,
         // but we can call it again here if we want to ensure it's done or for logging
         await SaveConditionsToDatabase(conditions);
         return true;

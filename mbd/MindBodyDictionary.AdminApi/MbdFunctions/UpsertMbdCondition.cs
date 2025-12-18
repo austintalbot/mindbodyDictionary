@@ -53,23 +53,30 @@ public class UpsertMbdCondition(ILogger<UpsertMbdCondition> logger, CosmosClient
             var response = await container.UpsertItemAsync(mbdCondition, new PartitionKey(mbdCondition.Id));
             _logger.LogInformation("Successfully upserted MbdCondition: {Name} (ID: {Id}). StatusCode: {StatusCode}", mbdCondition.Name, response.Resource.Id, response.StatusCode);
 
-            // Update LastUpdatedTime
-            _logger.LogInformation("Updating LastUpdatedTime in System container.");
-            var systemContainer = _client.GetContainer(CosmosDbConstants.DatabaseName, CosmosDbConstants.Containers.System);
-            var lastUpdatedTime = new LastUpdatedTime
+            // Update LastUpdatedTime (best effort)
+            try
             {
-                Id = CosmosDbConstants.LastUpdatedTimeID,
-                LastUpdated = DateTime.UtcNow,
-                Name = "lastUpdatedTime"
-            };
-            await systemContainer.UpsertItemAsync(lastUpdatedTime, new PartitionKey(lastUpdatedTime.Id));
-            _logger.LogInformation("LastUpdatedTime updated successfully.");
+                _logger.LogInformation("Updating LastUpdatedTime in LastUpdatedTime container.");
+                var containerLU = _client.GetContainer(CosmosDbConstants.DatabaseName, CosmosDbConstants.Containers.LastUpdatedTime);
+                var lastUpdatedTime = new LastUpdatedTime
+                {
+                    Id = CosmosDbConstants.LastUpdatedTimeID,
+                    LastUpdated = DateTime.UtcNow,
+                    Name = "lastUpdatedTime"
+                };
+                await containerLU.UpsertItemAsync(lastUpdatedTime, new PartitionKey(lastUpdatedTime.Id));
+                _logger.LogInformation("LastUpdatedTime updated successfully.");
+            }
+            catch (Exception metaEx)
+            {
+                _logger.LogWarning(metaEx, "Failed to update LastUpdatedTime metadata, but the condition was saved. Error: {Message}", metaEx.Message);
+            }
 
             return new OkObjectResult(response.Resource);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error upserting MbdCondition: {Name} (ID: {Id})", mbdCondition.Name, mbdCondition.Id);
+            _logger.LogError(ex, "Error upserting MbdCondition: {Name} (ID: {Id}). Error: {Message}", mbdCondition.Name, mbdCondition.Id, ex.Message);
             return new StatusCodeResult(StatusCodes.Status500InternalServerError);
         }
     }

@@ -26,7 +26,7 @@ public class DataSyncService(MbdConditionApiService apiService, MbdConditionRepo
       Debug.WriteLine("[DataSyncService] SyncMbdConditionsAsync - Starting sync");
 
       // Check if we need to refresh from backend
-      if (ShouldRefreshFromBackend())
+      if (await ShouldRefreshFromBackendAsync())
       {
         if (Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
         {
@@ -55,7 +55,7 @@ public class DataSyncService(MbdConditionApiService apiService, MbdConditionRepo
     }
   }
 
-  private bool ShouldRefreshFromBackend() {
+  private async Task<bool> ShouldRefreshFromBackendAsync() {
     try
     {
       var lastSync = Preferences.Default.Get<DateTime?>(LastSyncKey, null);
@@ -66,10 +66,33 @@ public class DataSyncService(MbdConditionApiService apiService, MbdConditionRepo
         return true;
       }
 
+      // Check remote last update time
+      if (Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
+      {
+        var remoteLastUpdate = await _apiService.GetLastUpdateTimeAsync();
+        if (remoteLastUpdate != null)
+        {
+          Debug.WriteLine($"[DataSyncService] Remote Last Update: {remoteLastUpdate.Value}, Local Last Sync: {lastSync.Value}");
+          if (remoteLastUpdate.Value > lastSync.Value)
+          {
+            Debug.WriteLine("[DataSyncService] Remote data is newer. Refreshing.");
+            return true;
+          }
+          else
+          {
+            Debug.WriteLine("[DataSyncService] Local data is up to date.");
+            return false;
+          }
+        }
+      }
+
+      // Fallback to time-based cache if remote check fails or no internet (though if no internet, we can't refresh anyway)
+      // Or if we want to force refresh periodically regardless of the "LastUpdatedTime" check failing (e.g. if the check endpoint is down)
+
       var daysSinceSync = (DateTime.UtcNow - lastSync.Value).TotalDays;
       var shouldRefresh = daysSinceSync > CacheExpiryDays;
 
-      Debug.WriteLine($"[DataSyncService] ShouldRefreshFromBackend - Days since sync: {daysSinceSync:F1}, Should refresh: {shouldRefresh}");
+      Debug.WriteLine($"[DataSyncService] ShouldRefreshFromBackend - Remote check skipped/failed. Days since sync: {daysSinceSync:F1}, Should refresh: {shouldRefresh}");
 
       return shouldRefresh;
     }
