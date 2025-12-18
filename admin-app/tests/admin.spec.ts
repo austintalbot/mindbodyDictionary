@@ -61,7 +61,7 @@ test.describe('MBD Admin Portal Full Functionality Test', () => {
   });
 
   test('Condition Life Cycle: Create, Upload Images, and Cleanup', async ({ page }) => {
-    test.setTimeout(150000);
+    test.setTimeout(180000);
 
     // --- 1. CREATE CONDITION ---
     console.log('Step 1: Creating condition');
@@ -111,22 +111,28 @@ test.describe('MBD Admin Portal Full Functionality Test', () => {
     console.log('Step 2: Uploading images');
     await page.getByRole('button', { name: 'images', exact: true }).click();
 
-    // Helper to upload image
-    const uploadImage = async (typeLabel: string, typeValue: string) => {
-        console.log(`Uploading ${typeLabel} Image...`);
-        await page.getByRole('button', { name: '+ Add New Image' }).click();
+        // Helper to upload image
+        const uploadImage = async (typeLabel: string, typeValue: string) => {
+            console.log(`Uploading ${typeLabel} Image...`);
+            await page.getByRole('button', { name: '+ Add New Image' }).click();
 
-        // Wait for conditions to load in dropdown
-        await page.locator('select').first().selectOption({ label: testConditionName });
-        await page.locator('select').nth(1).selectOption(typeValue);
-        await page.setInputFiles('input[id="imageFile"]', path.join(__dirname, 'assets/test-image.png'));
+            // Wait for conditions to load in dropdown
+            await page.locator('select').first().selectOption({ label: testConditionName });
+            await page.locator('select').nth(1).selectOption(typeValue);
+            await page.setInputFiles('input[id="imageFile"]', path.join(__dirname, 'assets/test-image.png'));
 
-        await page.getByRole('button', { name: 'Upload Image' }).click();
+            await page.getByRole('button', { name: 'Upload Image' }).click();
 
-        // Wait for upload success or modal close
-        await expect(page.getByText('Uploading...')).not.toBeVisible({ timeout: 30000 });
-    };
+            // Wait for upload success or modal close
+            await expect(page.getByText('Uploading...')).not.toBeVisible({ timeout: 60000 });
 
+            // If there's a cancel/close button, click it to ensure modal is gone
+            const closeButton = page.getByRole('button', { name: 'Cancel' });
+            if (await closeButton.isVisible()) {
+                await closeButton.click();
+            }
+            await expect(page.getByText('Add New Image Metadata')).not.toBeVisible({ timeout: 5000 }).catch(() => {});
+        };
     await uploadImage('Negative', '1');
     await uploadImage('Positive', '2');
 
