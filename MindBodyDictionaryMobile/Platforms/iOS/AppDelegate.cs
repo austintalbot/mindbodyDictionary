@@ -66,6 +66,20 @@ public class AppDelegate : MauiUIApplicationDelegate, IUNUserNotificationCenterD
         {
           iosService.SetDeviceToken(token);
           System.Diagnostics.Debug.WriteLine("APNS Token successfully set in DeviceInstallationService");
+
+          // Trigger a re-registration with the new token
+          var registrationService = currentApp.Services.GetService<INotificationRegistrationService>();
+          if (registrationService != null)
+          {
+            _ = Task.Run(async () => {
+              try {
+                await registrationService.RegisterDeviceAsync();
+                System.Diagnostics.Debug.WriteLine("iOS: Device re-registered with new token successfully.");
+              } catch (Exception ex) {
+                System.Diagnostics.Debug.WriteLine($"iOS: Failed to re-register with new token: {ex.Message}");
+              }
+            });
+          }
         }
         else
         {

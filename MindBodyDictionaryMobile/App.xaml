@@ -43,6 +43,7 @@
             <converters:SelectedTabBackgroundColorConverter x:Key="SelectedTabBackgroundColorConverter" />
             <converters:DataLabelValueConverter x:Key="DataLabelValueConverter" />
             <converters:BytesToFormattedSizeConverter x:Key="BytesToFormattedSizeConverter" />
+            <converters:StringToColorConverter x:Key="StringToColorConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

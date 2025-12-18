@@ -29,35 +29,26 @@ public class DeviceInstallationService : IDeviceInstallationService
       return _cachedToken;
     }
 
-#if DEBUG
-    if (Runtime.Arch == Arch.DEVICE)
-    {
-      // On device, wait for the real token from AppDelegate
-      // With a timeout to avoid hanging forever if registration fails
-      var delayTask = Task.Delay(TimeSpan.FromSeconds(15));
-      var completedTask = await Task.WhenAny(_tokenTcs.Task, delayTask);
+    Debug.WriteLine("Waiting for APNS token from AppDelegate...");
 
-      if (completedTask == _tokenTcs.Task)
-      {
-        return await _tokenTcs.Task;
-      }
-
-      Debug.WriteLine("APNS Token timeout on device, using mock for debug build.");
-      return GenerateMockToken();
-    }
-    // Simulator build: return mock token immediately
-    _cachedToken = GenerateMockToken();
-    return _cachedToken;
-#else
-    // Release build on device: must wait for the real token
-    // We'll wait up to 30 seconds
+    // Wait for the token from AppDelegate (set via SetDeviceToken)
+    // We wait up to 30 seconds for registration to complete
     var delayTask = Task.Delay(TimeSpan.FromSeconds(30));
     var completedTask = await Task.WhenAny(_tokenTcs.Task, delayTask);
 
-    if (completedTask == _tokenTcs.Task) {
-        return await _tokenTcs.Task;
+    if (completedTask == _tokenTcs.Task)
+    {
+      _cachedToken = await _tokenTcs.Task;
+      return _cachedToken;
     }
 
+#if DEBUG
+    // Only in debug mode, if we timeout, we can fallback to a mock token 
+    // for local UI testing, but Azure delivery will NOT work with this.
+    Debug.WriteLine("APNS Token registration timed out. Using mock token for UI testing only (Remote push will not work).");
+    _cachedToken = GenerateMockToken();
+    return _cachedToken;
+#else
     throw new Exception("APNS token registration timed out.");
 #endif
   }

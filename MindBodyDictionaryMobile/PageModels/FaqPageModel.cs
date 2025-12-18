@@ -44,11 +44,7 @@ public partial class FaqPageModel : ObservableObject
         var sortedFaqs = faqs.OrderBy(f => f.Order ?? int.MaxValue).ToList();
 
         MainThread.BeginInvokeOnMainThread(() => {
-          FaqItems.Clear();
-          foreach (var faq in sortedFaqs)
-          {
-            FaqItems.Add(faq);
-          }
+          FaqItems = new ObservableCollection<FaqItem>(sortedFaqs);
           _logger.LogInformation("FaqItems collection updated and sorted.");
         });
       }

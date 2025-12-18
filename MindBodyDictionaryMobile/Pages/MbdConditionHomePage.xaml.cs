@@ -51,7 +51,7 @@ public partial class MbdConditionHomePage : ContentPage
       Preferences.Set("hasShownDisclaimer", true);
     }
 
-    await _mbdConditionHomePageModel.GetConditionList();
+    await _mbdConditionHomePageModel.InitialLoadAsync();
   }
 
 

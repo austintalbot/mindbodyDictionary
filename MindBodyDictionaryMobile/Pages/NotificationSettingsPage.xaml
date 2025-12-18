@@ -35,7 +35,7 @@
                     <Label
                         Style="{StaticResource NotificationRegistrationStatusValueLabel}"
                         Text="{Binding IsRegistered, Converter={StaticResource BoolToRegisteredTextConverter}}"
-                        TextColor="{Binding IsRegistered, Converter={StaticResource BoolToColorConverter}}" />
+                        TextColor="{Binding IsRegistered, Converter={StaticResource BoolToColorConverter}, ConverterParameter='#4CAF50|#F44336'}" />
                 </HorizontalStackLayout>
             </Border>
 
