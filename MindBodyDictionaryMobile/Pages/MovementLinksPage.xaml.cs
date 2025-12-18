@@ -20,14 +20,19 @@ public partial class MovementLinksPage : ContentPage
   }
 
   private async void OnOpenLinkClicked(object sender, EventArgs e) {
-    if (sender is not Button button) return;
-    if (button.CommandParameter is not MovementLink link) return;
-    if (link?.Url == null) return;
+    if (sender is not Button button)
+      return;
+    if (button.CommandParameter is not MovementLink link)
+      return;
+    if (link?.Url == null)
+      return;
 
-    try {
+    try
+    {
       await Browser.OpenAsync(link.Url, BrowserLaunchMode.SystemPreferred);
     }
-    catch (Exception ex) {
+    catch (Exception ex)
+    {
       await AppShell.DisplayToastAsync($"Unable to open link: {ex.Message}");
     }
   }

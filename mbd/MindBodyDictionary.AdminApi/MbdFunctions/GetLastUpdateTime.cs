@@ -21,12 +21,12 @@ public class GetLastUpdateTime(ILogger<GetLastUpdateTime> logger, CosmosClient c
             _logger.LogInformation("GetLastUpdateTime processed a request.");
 
             var container = _client.GetContainer(CosmosDbConstants.DatabaseName, CosmosDbConstants.Containers.LastUpdatedTime);
-            
+
             var query = new QueryDefinition("SELECT * FROM c WHERE c.id = @id")
                 .WithParameter("@id", CosmosDbConstants.LastUpdatedTimeID);
 
             using var iterator = container.GetItemQueryIterator<backend.Entities.LastUpdatedTime>(query);
-            
+
             if (iterator.HasMoreResults)
             {
                 var response = await iterator.ReadNextAsync();

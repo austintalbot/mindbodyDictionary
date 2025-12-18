@@ -23,11 +23,11 @@ public class StringToColorConverter : IValueConverter
         Debug.WriteLine($"[StringToColorConverter] Error parsing color string '{colorString}': {ex.Message}");
       }
     }
-    
+
     // Default fallback color if input is invalid or empty
     if (value != null && !string.IsNullOrWhiteSpace(value.ToString()))
     {
-        Debug.WriteLine($"[StringToColorConverter] Falling back to Transparent for input: '{value}'");
+      Debug.WriteLine($"[StringToColorConverter] Falling back to Transparent for input: '{value}'");
     }
 
     return Colors.Transparent;

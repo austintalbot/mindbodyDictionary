@@ -62,7 +62,8 @@ namespace MindBodyDictionaryMobile.PageModels
       try
       {
         IsBusy = true;
-        if (showRefresh) IsRefreshing = true;
+        if (showRefresh)
+          IsRefreshing = true;
 
         // Simulate loading or fetch data
         var allConditions = await _mbdConditionRepository.ListAsync();
@@ -91,7 +92,7 @@ namespace MindBodyDictionaryMobile.PageModels
         // For now, just taking a few random ones, or all if less than 5
         var random = new Random();
         var conditionsToShow = allConditions.OrderBy(x => random.Next()).Take(5).ToList();
-        
+
         foreach (var condition in conditionsToShow)
         {
           condition.DisplayLock = condition.SubscriptionOnly && !isSubscribed;

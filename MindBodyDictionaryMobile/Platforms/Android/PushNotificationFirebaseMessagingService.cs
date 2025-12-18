@@ -17,23 +17,26 @@ public class PushNotificationFirebaseMessagingService : FirebaseMessagingService
       // Update the token in DeviceInstallationService
       var services = IPlatformApplication.Current?.Services;
       var deviceInstallationService = services?.GetService<IDeviceInstallationService>();
-      
+
       if (deviceInstallationService is Platforms.Android.DeviceInstallationService)
       {
         global::Android.Util.Log.Info("FCM", "✅ FCM token received.");
-        
+
         // Trigger a re-registration with the new token
         var registrationService = services?.GetService<INotificationRegistrationService>();
         if (registrationService != null)
         {
-            _ = Task.Run(async () => {
-                try {
-                    await registrationService.RegisterDeviceAsync();
-                    global::Android.Util.Log.Info("FCM", "✅ Device re-registered with new token successfully.");
-                } catch (Exception ex) {
-                    global::Android.Util.Log.Error("FCM", $"❌ Failed to re-register with new token: {ex.Message}");
-                }
-            });
+          _ = Task.Run(async () => {
+            try
+            {
+              await registrationService.RegisterDeviceAsync();
+              global::Android.Util.Log.Info("FCM", "✅ Device re-registered with new token successfully.");
+            }
+            catch (Exception ex)
+            {
+              global::Android.Util.Log.Error("FCM", $"❌ Failed to re-register with new token: {ex.Message}");
+            }
+          });
         }
       }
       else

@@ -72,10 +72,13 @@ public class AppDelegate : MauiUIApplicationDelegate, IUNUserNotificationCenterD
           if (registrationService != null)
           {
             _ = Task.Run(async () => {
-              try {
+              try
+              {
                 await registrationService.RegisterDeviceAsync();
                 System.Diagnostics.Debug.WriteLine("iOS: Device re-registered with new token successfully.");
-              } catch (Exception ex) {
+              }
+              catch (Exception ex)
+              {
                 System.Diagnostics.Debug.WriteLine($"iOS: Failed to re-register with new token: {ex.Message}");
               }
             });

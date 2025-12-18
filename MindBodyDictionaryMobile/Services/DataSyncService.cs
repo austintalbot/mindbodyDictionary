@@ -88,7 +88,7 @@ public class DataSyncService(MbdConditionApiService apiService, MbdConditionRepo
 
       // Fallback to time-based cache if remote check fails or no internet (though if no internet, we can't refresh anyway)
       // Or if we want to force refresh periodically regardless of the "LastUpdatedTime" check failing (e.g. if the check endpoint is down)
-      
+
       var daysSinceSync = (DateTime.UtcNow - lastSync.Value).TotalDays;
       var shouldRefresh = daysSinceSync > CacheExpiryDays;
 

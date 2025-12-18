@@ -66,10 +66,10 @@ public partial class SearchPageModel : ObservableObject, IRecipient<ConditionsUp
 
       // 1. Fetch conditions from repository
       var conditions = await _mbdConditionRepository.ListAsync();
-      
+
       await MainThread.InvokeOnMainThreadAsync(() => {
         _allConditions = new ObservableCollection<MbdCondition>(conditions);
-        
+
         // 2. Initialize UI with data immediately
         ApplyFilter();
         IsInitialized = true;
@@ -134,11 +134,11 @@ public partial class SearchPageModel : ObservableObject, IRecipient<ConditionsUp
 
     if (MainThread.IsMainThread)
     {
-        UpdateFilteredCollection(filteredList);
+      UpdateFilteredCollection(filteredList);
     }
     else
     {
-        MainThread.BeginInvokeOnMainThread(() => UpdateFilteredCollection(filteredList));
+      MainThread.BeginInvokeOnMainThread(() => UpdateFilteredCollection(filteredList));
     }
   }
 

@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Maui.Controls;
 using Newtonsoft.Json;
-using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace MindBodyDictionaryMobile.Models;
 

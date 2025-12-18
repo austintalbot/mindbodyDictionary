@@ -54,7 +54,7 @@ public class UpsertMbdCondition(ILogger<UpsertMbdCondition> logger, CosmosClient
             _logger.LogInformation("Successfully upserted MbdCondition: {Name} (ID: {Id}). StatusCode: {StatusCode}", mbdCondition.Name, response.Resource.Id, response.StatusCode);
 
             // Update LastUpdatedTime (best effort)
-            try 
+            try
             {
                 _logger.LogInformation("Updating LastUpdatedTime in LastUpdatedTime container.");
                 var containerLU = _client.GetContainer(CosmosDbConstants.DatabaseName, CosmosDbConstants.Containers.LastUpdatedTime);

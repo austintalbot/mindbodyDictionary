@@ -19,9 +19,12 @@ public partial class MbdConditionDetailsFoodView : ContentView
   }
 
   private async void OnAddToMyListClicked(object sender, EventArgs e) {
-    if (sender is not Button button) return;
-    if (button.CommandParameter is not Recommendation rec) return;
-    if (rec == null) return;
+    if (sender is not Button button)
+      return;
+    if (button.CommandParameter is not Recommendation rec)
+      return;
+    if (rec == null)
+      return;
 
     var snackbar = Snackbar.Make(
       $"Added {rec.Name} to your list",
