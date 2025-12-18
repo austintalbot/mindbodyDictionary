@@ -28,13 +28,13 @@
         ContentTemplate="{DataTemplate pages:SearchPage}"
         Icon="{StaticResource IconSearch}"
         Route="search" />
-<!--
+    <!--
     <ShellContent
         Title="Manage Meta"
         AutomationId="ManageMetaShellContent"
         ContentTemplate="{DataTemplate pages:ManageMetaPage}"
         Icon="{StaticResource IconSettings}"
-        Route="manage" /> -->
+        Route="manage" />-->
 
     <ShellContent
         Title="Notifications"
@@ -83,14 +83,14 @@
         AutomationId="ImageCacheShellContent"
         ContentTemplate="{DataTemplate pages:ImageCachePage}"
         Icon="{StaticResource IconImageCache}"
-        Route="imagecache" /> -->
+        Route="imagecache" />-->
 
     <!-- <ShellContent
         Title="Notification Test (Debug)"
         AutomationId="NotificationTestShellContent"
         ContentTemplate="{DataTemplate pages:NotificationTestPage}"
         Icon="{StaticResource IconTest}"
-        Route="notificationtest" /> -->
+        Route="notificationtest" />-->
 
     <!--  Flyout Footer with Theme Selector  -->
     <Shell.FlyoutFooter>

@@ -20,15 +20,15 @@ public partial class AppShell : Shell
     var currentTheme = Application.Current!.RequestedTheme;
     ThemeSegmentedControl.SelectedIndex = currentTheme == AppTheme.Light ? 0 : 1;
 
-/*
-#if !DEBUG
-		// Hide the Image Cache menu in release builds
-		if (ImageCacheContent != null)
-		{
-			ImageCacheContent.IsVisible = false;
-		}
-#endif
-*/
+    /*
+    #if !DEBUG
+            // Hide the Image Cache menu in release builds
+            if (ImageCacheContent != null)
+            {
+                ImageCacheContent.IsVisible = false;
+            }
+    #endif
+    */
 
     // Initiate device registration with Notification Hubs
     Task.Run(async () => {
@@ -127,7 +127,7 @@ public partial class AppShell : Shell
           // Manually tear down the Shell UI to prevent lifecycle crashes on Android
           // where Fragments try to access the ServiceProvider after it's disposed.
           Application.Current!.MainPage = new ContentPage();
-          await Task.Delay(100); 
+          await Task.Delay(100);
           Application.Current!.Quit();
         }
       });

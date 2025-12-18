@@ -119,15 +119,19 @@ public partial class SearchPageModel : ObservableObject, IRecipient<ConditionsUp
   }
 
   private bool FuzzyMatch(string pattern, string str) {
-    if (string.IsNullOrEmpty(pattern)) return true;
-    if (string.IsNullOrEmpty(str)) return false;
+    if (string.IsNullOrEmpty(pattern))
+      return true;
+    if (string.IsNullOrEmpty(str))
+      return false;
 
     pattern = pattern.ToLowerInvariant();
     str = str.ToLowerInvariant();
     int patternIdx = 0;
     int strIdx = 0;
-    while (patternIdx < pattern.Length && strIdx < str.Length) {
-      if (pattern[patternIdx] == str[strIdx]) {
+    while (patternIdx < pattern.Length && strIdx < str.Length)
+    {
+      if (pattern[patternIdx] == str[strIdx])
+      {
         patternIdx++;
       }
       strIdx++;
