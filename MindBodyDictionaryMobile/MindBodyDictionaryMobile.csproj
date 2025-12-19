@@ -26,12 +26,12 @@
 		<ApplicationTitle>mbd</ApplicationTitle>
 
 		<!-- App Identifier -->
-		<ApplicationId>com.mbd.mindbodydictionarymobile</ApplicationId>
+		<ApplicationId>com.mindbodydictionary.mindbodydictionarymobile</ApplicationId>
 
 		<!-- Versions -->
-		<ApplicationDisplayVersion>2.0</ApplicationDisplayVersion>
-		<ApplicationVersion>3</ApplicationVersion>
-		<NoWarn>$(NoWarn),CS8618,CS8602,XC0045,XC0103,XC0022</NoWarn>
+		<ApplicationDisplayVersion>3.0</ApplicationDisplayVersion>
+		<ApplicationVersion>4</ApplicationVersion>
+		<NoWarn>$(NoWarn),CS8618,CS8602,XC0045,XC0103,XC0022,CA1422</NoWarn>
 
 
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">17.0</SupportedOSPlatformVersion>
@@ -39,20 +39,25 @@
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net10.0-ios|AnyCPU'">
 		<CreatePackage>false</CreatePackage>
-		<CodesignKey>Apple Development: Austin Talbot (DKN65RTHX9)</CodesignKey>
-		<CodesignProvision>MindBodyDictionary</CodesignProvision>
+		<ProvisioningType>automatic</ProvisioningType>
+		<CodesignKey>Apple Distribution</CodesignKey>
+		<CodesignProvision>Automatic</CodesignProvision>
 		<CodesignEntitlements>Platforms\iOS\Entitlements.plist</CodesignEntitlements>
 		<MtouchLink>None</MtouchLink>
 		<BuildIpa>true</BuildIpa>
 		<MtouchEnableBitcode>false</MtouchEnableBitcode>
+		<ApplicationId>com.mindbodydictionary.mindbodydictionarymobile</ApplicationId>
+		<MtouchDebug>false</MtouchDebug>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0-ios|AnyCPU'">
 		<CreatePackage>false</CreatePackage>
+		<ProvisioningType>automatic</ProvisioningType>
+		<CodesignKey>Apple Distribution</CodesignKey>
+		<CodesignProvision>Automatic</CodesignProvision>
 		<MtouchLink>None</MtouchLink>
-		<CodesignKey>iPhone Developer: Austin Talbot (DKN65RTHX9)</CodesignKey>
-		<CodesignProvision>MindBodyDictionary</CodesignProvision>
 		<MtouchEnableBitcode>false</MtouchEnableBitcode>
 		<CodesignEntitlements>Platforms\iOS\Entitlements.plist</CodesignEntitlements>
+		<ApplicationId>com.mindbodydictionary.mindbodydictionarymobile</ApplicationId>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net10.0-android|AnyCPU'">
 		<AndroidKeyStore>True</AndroidKeyStore>
