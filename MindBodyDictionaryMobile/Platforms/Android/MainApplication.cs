@@ -9,10 +9,17 @@ public class MainApplication(IntPtr handle, JniHandleOwnership ownership) : Maui
   protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
 
   public override void OnCreate() {
-    base.OnCreate();
+    // Initialize Firebase before MAUI init
+    var firebaseApp = Firebase.FirebaseApp.InitializeApp(this);
+    if (firebaseApp == null)
+    {
+      Android.Util.Log.Error("Firebase", "FirebaseApp.InitializeApp returned null! Check google-services.json");
+    }
+    else
+    {
+      Android.Util.Log.Info("Firebase", "Firebase initialized successfully");
+    }
 
-    // Initialize Firebase
-    Firebase.FirebaseApp.InitializeApp(this);
-    Android.Util.Log.Info("Firebase", "Firebase initialized");
+    base.OnCreate();
   }
 }

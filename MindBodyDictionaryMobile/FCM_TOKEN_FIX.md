@@ -158,7 +158,7 @@ If token still not received:
    ```bash
    # Package name should match
    cat Platforms/Android/google-services.json | grep package_name
-   # Should output: "package_name": "com.mindbodydictionary.mindbodydictionarymobile"
+   # Should output: "package_name": "com.mbd.mindbodydictionarymobile"
    ```
 
 5. **Check Google Play Services:**
