@@ -357,19 +357,38 @@ tasks:
       dotnet build -f net10.0-ios -c Debug -t:Run -p:_DeviceName=":v2:udid=$UDID"
 
   run-ios13:
-    desc: Run the iOS app on iPhone 13 physical device
+    desc: Run the iOS app on iPhone 13 physical device (Sideload)
+    cmds:
+    - task: sideload-ios
+
+  sideload-ios:
+    desc: Build and sideload iOS app to physical device (Ad Hoc / No Debugger)
     dir: MindBodyDictionaryMobile
+    vars:
+      UDID: '{{.UDID | default "00008110-000E28EC0C7B801E"}}'
     cmds:
     - task: clean
     - |
-      UDID="00008110-000E28EC0C7B801E"
-      echo "✅ iPhone 13: Austin Talbot's iPhone (UDID: $UDID)"
-      echo "📱 Building for physical device..."
-      dotnet build -f net10.0-ios -c Debug -p:RuntimeIdentifier=ios-arm64 -p:_DeviceName=":v2:udid=$UDID"
+      echo "✅ Target Device UDID: {{.UDID}}"
+      echo "📱 Building for physical device (Release/AdHoc)..."
+      
+      # Build for device
+      dotnet build -f net10.0-ios -c Debug -r ios-arm64 -p:RuntimeIdentifier=ios-arm64
+
+      APP_PATH="bin/Debug/net10.0-ios/ios-arm64/MindBodyDictionaryMobile.app"
+      
+      if [ ! -d "$APP_PATH" ]; then
+        echo "❌ Build failed. App bundle not found at $APP_PATH"
+        exit 1
+      fi
 
       echo ""
-      echo "🚀 Deploying to device..."
-      dotnet build -f net10.0-ios -c Debug -t:Run -p:RuntimeIdentifier=ios-arm64 -p:_DeviceName=":v2:udid=$UDID"
+      echo "🚀 Installing to device via devicectl..."
+      xcrun devicectl device install app --device "{{.UDID}}" "$APP_PATH"
+      
+      echo ""
+      echo "✅ App installed successfully!"
+      echo "👉 Tap the icon on your device to launch it."
 
   run-ios-release:
     desc: Run the iOS app on iPhone 17 Pro Max simulator
