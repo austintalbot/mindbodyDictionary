@@ -20,10 +20,10 @@ APNS_MODE="${1:-Sandbox}"  # Default to Sandbox, can pass "Production"
 
 # Determine key file based on mode
 if [ "$APNS_MODE" = "Production" ]; then
-    KEY_FILE="../AuthKey_YRBWR72DCA_prod.p8"
-    APNS_KEY_ID="YRBWR72DCA"
+    KEY_FILE="../AuthKey_55FXD7BRS6_prod.p8"
+    APNS_KEY_ID="55FXD7BRS6"
 else
-    KEY_FILE="../AuthKey_5R75Q6ALPT_dev.p8"
+    KEY_FILE="../AuthKey_7A7K9N83F6.p8"
     APNS_MODE="Sandbox"
 fi
 

@@ -320,13 +320,14 @@
         </Setter>
     </Style>
 
-    <!--  New AffirmationFrameStyle  -->
-    <Style x:Key="AffirmationFrameStyle" TargetType="Frame">
+    <!--  New AffirmationBorderStyle  -->
+    <Style x:Key="AffirmationBorderStyle" TargetType="Border">
         <Setter Property="Padding" Value="10" />
         <Setter Property="Margin" Value="2" />
         <Setter Property="HeightRequest" Value="260" />
-        <Setter Property="CornerRadius" Value="12" />
-        <Setter Property="BorderColor" Value="{StaticResource MbdConditionDetailCardBorder}" />
-        <Setter Property="BackgroundColor" Value="{StaticResource MbdConditionDetailCardBackground}" />
+        <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+        <Setter Property="Stroke" Value="{StaticResource MbdConditionDetailCardBorder}" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="Background" Value="{StaticResource MbdConditionDetailCardBackground}" />
     </Style>
 </ResourceDictionary>

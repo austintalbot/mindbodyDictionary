@@ -8,10 +8,10 @@
     xmlns:vm="clr-namespace:MindBodyDictionaryMobile.PageModels"
     x:Name="this"
     x:DataType="vm:MbdConditionDetailPageModel">
-    <Grid HorizontalOptions="CenterAndExpand" VerticalOptions="StartAndExpand">
+    <Grid HorizontalOptions="Fill" VerticalOptions="Fill">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
+            <RowDefinition Height="280" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
@@ -32,31 +32,30 @@
             x:Name="AffirmationCarouselView"
             Grid.Row="1"
             CurrentItem="{Binding CurrentAffirmation}"
-            HeightRequest="280"
-            HorizontalOptions="CenterAndExpand"
+            HorizontalOptions="Fill"
             IndicatorView="AffirmationIndicatorView"
             IsBounceEnabled="True"
             ItemsSource="{Binding Condition.Affirmations}"
-            VerticalOptions="CenterAndExpand">
+            VerticalOptions="Fill">
             <CarouselView.ItemTemplate>
-                <DataTemplate>
-
-                    <Grid Padding="10">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="auto" />
-                            <RowDefinition Height="auto" />
-
-                        </Grid.RowDefinitions>
-                        <Frame Style="{StaticResource AffirmationFrameStyle}">
-                            <VerticalStackLayout>
-                                <Label
-                                    x:Name="AffirmationLabel"
-                                    x:DataType="{x:Type x:String}"
-                                    Style="{StaticResource AffirmationCarouselLabelStyle}"
-                                    Text="{x:Binding .}" />
-                            </VerticalStackLayout>
-                        </Frame>
-                    </Grid>
+                <DataTemplate x:DataType="x:String">
+                    <Border Style="{StaticResource AffirmationBorderStyle}"
+                            BackgroundColor="White"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center"
+                            WidthRequest="300"
+                            HeightRequest="260"
+                            Margin="10">
+                        <Label
+                            x:Name="AffirmationLabel"
+                            Style="{StaticResource AffirmationCarouselLabelStyle}"
+                            TextColor="Black"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center"
+                            HorizontalTextAlignment="Center"
+                            VerticalTextAlignment="Center"
+                            Text="{Binding .}" />
+                    </Border>
                 </DataTemplate>
             </CarouselView.ItemTemplate>
         </CarouselView>
@@ -66,7 +65,6 @@
             HorizontalOptions="Center"
             IndicatorColor="LightGray"
             IndicatorsShape="Square"
-            IsVisible="{Binding IsAndroid}"
             SelectedIndicatorColor="DarkGray" />
         <HorizontalStackLayout
             Grid.Row="3"
