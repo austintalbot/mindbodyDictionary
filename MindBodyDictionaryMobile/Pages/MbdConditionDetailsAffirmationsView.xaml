@@ -40,23 +40,18 @@
             VerticalOptions="CenterAndExpand">
             <CarouselView.ItemTemplate>
                 <DataTemplate>
-
-                    <Grid Padding="10">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="auto" />
-                            <RowDefinition Height="auto" />
-
-                        </Grid.RowDefinitions>
-                        <Frame Style="{StaticResource AffirmationFrameStyle}">
-                            <VerticalStackLayout>
-                                <Label
-                                    x:Name="AffirmationLabel"
-                                    x:DataType="{x:Type x:String}"
-                                    Style="{StaticResource AffirmationCarouselLabelStyle}"
-                                    Text="{x:Binding .}" />
-                            </VerticalStackLayout>
-                        </Frame>
-                    </Grid>
+                    <Border Style="{StaticResource AffirmationBorderStyle}"
+                            BackgroundColor="White"
+                            Margin="10">
+                        <VerticalStackLayout VerticalOptions="Center">
+                            <Label
+                                x:Name="AffirmationLabel"
+                                x:DataType="{x:Type x:String}"
+                                Style="{StaticResource AffirmationCarouselLabelStyle}"
+                                TextColor="Black"
+                                Text="{x:Binding .}" />
+                        </VerticalStackLayout>
+                    </Border>
                 </DataTemplate>
             </CarouselView.ItemTemplate>
         </CarouselView>
