@@ -193,6 +193,14 @@ public partial class NotificationSettingsPageModel : ObservableObject
 
     try
     {
+      StatusMessage = "Requesting permission...";
+      var granted = await _deviceInstallationService.RequestNotificationPermissionAsync();
+      if (!granted)
+      {
+          StatusMessage = "❌ Notification permission denied";
+          return;
+      }
+
       _logger.LogInformation("Calling RegisterDeviceAsync...");
       await _notificationRegistrationService.RegisterDeviceAsync();
 

@@ -17,6 +17,22 @@ public class DeviceInstallationService : IDeviceInstallationService
 
   public string GetDeviceId() => UIDevice.CurrentDevice.IdentifierForVendor?.AsString() ?? Guid.NewGuid().ToString();
 
+  public async Task<bool> RequestNotificationPermissionAsync() {
+    var (granted, error) = await UserNotifications.UNUserNotificationCenter.Current.RequestAuthorizationAsync(
+        UserNotifications.UNAuthorizationOptions.Alert |
+        UserNotifications.UNAuthorizationOptions.Badge |
+        UserNotifications.UNAuthorizationOptions.Sound);
+
+    if (granted)
+    {
+      await MainThread.InvokeOnMainThreadAsync(() => {
+        UIApplication.SharedApplication.RegisterForRemoteNotifications();
+      });
+    }
+
+    return granted;
+  }
+
   public void SetDeviceToken(string token) {
     _cachedToken = token;
     _tokenTcs.TrySetResult(token);
