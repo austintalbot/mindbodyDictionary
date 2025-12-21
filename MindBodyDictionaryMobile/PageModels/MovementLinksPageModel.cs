@@ -27,26 +27,33 @@ public partial class MovementLinksPageModel : ObservableObject
     if (Links.Count > 0)
       return;
 
-    Task.Run(async () => {
-      IsBusy = true;
-      try
-      {
-        var fetchedLinks = await _apiService.GetMovementLinksAsync();
-        var sortedLinks = fetchedLinks.OrderBy(l => l.Order ?? int.MaxValue).ToList();
+    _ = FetchLinksAsync();
+  }
 
-        MainThread.BeginInvokeOnMainThread(() => {
-          Links = new ObservableCollection<MovementLink>(sortedLinks);
-        });
-      }
-      catch (Exception ex)
-      {
-        _logger.LogError(ex, "Error loading movement links");
-      }
-      finally
-      {
-        IsBusy = false;
-      }
-    });
+  [RelayCommand]
+  public async Task GetMovementLinks() {
+    await FetchLinksAsync();
+  }
+
+  private async Task FetchLinksAsync() {
+    IsBusy = true;
+    try
+    {
+      var fetchedLinks = await _apiService.GetMovementLinksAsync();
+      var sortedLinks = fetchedLinks.OrderBy(l => l.Order ?? int.MaxValue).ToList();
+
+      await MainThread.InvokeOnMainThreadAsync(() => {
+        Links = new ObservableCollection<MovementLink>(sortedLinks);
+      });
+    }
+    catch (Exception ex)
+    {
+      _logger.LogError(ex, "Error loading movement links");
+    }
+    finally
+    {
+      IsBusy = false;
+    }
   }
 
   [RelayCommand]
