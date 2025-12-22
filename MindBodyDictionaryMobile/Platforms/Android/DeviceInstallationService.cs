@@ -16,6 +16,19 @@ public class DeviceInstallationService : IDeviceInstallationService
           Platform.AppContext.ContentResolver,
           global::Android.Provider.Settings.Secure.AndroidId) ?? throw new InvalidOperationException("Unable to get device ID");
 
+  public async Task<bool> RequestNotificationPermissionAsync() {
+    if (global::Android.OS.Build.VERSION.SdkInt >= global::Android.OS.BuildVersionCodes.Tiramisu)
+    {
+      var status = await Permissions.CheckStatusAsync<Permissions.PostNotifications>();
+      if (status != PermissionStatus.Granted)
+      {
+        status = await Permissions.RequestAsync<Permissions.PostNotifications>();
+      }
+      return status == PermissionStatus.Granted;
+    }
+    return true;
+  }
+
   public async Task<string> GetPushNotificationTokenAsync() {
     // Implement token retrieval for Android (FCM)
     // This typically involves getting the token from FirebaseMessaging.Instance

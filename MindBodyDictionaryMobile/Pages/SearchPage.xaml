@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
     x:Class="MindBodyDictionaryMobile.Pages.SearchPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
@@ -10,11 +10,33 @@
     Title="{Binding Title}"
     x:DataType="vm:SearchPageModel">
 
-    <Grid RowDefinitions="Auto,*" Style="{StaticResource MainPageGrid}">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem
+            Command="{Binding RefreshConditionsCommand}"
+            IconImageSource="{StaticResource IconRefresh}"
+            Text="Refresh" />
+    </ContentPage.ToolbarItems>
+
+    <Grid RowDefinitions="Auto,Auto,*" Style="{StaticResource MainPageGrid}">
+        <!--  Subscription Status Banner  -->
+        <Border
+            Grid.Row="0"
+            Margin="10,10,10,0"
+            BackgroundColor="{Binding IsSubscriptionActive, Converter={StaticResource BoolToColorConverter}, ConverterParameter='Green|Gray'}"
+            IsVisible="{Binding IsSubscriptionActive, Converter={StaticResource InverseBoolConverter}}"
+            Padding="10"
+            StrokeShape="RoundRectangle 8">
+            <Label
+                FontAttributes="Bold"
+                HorizontalOptions="Center"
+                Text="{Binding SubscriptionStatusMessage}"
+                TextColor="White" />
+        </Border>
+
         <!--  Search Bar  -->
         <SearchBar
             x:Name="MbdConditionSearchBar"
-            Grid.Row="0"
+            Grid.Row="1"
             android:Entry.ImeOptions="Done"
             AutomationId="MbdConditionSearchBar"
             IsTextPredictionEnabled="False"
@@ -25,7 +47,7 @@
             TextChanged="MbdConditionSearchBar_TextChanged" />
 
         <!--  Collection View with optimized layout  -->
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="2">
             <!--  Shimmer loading grid when busy  -->
             <CollectionView IsVisible="{Binding IsBusy}" Style="{StaticResource SearchGridCollectionView}">
                 <CollectionView.ItemsSource>
@@ -92,6 +114,7 @@
                 AutomationId="ConditionCollectionView"
                 IsVisible="{Binding IsInitialized}"
                 ItemsSource="{Binding FilteredConditionCollection}"
+                Scrolled="OnCollectionViewScrolled"
                 SelectionMode="None">
                 <CollectionView.EmptyView>
                     <VerticalStackLayout

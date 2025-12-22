@@ -43,7 +43,7 @@
                     FontSize="18"
                     HorizontalOptions="Fill"
                     HorizontalTextAlignment="Center"
-                    IsVisible="{Binding IsSubscribed, StringFormat='!{0}'}"
+                    IsVisible="{Binding IsSubscribed, Converter={StaticResource InverseBoolConverter}}"
                     LineBreakMode="WordWrap"
                     Text="Enjoy an ad free experience while helping support development."
                     TextColor="{AppThemeBinding Light={StaticResource DarkOnLightBackground},
@@ -55,7 +55,7 @@
                     FontSize="14"
                     HorizontalOptions="Fill"
                     HorizontalTextAlignment="Center"
-                    IsVisible="{Binding IsSubscribed, StringFormat='!{0}'}"
+                    IsVisible="{Binding IsSubscribed, Converter={StaticResource InverseBoolConverter}}"
                     LineBreakMode="WordWrap"
                     Text="No trial period, and the subscription will be renewed automatically on the subscription date, unless canceled before the renewal date."
                     TextColor="{AppThemeBinding Light={StaticResource Gray600},
@@ -64,7 +64,7 @@
                 <!--  Subscription Buttons  -->
                 <VerticalStackLayout
                     Padding="0,20,0,0"
-                    IsVisible="{Binding IsSubscribed, StringFormat='!{0}'}"
+                    IsVisible="{Binding IsSubscribed, Converter={StaticResource InverseBoolConverter}}"
                     Spacing="{StaticResource LayoutSpacing}">
                     <Button
                         Padding="15,12"

@@ -7,6 +7,7 @@ public interface IDeviceInstallationService
   string? Token { get; }
   Task<string> GetPushNotificationTokenAsync();
   bool NotificationsSupported { get; }
-  string GetDeviceId();
-  DeviceInstallation GetDeviceInstallation(params string[] tags);
-}
+      string GetDeviceId();
+      Task<bool> RequestNotificationPermissionAsync();
+      DeviceInstallation GetDeviceInstallation(params string[] tags);
+  }

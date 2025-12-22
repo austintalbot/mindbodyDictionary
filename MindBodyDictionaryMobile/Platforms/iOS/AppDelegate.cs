@@ -14,17 +14,6 @@ public class AppDelegate : MauiUIApplicationDelegate, IUNUserNotificationCenterD
     // Set this AppDelegate as the notification center delegate
     UNUserNotificationCenter.Current.Delegate = this;
 
-    // Request notification permissions
-    UNUserNotificationCenter.Current.RequestAuthorization(UNAuthorizationOptions.Alert | UNAuthorizationOptions.Badge | UNAuthorizationOptions.Sound, (approved, err) => {
-      if (approved)
-      {
-        // Must be on main UI thread
-        Microsoft.Maui.ApplicationModel.MainThread.BeginInvokeOnMainThread(() => {
-          UIApplication.SharedApplication.RegisterForRemoteNotifications();
-        });
-      }
-    });
-
     // Handle notification launched from background
     if (launchOptions?.ContainsKey(UIApplication.LaunchOptionsRemoteNotificationKey) == true)
     {

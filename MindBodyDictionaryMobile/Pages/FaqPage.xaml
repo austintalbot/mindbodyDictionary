@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <ContentPage
     x:Class="MindBodyDictionaryMobile.Pages.FaqPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
@@ -17,6 +17,11 @@
             <CollectionView.Header>
                 <VerticalStackLayout Padding="0,20,0,20">
                     <Image Style="{StaticResource AppLogoImage}" />
+                    <Button
+                        AutomationId="RefreshFaqsButton"
+                        Command="{Binding GetFaqListCommand}"
+                        Style="{StaticResource RandomMbdConditionButton}"
+                        Text="Refresh FAQs" />
                 </VerticalStackLayout>
             </CollectionView.Header>
 

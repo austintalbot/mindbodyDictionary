@@ -523,11 +523,23 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
 #if ANDROID
         productId = "mbdpremiumyr";
 #endif
-        isSubscribed = await _billingService.IsProductOwnedAsync(productId);
+        // Check new preference first for offline/immediate access
+        isSubscribed = Preferences.Get("hasPremiumSubscription", false);
+
+        var hasBillingSubscription = await _billingService.IsProductOwnedAsync(productId);
+
+        isSubscribed = isSubscribed || hasBillingSubscription;
+        // Update preference if we verified it via billing
+        if (hasBillingSubscription && !isSubscribed )
+        {
+            Preferences.Set("hasPremiumSubscription", true);
+        }
       }
       catch (Exception ex)
       {
         _logger.LogError(ex, "Error checking subscription status");
+        // Fallback to cached preferences on error
+        isSubscribed = Preferences.Get("hasPremiumSubscription", false);
       }
 
       Condition.DisplayLock = Condition.SubscriptionOnly && !isSubscribed;

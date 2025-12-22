@@ -12,7 +12,6 @@ using Firebase.Messaging;
 public class MainActivity : MauiAppCompatActivity
 {
   public const string CHANNEL_ID = "mindbody_notifications";
-  const int REQUEST_NOTIFICATION_PERMISSION = 1001;
 
   protected override void OnCreate(Bundle? savedInstanceState) {
     base.OnCreate(savedInstanceState);
@@ -21,7 +20,6 @@ public class MainActivity : MauiAppCompatActivity
     OnBackPressedDispatcher.AddCallback(this, new Platforms.Android.BackPressedCallback(this));
 
     CreateNotificationChannel();
-    RequestNotificationPermission();
 
     // Handle deep link when app is launched from a notification
     HandleIntent(Intent);
@@ -87,44 +85,6 @@ public class MainActivity : MauiAppCompatActivity
       notificationManager?.CreateNotificationChannel(channel);
 
       Android.Util.Log.Info("Notifications", $"✅ Channel created: {CHANNEL_ID}");
-    }
-  }
-
-  void RequestNotificationPermission() {
-    // Android 13 (API 33) and above requires runtime permission for notifications
-    if (Build.VERSION.SdkInt >= BuildVersionCodes.Tiramisu)
-    {
-      Android.Util.Log.Info("Permissions", "Checking notification permission (Android 13+)...");
-
-      if (CheckSelfPermission(Android.Manifest.Permission.PostNotifications) != Permission.Granted)
-      {
-        Android.Util.Log.Info("Permissions", "Requesting POST_NOTIFICATIONS permission...");
-        RequestPermissions([Android.Manifest.Permission.PostNotifications], REQUEST_NOTIFICATION_PERMISSION);
-      }
-      else
-      {
-        Android.Util.Log.Info("Permissions", "✅ POST_NOTIFICATIONS already granted");
-      }
-    }
-    else
-    {
-      Android.Util.Log.Info("Permissions", "Notification permission not required (< Android 13)");
-    }
-  }
-
-  public override void OnRequestPermissionsResult(int requestCode, string[] permissions, Permission[] grantResults) {
-    base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
-
-    if (requestCode == REQUEST_NOTIFICATION_PERMISSION)
-    {
-      if (grantResults.Length > 0 && grantResults[0] == Permission.Granted)
-      {
-        Android.Util.Log.Info("Permissions", "✅ Notification permission granted");
-      }
-      else
-      {
-        Android.Util.Log.Warn("Permissions", "⚠️ Notification permission denied");
-      }
     }
   }
 }

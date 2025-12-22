@@ -8,85 +8,81 @@
     Title="{Binding Title}"
     x:DataType="vm:MbdConditionHomePageModel">
 
-    <Grid RowDefinitions="*" Style="{StaticResource MainPageGrid}">
+    <Grid RowDefinitions="Auto,*" Style="{StaticResource MainPageGrid}">
+        
+        <!-- Fixed Header Section -->
+        <VerticalStackLayout Grid.Row="0" Style="{StaticResource MainContentStack}">
+            <Image AutomationId="AppLogo" Style="{StaticResource AppLogoImage}" />
+            <SearchBar
+                x:Name="MbdConditionSearchBar"
+                AutomationId="MbdConditionSearchBar"
+                SearchButtonPressed="MbdConditionHomePage_SearchButtonPressed"
+                Style="{StaticResource MbdConditionSearchBar}" />
+            <Button
+                AutomationId="RefreshConditionsButton"
+                Command="{Binding GetConditionListCommand}"
+                IsEnabled="{Binding IsInitialized}"
+                Style="{StaticResource RandomMbdConditionButton}"
+                Text="Refresh Conditions" />
+        </VerticalStackLayout>
+
         <RefreshView
-            Grid.Row="0"
+            Grid.Row="1"
             Command="{Binding GetConditionListCommand}"
             IsRefreshing="{Binding IsRefreshing}"
             RefreshColor="{StaticResource Primary}">
-            <ScrollView Style="{StaticResource ContentScrollView}">
-                <VerticalStackLayout Style="{StaticResource MainContentStack}">
+            <CollectionView
+                x:Name="ConditionsList"
+                AutomationId="ConditionsList"
+                IsVisible="{Binding IsInitialized}"
+                ItemSizingStrategy="MeasureAllItems"
+                ItemsSource="{Binding RandomConditionCollection}"
+                SelectionMode="None">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout ItemSpacing="5" Orientation="Vertical" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="model:MbdCondition">
+                        <Border InputTransparent="False" Style="{StaticResource MbdHomePageConditionCard}">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnConditionTapped" />
+                            </Border.GestureRecognizers>
+                            <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,*">
+                                <!--  Name  -->
+                                <Label
+                                    Grid.Row="0"
+                                    Grid.Column="0"
+                                    Style="{StaticResource HomePageConditionNameLabel}"
+                                    Text="{Binding Name}" />
 
-                    <Image AutomationId="AppLogo" Style="{StaticResource AppLogoImage}" />
-                    <SearchBar
-                        x:Name="MbdConditionSearchBar"
-                        AutomationId="MbdConditionSearchBar"
-                        SearchButtonPressed="MbdConditionHomePage_SearchButtonPressed"
-                        Style="{StaticResource MbdConditionSearchBar}" />
+                                <!--  Lock Icon  -->
+                                <Image
+                                    Grid.Row="0"
+                                    Grid.Column="1"
+                                    IsVisible="{Binding DisplayLock}"
+                                    Style="{StaticResource HomePageLockImage}" />
 
-
-
-                    <CollectionView
-                        x:Name="ConditionsList"
-                        AutomationId="ConditionsList"
-                        IsVisible="{Binding IsInitialized}"
-                        ItemSizingStrategy="MeasureAllItems"
-                        ItemsSource="{Binding RandomConditionCollection}"
-                        SelectionMode="None">
-                        <CollectionView.ItemsLayout>
-                            <LinearItemsLayout ItemSpacing="5" Orientation="Vertical" />
-                        </CollectionView.ItemsLayout>
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate x:DataType="model:MbdCondition">
-                                <Border InputTransparent="False" Style="{StaticResource MbdHomePageConditionCard}">
-                                    <Border.GestureRecognizers>
-                                        <TapGestureRecognizer Tapped="OnConditionTapped" />
-                                    </Border.GestureRecognizers>
-                                    <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,*">
-                                        <!--  Name  -->
-                                        <Label
-                                            Grid.Row="0"
-                                            Grid.Column="0"
-                                            Style="{StaticResource HomePageConditionNameLabel}"
-                                            Text="{Binding Name}" />
-
-                                        <!--  Lock Icon  -->
-                                        <Image
-                                            Grid.Row="0"
-                                            Grid.Column="1"
-                                            IsVisible="{Binding DisplayLock}"
-                                            Style="{StaticResource HomePageLockImage}" />
-
-                                        <!--  Affirmation  -->
-                                        <Label
-                                            Grid.Row="1"
-                                            Grid.Column="0"
-                                            Grid.ColumnSpan="2"
-                                            Style="{StaticResource HomePageAffirmationLabel}"
-                                            Text="{Binding DisplayedAffirmation}" />
-                                    </Grid>
-                                </Border>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                        <CollectionView.EmptyView>
-                            <VerticalStackLayout
-                                HorizontalOptions="Center"
-                                Spacing="10"
-                                VerticalOptions="Center">
-                                <Label Style="{StaticResource EmptyViewTitleLabel}" Text="No conditions available" />
-                                <Label Style="{StaticResource EmptyViewSubtitleLabel}" Text="Pull to refresh" />
-                            </VerticalStackLayout>
-                        </CollectionView.EmptyView>
-                    </CollectionView>
-                    <Button
-                        AutomationId="RefreshConditionsButton"
-                        Command="{Binding GetConditionListCommand}"
-                        IsEnabled="{Binding IsInitialized}"
-                        Style="{StaticResource RandomMbdConditionButton}"
-                        Text="Refresh Conditions" />
-
-                </VerticalStackLayout>
-            </ScrollView>
+                                <!--  Affirmation  -->
+                                <Label
+                                    Grid.Row="1"
+                                    Grid.Column="0"
+                                    Grid.ColumnSpan="2"
+                                    Style="{StaticResource HomePageAffirmationLabel}"
+                                    Text="{Binding DisplayedAffirmation}" />
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+                <CollectionView.EmptyView>
+                    <VerticalStackLayout
+                        HorizontalOptions="Center"
+                        Spacing="10"
+                        VerticalOptions="Center">
+                        <Label Style="{StaticResource EmptyViewTitleLabel}" Text="No conditions available" />
+                        <Label Style="{StaticResource EmptyViewSubtitleLabel}" Text="Pull to refresh" />
+                    </VerticalStackLayout>
+                </CollectionView.EmptyView>
+            </CollectionView>
         </RefreshView>
     </Grid>
 </ContentPage>

@@ -417,7 +417,7 @@ public class BillingService : BaseBillingService
     }
   }
 
-  private void ProcessPurchase(Purchase purchase) {
+  private async void ProcessPurchase(Purchase purchase) {
     try
     {
       _logger.LogInformation("ProcessPurchase called - ProductIds: {ProductIds}, State: {PurchaseState}, Token: {PurchaseToken}",
@@ -425,6 +425,24 @@ public class BillingService : BaseBillingService
 
       if (purchase.PurchaseState == PurchaseState.Purchased)
       {
+        if (!purchase.IsAcknowledged)
+        {
+          var acknowledgePurchaseParams = AcknowledgePurchaseParams.NewBuilder()
+              .SetPurchaseToken(purchase.PurchaseToken)
+              .Build();
+
+          if (_billingClient != null)
+          {
+            var result = await _billingClient.AcknowledgePurchaseAsync(acknowledgePurchaseParams);
+            if (result.ResponseCode != BillingResponseCode.Ok)
+            {
+              _logger.LogError("Failed to acknowledge purchase: {ResponseCode} {DebugMessage}", result.ResponseCode, result.DebugMessage);
+              return;
+            }
+             _logger.LogInformation("Purchase acknowledged successfully");
+          }
+        }
+
         foreach (var productId in purchase.Products)
         {
           _ownedProducts.Add(productId);

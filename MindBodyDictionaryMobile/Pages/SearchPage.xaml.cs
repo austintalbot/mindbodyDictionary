@@ -1,5 +1,6 @@
 namespace MindBodyDictionaryMobile.Pages;
 
+using System.ComponentModel;
 using Microsoft.Extensions.Logging; // Add this
 using MindBodyDictionaryMobile.Models;
 using MindBodyDictionaryMobile.PageModels;
@@ -9,6 +10,7 @@ public partial class SearchPage : ContentPage
 
   private readonly SearchPageModel _searchPageModel;
   private readonly ILogger<SearchPage> _logger; // Add this
+  private DateTime _lastDataUpdateTime;
 
   public SearchPage(SearchPageModel searchPageModel, ILogger<SearchPage> logger) // Modify constructor
   {
@@ -17,6 +19,16 @@ public partial class SearchPage : ContentPage
     this._searchPageModel = searchPageModel;
     _logger = logger; // Assign injected logger
     GetConditions();
+
+    _searchPageModel.PropertyChanged += OnViewModelPropertyChanged;
+  }
+
+  private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
+  {
+      if (e.PropertyName == nameof(SearchPageModel.FilteredConditionCollection))
+      {
+          _lastDataUpdateTime = DateTime.Now;
+      }
   }
 
   protected override void OnSizeAllocated(double width, double height) {
@@ -53,6 +65,19 @@ public partial class SearchPage : ContentPage
     catch (Exception err)
     {
       _logger.LogError(err, "Error in ConditionSearchBar_TextChanged"); // Replace Logger.Error
+    }
+  }
+
+  private void OnCollectionViewScrolled(object sender, ItemsViewScrolledEventArgs e) {
+    // If data updated recently (e.g. within 500ms), ignore scroll as it's likely a layout reset
+    if (DateTime.Now - _lastDataUpdateTime < TimeSpan.FromMilliseconds(500))
+    {
+        return;
+    }
+
+    if (MbdConditionSearchBar.IsFocused)
+    {
+      MbdConditionSearchBar.Unfocus();
     }
   }
 
