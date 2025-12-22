@@ -82,12 +82,21 @@ namespace MindBodyDictionaryMobile.PageModels
 #if ANDROID
           productId = "mbdpremiumyr";
 #endif
-          isSubscribed = await _billingService.IsProductOwnedAsync(productId);
-          Preferences.Set("hasPremiumSubscription", isSubscribed);
+          var isOwned = await _billingService.IsProductOwnedAsync(productId);
+          var hasPreference = Preferences.Get("hasPremiumSubscription", false);
+          
+          isSubscribed = isOwned || hasPreference;
+
+          if (isOwned)
+          {
+              Preferences.Set("hasPremiumSubscription", true);
+          }
         }
         catch (Exception ex)
         {
           _logger.LogError(ex, "Error checking subscription status");
+          // Fallback to preference
+          isSubscribed = Preferences.Get("hasPremiumSubscription", false);
         }
 
         // For now, just taking a few random ones, or all if less than 5

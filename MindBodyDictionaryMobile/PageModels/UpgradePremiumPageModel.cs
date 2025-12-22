@@ -42,9 +42,18 @@ public partial class UpgradePremiumPageModel : ObservableObject
   private async Task CheckSubscriptionStatus() {
     try
     {
-      IsSubscribed = await _billingService.IsProductOwnedAsync(_premiumProductId);
+      var isOwned = await _billingService.IsProductOwnedAsync(_premiumProductId);
+      var hasPreference = Preferences.Get("hasPremiumSubscription", false);
+      
+      IsSubscribed = isOwned || hasPreference;
+
+      if (isOwned)
+      {
+          Preferences.Set("hasPremiumSubscription", true);
+      }
+
 #if DEBUG
-      UpdateDebugInfo("SUBSCRIPTION_STATUS_CHECK", $"Product {_premiumProductId} is owned: {IsSubscribed}");
+      UpdateDebugInfo("SUBSCRIPTION_STATUS_CHECK", $"Product {_premiumProductId} is owned: {isOwned}, Pref: {hasPreference}, Result: {IsSubscribed}");
 #endif
     }
     catch (Exception ex)
@@ -53,7 +62,8 @@ public partial class UpgradePremiumPageModel : ObservableObject
 #if DEBUG
       UpdateDebugInfo("SUBSCRIPTION_CHECK_ERROR", $"Exception: {ex.GetType().Name}\nMessage: {ex.Message}");
 #endif
-      IsSubscribed = false;
+      // Fallback to preference on error
+      IsSubscribed = Preferences.Get("hasPremiumSubscription", false);
     }
   }
 

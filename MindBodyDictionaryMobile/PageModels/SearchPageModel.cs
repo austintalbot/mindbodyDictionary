@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using MindBodyDictionaryMobile.Models;
 using MindBodyDictionaryMobile.Models.Messaging;
+using MindBodyDictionaryMobile.Services;
 using MindBodyDictionaryMobile.Services.billing;
 
 namespace MindBodyDictionaryMobile.PageModels;
@@ -16,6 +17,7 @@ public partial class SearchPageModel : ObservableObject, IRecipient<ConditionsUp
   private readonly MbdConditionRepository _mbdConditionRepository;
   private readonly MindBodyDictionaryMobile.Data.ImageCacheService _imageCacheService;
   private readonly IBillingService _billingService;
+  private readonly MbdConditionApiService _mbdConditionApiService;
 
   [ObservableProperty]
   private string _title = "Search Conditions";
@@ -37,10 +39,17 @@ public partial class SearchPageModel : ObservableObject, IRecipient<ConditionsUp
   [ObservableProperty]
   private bool _hasNoResults;
 
-  public SearchPageModel(MbdConditionRepository mbdConditionRepository, MindBodyDictionaryMobile.Data.ImageCacheService imageCacheService, IBillingService billingService) {
+  [ObservableProperty]
+  private string _subscriptionStatusMessage = "Checking subscription...";
+
+  [ObservableProperty]
+  private bool _isSubscriptionActive;
+
+  public SearchPageModel(MbdConditionRepository mbdConditionRepository, MindBodyDictionaryMobile.Data.ImageCacheService imageCacheService, IBillingService billingService, MbdConditionApiService mbdConditionApiService) {
     _mbdConditionRepository = mbdConditionRepository;
     _imageCacheService = imageCacheService;
     _billingService = billingService;
+    _mbdConditionApiService = mbdConditionApiService;
 
     // Register to listen for data updates
     WeakReferenceMessenger.Default.Register(this);
@@ -83,8 +92,25 @@ public partial class SearchPageModel : ObservableObject, IRecipient<ConditionsUp
         _ = Task.Run(async () => {
           try
           {
+            // Check new preference first for offline/immediate access
+            var isSubscribed = Preferences.Get("hasPremiumSubscription", false);
+
             var purchasedProducts = await _billingService.GetPurchasedProductsAsync();
-            var hasSubscription = purchasedProducts.Contains("mbdpremiumyr") || purchasedProducts.Contains("MBDPremiumYr");
+            var hasBillingSubscription = purchasedProducts.Contains("mbdpremiumyr") || purchasedProducts.Contains("MBDPremiumYr");
+
+            var hasSubscription = isSubscribed || hasBillingSubscription;
+
+            // Update preference if we verified it via billing
+            if (hasBillingSubscription && !isSubscribed)
+            {
+                Preferences.Set("hasPremiumSubscription", true);
+            }
+
+            await MainThread.InvokeOnMainThreadAsync(() =>
+            {
+                IsSubscriptionActive = hasSubscription;
+                SubscriptionStatusMessage = hasSubscription ? "Premium Subscription Active" : "Free Version - Upgrade for Full Access";
+            });
 
             foreach (var c in _allConditions)
             {
@@ -111,6 +137,26 @@ public partial class SearchPageModel : ObservableObject, IRecipient<ConditionsUp
     {
       System.Diagnostics.Debug.WriteLine($"[SearchPageModel] Error: {ex.Message}");
       await MainThread.InvokeOnMainThreadAsync(() => IsBusy = false);
+    }
+  }
+
+  [RelayCommand]
+  public async Task RefreshConditions() {
+    if (IsBusy) return;
+
+    try
+    {
+      IsBusy = true;
+      await _mbdConditionApiService.GetMbdConditionsAsync();
+      await GetConditionShortList(forceRefresh: true);
+    }
+    catch (Exception ex)
+    {
+      System.Diagnostics.Debug.WriteLine($"[SearchPageModel] Refresh error: {ex.Message}");
+    }
+    finally
+    {
+      IsBusy = false;
     }
   }
 

@@ -198,6 +198,14 @@
         Color="White" />
 
     <FontImageSource
+        x:Key="IconRefresh"
+        FontFamily="{x:Static f:FluentUI.FontFamily}"
+        Glyph="{x:Static f:FluentUI.arrow_clockwise_24_regular}"
+        Size="{StaticResource IconSize}"
+        Color="{AppThemeBinding Light={StaticResource DarkOnLightBackground},
+                                Dark={StaticResource LightOnDarkBackground}}" />
+
+    <FontImageSource
         x:Key="IconLight"
         FontFamily="{x:Static f:FluentUI.FontFamily}"
         Glyph="{x:Static f:FluentUI.weather_sunny_28_regular}"

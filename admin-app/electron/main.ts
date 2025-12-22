@@ -28,7 +28,7 @@ function createWindow() {
   win = new BrowserWindow({
     width: 1200,
     height: 800,
-    icon: path.join(process.env.VITE_PUBLIC, 'electron-vite.svg'),
+    icon: path.join(process.env.VITE_PUBLIC, 'icon.png'),
     webPreferences: {
       // preload: path.join(__dirname, 'preload.mjs'), // Disabled preload script due to contextIsolation conflict
       // WARNING: These settings are generally NOT recommended for production Electron applications

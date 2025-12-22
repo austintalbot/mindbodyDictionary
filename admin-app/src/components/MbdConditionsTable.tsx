@@ -20,6 +20,7 @@ const MbdConditionsTable: React.FC<MbdConditionsTableProps> = ({ mbdConditions, 
               <th style={{ padding: '16px', textAlign: 'left', fontWeight: '600', color: colors.mutedText }}>Name</th>
               <th style={{ padding: '16px', textAlign: 'left', fontWeight: '600', color: colors.mutedText }}>Physical Connections</th>
               <th style={{ padding: '16px', textAlign: 'left', fontWeight: '600', color: colors.mutedText }}>Tags</th>
+              <th style={{ padding: '16px', textAlign: 'left', fontWeight: '600', color: colors.mutedText }}>Sub. Only</th>
             </tr>
           </thead>
           <tbody>
@@ -114,6 +115,13 @@ const MbdConditionsTable: React.FC<MbdConditionsTableProps> = ({ mbdConditions, 
                       ))
                     : <span style={{ color: '#adb5bd' }}>—</span>
                   }
+                </td>
+                <td style={{ padding: '16px', color: colors.mutedText, fontSize: '13px' }}>
+                  {mbdCondition.subscriptionOnly ? (
+                    <span style={{ color: colors.success, fontWeight: '600' }}>Yes</span>
+                  ) : (
+                    <span style={{ color: colors.mutedText }}>No</span>
+                  )}
                 </td>
               </tr>
             ))}

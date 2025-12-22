@@ -203,6 +203,18 @@ const MbdConditionModal: React.FC<MbdConditionModalProps> = ({
                         }}
                       />
                     </div>
+                    <div style={{ marginTop: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <input
+                        type="checkbox"
+                        id="subscriptionOnly"
+                        checked={mbdCondition.subscriptionOnly || false}
+                        onChange={(e) => onChange({ ...mbdCondition, subscriptionOnly: e.target.checked })}
+                        style={{ width: '16px', height: '16px', cursor: 'pointer', accentColor: colors.primary }}
+                      />
+                      <label htmlFor="subscriptionOnly" style={{ fontSize: '14px', color: colors.foreground, cursor: 'pointer', fontWeight: '500' }}>
+                        Subscription Only
+                      </label>
+                    </div>
                   </div>
                   <div>
                     <div style={{ marginBottom: '20px' }}>
