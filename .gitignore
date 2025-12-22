@@ -384,8 +384,8 @@ tofu/terraform.tfvars.staging
 /CosmosDB
 20251112_064146_database.zip
 admin-app/dist-electron/*
-MindBodyDictionaryMobile/old_files
-old_code
+# MindBodyDictionaryMobile/old_files
+#old_code
 admin-app/dist-electron/
 admin-app/playwright-report
 admin-app/test-results
