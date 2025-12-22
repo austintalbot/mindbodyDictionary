@@ -83,6 +83,7 @@ namespace MindBodyDictionaryMobile.PageModels
           productId = "mbdpremiumyr";
 #endif
           isSubscribed = await _billingService.IsProductOwnedAsync(productId);
+          Preferences.Set("hasPremiumSubscription", isSubscribed);
         }
         catch (Exception ex)
         {
