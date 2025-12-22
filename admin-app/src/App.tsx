@@ -41,13 +41,16 @@ function AppContent() {
       {/* Header */}
       <div style={{ backgroundColor: colors.background, borderBottom: `1px solid ${colors.border}`, padding: '30px 20px' }}>
         <div style={{ maxWidth: '1400px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-          <div>
-            <h1 style={{ fontSize: '28px', fontWeight: '700', margin: '0 0 8px 0', color: colors.foreground }}>
-              MBD Admin Portal
-            </h1>
-            <p style={{ fontSize: '14px', color: colors.mutedText, margin: 0 }}>
-              Manage your Mind-Body Dictionary content
-            </p>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <img src="/icon.png" alt="MBD Logo" style={{ width: '48px', height: '48px', objectFit: 'contain' }} />
+            <div>
+              <h1 style={{ fontSize: '28px', fontWeight: '700', margin: '0 0 4px 0', color: colors.foreground }}>
+                MBD Admin Portal
+              </h1>
+              <p style={{ fontSize: '14px', color: colors.mutedText, margin: 0 }}>
+                Manage your Mind-Body Dictionary content
+              </p>
+            </div>
           </div>
           <ThemeToggle />
         </div>

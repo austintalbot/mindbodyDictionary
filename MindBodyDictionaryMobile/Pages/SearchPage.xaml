@@ -114,6 +114,7 @@
                 AutomationId="ConditionCollectionView"
                 IsVisible="{Binding IsInitialized}"
                 ItemsSource="{Binding FilteredConditionCollection}"
+                Scrolled="OnCollectionViewScrolled"
                 SelectionMode="None">
                 <CollectionView.EmptyView>
                     <VerticalStackLayout

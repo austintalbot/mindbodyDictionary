@@ -56,6 +56,13 @@ public partial class SearchPage : ContentPage
     }
   }
 
+  private void OnCollectionViewScrolled(object sender, ItemsViewScrolledEventArgs e) {
+    if (MbdConditionSearchBar.IsFocused)
+    {
+      MbdConditionSearchBar.Unfocus();
+    }
+  }
+
   private async void OnConditionTapped(object? sender, TappedEventArgs e) {
     try
     {
