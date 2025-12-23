@@ -82,7 +82,9 @@ public abstract class BaseBillingService(ILogger<BaseBillingService> logger) : I
 
       if (result.IsSuccess)
       {
-        _ownedProducts.Add(productId);
+        // Don't optimistically add to _ownedProducts here. 
+        // Allow the platform implementation (OnPurchasesUpdated) to handle the state update 
+        // to ensure we only mark it owned if the purchase *actually* completed.
         _logger.LogInformation("Purchase successful for product: {ProductId}", productId);
       }
       else
