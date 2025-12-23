@@ -51,7 +51,7 @@
 
                 <Button
                     AutomationId="DeregisterNotificationsButton"
-                    BackgroundColor="{StaticResource Secondary}"
+                    BackgroundColor="{StaticResource Primary}"
                     Command="{Binding DeregisterDeviceCommand}"
                     IsEnabled="{Binding IsRegistered}"
                     Style="{StaticResource NotificationActionButton}"
@@ -65,8 +65,6 @@
                     <Label Style="{StaticResource NotificationInfoTextLabel}">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="• Receive updates about your projects and tasks" />
-                                <Span Text="&#x0a;• Get reminders for important deadlines" />
                                 <Span Text="&#x0a;• Stay informed even when the app is closed" />
                                 <Span Text="&#x0a;&#x0a;" />
                                 <Span FontAttributes="Bold" Text="Note: " />
