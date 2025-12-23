@@ -38,7 +38,6 @@
             <!--  Website Button  -->
             <Button
                 AutomationId="VisitWebsiteButton"
-                BackgroundColor="{StaticResource Primary}"
                 Command="{Binding VisitWebsiteCommand}"
                 Style="{StaticResource AboutPageActionButton}"
                 Text="Visit Website" />
@@ -46,7 +45,6 @@
             <!--  Email Button  -->
             <Button
                 AutomationId="SendFeedbackButton"
-                BackgroundColor="{StaticResource Secondary}"
                 Command="{Binding SendEmailCommand}"
                 Style="{StaticResource AboutPageActionButton}"
                 Text="Send Feedback" />

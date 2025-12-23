@@ -26,8 +26,8 @@ public class BoolToColorConverter : IValueConverter
           // Fallback for common resource keys
           return resourceKey switch
           {
-            "Primary" => Color.FromArgb("#512BD4"),
-            "Secondary" => Color.FromArgb("#DFD8F7"),
+            "Primary" => Color.FromArgb("#00606E"),
+            "Secondary" => Color.FromArgb("#E0F2F1"),
             _ => Colors.Gray
           };
         }

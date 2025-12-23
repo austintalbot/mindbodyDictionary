@@ -30,8 +30,8 @@
 
 		<!-- Versions -->
 		<ApplicationDisplayVersion>3.0</ApplicationDisplayVersion>
-		<ApplicationVersion>4</ApplicationVersion>
-		<NoWarn>$(NoWarn),CS8618,CS8602,XC0045,XC0103,XC0022,CA1422</NoWarn>
+		<ApplicationVersion>5</ApplicationVersion>
+		<NoWarn>$(NoWarn),CS8618,CS8602,XC0045,XC0103,XC0022,CA1422,CA1416</NoWarn>
 
 
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">17.0</SupportedOSPlatformVersion>

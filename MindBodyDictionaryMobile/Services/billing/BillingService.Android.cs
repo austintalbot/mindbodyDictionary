@@ -11,6 +11,8 @@ public class BillingService : BaseBillingService
   private readonly object _lockObject = new();
   private BillingClientStateListener? _stateListener;
   private PurchasesUpdatedListener? _purchaseListener;
+  private TaskCompletionSource<bool>? _initTcs;
+  private TaskCompletionSource<PurchaseResult>? _purchaseTcs;
 
   public BillingService(ILogger<BaseBillingService> logger) : base(logger) {
     InitializeListeners();
@@ -22,9 +24,8 @@ public class BillingService : BaseBillingService
   }
 
   protected override async Task<bool> InitializePlatformAsync() {
-    return await Task.Run(() => {
-      try
-      {
+    try
+    {
         var context = Platform.CurrentActivity ?? Microsoft.Maui.ApplicationModel.Platform.CurrentActivity;
         if (context == null)
         {
@@ -37,6 +38,14 @@ public class BillingService : BaseBillingService
           _logger.LogError("Purchase listener not initialized");
           return false;
         }
+
+        // If already connected, return true
+        if (_billingClient != null && _billingClient.IsReady)
+        {
+            return true;
+        }
+
+        _initTcs = new TaskCompletionSource<bool>();
 
         var pendingPurchasesParams = PendingPurchasesParams.NewBuilder()
             .EnableOneTimeProducts()
@@ -52,14 +61,24 @@ public class BillingService : BaseBillingService
         {
           _billingClient.StartConnection(_stateListener);
         }
-        return true;
-      }
-      catch (Exception ex)
-      {
+
+        // Wait for connection with timeout (5 seconds)
+        var timeoutTask = Task.Delay(5000);
+        var completedTask = await Task.WhenAny(_initTcs.Task, timeoutTask);
+
+        if (completedTask == timeoutTask)
+        {
+            _logger.LogError("Billing client connection timed out");
+            return false;
+        }
+
+        return await _initTcs.Task;
+    }
+    catch (Exception ex)
+    {
         _logger.LogError(ex, "Failed to initialize billing client");
         return false;
-      }
-    });
+    }
   }
 
   protected override async Task<List<Product>> GetPlatformProductsAsync(List<Product> baseProducts) {
@@ -70,55 +89,57 @@ public class BillingService : BaseBillingService
       if (_billingClient == null)
       {
         _logger.LogError("Billing client is null");
-        foreach (var p in baseProducts)
-          p.IsOwned = _ownedProducts.Contains(p.Id);
-        return baseProducts;
+        return baseProducts; // Return original list marked as unowned
       }
 
-      // Build product list for v8 API
-      var productList = new List<QueryProductDetailsParams.Product>();
-      foreach (var product in baseProducts)
-      {
-        var queryProduct = QueryProductDetailsParams.Product.NewBuilder()
-            .SetProductId(product.Id)
-            .SetProductType(BillingClient.ProductType.Inapp)
-            .Build();
-        productList.Add(queryProduct);
-      }
-
-      if (productList.Count == 0)
-      {
-        foreach (var p in baseProducts)
-          p.IsOwned = _ownedProducts.Contains(p.Id);
-        return baseProducts;
-      }
-
-      var queryParams = QueryProductDetailsParams.NewBuilder()
-          .SetProductList(productList)
-          .Build();
-
-      // v8 API call - QueryProductDetailsAsync returns a coroutine
-      var productResult = await _billingClient.QueryProductDetailsAsync(queryParams);
-
-      // Update products with actual details from Google Play
       var updatedProducts = new List<Product>();
+      var productDict = new Dictionary<string, ProductDetails>();
 
-      if (productResult != null)
+      // Helper to query a batch
+      async Task QueryBatch(string productType)
       {
-        // Access products from the result - v8 may use different property names
-        var products = productResult.ProductDetailsList ??
+          var productList = new List<QueryProductDetailsParams.Product>();
+          foreach (var product in baseProducts)
+          {
+              productList.Add(QueryProductDetailsParams.Product.NewBuilder()
+                  .SetProductId(product.Id)
+                  .SetProductType(productType)
+                  .Build());
+          }
+
+          if (productList.Count == 0) return;
+
+          var queryParams = QueryProductDetailsParams.NewBuilder()
+              .SetProductList(productList)
+              .Build();
+
+          var productResult = await _billingClient.QueryProductDetailsAsync(queryParams);
+          
+          if (productResult != null)
+          {
+               var detailsList = productResult.ProductDetailsList ??
                      productResult.GetType()
                          .GetProperty("Products")?.GetValue(productResult) as IList<ProductDetails> ??
                      [];
+               
+               foreach(var detail in detailsList)
+               {
+                   // If duplicate, prefer Subs
+                   if (!productDict.ContainsKey(detail.ProductId) || detail.ProductType == BillingClient.ProductType.Subs)
+                   {
+                       productDict[detail.ProductId] = detail;
+                   }
+               }
+          }
+      }
 
-        var productDict = new Dictionary<string, ProductDetails>();
-        foreach (var pd in products)
-        {
-          productDict[pd.ProductId] = pd;
-        }
+      // Execute queries for both types sequentially (API limitation: can't mix types in one call)
+      await QueryBatch(BillingClient.ProductType.Inapp);
+      await QueryBatch(BillingClient.ProductType.Subs);
 
-        foreach (var baseProduct in baseProducts)
-        {
+      // Rebuild product list
+      foreach (var baseProduct in baseProducts)
+      {
           var updated = new Product
           {
             Id = baseProduct.Id,
@@ -142,18 +163,10 @@ public class BillingService : BaseBillingService
           }
 
           updatedProducts.Add(updated);
-        }
+      }
 
-        _logger.LogInformation("Retrieved {Count} product details", updatedProducts.Count);
-        return updatedProducts;
-      }
-      else
-      {
-        _logger.LogWarning("QueryProductDetailsAsync returned null");
-        foreach (var p in baseProducts)
-          p.IsOwned = _ownedProducts.Contains(p.Id);
-        return baseProducts;
-      }
+      _logger.LogInformation("Retrieved {Count} product details", updatedProducts.Count);
+      return updatedProducts;
     }
     catch (Exception ex)
     {
@@ -168,10 +181,31 @@ public class BillingService : BaseBillingService
     try
     {
       var purchasedProducts = new List<string>();
+      
+      // Query InApp purchases
+      var inAppPurchases = await QueryPurchasesByTypeAsync(BillingClient.ProductType.Inapp);
+      purchasedProducts.AddRange(inAppPurchases);
+
+      // Query Subscriptions
+      var subPurchases = await QueryPurchasesByTypeAsync(BillingClient.ProductType.Subs);
+      purchasedProducts.AddRange(subPurchases);
+
+      return purchasedProducts.Distinct().ToList();
+    }
+    catch (Exception ex)
+    {
+      _logger.LogError(ex, "Error querying purchased products");
+      return [];
+    }
+  }
+
+  private async Task<List<string>> QueryPurchasesByTypeAsync(string productType)
+  {
       var tcs = new TaskCompletionSource<List<string>>();
+      var resultList = new List<string>();
 
       var queryPurchasesParams = QueryPurchasesParams.NewBuilder()
-          .SetProductType(BillingClient.ProductType.Inapp)
+          .SetProductType(productType)
           .Build();
 
       var purchaseResponseListener = new PurchasesResponseListener((billingResult, purchases) => {
@@ -181,11 +215,11 @@ public class BillingService : BaseBillingService
           {
             if (purchase.PurchaseState == PurchaseState.Purchased)
             {
-              purchasedProducts.AddRange(purchase.Products);
+              resultList.AddRange(purchase.Products);
             }
           }
         }
-        tcs.SetResult(purchasedProducts);
+        tcs.SetResult(resultList);
       });
 
       if (_billingClient != null)
@@ -194,17 +228,10 @@ public class BillingService : BaseBillingService
       }
       else
       {
-        _logger.LogError("Billing client is null when querying purchases");
-        tcs.SetResult(purchasedProducts);
+         tcs.SetResult(resultList);
       }
 
       return await tcs.Task;
-    }
-    catch (Exception ex)
-    {
-      _logger.LogError(ex, "Error querying purchased products");
-      return [];
-    }
   }
 
   protected override async Task<PurchaseResult> PurchasePlatformProductAsync(string productId) {
@@ -233,69 +260,94 @@ public class BillingService : BaseBillingService
 
         if (_billingClient == null)
         {
-          _logger.LogError("Billing client still null after re-initialization attempt");
-          return new PurchaseResult { IsSuccess = false, ProductId = productId, ErrorMessage = "Billing client not initialized" };
+           return new PurchaseResult { IsSuccess = false, ProductId = productId, ErrorMessage = "Billing client not initialized" };
         }
       }
 
       // Check if billing client is connected
       if (!_billingClient.IsReady)
       {
-        _logger.LogWarning("Billing client not ready, attempting connection...");
-        return new PurchaseResult { IsSuccess = false, ProductId = productId, ErrorMessage = "Billing service not ready" };
+         _logger.LogWarning("Billing client not ready, attempting connection...");
+         _initTcs = new TaskCompletionSource<bool>();
+         _billingClient.StartConnection(_stateListener);
+
+          var timeoutTask = Task.Delay(3000);
+          await Task.WhenAny(_initTcs.Task, timeoutTask);
+
+        if (!_billingClient.IsReady)
+        {
+          return new PurchaseResult { IsSuccess = false, ProductId = productId, ErrorMessage = "Billing service not ready" };
+        }
       }
 
       _logger.LogInformation("Querying product details for {ProductId}", productId);
 
-      // Query product details first (v8 API requirement)
-      var productList = new List<QueryProductDetailsParams.Product>();
-      var queryProduct = QueryProductDetailsParams.Product.NewBuilder()
-          .SetProductId(productId)
-          .SetProductType(BillingClient.ProductType.Inapp)
-          .Build();
-      productList.Add(queryProduct);
+      ProductDetails? productDetails = null;
 
-      var queryParams = QueryProductDetailsParams.NewBuilder()
-          .SetProductList(productList)
-          .Build();
-
-      _logger.LogInformation("Calling QueryProductDetailsAsync");
-      var productResult = await _billingClient.QueryProductDetailsAsync(queryParams);
-
-      _logger.LogInformation("QueryProductDetailsAsync completed");
-
-      var products = productResult?.ProductDetailsList ??
-                   productResult?.GetType()
-                       .GetProperty("Products")?.GetValue(productResult) as IList<ProductDetails> ??
-                   [];
-
-      _logger.LogInformation("Product list contains {Count} products", products.Count);
-
-      if (products.Count == 0)
+      // Helper to query single product
+      async Task<ProductDetails?> QuerySingle(string type)
       {
-        _logger.LogWarning("Product {ProductId} not found in Play Store", productId);
+          var productList = new List<QueryProductDetailsParams.Product>
+          {
+              QueryProductDetailsParams.Product.NewBuilder()
+                  .SetProductId(productId)
+                  .SetProductType(type)
+                  .Build()
+          };
+          
+          var queryParams = QueryProductDetailsParams.NewBuilder()
+              .SetProductList(productList)
+              .Build();
+              
+           var res = await _billingClient.QueryProductDetailsAsync(queryParams);
+           var list = res?.ProductDetailsList ?? 
+                      res?.GetType().GetProperty("Products")?.GetValue(res) as IList<ProductDetails>;
+           
+           return list?.FirstOrDefault(p => p.ProductId == productId);
+      }
+
+      // Try InApp first
+      productDetails = await QuerySingle(BillingClient.ProductType.Inapp);
+      
+      // If not found, try Subs
+      if (productDetails == null)
+      {
+           _logger.LogInformation("Product not found in InApp, checking Subs...");
+          productDetails = await QuerySingle(BillingClient.ProductType.Subs);
+      }
+
+      if (productDetails == null)
+      {
+        _logger.LogWarning("Product {ProductId} not found in Play Store (checked InApp and Subs)", productId);
         return new PurchaseResult { IsSuccess = false, ProductId = productId, ErrorMessage = "Product not found in Play Store" };
       }
 
-      var productDetails = products.FirstOrDefault();
-      if (productDetails == null)
-      {
-        _logger.LogWarning("Product details are null even though list has items");
-        return new PurchaseResult { IsSuccess = false, ProductId = productId, ErrorMessage = "Product unavailable" };
-      }
-
+      _logger.LogInformation("Product found. Type: {Type}", productDetails.ProductType);
       _logger.LogInformation("Building billing flow params for {ProductId}", productId);
 
       // Build billing flow params
-      var detailsParams = BillingFlowParams.ProductDetailsParams.NewBuilder()
-          .SetProductDetails(productDetails)
-          .Build();
+      var detailsParamsBuilder = BillingFlowParams.ProductDetailsParams.NewBuilder()
+          .SetProductDetails(productDetails);
+
+      // If subscription, set the OfferToken
+      var subOffers = productDetails.GetSubscriptionOfferDetails();
+      if (subOffers != null && subOffers.Count > 0)
+      {
+          // For now, just pick the first offer. In a real app with multiple offers (monthly/yearly/trials), 
+          // you'd need logic to select the correct one.
+          var offerToken = subOffers[0].OfferToken;
+          detailsParamsBuilder.SetOfferToken(offerToken);
+          _logger.LogInformation("Set offer token for subscription");
+      }
 
       var flowParams = BillingFlowParams.NewBuilder()
-          .SetProductDetailsParamsList(new[] { detailsParams })
+          .SetProductDetailsParamsList(new[] { detailsParamsBuilder.Build() })
           .Build();
 
       _logger.LogInformation("Launching billing flow");
+
+      // Initialize TaskCompletionSource for the result
+      _purchaseTcs = new TaskCompletionSource<PurchaseResult>();
 
       // Launch billing flow
       var result = _billingClient.LaunchBillingFlow(activity, flowParams);
@@ -304,8 +356,9 @@ public class BillingService : BaseBillingService
 
       if (result?.ResponseCode == BillingResponseCode.Ok)
       {
-        _logger.LogInformation("Billing flow started successfully for {ProductId}", productId);
-        return new PurchaseResult { IsSuccess = true, ProductId = productId };
+        _logger.LogInformation("Billing flow started successfully for {ProductId}. Waiting for completion...", productId);
+        // Wait for OnPurchasesUpdated to signal completion
+        return await _purchaseTcs.Task;
       }
       else
       {
@@ -346,7 +399,8 @@ public class BillingService : BaseBillingService
 
   internal void OnBillingServiceDisconnected() {
     _logger.LogInformation("Billing service disconnected");
-
+    _initTcs?.TrySetResult(false);
+    _purchaseTcs?.TrySetResult(new PurchaseResult { IsSuccess = false, ErrorMessage = "Billing service disconnected during purchase" });
   }
 
   internal void OnBillingSetupFinished(AndroidBillingResult billingResult) {
@@ -358,10 +412,12 @@ public class BillingService : BaseBillingService
     if (responseCode == BillingResponseCode.Ok)
     {
       _logger.LogInformation("Billing client ready for purchases");
+      _initTcs?.TrySetResult(true);
     }
     else
     {
       _logger.LogError("Billing setup failed with code {ResponseCode}: {DebugMessage}", responseCode, debugMessage);
+      _initTcs?.TrySetResult(false);
     }
   }
 
@@ -378,15 +434,29 @@ public class BillingService : BaseBillingService
             string.Join(",", purchase.Products), purchase.PurchaseState, purchase.PurchaseToken);
         ProcessPurchase(purchase);
       }
+      
+      // Signal success if we were waiting for a purchase
+      if (_purchaseTcs != null && !_purchaseTcs.Task.IsCompleted)
+      {
+          // We assume success if we got here. Ideal would be to check if the specific product was in the list,
+          // but for now, any success is good enough to unblock the UI.
+          var productId = purchases.FirstOrDefault()?.Products.FirstOrDefault() ?? "unknown";
+          _purchaseTcs.TrySetResult(new PurchaseResult { IsSuccess = true, ProductId = productId });
+      }
     }
     else if (billingResult.ResponseCode == BillingResponseCode.UserCancelled)
     {
       _logger.LogInformation("User canceled purchase");
+      _purchaseTcs?.TrySetResult(new PurchaseResult { IsSuccess = false, ErrorMessage = "User canceled" });
     }
     else
     {
       _logger.LogError("Purchase failed - ResponseCode: {ResponseCode}, Debug: {DebugMessage}",
           billingResult.ResponseCode, billingResult.DebugMessage);
+      _purchaseTcs?.TrySetResult(new PurchaseResult { 
+          IsSuccess = false, 
+          ErrorMessage = $"Purchase failed: {billingResult.DebugMessage} (Code {billingResult.ResponseCode})" 
+      });
     }
   }
 
@@ -396,19 +466,34 @@ public class BillingService : BaseBillingService
   private async Task<List<Purchase>> QueryExistingPurchasesAsync() {
     try
     {
-      var queryParams = QueryPurchasesParams.NewBuilder()
-          .SetProductType(BillingClient.ProductType.Inapp)
-          .Build();
+        if (_billingClient == null)
+        {
+            _logger.LogWarning("Billing client is null");
+            return [];
+        }
 
-      if (_billingClient == null)
-      {
-        _logger.LogWarning("Billing client is null");
-        return [];
-      }
+        var allPurchases = new List<Purchase>();
 
-      var purchasesResult = await _billingClient.QueryPurchasesAsync(queryParams);
-      _logger.LogInformation("Successfully queried {Count} existing purchases", purchasesResult.Purchases.Count);
-      return purchasesResult.Purchases.ToList();
+        // Query InApp
+        var inAppParams = QueryPurchasesParams.NewBuilder()
+            .SetProductType(BillingClient.ProductType.Inapp)
+            .Build();
+        
+        var inAppResult = await _billingClient.QueryPurchasesAsync(inAppParams);
+        if (inAppResult.Purchases != null)
+            allPurchases.AddRange(inAppResult.Purchases);
+
+        // Query Subs
+        var subParams = QueryPurchasesParams.NewBuilder()
+            .SetProductType(BillingClient.ProductType.Subs)
+            .Build();
+
+        var subResult = await _billingClient.QueryPurchasesAsync(subParams);
+        if (subResult.Purchases != null)
+            allPurchases.AddRange(subResult.Purchases);
+
+        _logger.LogInformation("Successfully queried {Count} existing purchases", allPurchases.Count);
+        return allPurchases;
     }
     catch (Exception ex)
     {
@@ -468,8 +553,15 @@ public class BillingService : BaseBillingService
   private string? GetFormattedPrice(ProductDetails productDetails) {
     try
     {
-      var offerDetails = productDetails.GetOneTimePurchaseOfferDetails();
-      return offerDetails?.FormattedPrice;
+      var oneTime = productDetails.GetOneTimePurchaseOfferDetails();
+      if (oneTime != null) return oneTime.FormattedPrice;
+
+      var subs = productDetails.GetSubscriptionOfferDetails();
+      if (subs != null && subs.Count > 0)
+      {
+          return subs[0].PricingPhases?.PricingPhaseList?.FirstOrDefault()?.FormattedPrice;
+      }
+      return null;
     }
     catch
     {
@@ -480,11 +572,20 @@ public class BillingService : BaseBillingService
   private decimal? GetPriceAmount(ProductDetails productDetails) {
     try
     {
-      var offerDetails = productDetails.GetOneTimePurchaseOfferDetails();
-      var priceAmountMicros = offerDetails?.PriceAmountMicros;
-      if (priceAmountMicros != null)
+      var oneTime = productDetails.GetOneTimePurchaseOfferDetails();
+      if (oneTime != null && oneTime.PriceAmountMicros > 0) 
       {
-        return priceAmountMicros.Value / 1_000_000m;
+          return oneTime.PriceAmountMicros / 1_000_000m;
+      }
+
+      var subs = productDetails.GetSubscriptionOfferDetails();
+      if (subs != null && subs.Count > 0)
+      {
+          var micros = subs[0].PricingPhases?.PricingPhaseList?.FirstOrDefault()?.PriceAmountMicros;
+          if (micros.HasValue)
+          {
+              return micros.Value / 1_000_000m;
+          }
       }
     }
     catch

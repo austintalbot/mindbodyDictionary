@@ -34,7 +34,10 @@
         <Setter Property="HorizontalTextAlignment" Value="Center" />
     </Style>
 
-    <Style x:Key="LockOverlayUpgradeButton" TargetType="Button">
+    <Style
+        x:Key="LockOverlayUpgradeButton"
+        BasedOn="{StaticResource Button}"
+        TargetType="Button">
         <Setter Property="Text" Value="Upgrade Now" />
         <Setter Property="Command" Value="{Binding GoToSubscriptionCommand}" />
     </Style>
