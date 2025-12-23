@@ -73,9 +73,10 @@
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource White}}" />
         <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
         <Setter Property="FontFamily" Value="OpenSansRegular" />
-        <Setter Property="FontSize" Value="18" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="FontAttributes" Value="Bold" />
         <Setter Property="BorderWidth" Value="0" />
-        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="CornerRadius" Value="10" />
         <Setter Property="Padding" Value="14,10" />
         <Setter Property="MinimumHeightRequest" Value="44" />
         <Setter Property="MinimumWidthRequest" Value="44" />
@@ -99,38 +100,54 @@
     <!--  New AboutPageActionButton Style  -->
     <Style x:Key="AboutPageActionButton" TargetType="Button">
         <Setter Property="TextColor" Value="White" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="FontAttributes" Value="Bold" />
         <Setter Property="Padding" Value="15" />
-        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="CornerRadius" Value="10" />
     </Style>
 
     <!--  New Button Styles from UpgradePremiumPage.xaml  -->
-    <Style x:Key="UpgradePremiumPrimaryButton" TargetType="Button">
+    <Style
+        x:Key="UpgradePremiumPrimaryButton"
+        BasedOn="{StaticResource Button}"
+        TargetType="Button">
         <Setter Property="Padding" Value="15,12" />
     </Style>
 
-    <Style x:Key="UpgradePremiumRestoreButton" TargetType="Button">
+    <Style
+        x:Key="UpgradePremiumRestoreButton"
+        BasedOn="{StaticResource Button}"
+        TargetType="Button">
         <Setter Property="Padding" Value="15,12" />
         <Setter Property="BackgroundColor" Value="Transparent" />
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Primary}}" />
         <Setter Property="BorderColor" Value="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Primary}}" />
         <Setter Property="BorderWidth" Value="2" />
-        <Setter Property="FontAttributes" Value="Bold" />
     </Style>
 
-    <Style x:Key="UpgradePremiumLegalButton" TargetType="Button">
+    <Style
+        x:Key="UpgradePremiumLegalButton"
+        BasedOn="{StaticResource Button}"
+        TargetType="Button">
         <Setter Property="BackgroundColor" Value="Transparent" />
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Primary}}" />
         <Setter Property="FontSize" Value="16" />
         <Setter Property="Padding" Value="10,8" />
     </Style>
 
-    <Style x:Key="UpgradePremiumDebugCopyButton" TargetType="Button">
+    <Style
+        x:Key="UpgradePremiumDebugCopyButton"
+        BasedOn="{StaticResource Button}"
+        TargetType="Button">
         <Setter Property="HorizontalOptions" Value="Fill" />
         <Setter Property="Padding" Value="10,8" />
         <Setter Property="FontSize" Value="12" />
     </Style>
 
-    <Style x:Key="UpgradePremiumDebugClearButton" TargetType="Button">
+    <Style
+        x:Key="UpgradePremiumDebugClearButton"
+        BasedOn="{StaticResource Button}"
+        TargetType="Button">
         <Setter Property="HorizontalOptions" Value="Fill" />
         <Setter Property="Padding" Value="10,8" />
         <Setter Property="FontSize" Value="12" />
@@ -152,6 +169,9 @@
     <Style x:Key="DisclaimerPopupButton" TargetType="Button">
         <Setter Property="BackgroundColor" Value="{StaticResource ButtonColor}" />
         <Setter Property="TextColor" Value="White" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="CornerRadius" Value="10" />
         <Setter Property="Margin" Value="10" />
         <Setter Property="Padding" Value="10" />
     </Style>
@@ -160,6 +180,8 @@
     <Style x:Key="ImageCacheActionButton" TargetType="Button">
         <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
         <Setter Property="TextColor" Value="White" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="FontAttributes" Value="Bold" />
         <Setter Property="HeightRequest" Value="50" />
         <Setter Property="CornerRadius" Value="10" />
     </Style>

@@ -3,9 +3,9 @@
 
     <!--  App-specific Colors  -->
     <Color x:Key="ActionColor">#00606E</Color>
-    <Color x:Key="PrimaryColor">#6B329B</Color>
-    <Color x:Key="HeaderColor">#4A1085</Color>
-    <Color x:Key="PrimaryColorDark">#4A1085</Color>
+    <Color x:Key="PrimaryColor">#00606E</Color>
+    <Color x:Key="HeaderColor">#004d58</Color>
+    <Color x:Key="PrimaryColorDark">#004d58</Color>
     <Color x:Key="BackgroundColor">#FFFFFF</Color>
     <Color x:Key="GoColor">#4F794E</Color>
     <Color x:Key="BarColor">#00606E</Color>
