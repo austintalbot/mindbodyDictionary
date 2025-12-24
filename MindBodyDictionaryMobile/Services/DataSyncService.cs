@@ -63,38 +63,45 @@ public class DataSyncService(
           }
 
           // 4. Force Refresh All Images
-          // This is a heavy operation, but requested to ensure all images are up to date.
-          // if (conditions.Count > 0)
-          // {
-          //     Debug.WriteLine($"[DataSyncService] Force refreshing images for {conditions.Count} conditions...");
-          //     var imageNames = new HashSet<string>();
-          //     foreach (var c in conditions)
-          //     {
-          //         if (!string.IsNullOrWhiteSpace(c.ImageNegative)) imageNames.Add(c.ImageNegative);
-          //         if (!string.IsNullOrWhiteSpace(c.ImagePositive)) imageNames.Add(c.ImagePositive);
-          //     }
+          // Run in background to avoid blocking the UI/Sync
+          if (conditions.Count > 0)
+          {
+              _ = Task.Run(async () => 
+              {
+                  try 
+                  {
+                      Debug.WriteLine($"[DataSyncService] Background: Force refreshing images for {conditions.Count} conditions...");
+                      var imageNames = new HashSet<string>();
+                      foreach (var c in conditions)
+                      {
+                          if (!string.IsNullOrWhiteSpace(c.ImageNegative)) imageNames.Add(c.ImageNegative);
+                          if (!string.IsNullOrWhiteSpace(c.ImagePositive)) imageNames.Add(c.ImagePositive);
+                      }
 
-          //     Debug.WriteLine($"[DataSyncService] Found {imageNames.Count} unique images to refresh.");
-
-          //     // Process in background to not block too long, or await if critical.
-          //     // Given "PreloadData" is background, awaiting is fine.
-          //     // We'll use a semaphore to limit concurrency to avoid network saturation.
-          //     using var semaphore = new SemaphoreSlim(5);
-          //     var tasks = imageNames.Select(async imageName =>
-          //     {
-          //         await semaphore.WaitAsync();
-          //         try
-          //         {
-          //             await _imageCacheService.RefreshImageFromRemoteAsync(imageName);
-          //         }
-          //         finally
-          //         {
-          //             semaphore.Release();
-          //         }
-          //     });
-          //     await Task.WhenAll(tasks);
-          //     Debug.WriteLine("[DataSyncService] Image refresh complete.");
-          // }
+                      Debug.WriteLine($"[DataSyncService] Background: Found {imageNames.Count} unique images to refresh.");
+                      
+                      using var semaphore = new SemaphoreSlim(5); 
+                      var tasks = imageNames.Select(async imageName => 
+                      {
+                          await semaphore.WaitAsync();
+                          try
+                          {
+                              await _imageCacheService.RefreshImageFromRemoteAsync(imageName);
+                          }
+                          finally
+                          {
+                              semaphore.Release();
+                          }
+                      });
+                      await Task.WhenAll(tasks);
+                      Debug.WriteLine("[DataSyncService] Background: Image refresh complete.");
+                  }
+                  catch (Exception ex)
+                  {
+                      Debug.WriteLine($"[DataSyncService] Background Image Refresh Error: {ex.Message}");
+                  }
+              });
+          }
 
           // Update Last Sync Time
           Preferences.Default.Set(LastSyncKey, DateTime.UtcNow);
