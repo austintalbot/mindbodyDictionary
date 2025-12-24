@@ -30,12 +30,12 @@ public class DataSyncService(
   /// <summary>
   /// Syncs all application data (Conditions, FAQs, MovementLinks) from backend if needed.
   /// </summary>
-  public async Task SyncAllDataAsync() {
+  public async Task SyncAllDataAsync(bool forceRefresh = false) {
     try
     {
-      Debug.WriteLine("[DataSyncService] SyncAllDataAsync - Starting sync check");
+      Debug.WriteLine($"[DataSyncService] SyncAllDataAsync - Starting sync check (Force: {forceRefresh})");
 
-      if (await ShouldRefreshFromBackendAsync())
+      if (forceRefresh || await ShouldRefreshFromBackendAsync())
       {
         if (Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
         {
@@ -63,37 +63,44 @@ public class DataSyncService(
           }
 
           // 4. Force Refresh All Images
-          // This is a heavy operation, but requested to ensure all images are up to date.
+          // Run in background to avoid blocking the UI/Sync
           if (conditions.Count > 0)
           {
-              Debug.WriteLine($"[DataSyncService] Force refreshing images for {conditions.Count} conditions...");
-              var imageNames = new HashSet<string>();
-              foreach (var c in conditions)
+            _ = Task.Run(async () => {
+              try
               {
-                  if (!string.IsNullOrWhiteSpace(c.ImageNegative)) imageNames.Add(c.ImageNegative);
-                  if (!string.IsNullOrWhiteSpace(c.ImagePositive)) imageNames.Add(c.ImagePositive);
-              }
+                Debug.WriteLine($"[DataSyncService] Background: Force refreshing images for {conditions.Count} conditions...");
+                var imageNames = new HashSet<string>();
+                foreach (var c in conditions)
+                {
+                  if (!string.IsNullOrWhiteSpace(c.ImageNegative))
+                    imageNames.Add(c.ImageNegative);
+                  if (!string.IsNullOrWhiteSpace(c.ImagePositive))
+                    imageNames.Add(c.ImagePositive);
+                }
 
-              Debug.WriteLine($"[DataSyncService] Found {imageNames.Count} unique images to refresh.");
-              
-              // Process in background to not block too long, or await if critical.
-              // Given "PreloadData" is background, awaiting is fine.
-              // We'll use a semaphore to limit concurrency to avoid network saturation.
-              using var semaphore = new SemaphoreSlim(5); 
-              var tasks = imageNames.Select(async imageName => 
-              {
+                Debug.WriteLine($"[DataSyncService] Background: Found {imageNames.Count} unique images to refresh.");
+
+                using var semaphore = new SemaphoreSlim(5, 50);
+                var tasks = imageNames.Select(async imageName => {
                   await semaphore.WaitAsync();
                   try
                   {
-                      await _imageCacheService.RefreshImageFromRemoteAsync(imageName);
+                    await _imageCacheService.RefreshImageFromRemoteAsync(imageName);
                   }
                   finally
                   {
-                      semaphore.Release();
+                    semaphore.Release();
                   }
-              });
-              await Task.WhenAll(tasks);
-              Debug.WriteLine("[DataSyncService] Image refresh complete.");
+                });
+                await Task.WhenAll(tasks);
+                Debug.WriteLine("[DataSyncService] Background: Image refresh complete.");
+              }
+              catch (Exception ex)
+              {
+                Debug.WriteLine($"[DataSyncService] Background Image Refresh Error: {ex.Message}");
+              }
+            });
           }
 
           // Update Last Sync Time
@@ -112,6 +119,20 @@ public class DataSyncService(
     catch (Exception ex)
     {
       Debug.WriteLine($"[DataSyncService] SyncAllDataAsync - ERROR: {ex.Message}");
+
+      // If we failed and have no data, alert the user
+      var count = await _repository.CountAsync();
+      if (count == 0)
+      {
+        await MainThread.InvokeOnMainThreadAsync(async () => {
+          if (Shell.Current != null)
+          {
+            await Shell.Current.DisplayAlertAsync("Data Sync Failed",
+                "Unable to download content. Please check your internet connection and try again. exception: " + ex.Message,
+                "OK");
+          }
+        });
+      }
     }
   }
 
@@ -127,24 +148,38 @@ public class DataSyncService(
   }
 
   public List<FaqItem> GetCachedFaqs() {
-    try {
-        var json = Preferences.Default.Get(FaqsCacheKey, string.Empty);
-        if (string.IsNullOrEmpty(json)) return [];
-        return JsonSerializer.Deserialize<List<FaqItem>>(json) ?? [];
-    } catch { return []; }
+    try
+    {
+      var json = Preferences.Default.Get(FaqsCacheKey, string.Empty);
+      if (string.IsNullOrEmpty(json))
+        return [];
+      return JsonSerializer.Deserialize<List<FaqItem>>(json) ?? [];
+    }
+    catch { return []; }
   }
 
   public List<MovementLink> GetCachedMovementLinks() {
-    try {
-        var json = Preferences.Default.Get(MovementLinksCacheKey, string.Empty);
-        if (string.IsNullOrEmpty(json)) return [];
-        return JsonSerializer.Deserialize<List<MovementLink>>(json) ?? [];
-    } catch { return []; }
+    try
+    {
+      var json = Preferences.Default.Get(MovementLinksCacheKey, string.Empty);
+      if (string.IsNullOrEmpty(json))
+        return [];
+      return JsonSerializer.Deserialize<List<MovementLink>>(json) ?? [];
+    }
+    catch { return []; }
   }
 
   private async Task<bool> ShouldRefreshFromBackendAsync() {
     try
     {
+      // Force sync if local DB is empty
+      var localCount = await _repository.CountAsync();
+      if (localCount == 0)
+      {
+        Debug.WriteLine("[DataSyncService] ShouldRefreshFromBackend - Local DB is empty. Forcing sync.");
+        return true;
+      }
+
       var lastSync = Preferences.Default.Get<DateTime?>(LastSyncKey, null);
 
       if (lastSync is null)

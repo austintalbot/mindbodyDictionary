@@ -11,11 +11,11 @@ public class MainApplication(IntPtr handle, JniHandleOwnership ownership) : Maui
   public override void OnCreate() {
     // Initialize Firebase before MAUI init
     var firebaseApp = Firebase.FirebaseApp.InitializeApp(this);
-    
+
     if (firebaseApp == null)
     {
       Android.Util.Log.Warn("Firebase", "Automatic initialization failed. Attempting manual initialization...");
-      
+
       // Fallback: Manually initialize with values from google-services.json
       // This protects against build issues where the json isn't processed correctly
       var options = new Firebase.FirebaseOptions.Builder()
@@ -25,7 +25,7 @@ public class MainApplication(IntPtr handle, JniHandleOwnership ownership) : Maui
           .SetStorageBucket("mindbody-dictionary.firebasestorage.app")
           .Build();
 
-      try 
+      try
       {
         firebaseApp = Firebase.FirebaseApp.InitializeApp(this, options);
         Android.Util.Log.Info("Firebase", "Manual initialization successful");

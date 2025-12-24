@@ -44,12 +44,12 @@ public partial class UpgradePremiumPageModel : ObservableObject
     {
       var isOwned = await _billingService.IsProductOwnedAsync(_premiumProductId);
       var hasPreference = Preferences.Get("hasPremiumSubscription", false);
-      
+
       IsSubscribed = isOwned || hasPreference;
 
       if (isOwned)
       {
-          Preferences.Set("hasPremiumSubscription", true);
+        Preferences.Set("hasPremiumSubscription", true);
       }
 
 #if DEBUG

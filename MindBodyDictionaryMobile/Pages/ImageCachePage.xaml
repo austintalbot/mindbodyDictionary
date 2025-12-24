@@ -126,7 +126,7 @@
 
             <CollectionView IsVisible="{Binding CachedImagesList, Converter={StaticResource IsNotNullOrEmptyConverter}}" ItemsSource="{Binding CachedImagesList}">
                 <CollectionView.ItemTemplate>
-                    <DataTemplate>
+                    <DataTemplate x:DataType="vm:ImageCacheItem">
                         <Border Style="{StaticResource ImageCacheListItemBorder}">
                             <VerticalStackLayout Spacing="4">
                                 <Label Style="{StaticResource ImageCacheListItemFileNameLabel}" Text="{Binding FileName}" />

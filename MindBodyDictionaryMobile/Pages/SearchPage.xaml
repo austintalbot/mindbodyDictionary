@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
     x:Class="MindBodyDictionaryMobile.Pages.SearchPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
@@ -22,9 +22,9 @@
         <Border
             Grid.Row="0"
             Margin="10,10,10,0"
+            Padding="10"
             BackgroundColor="{Binding IsSubscriptionActive, Converter={StaticResource BoolToColorConverter}, ConverterParameter='Green|Gray'}"
             IsVisible="{Binding IsSubscriptionActive, Converter={StaticResource InverseBoolConverter}}"
-            Padding="10"
             StrokeShape="RoundRectangle 8">
             <Label
                 FontAttributes="Bold"
@@ -48,67 +48,6 @@
 
         <!--  Collection View with optimized layout  -->
         <Grid Grid.Row="2">
-            <!--  Shimmer loading grid when busy  -->
-            <CollectionView IsVisible="{Binding IsBusy}" Style="{StaticResource SearchGridCollectionView}">
-                <CollectionView.ItemsSource>
-                    <x:Array Type="{x:Type x:String}">
-                        <x:String>1</x:String>
-                        <x:String>2</x:String>
-                        <x:String>3</x:String>
-                        <x:String>4</x:String>
-                        <x:String>5</x:String>
-                        <x:String>6</x:String>
-                        <x:String>7</x:String>
-                        <x:String>8</x:String>
-                        <x:String>9</x:String>
-                        <x:String>10</x:String>
-                        <x:String>11</x:String>
-                        <x:String>12</x:String>
-                    </x:Array>
-                </CollectionView.ItemsSource>
-                <CollectionView.ItemsLayout>
-                    <GridItemsLayout
-                        x:Name="ShimmerGridItemsLayout"
-                        HorizontalItemSpacing="6"
-                        Orientation="Vertical"
-                        Span="3"
-                        VerticalItemSpacing="6" />
-                </CollectionView.ItemsLayout>
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <shimmer:SfShimmer IsActive="True">
-                            <shimmer:SfShimmer.CustomView>
-                                <Border Style="{StaticResource SearchMbdConditionCard}">
-                                    <Grid Padding="0" RowDefinitions="*,Auto">
-                                        <!--  Image placeholder  -->
-                                        <Border
-                                            Grid.Row="0"
-                                            HeightRequest="100"
-                                            HorizontalOptions="Center"
-                                            Style="{StaticResource ShimmerPlaceholderBorder}"
-                                            VerticalOptions="Start"
-                                            WidthRequest="100">
-                                            <Border.StrokeShape>
-                                                <RoundRectangle CornerRadius="8" />
-                                            </Border.StrokeShape>
-                                        </Border>
-
-                                        <!--  Text placeholder  -->
-                                        <Border
-                                            Grid.Row="1"
-                                            Margin="0,8"
-                                            HeightRequest="16"
-                                            HorizontalOptions="Center"
-                                            Style="{StaticResource ShimmerPlaceholderBorder}"
-                                            WidthRequest="80" />
-                                    </Grid>
-                                </Border>
-                            </shimmer:SfShimmer.CustomView>
-                        </shimmer:SfShimmer>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-
             <CollectionView
                 x:Name="ConditionCollectionView"
                 AutomationId="ConditionCollectionView"
@@ -165,6 +104,72 @@
                                     Text="{Binding Name}" />
                             </Grid>
                         </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <!--  Shimmer loading grid when busy  -->
+            <CollectionView
+                BackgroundColor="{AppThemeBinding Light={StaticResource LightBackground},
+                                                  Dark={StaticResource DarkBackground}}"
+                IsVisible="{Binding IsBusy}"
+                Style="{StaticResource SearchGridCollectionView}">
+                <CollectionView.ItemsSource>
+                    <x:Array Type="{x:Type x:String}">
+                        <x:String>1</x:String>
+                        <x:String>2</x:String>
+                        <x:String>3</x:String>
+                        <x:String>4</x:String>
+                        <x:String>5</x:String>
+                        <x:String>6</x:String>
+                        <x:String>7</x:String>
+                        <x:String>8</x:String>
+                        <x:String>9</x:String>
+                        <x:String>10</x:String>
+                        <x:String>11</x:String>
+                        <x:String>12</x:String>
+                    </x:Array>
+                </CollectionView.ItemsSource>
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout
+                        x:Name="ShimmerGridItemsLayout"
+                        HorizontalItemSpacing="6"
+                        Orientation="Vertical"
+                        Span="3"
+                        VerticalItemSpacing="6" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="x:String">
+                        <shimmer:SfShimmer IsActive="True" WaveColor="{StaticResource Primary}">
+                            <shimmer:SfShimmer.CustomView>
+                                <Border Style="{StaticResource SearchMbdConditionCard}">
+                                    <Grid Padding="0" RowDefinitions="*,Auto">
+                                        <!--  Image placeholder  -->
+                                        <Border
+                                            Grid.Row="0"
+                                            Margin="0,10,0,0"
+                                            HeightRequest="100"
+                                            HorizontalOptions="Center"
+                                            Style="{StaticResource ShimmerPlaceholderBorder}"
+                                            VerticalOptions="Start"
+                                            WidthRequest="100">
+                                            <Border.StrokeShape>
+                                                <RoundRectangle CornerRadius="8" />
+                                            </Border.StrokeShape>
+                                        </Border>
+
+                                        <!--  Text placeholder  -->
+                                        <Border
+                                            Grid.Row="1"
+                                            Margin="0,8,0,10"
+                                            HeightRequest="20"
+                                            HorizontalOptions="Center"
+                                            Style="{StaticResource ShimmerPlaceholderBorder}"
+                                            WidthRequest="80" />
+                                    </Grid>
+                                </Border>
+                            </shimmer:SfShimmer.CustomView>
+                        </shimmer:SfShimmer>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentView
     x:Class="MindBodyDictionaryMobile.Pages.MbdConditionDetailsResourcesView"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
@@ -7,9 +7,7 @@
     xmlns:vm="clr-namespace:MindBodyDictionaryMobile.PageModels"
     x:Name="this"
     x:DataType="vm:MbdConditionDetailPageModel">
-    <VerticalStackLayout
-        BindableLayout.EmptyView="There are no corresponding resources for this Condition"
-        BindableLayout.ItemsSource="{Binding BooksResourcesList}">
+    <VerticalStackLayout BindableLayout.EmptyView="There are no corresponding resources for this Condition" BindableLayout.ItemsSource="{Binding BooksResourcesList}">
         <BindableLayout.ItemTemplate>
             <DataTemplate x:DataType="model:Recommendation">
                 <Border

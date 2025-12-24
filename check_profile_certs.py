@@ -3,7 +3,7 @@ import hashlib
 
 with open('profile.plist', 'rb') as f:
     pl = plistlib.load(f)
-    
+
 certs = pl.get('DeveloperCertificates', [])
 print(f"Found {len(certs)} certificates in profile.")
 for cert_data in certs:

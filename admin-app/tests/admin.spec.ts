@@ -153,7 +153,7 @@ test.describe('MBD Admin Portal Full Functionality Test', () => {
         await page.getByRole('button', { name: 'Refresh Images' }).click();
         await page.getByPlaceholder('Search images by name or condition...').clear();
         await page.getByPlaceholder('Search images by name or condition...').fill(testConditionName);
-        
+
         await expect(page.getByRole('cell', { name: `${testConditionName}Negative.png` })).toBeVisible({ timeout: 5000 });
         await expect(page.getByRole('cell', { name: `${testConditionName}Positive.png` })).toBeVisible({ timeout: 5000 });
     }).toPass({ timeout: 30000 });

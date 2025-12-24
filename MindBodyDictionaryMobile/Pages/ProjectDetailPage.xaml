@@ -137,7 +137,7 @@
                 </Grid>
                 <VerticalStackLayout BindableLayout.ItemsSource="{Binding Tasks}" Spacing="{StaticResource LayoutSpacing}">
                     <BindableLayout.ItemTemplate>
-                        <DataTemplate>
+                        <DataTemplate x:DataType="models:ProjectTask">
                             <controls:TaskView TaskCompletedCommand="{Binding TaskCompletedCommand, Source={RelativeSource AncestorType={x:Type pageModels:ProjectDetailPageModel}}, x:DataType=pageModels:ProjectDetailPageModel}" />
                         </DataTemplate>
                     </BindableLayout.ItemTemplate>
