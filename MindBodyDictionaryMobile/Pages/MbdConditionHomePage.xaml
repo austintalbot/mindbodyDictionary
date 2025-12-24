@@ -9,8 +9,8 @@
     x:DataType="vm:MbdConditionHomePageModel">
 
     <Grid RowDefinitions="Auto,*" Style="{StaticResource MainPageGrid}">
-        
-        <!-- Fixed Header Section -->
+
+        <!--  Fixed Header Section  -->
         <VerticalStackLayout Grid.Row="0" Style="{StaticResource MainContentStack}">
             <Image AutomationId="AppLogo" Style="{StaticResource AppLogoImage}" />
             <SearchBar

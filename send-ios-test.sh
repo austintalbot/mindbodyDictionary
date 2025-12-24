@@ -48,5 +48,3 @@ curl -v -X POST "${RESOURCE_URI}?api-version=2015-01" \
 
 echo ""
 echo "Done. Check your iPhone."
-
-

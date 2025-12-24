@@ -51,7 +51,7 @@ const ImageActionModal: React.FC<ImageActionModalProps> = ({
     } else if (image) {
        // Try to pre-fill the association form based on current image name/condition
        const parsed = parseImageNameForUpload(image.name);
-       
+
        // Use explicit initial type if provided, otherwise parsed
        const typeToUse = initialImageType || parsed.imageType;
        setSelectedImageType(typeToUse);
@@ -148,7 +148,7 @@ const ImageActionModal: React.FC<ImageActionModalProps> = ({
       // Parse details from filename
       const parsed = parseImageNameForUpload(image.name);
       let { mbdConditionName, imageType } = parsed;
-      
+
       // Override with explicit context if available
       if (initialImageType) {
           imageType = initialImageType;
@@ -162,7 +162,7 @@ const ImageActionModal: React.FC<ImageActionModalProps> = ({
       // Ensure we have a valid type
       if (!imageType) {
           // Fallback if parsing failed and no context provided
-          imageType = ImageType.Positive; 
+          imageType = ImageType.Positive;
       }
 
       // Upload the new image using the constant naming convention
@@ -218,7 +218,7 @@ const ImageActionModal: React.FC<ImageActionModalProps> = ({
               if (condition) {
                   const suffix = selectedImageType === ImageType.Negative ? 'Negative' : 'Positive';
                   const newFileName = `${selectedCondition.name}${suffix}.png`;
-                  
+
                   if (selectedImageType === ImageType.Negative) {
                       condition.imageNegative = newFileName;
                   } else {

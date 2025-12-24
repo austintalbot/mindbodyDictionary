@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
     x:Class="MindBodyDictionaryMobile.Pages.SearchPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
@@ -22,9 +22,9 @@
         <Border
             Grid.Row="0"
             Margin="10,10,10,0"
+            Padding="10"
             BackgroundColor="{Binding IsSubscriptionActive, Converter={StaticResource BoolToColorConverter}, ConverterParameter='Green|Gray'}"
             IsVisible="{Binding IsSubscriptionActive, Converter={StaticResource InverseBoolConverter}}"
-            Padding="10"
             StrokeShape="RoundRectangle 8">
             <Label
                 FontAttributes="Bold"
@@ -140,9 +140,7 @@
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="x:String">
-                        <shimmer:SfShimmer
-                            IsActive="True"
-                            WaveColor="{StaticResource Primary}">
+                        <shimmer:SfShimmer IsActive="True" WaveColor="{StaticResource Primary}">
                             <shimmer:SfShimmer.CustomView>
                                 <Border Style="{StaticResource SearchMbdConditionCard}">
                                     <Grid Padding="0" RowDefinitions="*,Auto">

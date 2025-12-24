@@ -51,8 +51,8 @@ public class MbdConditionApiService(MbdConditionRepository mbdConditionRepositor
     }
     else
     {
-         Debug.WriteLine("[MbdConditionApiService] Warning: API returned 0 conditions.");
-         throw new Exception("API returned 0 conditions. Verify backend data or parsing.");
+      Debug.WriteLine("[MbdConditionApiService] Warning: API returned 0 conditions.");
+      throw new Exception("API returned 0 conditions. Verify backend data or parsing.");
     }
 
     return result;
@@ -97,21 +97,21 @@ public class MbdConditionApiService(MbdConditionRepository mbdConditionRepositor
       var trimmedJson = json.TrimStart();
       if (trimmedJson.StartsWith("["))
       {
-          // Direct array format
-          return System.Text.Json.JsonSerializer.Deserialize<List<MbdCondition>>(json, options) ?? [];
+        // Direct array format
+        return System.Text.Json.JsonSerializer.Deserialize<List<MbdCondition>>(json, options) ?? [];
       }
       else
       {
-          // Wrapped object format
-          var response = System.Text.Json.JsonSerializer.Deserialize<ApiResponse>(json, options);
-          return response?.Data ?? [];
+        // Wrapped object format
+        var response = System.Text.Json.JsonSerializer.Deserialize<ApiResponse>(json, options);
+        return response?.Data ?? [];
       }
     }
     catch (Exception ex)
     {
       Debug.WriteLine($"[MbdConditionApiService] ParseApiResponse - JSON parsing error: {ex.Message}");
       // Re-throw to ensure we don't silently fail with empty list, allowing fallback or alert
-      throw; 
+      throw;
     }
   }
 

@@ -143,27 +143,28 @@ public class ImageCacheService(ImageCacheRepository imageCacheRepository, ILogge
   /// bypassing any existing cache check.
   /// </summary>
   public async Task RefreshImageFromRemoteAsync(string fileName) {
-      if (string.IsNullOrWhiteSpace(fileName)) return;
+    if (string.IsNullOrWhiteSpace(fileName))
+      return;
 
-      try
+    try
+    {
+      using var httpClient = new HttpClient();
+      var url = $"{RemoteImageBaseUrl}{Uri.EscapeDataString(fileName)}";
+      _logger.LogInformation("RefreshImageFromRemoteAsync: Force downloading: {Url}", url);
+
+      var imageData = await httpClient.GetByteArrayAsync(url);
+
+      if (imageData.Length > 0)
       {
-          using var httpClient = new HttpClient();
-          var url = $"{RemoteImageBaseUrl}{Uri.EscapeDataString(fileName)}";
-          _logger.LogInformation("RefreshImageFromRemoteAsync: Force downloading: {Url}", url);
-
-          var imageData = await httpClient.GetByteArrayAsync(url);
-
-          if (imageData.Length > 0)
-          {
-              // This upserts (overwrites) the existing cache entry
-              await SaveToCacheAsync(fileName, imageData);
-              _logger.LogInformation("RefreshImageFromRemoteAsync: Successfully refreshed: {FileName}", fileName);
-          }
+        // This upserts (overwrites) the existing cache entry
+        await SaveToCacheAsync(fileName, imageData);
+        _logger.LogInformation("RefreshImageFromRemoteAsync: Successfully refreshed: {FileName}", fileName);
       }
-      catch (Exception ex)
-      {
-          _logger.LogWarning(ex, "RefreshImageFromRemoteAsync: Failed to refresh image: {FileName}", fileName);
-      }
+    }
+    catch (Exception ex)
+    {
+      _logger.LogWarning(ex, "RefreshImageFromRemoteAsync: Failed to refresh image: {FileName}", fileName);
+    }
   }
 
   private async Task SaveToCacheAsync(string fileName, byte[] imageData) {

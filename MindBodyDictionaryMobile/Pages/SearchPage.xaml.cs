@@ -23,12 +23,11 @@ public partial class SearchPage : ContentPage
     _searchPageModel.PropertyChanged += OnViewModelPropertyChanged;
   }
 
-  private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
-  {
-      if (e.PropertyName == nameof(SearchPageModel.FilteredConditionCollection))
-      {
-          _lastDataUpdateTime = DateTime.Now;
-      }
+  private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e) {
+    if (e.PropertyName == nameof(SearchPageModel.FilteredConditionCollection))
+    {
+      _lastDataUpdateTime = DateTime.Now;
+    }
   }
 
   protected override void OnSizeAllocated(double width, double height) {
@@ -72,7 +71,7 @@ public partial class SearchPage : ContentPage
     // If data updated recently (e.g. within 500ms), ignore scroll as it's likely a layout reset
     if (DateTime.Now - _lastDataUpdateTime < TimeSpan.FromMilliseconds(500))
     {
-        return;
+      return;
     }
 
     if (MbdConditionSearchBar.IsFocused)

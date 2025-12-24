@@ -45,11 +45,11 @@ public class AppDataPreloaderService(
         // 2. Sync with remote server (Conditions, FAQs, Links)
         System.Diagnostics.Debug.WriteLine("[AppDataPreloader] Starting remote sync...");
         await _dataSyncService.SyncAllDataAsync();
-        
+
         System.Diagnostics.Debug.WriteLine("[AppDataPreloader] Sync check complete.");
         // Notify any active listeners that the data has been updated.
         WeakReferenceMessenger.Default.Send(new ConditionsUpdatedMessage());
-        
+
       }
       catch (Exception ex)
       {

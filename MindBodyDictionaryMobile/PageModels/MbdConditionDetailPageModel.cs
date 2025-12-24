@@ -530,9 +530,9 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
 
         isSubscribed = isSubscribed || hasBillingSubscription;
         // Update preference if we verified it via billing
-        if (hasBillingSubscription && !isSubscribed )
+        if (hasBillingSubscription && !isSubscribed)
         {
-            Preferences.Set("hasPremiumSubscription", true);
+          Preferences.Set("hasPremiumSubscription", true);
         }
       }
       catch (Exception ex)

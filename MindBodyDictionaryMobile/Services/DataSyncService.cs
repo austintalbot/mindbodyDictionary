@@ -66,41 +66,41 @@ public class DataSyncService(
           // Run in background to avoid blocking the UI/Sync
           if (conditions.Count > 0)
           {
-              _ = Task.Run(async () =>
+            _ = Task.Run(async () => {
+              try
               {
+                Debug.WriteLine($"[DataSyncService] Background: Force refreshing images for {conditions.Count} conditions...");
+                var imageNames = new HashSet<string>();
+                foreach (var c in conditions)
+                {
+                  if (!string.IsNullOrWhiteSpace(c.ImageNegative))
+                    imageNames.Add(c.ImageNegative);
+                  if (!string.IsNullOrWhiteSpace(c.ImagePositive))
+                    imageNames.Add(c.ImagePositive);
+                }
+
+                Debug.WriteLine($"[DataSyncService] Background: Found {imageNames.Count} unique images to refresh.");
+
+                using var semaphore = new SemaphoreSlim(5, 50);
+                var tasks = imageNames.Select(async imageName => {
+                  await semaphore.WaitAsync();
                   try
                   {
-                      Debug.WriteLine($"[DataSyncService] Background: Force refreshing images for {conditions.Count} conditions...");
-                      var imageNames = new HashSet<string>();
-                      foreach (var c in conditions)
-                      {
-                          if (!string.IsNullOrWhiteSpace(c.ImageNegative)) imageNames.Add(c.ImageNegative);
-                          if (!string.IsNullOrWhiteSpace(c.ImagePositive)) imageNames.Add(c.ImagePositive);
-                      }
-
-                      Debug.WriteLine($"[DataSyncService] Background: Found {imageNames.Count} unique images to refresh.");
-
-                      using var semaphore = new SemaphoreSlim(5,50);
-                      var tasks = imageNames.Select(async imageName =>
-                      {
-                          await semaphore.WaitAsync();
-                          try
-                          {
-                              await _imageCacheService.RefreshImageFromRemoteAsync(imageName);
-                          }
-                          finally
-                          {
-                              semaphore.Release();
-                          }
-                      });
-                      await Task.WhenAll(tasks);
-                      Debug.WriteLine("[DataSyncService] Background: Image refresh complete.");
+                    await _imageCacheService.RefreshImageFromRemoteAsync(imageName);
                   }
-                  catch (Exception ex)
+                  finally
                   {
-                      Debug.WriteLine($"[DataSyncService] Background Image Refresh Error: {ex.Message}");
+                    semaphore.Release();
                   }
-              });
+                });
+                await Task.WhenAll(tasks);
+                Debug.WriteLine("[DataSyncService] Background: Image refresh complete.");
+              }
+              catch (Exception ex)
+              {
+                Debug.WriteLine($"[DataSyncService] Background Image Refresh Error: {ex.Message}");
+              }
+            });
           }
 
           // Update Last Sync Time
@@ -124,15 +124,14 @@ public class DataSyncService(
       var count = await _repository.CountAsync();
       if (count == 0)
       {
-          await MainThread.InvokeOnMainThreadAsync(async () =>
+        await MainThread.InvokeOnMainThreadAsync(async () => {
+          if (Shell.Current != null)
           {
-              if (Shell.Current != null)
-              {
-                  await Shell.Current.DisplayAlertAsync("Data Sync Failed",
-                      "Unable to download content. Please check your internet connection and try again. exception: " + ex.Message,
-                      "OK");
-              }
-          });
+            await Shell.Current.DisplayAlertAsync("Data Sync Failed",
+                "Unable to download content. Please check your internet connection and try again. exception: " + ex.Message,
+                "OK");
+          }
+        });
       }
     }
   }
@@ -149,19 +148,25 @@ public class DataSyncService(
   }
 
   public List<FaqItem> GetCachedFaqs() {
-    try {
-        var json = Preferences.Default.Get(FaqsCacheKey, string.Empty);
-        if (string.IsNullOrEmpty(json)) return [];
-        return JsonSerializer.Deserialize<List<FaqItem>>(json) ?? [];
-    } catch { return []; }
+    try
+    {
+      var json = Preferences.Default.Get(FaqsCacheKey, string.Empty);
+      if (string.IsNullOrEmpty(json))
+        return [];
+      return JsonSerializer.Deserialize<List<FaqItem>>(json) ?? [];
+    }
+    catch { return []; }
   }
 
   public List<MovementLink> GetCachedMovementLinks() {
-    try {
-        var json = Preferences.Default.Get(MovementLinksCacheKey, string.Empty);
-        if (string.IsNullOrEmpty(json)) return [];
-        return JsonSerializer.Deserialize<List<MovementLink>>(json) ?? [];
-    } catch { return []; }
+    try
+    {
+      var json = Preferences.Default.Get(MovementLinksCacheKey, string.Empty);
+      if (string.IsNullOrEmpty(json))
+        return [];
+      return JsonSerializer.Deserialize<List<MovementLink>>(json) ?? [];
+    }
+    catch { return []; }
   }
 
   private async Task<bool> ShouldRefreshFromBackendAsync() {

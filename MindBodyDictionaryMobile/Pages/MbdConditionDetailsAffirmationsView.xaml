@@ -39,22 +39,23 @@
             VerticalOptions="Fill">
             <CarouselView.ItemTemplate>
                 <DataTemplate x:DataType="x:String">
-                    <Border Style="{StaticResource AffirmationBorderStyle}"
-                            BackgroundColor="White"
-                            HorizontalOptions="Center"
-                            VerticalOptions="Center"
-                            WidthRequest="300"
-                            HeightRequest="260"
-                            Margin="10">
+                    <Border
+                        Margin="10"
+                        BackgroundColor="White"
+                        HeightRequest="260"
+                        HorizontalOptions="Center"
+                        Style="{StaticResource AffirmationBorderStyle}"
+                        VerticalOptions="Center"
+                        WidthRequest="300">
                         <Label
                             x:Name="AffirmationLabel"
-                            Style="{StaticResource AffirmationCarouselLabelStyle}"
-                            TextColor="Black"
                             HorizontalOptions="Center"
-                            VerticalOptions="Center"
                             HorizontalTextAlignment="Center"
-                            VerticalTextAlignment="Center"
-                            Text="{Binding .}" />
+                            Style="{StaticResource AffirmationCarouselLabelStyle}"
+                            Text="{Binding .}"
+                            TextColor="Black"
+                            VerticalOptions="Center"
+                            VerticalTextAlignment="Center" />
                     </Border>
                 </DataTemplate>
             </CarouselView.ItemTemplate>

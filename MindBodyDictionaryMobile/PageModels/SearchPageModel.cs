@@ -105,13 +105,12 @@ public partial class SearchPageModel : ObservableObject, IRecipient<ConditionsUp
             // Update preference if we verified it via billing
             if (hasBillingSubscription && !isSubscribed)
             {
-                Preferences.Set("hasPremiumSubscription", true);
+              Preferences.Set("hasPremiumSubscription", true);
             }
 
-            await MainThread.InvokeOnMainThreadAsync(() =>
-            {
-                IsSubscriptionActive = hasSubscription;
-                SubscriptionStatusMessage = hasSubscription ? "Premium Subscription Active" : "Free Version - Upgrade for Full Access";
+            await MainThread.InvokeOnMainThreadAsync(() => {
+              IsSubscriptionActive = hasSubscription;
+              SubscriptionStatusMessage = hasSubscription ? "Premium Subscription Active" : "Free Version - Upgrade for Full Access";
             });
 
             foreach (var c in _allConditions)
@@ -144,7 +143,8 @@ public partial class SearchPageModel : ObservableObject, IRecipient<ConditionsUp
 
   [RelayCommand]
   public async Task RefreshConditions() {
-    if (IsBusy) return;
+    if (IsBusy)
+      return;
 
     try
     {

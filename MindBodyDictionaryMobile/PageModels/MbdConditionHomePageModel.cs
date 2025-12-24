@@ -4,11 +4,10 @@ namespace MindBodyDictionaryMobile.PageModels
   using System.Threading.Tasks;
   using CommunityToolkit.Mvvm.ComponentModel;
   using CommunityToolkit.Mvvm.Input;
+  using CommunityToolkit.Mvvm.Messaging;
   using Microsoft.Extensions.Logging; // Add this for ILogger
   using Microsoft.Maui.Controls; // For Preferences
   using MindBodyDictionaryMobile.Models;
-
-  using CommunityToolkit.Mvvm.Messaging;
   using MindBodyDictionaryMobile.Models.Messaging;
 
   public partial class MbdConditionHomePageModel : ObservableObject, IRecipient<ConditionsUpdatedMessage>
@@ -46,15 +45,14 @@ namespace MindBodyDictionaryMobile.PageModels
       _seedDataService = seedDataService;
       _billingService = billingService;
       RandomConditionCollection = [];
-      
+
       // Register for messages
       WeakReferenceMessenger.Default.Register(this);
     }
 
-    public void Receive(ConditionsUpdatedMessage message)
-    {
-        _logger.LogInformation("Received ConditionsUpdatedMessage. Refreshing home page data.");
-        MainThread.BeginInvokeOnMainThread(async () => await GetConditionList());
+    public void Receive(ConditionsUpdatedMessage message) {
+      _logger.LogInformation("Received ConditionsUpdatedMessage. Refreshing home page data.");
+      MainThread.BeginInvokeOnMainThread(async () => await GetConditionList());
     }
 
     [RelayCommand]
@@ -95,12 +93,12 @@ namespace MindBodyDictionaryMobile.PageModels
 #endif
           var isOwned = await _billingService.IsProductOwnedAsync(productId);
           var hasPreference = Preferences.Get("hasPremiumSubscription", false);
-          
+
           isSubscribed = isOwned || hasPreference;
 
           if (isOwned)
           {
-              Preferences.Set("hasPremiumSubscription", true);
+            Preferences.Set("hasPremiumSubscription", true);
           }
         }
         catch (Exception ex)
