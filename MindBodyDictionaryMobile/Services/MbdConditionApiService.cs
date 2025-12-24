@@ -17,46 +17,45 @@ public class MbdConditionApiService(MbdConditionRepository mbdConditionRepositor
   private const string LastUpdateTimeEndpoint = "GetLastUpdateTime";
   private const string ApiKey = "p8_sBm-IGx0vcvseYZK_mGxL16_CYCbH7RgPb2p-YoIkAzFuiNtQ1Q==";
 
+  private static readonly HttpClient _httpClient = new() { Timeout = TimeSpan.FromSeconds(30) };
+
   /// <summary>
   /// Retrieves all MbdConditions from the backend API.
   /// </summary>
   public async Task<List<MbdCondition>> GetMbdConditionsAsync() {
-    try
+    Debug.WriteLine("[MbdConditionApiService] GetMbdConditionsAsync - Starting retrieval");
+
+    var url = $"{BaseUrl}/{MbdConditionsEndpoint}?code={ApiKey}";
+    Debug.WriteLine($"[MbdConditionApiService] GetMbdConditionsAsync - URL: {url}");
+
+    var response = await _httpClient.GetAsync(url);
+
+    if (!response.IsSuccessStatusCode)
     {
-      Debug.WriteLine("[MbdConditionApiService] GetMbdConditionsAsync - Starting retrieval");
-
-      var url = $"{BaseUrl}/{MbdConditionsEndpoint}?code={ApiKey}";
-      Debug.WriteLine($"[MbdConditionApiService] GetMbdConditionsAsync - URL: {url}");
-
-      using var client = new HttpClient();
-      var response = await client.GetAsync(url);
-
-      if (!response.IsSuccessStatusCode)
-      {
-        Debug.WriteLine($"[MbdConditionApiService] GetMbdConditionsAsync - API Error: {response.StatusCode}");
-        return [];
-      }
-
-      var json = await response.Content.ReadAsStringAsync();
-      Debug.WriteLine("[MbdConditionApiService] GetMbdConditionsAsync - Response received");
-
-      // Parse JSON response
-      var result = ParseApiResponse(json);
-      Debug.WriteLine($"[MbdConditionApiService] GetMbdConditionsAsync - Retrieved {result.Count} conditions");
-
-      // Sync to local database
-      if (result.Count > 0)
-      {
-        await SyncToLocalDatabaseAsync(result);
-      }
-
-      return result;
+      var errorContent = await response.Content.ReadAsStringAsync();
+      Debug.WriteLine($"[MbdConditionApiService] GetMbdConditionsAsync - API Error: {response.StatusCode} - {errorContent}");
+      throw new HttpRequestException($"API Error: {response.StatusCode} - {errorContent}");
     }
-    catch (Exception ex)
+
+    var json = await response.Content.ReadAsStringAsync();
+    Debug.WriteLine($"[MbdConditionApiService] GetMbdConditionsAsync - Response received ({json.Length} chars)");
+
+    // Parse JSON response
+    var result = ParseApiResponse(json);
+    Debug.WriteLine($"[MbdConditionApiService] GetMbdConditionsAsync - Retrieved {result.Count} conditions");
+
+    // Sync to local database
+    if (result.Count > 0)
     {
-      Debug.WriteLine($"[MbdConditionApiService] GetMbdConditionsAsync - ERROR: {ex.Message}");
-      return [];
+      await SyncToLocalDatabaseAsync(result);
     }
+    else
+    {
+         Debug.WriteLine("[MbdConditionApiService] Warning: API returned 0 conditions.");
+         throw new Exception("API returned 0 conditions. Verify backend data or parsing.");
+    }
+
+    return result;
   }
 
   /// <summary>
@@ -94,13 +93,25 @@ public class MbdConditionApiService(MbdConditionRepository mbdConditionRepositor
       {
         PropertyNameCaseInsensitive = true
       };
-      var response = System.Text.Json.JsonSerializer.Deserialize<ApiResponse>(json, options);
-      return response?.Data ?? [];
+
+      var trimmedJson = json.TrimStart();
+      if (trimmedJson.StartsWith("["))
+      {
+          // Direct array format
+          return System.Text.Json.JsonSerializer.Deserialize<List<MbdCondition>>(json, options) ?? [];
+      }
+      else
+      {
+          // Wrapped object format
+          var response = System.Text.Json.JsonSerializer.Deserialize<ApiResponse>(json, options);
+          return response?.Data ?? [];
+      }
     }
     catch (Exception ex)
     {
       Debug.WriteLine($"[MbdConditionApiService] ParseApiResponse - JSON parsing error: {ex.Message}");
-      return [];
+      // Re-throw to ensure we don't silently fail with empty list, allowing fallback or alert
+      throw; 
     }
   }
 
@@ -109,10 +120,7 @@ public class MbdConditionApiService(MbdConditionRepository mbdConditionRepositor
     {
       Debug.WriteLine($"[MbdConditionApiService] SyncToLocalDatabaseAsync - Syncing {conditions.Count} conditions");
 
-      foreach (var condition in conditions)
-      {
-        await _mbdConditionRepository.SaveItemAsync(condition);
-      }
+      await _mbdConditionRepository.BulkInsertAsync(conditions);
 
       // Update last sync timestamp
       Preferences.Default.Set("LastConditionSync", DateTime.UtcNow);

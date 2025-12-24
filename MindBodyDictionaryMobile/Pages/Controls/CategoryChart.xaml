@@ -37,8 +37,8 @@
                     XBindingPath="Title"
                     YBindingPath="Count">
                     <chart:DoughnutSeries.LabelTemplate>
-                        <DataTemplate>
-                            <HorizontalStackLayout x:DataType="chart:ChartDataLabel">
+                        <DataTemplate x:DataType="chart:ChartDataLabel">
+                            <HorizontalStackLayout>
                                 <Label Style="{StaticResource CategoryChartDataLabel}" Text="{Binding Item, Converter={StaticResource DataLabelValueConverter}, ConverterParameter='Title'}" />
                                 <Label Style="{StaticResource CategoryChartDataLabel}" Text=": " />
                                 <Label Style="{StaticResource CategoryChartDataLabel}" Text="{Binding Item, Converter={StaticResource DataLabelValueConverter}, ConverterParameter='Count'}" />

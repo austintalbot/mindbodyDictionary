@@ -8,7 +8,10 @@ namespace MindBodyDictionaryMobile.PageModels
   using Microsoft.Maui.Controls; // For Preferences
   using MindBodyDictionaryMobile.Models;
 
-  public partial class MbdConditionHomePageModel : ObservableObject
+  using CommunityToolkit.Mvvm.Messaging;
+  using MindBodyDictionaryMobile.Models.Messaging;
+
+  public partial class MbdConditionHomePageModel : ObservableObject, IRecipient<ConditionsUpdatedMessage>
   {
     private readonly MbdConditionRepository _mbdConditionRepository;
     private readonly ModalErrorHandler _errorHandler;
@@ -43,7 +46,15 @@ namespace MindBodyDictionaryMobile.PageModels
       _seedDataService = seedDataService;
       _billingService = billingService;
       RandomConditionCollection = [];
-      // Initialize with default values or from preferences/settings
+      
+      // Register for messages
+      WeakReferenceMessenger.Default.Register(this);
+    }
+
+    public void Receive(ConditionsUpdatedMessage message)
+    {
+        _logger.LogInformation("Received ConditionsUpdatedMessage. Refreshing home page data.");
+        MainThread.BeginInvokeOnMainThread(async () => await GetConditionList());
     }
 
     [RelayCommand]

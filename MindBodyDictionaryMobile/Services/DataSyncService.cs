@@ -30,12 +30,12 @@ public class DataSyncService(
   /// <summary>
   /// Syncs all application data (Conditions, FAQs, MovementLinks) from backend if needed.
   /// </summary>
-  public async Task SyncAllDataAsync() {
+  public async Task SyncAllDataAsync(bool forceRefresh = false) {
     try
     {
-      Debug.WriteLine("[DataSyncService] SyncAllDataAsync - Starting sync check");
+      Debug.WriteLine($"[DataSyncService] SyncAllDataAsync - Starting sync check (Force: {forceRefresh})");
 
-      if (await ShouldRefreshFromBackendAsync())
+      if (forceRefresh || await ShouldRefreshFromBackendAsync())
       {
         if (Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
         {
@@ -75,12 +75,12 @@ public class DataSyncService(
               }
 
               Debug.WriteLine($"[DataSyncService] Found {imageNames.Count} unique images to refresh.");
-              
+
               // Process in background to not block too long, or await if critical.
               // Given "PreloadData" is background, awaiting is fine.
               // We'll use a semaphore to limit concurrency to avoid network saturation.
-              using var semaphore = new SemaphoreSlim(5); 
-              var tasks = imageNames.Select(async imageName => 
+              using var semaphore = new SemaphoreSlim(5);
+              var tasks = imageNames.Select(async imageName =>
               {
                   await semaphore.WaitAsync();
                   try
@@ -112,6 +112,21 @@ public class DataSyncService(
     catch (Exception ex)
     {
       Debug.WriteLine($"[DataSyncService] SyncAllDataAsync - ERROR: {ex.Message}");
+
+      // If we failed and have no data, alert the user
+      var count = await _repository.CountAsync();
+      if (count == 0)
+      {
+          await MainThread.InvokeOnMainThreadAsync(async () =>
+          {
+              if (Shell.Current != null)
+              {
+                  await Shell.Current.DisplayAlert("Data Sync Failed",
+                      "Unable to download content. Please check your internet connection and try again. exception: " + ex.Message,
+                      "OK");
+              }
+          });
+      }
     }
   }
 
@@ -145,6 +160,14 @@ public class DataSyncService(
   private async Task<bool> ShouldRefreshFromBackendAsync() {
     try
     {
+      // Force sync if local DB is empty
+      var localCount = await _repository.CountAsync();
+      if (localCount == 0)
+      {
+        Debug.WriteLine("[DataSyncService] ShouldRefreshFromBackend - Local DB is empty. Forcing sync.");
+        return true;
+      }
+
       var lastSync = Preferences.Default.Get<DateTime?>(LastSyncKey, null);
 
       if (lastSync is null)

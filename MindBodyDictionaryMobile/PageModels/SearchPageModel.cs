@@ -18,6 +18,7 @@ public partial class SearchPageModel : ObservableObject, IRecipient<ConditionsUp
   private readonly MindBodyDictionaryMobile.Data.ImageCacheService _imageCacheService;
   private readonly IBillingService _billingService;
   private readonly MbdConditionApiService _mbdConditionApiService;
+  private readonly DataSyncService _dataSyncService;
 
   [ObservableProperty]
   private string _title = "Search Conditions";
@@ -45,11 +46,12 @@ public partial class SearchPageModel : ObservableObject, IRecipient<ConditionsUp
   [ObservableProperty]
   private bool _isSubscriptionActive;
 
-  public SearchPageModel(MbdConditionRepository mbdConditionRepository, MindBodyDictionaryMobile.Data.ImageCacheService imageCacheService, IBillingService billingService, MbdConditionApiService mbdConditionApiService) {
+  public SearchPageModel(MbdConditionRepository mbdConditionRepository, MindBodyDictionaryMobile.Data.ImageCacheService imageCacheService, IBillingService billingService, MbdConditionApiService mbdConditionApiService, DataSyncService dataSyncService) {
     _mbdConditionRepository = mbdConditionRepository;
     _imageCacheService = imageCacheService;
     _billingService = billingService;
     _mbdConditionApiService = mbdConditionApiService;
+    _dataSyncService = dataSyncService;
 
     // Register to listen for data updates
     WeakReferenceMessenger.Default.Register(this);
@@ -147,7 +149,8 @@ public partial class SearchPageModel : ObservableObject, IRecipient<ConditionsUp
     try
     {
       IsBusy = true;
-      await _mbdConditionApiService.GetMbdConditionsAsync();
+      // Force full sync (Conditions, FAQs, Links, Images)
+      await _dataSyncService.SyncAllDataAsync(forceRefresh: true);
       await GetConditionShortList(forceRefresh: true);
     }
     catch (Exception ex)
