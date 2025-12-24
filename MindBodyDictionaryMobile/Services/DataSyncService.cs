@@ -121,7 +121,7 @@ public class DataSyncService(
           {
               if (Shell.Current != null)
               {
-                  await Shell.Current.DisplayAlert("Data Sync Failed",
+                  await Shell.Current.DisplayAlertAsync("Data Sync Failed",
                       "Unable to download content. Please check your internet connection and try again. exception: " + ex.Message,
                       "OK");
               }
