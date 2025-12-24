@@ -66,9 +66,9 @@ public class DataSyncService(
           // Run in background to avoid blocking the UI/Sync
           if (conditions.Count > 0)
           {
-              _ = Task.Run(async () => 
+              _ = Task.Run(async () =>
               {
-                  try 
+                  try
                   {
                       Debug.WriteLine($"[DataSyncService] Background: Force refreshing images for {conditions.Count} conditions...");
                       var imageNames = new HashSet<string>();
@@ -79,9 +79,9 @@ public class DataSyncService(
                       }
 
                       Debug.WriteLine($"[DataSyncService] Background: Found {imageNames.Count} unique images to refresh.");
-                      
-                      using var semaphore = new SemaphoreSlim(5); 
-                      var tasks = imageNames.Select(async imageName => 
+
+                      using var semaphore = new SemaphoreSlim(5,50);
+                      var tasks = imageNames.Select(async imageName =>
                       {
                           await semaphore.WaitAsync();
                           try
