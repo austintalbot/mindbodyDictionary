@@ -11,7 +11,7 @@ public class ImageCacheService(ImageCacheRepository imageCacheRepository, ILogge
   private readonly ImageCacheRepository _imageCacheRepository = imageCacheRepository;
   private readonly ILogger<ImageCacheService> _logger = logger;
   private const string ImagesResourcePath = "images";
-  private const string RemoteImageBaseUrl = "https://mbdstoragesa.blob.core.windows.net/mbd-images/";
+  private const string RemoteImageBaseUrl = "https://mbdstoragesa.blob.core.windows.net/mbdconditionimages/";
 
   /// <summary>
   /// Loads all images from Resources/Raw/images into the local cache database.
@@ -136,6 +136,34 @@ public class ImageCacheService(ImageCacheRepository imageCacheRepository, ILogge
       _logger.LogError(e, "GetImageAsync: Top-level error retrieving image: {FileName}", fileName);
       return null;
     }
+  }
+
+  /// <summary>
+  /// Forces a download of the image from the remote server and updates the local cache,
+  /// bypassing any existing cache check.
+  /// </summary>
+  public async Task RefreshImageFromRemoteAsync(string fileName) {
+      if (string.IsNullOrWhiteSpace(fileName)) return;
+
+      try
+      {
+          using var httpClient = new HttpClient();
+          var url = $"{RemoteImageBaseUrl}{Uri.EscapeDataString(fileName)}";
+          _logger.LogInformation("RefreshImageFromRemoteAsync: Force downloading: {Url}", url);
+
+          var imageData = await httpClient.GetByteArrayAsync(url);
+
+          if (imageData.Length > 0)
+          {
+              // This upserts (overwrites) the existing cache entry
+              await SaveToCacheAsync(fileName, imageData);
+              _logger.LogInformation("RefreshImageFromRemoteAsync: Successfully refreshed: {FileName}", fileName);
+          }
+      }
+      catch (Exception ex)
+      {
+          _logger.LogWarning(ex, "RefreshImageFromRemoteAsync: Failed to refresh image: {FileName}", fileName);
+      }
   }
 
   private async Task SaveToCacheAsync(string fileName, byte[] imageData) {

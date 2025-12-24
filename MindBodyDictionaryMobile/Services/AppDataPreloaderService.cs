@@ -13,11 +13,11 @@ using MindBodyDictionaryMobile.Services;
 public class AppDataPreloaderService(
     MbdConditionRepository mbdConditionRepository,
     SeedDataService seedDataService,
-    MbdConditionApiService mbdConditionApiService)
+    DataSyncService dataSyncService)
 {
   private readonly MbdConditionRepository _mbdConditionRepository = mbdConditionRepository;
   private readonly SeedDataService _seedDataService = seedDataService;
-  private readonly MbdConditionApiService _mbdConditionApiService = mbdConditionApiService;
+  private readonly DataSyncService _dataSyncService = dataSyncService;
   private static bool _isPreloadStarted = false;
 
   /// <summary>
@@ -42,19 +42,14 @@ public class AppDataPreloaderService(
           await _seedDataService.SeedConditionsAsync();
         }
 
-        // 2. Sync with remote server
+        // 2. Sync with remote server (Conditions, FAQs, Links)
         System.Diagnostics.Debug.WriteLine("[AppDataPreloader] Starting remote sync...");
-        var remoteConditions = await _mbdConditionApiService.GetMbdConditionsAsync();
-        if (remoteConditions.Count > 0)
-        {
-          System.Diagnostics.Debug.WriteLine($"[AppDataPreloader] Sync complete. Fetched {remoteConditions.Count} conditions.");
-          // Notify any active listeners that the data has been updated.
-          WeakReferenceMessenger.Default.Send(new ConditionsUpdatedMessage());
-        }
-        else
-        {
-          System.Diagnostics.Debug.WriteLine("[AppDataPreloader] Remote sync returned no new data.");
-        }
+        await _dataSyncService.SyncAllDataAsync();
+        
+        System.Diagnostics.Debug.WriteLine("[AppDataPreloader] Sync check complete.");
+        // Notify any active listeners that the data has been updated.
+        WeakReferenceMessenger.Default.Send(new ConditionsUpdatedMessage());
+        
       }
       catch (Exception ex)
       {

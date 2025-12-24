@@ -50,6 +50,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<ImageCacheService>();
         builder.Services.AddSingleton<IImageCacheHelper, ImageCacheHelper>();
         builder.Services.AddSingleton<MbdConditionApiService>();
+        builder.Services.AddSingleton<DataSyncService>();
         builder.Services.AddSingleton<SeedDataService>();
         builder.Services.AddSingleton<AppDataPreloaderService>();
         builder.Services.AddSingleton<ModalErrorHandler>();

@@ -30,7 +30,7 @@
 
 		<!-- Versions -->
 		<ApplicationDisplayVersion>3.0</ApplicationDisplayVersion>
-		<ApplicationVersion>5</ApplicationVersion>
+		<ApplicationVersion>6</ApplicationVersion>
 		<NoWarn>$(NoWarn),CS8618,CS8602,XC0045,XC0103,XC0022,CA1422,CA1416</NoWarn>
 
 
