@@ -74,6 +74,11 @@ public abstract class BaseBillingService(ILogger<BaseBillingService> logger) : I
   }
 
   public async Task<PurchaseResult> PurchaseAsync(string productId) {
+    if (!_isInitialized)
+    {
+      await InitializeAsync();
+    }
+
     _logger.LogInformation("Attempting to purchase product: {ProductId}", productId);
 
     try
@@ -107,6 +112,11 @@ public abstract class BaseBillingService(ILogger<BaseBillingService> logger) : I
   }
 
   public async Task<List<string>> GetPurchasedProductsAsync() {
+    if (!_isInitialized)
+    {
+      await InitializeAsync();
+    }
+
     try
     {
       var platformOwned = await GetPlatformPurchasedProductsAsync();
@@ -126,6 +136,11 @@ public abstract class BaseBillingService(ILogger<BaseBillingService> logger) : I
     }
   }
   public async Task<bool> RestorePurchasesAsync() {
+    if (!_isInitialized)
+    {
+      await InitializeAsync();
+    }
+
     try
     {
       var success = await RestorePlatformPurchasesAsync();
