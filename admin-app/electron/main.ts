@@ -26,7 +26,7 @@ let win: BrowserWindow | null
 
 function createWindow() {
   if (process.platform === 'darwin') {
-    app.dock.setIcon(path.join(process.env.VITE_PUBLIC, 'icon.png'))
+    app.dock?.setIcon(path.join(process.env.VITE_PUBLIC, 'icon.png'))
   }
 
   win = new BrowserWindow({
