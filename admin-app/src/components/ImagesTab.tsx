@@ -1,7 +1,7 @@
 // admin-app/src/components/ImagesTab.tsx
 import React, { useEffect, useState } from 'react';
 import { fetchImagesTable, deleteImage, uploadImage, fetchMbdConditions, clearImagesCache } from '../services/apiService';
-import { MbdCondition, Image } from '../types';
+import { MbdCondition, Image, ImageType } from '../types';
 import { useTheme } from '../theme/useTheme';
 import ErrorModal from './ErrorModal';
 import ImageActionModal from './ImageActionModal';
@@ -26,7 +26,7 @@ const ImagesTab: React.FC = () => {
 
   // Form states for adding image
   const [imageMbdCondition, setImageMbdCondition] = useState('0');
-  const [imageType, setImageType] = useState('0'); // 1 for Negative, 2 for Positive
+  const [imageType, setImageType] = useState<ImageType | '0'>('0');
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [fileLabel, setFileLabel] = useState('Choose file');
 
@@ -132,7 +132,7 @@ const ImagesTab: React.FC = () => {
         const selectedMbdCondition = mbdConditionOptions.find(opt => opt.id === imageMbdCondition);
         const conditionNameToUse = selectedMbdCondition ? selectedMbdCondition.name : imageMbdCondition;
 
-        await uploadImage(conditionNameToUse!, imageType, imageFile);
+        await uploadImage(conditionNameToUse!, imageType as ImageType, imageFile);
         alert("Image uploaded successfully!");
         setShowAddImageDiv(false);
         loadImages();
@@ -383,7 +383,7 @@ const ImagesTab: React.FC = () => {
               <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '8px', color: colors.lightText }}>Image Type</label>
               <select
                 value={imageType}
-                onChange={(e) => setImageType(e.target.value)}
+                onChange={(e) => setImageType(e.target.value as ImageType)}
                 style={{
                   width: '100%',
                   padding: '10px 12px',
@@ -397,8 +397,8 @@ const ImagesTab: React.FC = () => {
                 }}
               >
                 <option value="0">Select Image Type...</option>
-                <option value="1">Negative</option>
-                <option value="2">Positive</option>
+                <option value={ImageType.Negative}>Negative</option>
+                <option value={ImageType.Positive}>Positive</option>
               </select>
             </div>
 

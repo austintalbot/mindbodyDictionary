@@ -17,7 +17,7 @@ import {
   UPDATE_FAQS_ORDER_CODE,
   COSMOS_DB_CONTAINER_NAME,
 } from '../constants';
-import { MbdCondition, Faq, MbdMovementLink } from '../types'; // Import from barrel file
+import { MbdCondition, Faq, MbdMovementLink, ImageType } from '../types'; // Import from barrel file
 
 // In-memory caches
 let mbdConditionsCache: any[] | null = null;
@@ -193,7 +193,7 @@ export const deleteImage = async (imageName: string): Promise<void> => {
   return makeApiRequest<void>(url, 'POST');
 };
 
-export const uploadImage = async (ailmentName: string, imageType: string, file: File): Promise<any> => {
+export const uploadImage = async (ailmentName: string, imageType: ImageType, file: File): Promise<any> => {
   clearImagesCache(); // Clear cache on data modification
   const name = `${ailmentName}${imageType}.png`;
   const formData = new FormData();

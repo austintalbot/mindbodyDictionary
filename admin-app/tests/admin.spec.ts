@@ -145,16 +145,17 @@ test.describe('MBD Admin Portal Full Functionality Test', () => {
                     await modal.getByRole('button', { name: 'Cancel' }).click();
                 }
                 await expect(modal).not.toBeVisible({ timeout: 10000 });
-            };    await uploadImage('Negative', '1');
-    await uploadImage('Positive', '2');
+            };    await uploadImage('Negative', 'Negative');
+    await uploadImage('Positive', 'Positive');
 
     // Verify images appear in the table
     await expect(async () => {
         await page.getByRole('button', { name: 'Refresh Images' }).click();
         await page.getByPlaceholder('Search images by name or condition...').clear();
         await page.getByPlaceholder('Search images by name or condition...').fill(testConditionName);
-        await expect(page.getByRole('cell', { name: `${testConditionName}1.png` })).toBeVisible({ timeout: 5000 });
-        await expect(page.getByRole('cell', { name: `${testConditionName}2.png` })).toBeVisible({ timeout: 5000 });
+        
+        await expect(page.getByRole('cell', { name: `${testConditionName}Negative.png` })).toBeVisible({ timeout: 5000 });
+        await expect(page.getByRole('cell', { name: `${testConditionName}Positive.png` })).toBeVisible({ timeout: 5000 });
     }).toPass({ timeout: 30000 });
 
     // --- 3. CLEANUP IMAGES ---

@@ -6,6 +6,11 @@ export enum RecommendationType {
   Food = 3,
 }
 
+export enum ImageType {
+  Negative = 'Negative',
+  Positive = 'Positive',
+}
+
 export interface Recommendation {
   name?: string;
   url?: string;

@@ -1,8 +1,8 @@
 // admin-app/src/components/ImageActionModal.tsx
 import React, { useState, useEffect } from 'react';
 import { useTheme } from '../theme/useTheme';
-import { Image } from '../types'; // Assuming Image interface is in types.ts now
-import { deleteImage, uploadImage } from '../services/apiService'; // Re-import delete/upload
+import { Image, ImageType } from '../types'; // Assuming Image interface is in types.ts now
+import { deleteImage, uploadImage, fetchMbdCondition, upsertMbdCondition } from '../services/apiService'; // Re-import delete/upload
 import { getImageBaseUrl } from '../constants';
 
 interface ImageActionModalProps {
@@ -12,6 +12,7 @@ interface ImageActionModalProps {
   mbdConditionOptions?: { id?: string; name?: string }[];
   onImageDeleted: () => void; // Callback to refresh images after deletion
   onImageUploaded: () => void; // Callback to refresh images after upload
+  initialImageType?: ImageType; // Optional context
 }
 
 const ImageActionModal: React.FC<ImageActionModalProps> = ({
@@ -21,6 +22,7 @@ const ImageActionModal: React.FC<ImageActionModalProps> = ({
   mbdConditionOptions = [],
   onImageDeleted,
   onImageUploaded,
+  initialImageType
 }) => {
   const { colors } = useTheme();
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -31,7 +33,7 @@ const ImageActionModal: React.FC<ImageActionModalProps> = ({
 
   // State for changing association
   const [selectedConditionId, setSelectedConditionId] = useState<string>('');
-  const [selectedImageType, setSelectedImageType] = useState<string>('0');
+  const [selectedImageType, setSelectedImageType] = useState<ImageType | undefined>(undefined);
 
   useEffect(() => {
     if (!isOpen) {
@@ -41,22 +43,20 @@ const ImageActionModal: React.FC<ImageActionModalProps> = ({
       setError(null);
       setLoading(false);
       setSelectedConditionId('');
-      setSelectedImageType('0');
+      setSelectedImageType(undefined);
       if (previewImageUrl) {
         URL.revokeObjectURL(previewImageUrl); // Clean up the old preview URL
         setPreviewImageUrl(null);
       }
     } else if (image) {
        // Try to pre-fill the association form based on current image name/condition
-       const { imageType } = parseImageNameForUpload(image.name);
-       setSelectedImageType(imageType);
+       const parsed = parseImageNameForUpload(image.name);
+       
+       // Use explicit initial type if provided, otherwise parsed
+       const typeToUse = initialImageType || parsed.imageType;
+       setSelectedImageType(typeToUse);
 
        // Pre-select condition if possible
-       // image.mbdCondition contains the name, but we need the ID for the select value if possible,
-       // OR we can just use the name if that's what we upload with.
-       // The uploadImage function takes 'ailmentName' which corresponds to the condition NAME.
-       // However, the ImagesTab passes mbdConditionOptions which has ID and Name.
-       // Let's try to find the ID corresponding to image.mbdCondition (name).
        if (image.mbdCondition) {
            const found = mbdConditionOptions.find(opt => opt.name === image.mbdCondition);
            if (found && found.id) {
@@ -64,7 +64,7 @@ const ImageActionModal: React.FC<ImageActionModalProps> = ({
            }
        }
     }
-  }, [isOpen, previewImageUrl, image, mbdConditionOptions]);
+  }, [isOpen, previewImageUrl, image, mbdConditionOptions, initialImageType]);
 
   // Clean up object URL on component unmount
   useEffect(() => {
@@ -108,22 +108,28 @@ const ImageActionModal: React.FC<ImageActionModalProps> = ({
   };
 
   const parseImageNameForUpload = (imageName: string) => {
-    const nameWithoutExtension = imageName.split('.').slice(0, -1).join('.'); // "lungProblemsNegative"
+    // Remove extension
+    let nameWithoutExtension = imageName.split('.').slice(0, -1).join('.');
+
+    // Check for timestamp suffix (e.g. _1234567890) and remove it if present
+    const timestampRegex = /_\d+$/;
+    if (timestampRegex.test(nameWithoutExtension)) {
+        nameWithoutExtension = nameWithoutExtension.replace(timestampRegex, '');
+    }
+
     let mbdConditionName = '';
-    let imageType = ''; // "1" for Negative, "2" for Positive
+    let imageType: ImageType | undefined = undefined;
 
     if (nameWithoutExtension.endsWith('Negative')) {
       mbdConditionName = nameWithoutExtension.replace('Negative', '');
-      imageType = '1';
+      imageType = ImageType.Negative;
     } else if (nameWithoutExtension.endsWith('Positive')) {
       mbdConditionName = nameWithoutExtension.replace('Positive', '');
-      imageType = '2';
+      imageType = ImageType.Positive;
     } else {
-      // Fallback or error handling if name doesn't match expected pattern
-      // console.warn('Image name does not match expected pattern for parsing type:', imageName);
-      // For now, let's assume it's positive if not explicitly negative
+      // Fallback
       mbdConditionName = nameWithoutExtension;
-      imageType = '2';
+      imageType = ImageType.Positive; // Default
     }
     return { mbdConditionName, imageType };
   };
@@ -139,15 +145,31 @@ const ImageActionModal: React.FC<ImageActionModalProps> = ({
     setError(null);
 
     try {
-      // First, delete the existing image (if it's being replaced)
-      // Note: The user might want to keep the old image if new one fails.
-      // For simplicity, we'll assume replacing means deleting the old one first.
-      await deleteImage(image.name);
+      // Parse details from filename
+      const parsed = parseImageNameForUpload(image.name);
+      let { mbdConditionName, imageType } = parsed;
+      
+      // Override with explicit context if available
+      if (initialImageType) {
+          imageType = initialImageType;
+      }
 
-      // Parse mbdConditionName and imageType from the current image's name
-      const { mbdConditionName, imageType } = parseImageNameForUpload(image.name);
+      // If the image object has an explicit condition association, use that name
+      if (image.mbdCondition) {
+          mbdConditionName = image.mbdCondition;
+      }
 
-      // Now, upload the new image using the parsed details
+      // Ensure we have a valid type
+      if (!imageType) {
+          // Fallback if parsing failed and no context provided
+          imageType = ImageType.Positive; 
+      }
+
+      // Upload the new image using the constant naming convention
+      // This will overwrite the existing blob in Azure Storage.
+      // Since filenames are constant (<ConditionName><Type>.png), we don't need to update the MbdCondition record.
+      // The backend 'UpsertMbdImage' updates the global 'LastUpdatedTime', which triggers the mobile app
+      // to force-refresh all images.
       await uploadImage(mbdConditionName, imageType, imageFile);
 
       alert("Image replaced successfully!");
@@ -161,7 +183,7 @@ const ImageActionModal: React.FC<ImageActionModalProps> = ({
   };
 
   const handleMoveImage = async () => {
-      if (!selectedConditionId || selectedImageType === '0') {
+      if (!selectedConditionId || !selectedImageType) {
           alert("Please select both a condition and an image type.");
           return;
       }
@@ -184,13 +206,31 @@ const ImageActionModal: React.FC<ImageActionModalProps> = ({
           const blob = await response.blob();
 
           // 2. Create a File object from the Blob
-          // We need a filename for the File constructor, though the backend renames it.
           const file = new File([blob], image.name, { type: blob.type });
 
           // 3. Upload the image with the NEW name (derived from new condition and type)
+          // The uploadImage function enforces the naming convention: <conditionName><Type>.png
           await uploadImage(selectedCondition.name, selectedImageType, file);
 
-          // 4. Delete the OLD image
+          // 4. Update the NEW condition record to point to the new standard filename
+          try {
+              const condition = await fetchMbdCondition(selectedCondition.id!, selectedCondition.name);
+              if (condition) {
+                  const suffix = selectedImageType === ImageType.Negative ? 'Negative' : 'Positive';
+                  const newFileName = `${selectedCondition.name}${suffix}.png`;
+                  
+                  if (selectedImageType === ImageType.Negative) {
+                      condition.imageNegative = newFileName;
+                  } else {
+                      condition.imagePositive = newFileName;
+                  }
+                  await upsertMbdCondition(condition);
+              }
+          } catch (e) {
+              console.warn("Failed to update condition after move", e);
+          }
+
+          // 5. Delete the OLD image
           await deleteImage(image.name);
 
           alert("Image re-associated successfully!");
@@ -387,8 +427,8 @@ const ImageActionModal: React.FC<ImageActionModalProps> = ({
                   <div style={{ flex: 1 }}>
                       <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '8px', color: colors.lightText }}>Type</label>
                       <select
-                          value={selectedImageType}
-                          onChange={(e) => setSelectedImageType(e.target.value)}
+                          value={selectedImageType || ''}
+                          onChange={(e) => setSelectedImageType(e.target.value as ImageType)}
                           style={{
                               width: '100%',
                               padding: '10px 12px',
@@ -401,15 +441,15 @@ const ImageActionModal: React.FC<ImageActionModalProps> = ({
                               cursor: 'pointer'
                           }}
                       >
-                          <option value="0">Select...</option>
-                          <option value="1">Negative</option>
-                          <option value="2">Positive</option>
+                          <option value="">Select...</option>
+                          <option value={ImageType.Negative}>Negative</option>
+                          <option value={ImageType.Positive}>Positive</option>
                       </select>
                   </div>
               </div>
               <button
                   onClick={handleMoveImage}
-                  disabled={loading || !selectedConditionId || selectedImageType === '0'}
+                  disabled={loading || !selectedConditionId || !selectedImageType}
                   style={{
                       width: '100%',
                       padding: '12px',
@@ -417,14 +457,14 @@ const ImageActionModal: React.FC<ImageActionModalProps> = ({
                       color: '#fff',
                       border: 'none',
                       borderRadius: '6px',
-                      cursor: (loading || !selectedConditionId || selectedImageType === '0') ? 'not-allowed' : 'pointer',
+                      cursor: (loading || !selectedConditionId || !selectedImageType) ? 'not-allowed' : 'pointer',
                       fontSize: '14px',
                       fontWeight: '600',
                       transition: 'all 0.2s',
-                      opacity: (loading || !selectedConditionId || selectedImageType === '0') ? 0.7 : 1,
+                      opacity: (loading || !selectedConditionId || !selectedImageType) ? 0.7 : 1,
                   }}
-                  onMouseEnter={(e) => { if (!loading && selectedConditionId && selectedImageType !== '0') e.currentTarget.style.backgroundColor = colors.accentHover; }}
-                  onMouseLeave={(e) => { if (!loading && selectedConditionId && selectedImageType !== '0') e.currentTarget.style.backgroundColor = colors.accent; }}
+                  onMouseEnter={(e) => { if (!loading && selectedConditionId && selectedImageType) e.currentTarget.style.backgroundColor = colors.accentHover; }}
+                  onMouseLeave={(e) => { if (!loading && selectedConditionId && selectedImageType) e.currentTarget.style.backgroundColor = colors.accent; }}
               >
                   {loading ? 'Moving...' : 'Update Association'}
               </button>

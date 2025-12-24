@@ -133,7 +133,8 @@ const MbdConditionsTab: React.FC = () => {
       // Fallback: Construct name from mbdCondition.name
       const conditionName = selectedMbdConditionForModal.name;
       if (!conditionName) return '';
-      imageFileName = `${conditionName}${type === 'negative' ? '1' : '2'}`;
+      // Use 'Negative' and 'Positive' suffixes instead of legacy '1'/'2'
+      imageFileName = `${conditionName}${type === 'negative' ? 'Negative' : 'Positive'}`;
     }
 
     // Ensure .png extension is present, but avoid double extensions

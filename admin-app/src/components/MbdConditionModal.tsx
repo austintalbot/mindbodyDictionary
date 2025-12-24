@@ -1,7 +1,7 @@
 import React from 'react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from './components/ui/tabs';
 import { useTheme } from '../theme/useTheme';
-import { MbdCondition, Recommendation, RecommendationType, Image } from '../types';
+import { MbdCondition, Recommendation, RecommendationType, Image, ImageType } from '../types';
 import ImageActionModal from './ImageActionModal';
 
 interface MbdConditionModalProps {
@@ -28,6 +28,7 @@ const MbdConditionModal: React.FC<MbdConditionModalProps> = ({
   const { colors } = useTheme();
   const [showImageActionModal, setShowImageActionModal] = React.useState(false);
   const [selectedImageForAction, setSelectedImageForAction] = React.useState<Image | null>(null);
+  const [selectedImageTypeForAction, setSelectedImageTypeForAction] = React.useState<ImageType | undefined>(undefined);
   const [activeTab, setActiveTab] = React.useState('basicInfo');
 
   React.useEffect(() => {
@@ -39,13 +40,14 @@ const MbdConditionModal: React.FC<MbdConditionModalProps> = ({
   if (!mbdCondition) return null;
   // console.log("Condition data in modal:", mbdCondition);
 
-  const handleImageClick = (imageName: string | undefined) => {
+  const handleImageClick = (imageName: string | undefined, type: ImageType) => {
     if (!imageName) return;
     const imageObj: Image = {
       name: imageName,
       mbdCondition: mbdCondition.name // Associate with current condition name
     };
     setSelectedImageForAction(imageObj);
+    setSelectedImageTypeForAction(type);
     setShowImageActionModal(true);
   };
 
@@ -334,7 +336,7 @@ const MbdConditionModal: React.FC<MbdConditionModalProps> = ({
                 <div style={{ marginTop: '32px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', padding: '32px', borderTop: `1px solid ${colors.border}` }}>
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
                     <div
-                      onClick={() => handleImageClick(mbdCondition.imageNegative)}
+                      onClick={() => handleImageClick(mbdCondition.imageNegative, ImageType.Negative)}
                       style={{ cursor: 'pointer', width: '100%', position: 'relative' }}
                       title="Click to manage image"
                     >
@@ -344,7 +346,7 @@ const MbdConditionModal: React.FC<MbdConditionModalProps> = ({
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
                     <div
-                      onClick={() => handleImageClick(mbdCondition.imagePositive)}
+                      onClick={() => handleImageClick(mbdCondition.imagePositive, ImageType.Positive)}
                       style={{ cursor: 'pointer', width: '100%', position: 'relative' }}
                       title="Click to manage image"
                     >
@@ -786,17 +788,21 @@ const MbdConditionModal: React.FC<MbdConditionModalProps> = ({
           onClose={() => {
             setShowImageActionModal(false);
             setSelectedImageForAction(null);
+            setSelectedImageTypeForAction(undefined);
           }}
           image={selectedImageForAction}
           mbdConditionOptions={mbdConditionOptions}
+          initialImageType={selectedImageTypeForAction}
           onImageDeleted={() => {
             setShowImageActionModal(false);
             setSelectedImageForAction(null);
+            setSelectedImageTypeForAction(undefined);
             if (onImageUpdate) onImageUpdate();
           }}
           onImageUploaded={() => {
             setShowImageActionModal(false);
             setSelectedImageForAction(null);
+            setSelectedImageTypeForAction(undefined);
             if (onImageUpdate) onImageUpdate();
           }}
         />
