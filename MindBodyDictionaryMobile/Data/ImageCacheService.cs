@@ -14,6 +14,11 @@ public class ImageCacheService(ImageCacheRepository imageCacheRepository, ILogge
   private const string RemoteImageBaseUrl = "https://mbdstoragesa.blob.core.windows.net/mbdconditionimages/";
 
   /// <summary>
+  /// Event fired when an image is added or updated in the cache.
+  /// </summary>
+  public event EventHandler<string>? ImageUpdated;
+
+  /// <summary>
   /// Loads all images from Resources/Raw/images into the local cache database.
   /// </summary>
   public async Task LoadImagesFromResourcesAsync() {
@@ -177,6 +182,15 @@ public class ImageCacheService(ImageCacheRepository imageCacheRepository, ILogge
     };
 
     await _imageCacheRepository.SaveItemAsync(imageCache);
+
+    try
+    {
+      ImageUpdated?.Invoke(this, fileName);
+    }
+    catch (Exception ex)
+    {
+      _logger.LogWarning(ex, "Error invoking ImageUpdated event for {FileName}", fileName);
+    }
   }
 
   /// <summary>

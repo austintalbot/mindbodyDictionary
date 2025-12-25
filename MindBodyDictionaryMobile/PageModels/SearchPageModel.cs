@@ -55,6 +55,51 @@ public partial class SearchPageModel : ObservableObject, IRecipient<ConditionsUp
 
     // Register to listen for data updates
     WeakReferenceMessenger.Default.Register(this);
+
+    // Listen for image updates from cache refresh
+    _imageCacheService.ImageUpdated += OnImageUpdated;
+  }
+
+  private void OnImageUpdated(object? sender, string fileName) {
+    if (string.IsNullOrWhiteSpace(fileName) || _allConditions == null) return;
+
+    // Run update in background to avoid blocking
+    Task.Run(async () => {
+      try
+      {
+        // Find all conditions using this image
+        // ToList() creates a copy to avoid concurrent modification issues during enumeration if _allConditions changes
+        var conditionsToUpdate = _allConditions
+            .Where(c => c.ImageNegative == fileName || c.ImagePositive == fileName)
+            .ToList();
+
+        if (conditionsToUpdate.Count == 0) return;
+
+        // Fetch the new image source
+        var newImageSource = await _imageCacheService.GetImageAsync(fileName);
+        if (newImageSource != null)
+        {
+          await MainThread.InvokeOnMainThreadAsync(() => {
+            foreach (var condition in conditionsToUpdate)
+            {
+              // Update property triggers UI refresh
+              if (condition.ImageNegative == fileName)
+              {
+                condition.CachedImageOneSource = newImageSource;
+              }
+              if (condition.ImagePositive == fileName)
+              {
+                condition.CachedImageTwoSource = newImageSource;
+              }
+            }
+          });
+        }
+      }
+      catch (Exception ex)
+      {
+        System.Diagnostics.Debug.WriteLine($"[SearchPageModel] Error updating image {fileName}: {ex.Message}");
+      }
+    });
   }
 
   public void Receive(ConditionsUpdatedMessage message) {
