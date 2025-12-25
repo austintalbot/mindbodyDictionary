@@ -35,7 +35,7 @@
                 <Label
                     HorizontalTextAlignment="Center"
                     Style="{StaticResource Body1}"
-                    Text="I understand that mbd is for informational purposes only. mbd does not diagnose, treat, prevent, or cure any illness. If you have any questions concerning your health please consult with your Doctor." />
+                    Text="I understand that MBD is for informational purposes only. MBD does not diagnose, treat, prevent, or cure any illness. If you have any questions concerning your health please consult with your Doctor." />
             </VerticalStackLayout>
         </ScrollView>
 

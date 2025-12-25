@@ -18,7 +18,7 @@ public partial class AboutPageModel : ObservableObject
   private string appVersion = $"v{AppInfo.Current.VersionString}";
 
   [ObservableProperty]
-  private string appName = "mbd";
+  private string appName = "MBD";
 
   [ObservableProperty]
   private string practitionerString = "This app also includes referrals to products, and classes that will help people along their healing path. As an Amazon Associate, we earn from qualifying purchases through amazon.";
@@ -78,7 +78,7 @@ public partial class AboutPageModel : ObservableObject
     {
       var message = new EmailMessage
       {
-        Subject = "mbd Feedback",
+        Subject = "MBD Feedback",
         To = ["support@mindbodydictionary.com"]
       };
       await Email.Default.ComposeAsync(message);

@@ -53,6 +53,7 @@ public static class MauiProgram
       builder.Services.AddSingleton<MbdConditionApiService>();
       builder.Services.AddSingleton<DataSyncService>();
       builder.Services.AddSingleton<SeedDataService>();
+      builder.Services.AddSingleton<DatabaseBootstrap>();
       builder.Services.AddSingleton<AppDataPreloaderService>();
       builder.Services.AddSingleton<ModalErrorHandler>();
       builder.Services.AddSingleton<MainPageModel>();
@@ -79,10 +80,6 @@ public static class MauiProgram
       builder.Services.AddTransient<NotificationSettingsPageModel>();
       builder.Services.AddTransient<NotificationSettingsPage>();
 
-#if DEBUG
-      // builder.Services.AddTransient<ImageCachePageModel>();
-      // builder.Services.AddTransient<ImageCachePage>();
-#endif
 
       builder.Services.AddSingleton<UpgradePremiumPageModel>();
       builder.Services.AddSingleton<UpgradePremiumPage>();
@@ -127,6 +124,9 @@ public static class MauiProgram
       var logger = app.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Startup");
       logger.LogInformation("App startup log test");
       Services = app.Services;
+
+      // Initialize Database (WAL Mode)
+      app.Services.GetRequiredService<DatabaseBootstrap>().Initialize();
 
       // Load images into cache on startup
       var imageCacheService = Services.GetRequiredService<ImageCacheService>();
