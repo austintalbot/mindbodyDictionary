@@ -1,8 +1,8 @@
 namespace MindBodyDictionaryMobile.Models;
-
 /// <summary>
 /// Enumeration of notification action types that determine how the app responds to push notifications.
-/// </summary>\npublic enum NotificationAction
+/// </summary>
+public enum NotificationAction
 {
   /// <summary>
   /// Notification for an update to a project.
