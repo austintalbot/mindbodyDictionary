@@ -155,7 +155,7 @@ namespace MindBodyDictionaryMobile.PageModels
 
     [RelayCommand]
     public async Task ShowConditionDetails(MbdCondition condition) {
-      _logger.LogInformation($"ShowConditionDetails called. Parameter: {{condition?.Id}} / {{condition?.Name}}");
+      _logger.LogInformation($"ShowConditionDetails called. Parameter: {condition?.Id} / {condition?.Name}");
       await AppShell.DisplaySnackbarAsync($"Navigating to: condtion");
       if (condition == null)
       {

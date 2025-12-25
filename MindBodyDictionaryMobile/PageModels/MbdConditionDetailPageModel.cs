@@ -341,7 +341,7 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
 
   }
 
-  partial void OnConditionChanged(MbdCondition value) {
+  partial void OnConditionChanged(MbdCondition? value) {
     PopulateRecommendationLists();
   }
 

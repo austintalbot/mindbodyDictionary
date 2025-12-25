@@ -67,7 +67,7 @@ public class UserListRepository(ILogger<UserListRepository> logger)
       {
         ID = reader.GetInt32(0),
         Name = reader.GetString(1),
-        Url = reader.IsDBNull(2) ? null : reader.GetString(2),
+        Url = reader.IsDBNull(2) ? string.Empty : reader.GetString(2),
         RecommendationType = reader.GetInt32(3),
         AddedAt = DateTime.Parse(reader.GetString(4)),
         IsCompleted = reader.GetBoolean(5)

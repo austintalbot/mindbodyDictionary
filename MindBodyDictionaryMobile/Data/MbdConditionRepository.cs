@@ -276,7 +276,7 @@ public class MbdConditionRepository(TaskRepository taskRepository, TagRepository
     }
     _inMemoryConditions.Add(item);
 
-    return item.Id;
+    return item.Id ?? string.Empty;
   }
 
   /// <summary>
