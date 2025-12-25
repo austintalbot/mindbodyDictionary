@@ -7,6 +7,10 @@ using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using MindBodyDictionaryMobile.Models;
 
+/// <summary>
+/// Service for seeding the application database with initial data from JSON files and API sources.
+/// Handles loading projects, tasks, tags, categories, and medical conditions into SQLite.
+/// </summary>
 public class SeedDataService(ProjectRepository projectRepository, TaskRepository taskRepository, TagRepository tagRepository, CategoryRepository categoryRepository, MbdConditionRepository mbdConditionRepository, ImageCacheService imageCacheService, MbdConditionApiService mbdConditionApiService, ILogger<SeedDataService> logger)
 {
   public string? RawApiConditionsJson { get; private set; }
@@ -20,9 +24,19 @@ public class SeedDataService(ProjectRepository projectRepository, TaskRepository
   private readonly string _seedDataFilePath = "SeedData.json";
   private readonly ILogger<SeedDataService> _logger = logger;
 
-  // Callback for UI updates during seeding
+  /// <summary>
+  /// Callback for UI updates during the seeding process.
+  /// </summary>
   public Action<string>? OnProgressUpdate { get; set; }
 
+  /// <summary>
+  /// Loads all seed data (projects, tasks, tags, categories, and conditions) into the database.
+  /// Clears existing data before loading new data.
+  /// </summary>
+  /// <remarks>
+  /// This method first clears all tables, then loads projects, tasks, tags, and categories from the seed JSON file,
+  /// and finally seeds conditions from the API or local fallback file. Logs progress and errors throughout.
+  /// </remarks>
   public async Task LoadSeedDataAsync() {
     await ClearTables();
 

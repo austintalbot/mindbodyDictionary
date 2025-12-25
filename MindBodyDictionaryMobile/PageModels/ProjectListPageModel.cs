@@ -6,6 +6,12 @@ using MindBodyDictionaryMobile.Data;
 using MindBodyDictionaryMobile.Models;
 using MindBodyDictionaryMobile.Services;
 
+/// <summary>
+/// Page model for displaying a list of user projects.
+/// </summary>
+/// <remarks>
+/// Loads and displays all projects from the database, allowing users to view and manage their projects.
+/// </remarks>
 public partial class ProjectListPageModel(ProjectRepository projectRepository) : ObservableObject
 {
   private readonly ProjectRepository _projectRepository = projectRepository;

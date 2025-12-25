@@ -2,8 +2,19 @@ namespace MindBodyDictionaryMobile.Services;
 
 using System.Text;
 
+/// <summary>
+/// Debug helper utility for retrieving and displaying notification hub configuration and device installation information.
+/// </summary>
+/// <remarks>
+/// Provides detailed diagnostic information about push notification settings for troubleshooting and testing purposes.
+/// </remarks>
 public static class NotificationDebugHelper
 {
+  /// <summary>
+  /// Generates a debug information string containing notification hub configuration and device details.
+  /// </summary>
+  /// <param name="deviceService">Optional device installation service for retrieving device information.</param>
+  /// <returns>A formatted string containing notification configuration debug information.</returns>
   public static string GetDebugInfo(IDeviceInstallationService? deviceService = null) {
     var sb = new StringBuilder();
     sb.AppendLine("=== NOTIFICATION HUB CONFIGURATION ===");

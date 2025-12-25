@@ -4,6 +4,13 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MindBodyDictionaryMobile.Models;
 
+/// <summary>
+/// Page model for the main/dashboard page displaying project overview and task statistics.
+/// </summary>
+/// <remarks>
+/// Displays pie charts of project and task counts by category, manages project and task data,
+/// and provides navigation to detail pages. Inherits from ObservableObject for MVVM property binding.
+/// </remarks>
 public partial class MainPageModel(SeedDataService seedDataService, ProjectRepository projectRepository,
     TaskRepository taskRepository, CategoryRepository categoryRepository, ModalErrorHandler errorHandler)
     : ObservableObject, IProjectTaskPageModel

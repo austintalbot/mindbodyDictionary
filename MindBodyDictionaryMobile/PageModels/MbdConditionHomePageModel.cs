@@ -10,6 +10,13 @@ namespace MindBodyDictionaryMobile.PageModels
   using MindBodyDictionaryMobile.Models;
   using MindBodyDictionaryMobile.Models.Messaging;
 
+  /// <summary>
+  /// Page model for the conditions home/discovery page.
+  /// </summary>
+  /// <remarks>
+  /// Displays a filterable list of medical conditions with search and category filtering capabilities.
+  /// Listens for updates via the MVVM Messaging system when condition data is refreshed.
+  /// </remarks>
   public partial class MbdConditionHomePageModel : ObservableObject, IRecipient<ConditionsUpdatedMessage>
   {
     private readonly MbdConditionRepository _mbdConditionRepository;

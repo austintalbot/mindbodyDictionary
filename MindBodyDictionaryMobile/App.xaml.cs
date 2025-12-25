@@ -3,6 +3,12 @@ namespace MindBodyDictionaryMobile;
 using Microsoft.Extensions.DependencyInjection;
 using MindBodyDictionaryMobile.Services;
 
+/// <summary>
+/// Main application class for the MindBodyDictionary mobile app.
+/// </summary>
+/// <remarks>
+/// Initializes the application, sets up the main page (AppShell), and manages app lifecycle.
+/// </remarks>
 public partial class App : Application
 {
   public static string CopyrightText { get; } = "© Mind Body Dictionary, LLC";

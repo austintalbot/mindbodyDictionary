@@ -51,6 +51,7 @@ public class UserListRepository(ILogger<UserListRepository> logger)
   /// <summary>
   /// Retrieves a list of user items from the database.
   /// </summary>
+  /// <returns>A list of <see cref="UserListItem"/> objects ordered by most recently added first.</returns>
   public async Task<List<UserListItem>> ListAsync() {
     await Init();
     await using var connection = new SqliteConnection(Constants.DatabasePath);
@@ -80,6 +81,9 @@ public class UserListRepository(ILogger<UserListRepository> logger)
   /// <summary>
   /// Saves a user item to the database.
   /// </summary>
+  /// <param name="item">The <see cref="UserListItem"/> to save or update.</param>
+  /// <returns>The ID of the saved item (newly inserted or existing).</returns>
+  /// <remarks>Inserts new items and updates existing ones based on the ID property.</remarks>
   public async Task<int> SaveItemAsync(UserListItem item) {
     await Init();
     await using var connection = new SqliteConnection(Constants.DatabasePath);
@@ -120,6 +124,8 @@ public class UserListRepository(ILogger<UserListRepository> logger)
   /// <summary>
   /// Deletes a user item from the database.
   /// </summary>
+  /// <param name="item">The <see cref="UserListItem"/> to delete.</param>
+  /// <returns>The number of rows affected by the delete operation.</returns>
   public async Task<int> DeleteItemAsync(UserListItem item) {
     await Init();
     await using var connection = new SqliteConnection(Constants.DatabasePath);

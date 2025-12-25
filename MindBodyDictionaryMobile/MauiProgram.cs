@@ -11,6 +11,13 @@ using MindBodyDictionaryMobile.Services.billing;
 using Syncfusion.Maui.Core.Hosting;
 using Syncfusion.Maui.Toolkit.Hosting;
 
+/// <summary>
+/// Configuration class for building and configuring the MAUI application.
+/// </summary>
+/// <remarks>
+/// This class is responsible for registering services, configuring the host builder,
+/// and setting up fonts and platform-specific configurations for the mobile app.
+/// </remarks>
 public static class MauiProgram
 {
   public static IServiceProvider Services { get; private set; }

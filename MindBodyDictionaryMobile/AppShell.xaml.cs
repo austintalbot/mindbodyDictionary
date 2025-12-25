@@ -9,6 +9,12 @@ using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
 using Font = Microsoft.Maui.Font;
 
+/// <summary>
+/// Code-behind for the app shell which provides the main navigation structure.
+/// </summary>
+/// <remarks>
+/// The AppShell defines the navigation routes and layout structure for the entire application.
+/// </remarks>
 public partial class AppShell : Shell
 {
   private readonly IServiceProvider _serviceProvider;

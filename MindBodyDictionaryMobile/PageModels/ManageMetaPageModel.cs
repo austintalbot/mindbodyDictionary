@@ -7,6 +7,12 @@ using MindBodyDictionaryMobile.Data;
 using MindBodyDictionaryMobile.Models;
 using MindBodyDictionaryMobile.Services;
 
+/// <summary>
+/// Page model for managing metadata (categories and tags) in the application.
+/// </summary>
+/// <remarks>
+/// Allows administrators and advanced users to view, manage, and reseed application metadata including categories and tags.
+/// </remarks>
 public partial class ManageMetaPageModel(CategoryRepository categoryRepository, TagRepository tagRepository, SeedDataService seedDataService) : ObservableObject
 {
   private readonly CategoryRepository _categoryRepository = categoryRepository;

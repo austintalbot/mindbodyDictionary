@@ -11,6 +11,13 @@ using MindBodyDictionaryMobile.Services.billing;
 
 namespace MindBodyDictionaryMobile.PageModels;
 
+/// <summary>
+/// Page model for searching and filtering conditions and resources.
+/// </summary>
+/// <remarks>
+/// Provides real-time search functionality with filtering by name, description, tags, and other criteria.
+/// Listens for updates via the MVVM Messaging system.
+/// </remarks>
 [QueryProperty(nameof(SearchParam), "SearchParam")]
 public partial class SearchPageModel : ObservableObject, IRecipient<ConditionsUpdatedMessage>
 {

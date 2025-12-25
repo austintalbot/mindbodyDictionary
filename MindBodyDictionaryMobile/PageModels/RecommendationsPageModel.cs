@@ -10,6 +10,13 @@ namespace MindBodyDictionaryMobile.PageModels
   using MindBodyDictionaryMobile.Models;
   using MindBodyDictionaryMobile.Services; // For ModalErrorHandler
 
+  /// <summary>
+  /// Page model for displaying recommended resources (products, books, food).
+  /// </summary>
+  /// <remarks>
+  /// Displays recommendations associated with conditions, organized by recommendation type.
+  /// Users can open URLs and manage their custom recommendation lists.
+  /// </remarks>
   public partial class RecommendationsPageModel : ObservableObject
   {
     private readonly IServiceProvider _serviceProvider;

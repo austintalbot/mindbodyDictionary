@@ -8,6 +8,13 @@ namespace MindBodyDictionaryMobile.PageModels
   using Microsoft.Maui.Controls; // For ImageSource and Shell
   using MindBodyDictionaryMobile.Models;
 
+  /// <summary>
+  /// Page model for displaying a summary view of a condition with positive/negative perspectives.
+  /// </summary>
+  /// <remarks>
+  /// Shows a simplified view of condition information including problem/positive summaries,
+  /// affirmations, and physical connections. Used for quick reference and learning.
+  /// </remarks>
   [QueryProperty(nameof(Id), "Id")]
   [QueryProperty(nameof(Type), "Type")]
   public partial class MbdConditionSummaryPageModel : ObservableObject, IQueryAttributable

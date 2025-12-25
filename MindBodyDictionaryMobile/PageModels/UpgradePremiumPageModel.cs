@@ -5,6 +5,13 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MindBodyDictionaryMobile.Services.billing;
 
+/// <summary>
+/// Page model for premium subscription upgrade functionality.
+/// </summary>
+/// <remarks>
+/// Manages in-app purchases for premium features and subscription management.
+/// Handles billing service interactions and purchase state management.
+/// </remarks>
 public partial class UpgradePremiumPageModel : ObservableObject
 {
   private readonly IBillingService _billingService;

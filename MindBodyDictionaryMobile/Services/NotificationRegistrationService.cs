@@ -5,6 +5,13 @@ using Microsoft.Azure.NotificationHubs;
 using Microsoft.Extensions.Logging;
 using MindBodyDictionaryMobile.Models;
 
+/// <summary>
+/// Service for managing device registration and installation with Azure Notification Hubs.
+/// </summary>
+/// <remarks>
+/// Handles device installation registration, tag management, and synchronization with the notification hub service.
+/// Manages caching of device tokens and tags for offline scenarios.
+/// </remarks>
 public class NotificationRegistrationService : INotificationRegistrationService
 {
   const string CachedDeviceTokenKey = "cached_device_token";

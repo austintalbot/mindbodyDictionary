@@ -12,6 +12,13 @@ using MindBodyDictionaryMobile.Enums; // Add this using statement
 using MindBodyDictionaryMobile.Models;
 using MindBodyDictionaryMobile.Services.billing;
 
+/// <summary>
+/// Page model for displaying detailed information about a single medical/body condition.
+/// </summary>
+/// <remarks>
+/// Shows comprehensive condition data including images, summaries, affirmations, physical connections,
+/// movement links, recommendations (products, books, food), and FAQs. Provides navigation to related resources.
+/// </remarks>
 public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttributable, IProjectTaskPageModel
 
 {

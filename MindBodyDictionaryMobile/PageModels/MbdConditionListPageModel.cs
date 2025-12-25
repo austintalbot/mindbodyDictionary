@@ -7,6 +7,13 @@ using Microsoft.Extensions.Logging;
 using MindBodyDictionaryMobile.Data;
 using MindBodyDictionaryMobile.Models;
 
+/// <summary>
+/// Page model for displaying a list of medical/body conditions with lazy loading support.
+/// </summary>
+/// <remarks>
+/// Provides infinite scroll functionality to load conditions in pages. Users can navigate to detail pages
+/// to view full condition information.
+/// </remarks>
 public partial class MbdConditionListPageModel : ObservableObject
 {
   private readonly MbdConditionRepository _mbdConditionRepository;

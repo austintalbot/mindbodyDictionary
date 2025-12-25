@@ -186,6 +186,11 @@ public class MbdConditionRepository(TaskRepository taskRepository, TagRepository
     return null;
   }
 
+  /// <summary>
+  /// Reads a condition from a database reader and maps it to a <see cref="MbdCondition"/> object.
+  /// </summary>
+  /// <param name="reader">The SQLite data reader positioned at the condition record.</param>
+  /// <returns>A <see cref="MbdCondition"/> object populated from the current row.</returns>
   private MbdCondition ReadCondition(SqliteDataReader reader) {
     return new MbdCondition
     {
@@ -206,6 +211,13 @@ public class MbdConditionRepository(TaskRepository taskRepository, TagRepository
     };
   }
 
+  /// <summary>
+  /// Deserializes a JSON string from the database into a generic list of type T.
+  /// </summary>
+  /// <typeparam name="T">The type of items in the list.</typeparam>
+  /// <param name="reader">The SQLite data reader.</param>
+  /// <param name="ordinal">The column index to read from.</param>
+  /// <returns>A deserialized list of type T, or null if the value is NULL or empty.</returns>
   private List<T>? DeserializeList<T>(SqliteDataReader reader, int ordinal) {
     if (reader.IsDBNull(ordinal))
       return null;

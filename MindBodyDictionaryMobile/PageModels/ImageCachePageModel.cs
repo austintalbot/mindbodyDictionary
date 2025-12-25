@@ -7,6 +7,13 @@ using Microsoft.Extensions.Logging;
 using MindBodyDictionaryMobile.Data;
 using MindBodyDictionaryMobile.Models;
 
+/// <summary>
+/// Page model for managing the image cache and displaying cache statistics.
+/// </summary>
+/// <remarks>
+/// Provides diagnostic information about cached images including size, count, and cache health.
+/// Allows users to clear the image cache and view cache details.
+/// </remarks>
 public partial class ImageCachePageModel : ObservableObject
 {
   readonly ImageCacheRepository _imageCacheRepository;
