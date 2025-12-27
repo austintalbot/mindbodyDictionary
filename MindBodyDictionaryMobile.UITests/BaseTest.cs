@@ -2,8 +2,10 @@ using OpenQA.Selenium.Appium;
 using OpenQA.Selenium.Appium.Android;
 using OpenQA.Selenium.Appium.iOS;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Interactions;
 using System;
 using System.IO;
+using System.Collections.Generic;
 using Xunit.Abstractions;
 using System.Linq;
 
@@ -12,38 +14,116 @@ namespace MindBodyDictionaryMobile.UITests;
 /// <summary>
 /// Base class for all UI tests, providing setup and teardown for Appium driver
 /// </summary>
-public abstract class BaseTest : IDisposable
+public abstract class BaseTest(ITestOutputHelper output) : IDisposable
 {
     protected AppiumDriver? Driver { get; private set; }
-    protected bool TestFailed { get; set; }
-    protected readonly ITestOutputHelper Output;
-
-    protected BaseTest(ITestOutputHelper output)
-    {
-        Output = output;
-        TestFailed = false; // Initialize to false
-    }
+    protected bool TestFailed { get; set; } = false; // Initialize to false
+    protected readonly ITestOutputHelper Output = output;
 
     protected void InitializeDriver(Platform platform)
     {
         var serverUri = AppiumServerHelper.GetAppiumServerUri();
+        Output.WriteLine($"BaseTest: Connecting to Appium Server at {serverUri}");
 
         switch (platform)
         {
             case Platform.Android:
+                Output.WriteLine("BaseTest: Configured for Android.");
                 Driver = new AndroidDriver(serverUri, GetAndroidOptions());
                 break;
             case Platform.iOS:
+                Output.WriteLine("BaseTest: Configured for iOS.");
                 Driver = new IOSDriver(serverUri, GetIOSOptions());
                 break;
             default:
                 throw new ArgumentException($"Unsupported platform: {platform}");
         }
 
+        // Temporarily set implicit wait to 0 for popup handling
+        Driver.Manage().Timeouts().ImplicitWait = TimeSpan.Zero;
+        HandlePopups();
+
         // Set implicit wait for element finding
         Driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
+        Output.WriteLine("BaseTest: Implicit Wait set to 5 seconds.");
+    }
 
-        HandlePopups();
+    protected void OpenFlyout()
+    {
+        // Attempt to swipe from left edge to right to open menu
+        try 
+        {
+            var size = Driver!.Manage().Window.Size;
+            // Start from very left edge, middle height
+            int startX = 5; 
+            int startY = size.Height / 2;
+            int endX = (int)(size.Width * 0.75); // Drag across screen
+            int endY = startY;
+
+            Output.WriteLine($"ACTION: Swiping from ({startX},{startY}) to ({endX},{endY}) to open Flyout");
+
+            var action = new Actions(Driver);
+            action.MoveToLocation(startX, startY)
+                  .ClickAndHold()
+                  .MoveToLocation(endX, endY)
+                  .Release()
+                  .Perform();
+            
+            // Short wait for animation
+            System.Threading.Thread.Sleep(1000);
+        }
+        catch (Exception ex)
+        {
+             Output.WriteLine($"WARNING: Swipe failed: {ex.Message}. Trying to find Hamburger button...");
+             try {
+                 // Fallback for iOS usually
+                 var hamburger = Driver!.FindElement(By.XPath("//XCUIElementTypeButton[1]")); 
+                 hamburger.Click();
+                 System.Threading.Thread.Sleep(1000);
+             } catch {}
+        }
+    }
+
+    protected void VerifyFlyoutMenu()
+    {
+        Output.WriteLine("VERIFY: Checking Flyout Menu content...");
+        OpenFlyout();
+
+        var expectedItems = new List<string> 
+        { 
+            "Home", "Search", "Notifications", "Premium", 
+            "Resources", "About", "FAQ", "Disclaimer" 
+        };
+
+        foreach (var item in expectedItems)
+        {
+            try 
+            {
+                // Try to find by multiple attributes
+                var locator = By.XPath($"//*[@label='{item}' or @name='{item}' or @text='{item}' or @content-desc='{item}']");
+                var element = Driver!.FindElement(locator);
+                
+                if (element.Displayed)
+                {
+                    Output.WriteLine($"SUCCESS: Found menu item '{item}'");
+                }
+                else
+                {
+                    Output.WriteLine($"FAILURE: Menu item '{item}' found but not displayed.");
+                    TestFailed = true;
+                }
+            }
+            catch (NoSuchElementException)
+            {
+                Output.WriteLine($"FAILURE: Menu item '{item}' NOT found in Flyout.");
+                TestFailed = true;
+            }
+        }
+
+        if (TestFailed)
+        {
+            throw new Exception("Flyout Menu verification failed. See logs for missing items.");
+        }
     }
 
     private void HandlePopups()
@@ -51,46 +131,58 @@ public abstract class BaseTest : IDisposable
         try
         {
             // 1. Handle OS Notification Permission "Allow"
-            // Common ID for Android 10+ permission controller
-            var allowButtons = Driver.FindElements(By.Id("com.android.permissioncontroller:id/permission_allow_button"));
-            if (allowButtons.Count > 0)
+            try
             {
+                var allowButton = Driver.FindElement(By.Id("com.android.permissioncontroller:id/permission_allow_button"));
                 Output.WriteLine("Popup: Found Notification Permission 'Allow' button. Clicking...");
-                allowButtons[0].Click();
+                allowButton.Click();
             }
-            else
+            catch (NoSuchElementException)
             {
-                 // Fallback: Try finding by text "Allow" if ID fails (less reliable but useful)
-                 var allowTextButtons = Driver.FindElements(By.XPath("//*[@text='Allow']"));
-                 if (allowTextButtons.Count > 0)
+                 try
                  {
+                     var allowTextButton = Driver.FindElement(By.XPath("//*[@text='Allow']"));
                      Output.WriteLine("Popup: Found 'Allow' button by text. Clicking...");
-                     allowTextButtons[0].Click();
+                     allowTextButton.Click();
                  }
+                 catch (NoSuchElementException) { /* Ignore */ }
             }
 
             // 2. Handle Disclaimer Popup
-            var disclaimerButtons = Driver.FindElements(MobileBy.AccessibilityId("DisclaimerUnderstandButton"));
-            if (disclaimerButtons.Count > 0)
+            Output.WriteLine("Popup: Checking for Disclaimer...");
+            try
             {
-                Output.WriteLine("Popup: Found Disclaimer 'I Understand' button by ID. Clicking...");
-                disclaimerButtons[0].Click();
-            }
-            else
-            {
-                // Fallback: Try finding by text "I Understand"
-                var disclaimerTextButtons = Driver.FindElements(By.XPath("//*[@text='I Understand']"));
-                if (disclaimerTextButtons.Count > 0)
+                var wait = new OpenQA.Selenium.Support.UI.WebDriverWait(Driver, TimeSpan.FromSeconds(10));
+                IWebElement? disclaimerButton = null;
+
+                try 
                 {
-                    Output.WriteLine("Popup: Found Disclaimer 'I Understand' button by text. Clicking...");
-                    disclaimerTextButtons[0].Click();
+                    // Try Accessibility ID first
+                    disclaimerButton = wait.Until(d => d.FindElement(MobileBy.AccessibilityId("DisclaimerUnderstandButton")));
+                    Output.WriteLine("Popup: Found Disclaimer 'I Understand' button by ID.");
                 }
+                catch
+                {
+                    // Fallback to text
+                    Output.WriteLine("Popup: ID not found. Trying text 'I Understand'...");
+                    disclaimerButton = wait.Until(d => d.FindElement(By.XPath("//*[@text='I Understand' or @label='I Understand']")));
+                    Output.WriteLine("Popup: Found Disclaimer 'I Understand' button by Text.");
+                }
+
+                if (disclaimerButton != null)
+                {
+                    disclaimerButton.Click();
+                    Output.WriteLine("Popup: Clicked Disclaimer button.");
+                }
+            }
+            catch (WebDriverTimeoutException)
+            {
+                Output.WriteLine("Popup: Disclaimer button not found within timeout.");
             }
         }
         catch (Exception ex)
         {
             Output.WriteLine($"Warning: Error handling popups: {ex.Message}");
-            // Don't fail the test if popup handling fails, just log it.
         }
     }
 
