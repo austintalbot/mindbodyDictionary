@@ -1926,8 +1926,6 @@
         }
       }
     },
-    "net10.0-android36.0/android-arm64": {},
-    "net10.0-android36.0/android-x64": {},
     "net10.0-android36.0/iossimulator-arm64": {},
     "net10.0-ios26.2": {
       "CommunityToolkit.Maui": {
@@ -2240,8 +2238,6 @@
         "contentHash": "vq+81ZqZz9oHV6iWgGXFnxHAyO5xA73nfvDNu5LwymIK294is5bRo3P063VToAbDRyyc0qq/YFRYjHmiD6Cv8Q=="
       }
     },
-    "net10.0-ios26.2/android-arm64": {},
-    "net10.0-ios26.2/android-x64": {},
     "net10.0-ios26.2/iossimulator-arm64": {}
   }
 }

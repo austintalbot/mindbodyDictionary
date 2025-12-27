@@ -127,12 +127,25 @@ public abstract class BaseTest : IDisposable
         {
             AutomationName = "XCUITest",
             PlatformName = "iOS",
-            PlatformVersion = Environment.GetEnvironmentVariable("IOS_PLATFORM_VERSION") ?? "26.1",
+            PlatformVersion = Environment.GetEnvironmentVariable("IOS_PLATFORM_VERSION") ?? "26.0",
             DeviceName = Environment.GetEnvironmentVariable("IOS_DEVICE_NAME") ?? "iPhone 17 Pro Max"
         };
 
+        // Support targeting specific UDID (e.g. the currently booted simulator)
+        var udid = Environment.GetEnvironmentVariable("IOS_UDID");
+        if (!string.IsNullOrEmpty(udid))
+        {
+            options.AddAdditionalAppiumOption("udid", udid);
+        }
+
         // Bundle ID
-        options.AddAdditionalAppiumOption("bundleId", "com.mbd.mindbodydictionarymobile");
+        options.AddAdditionalAppiumOption("bundleId", "com.mindbodydictionary.mindbodydictionarymobile");
+
+        // Fixes for ECONNREFUSED / xcodebuild code 70
+        options.AddAdditionalAppiumOption("useNewWDA", true);
+        options.AddAdditionalAppiumOption("wdaLaunchTimeout", 60000); // 60 seconds
+        options.AddAdditionalAppiumOption("wdaConnectionTimeout", 60000); // 60 seconds
+        options.AddAdditionalAppiumOption("showXcodeLog", true); // Crucial for debugging WDA crashes
 
         // Optional: Path to app if needed
         var appPath = Environment.GetEnvironmentVariable("IOS_APP_PATH");
