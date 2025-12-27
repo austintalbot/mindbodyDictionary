@@ -134,8 +134,10 @@ namespace MindBodyDictionaryMobile.PageModels
         }
 
         // Assign a new ObservableCollection to trigger only ONE update notification
-        RandomConditionCollection = new ObservableCollection<MbdCondition>(conditionsToShow);
-        IsInitialized = true;
+        MainThread.BeginInvokeOnMainThread(() => {
+          RandomConditionCollection = new ObservableCollection<MbdCondition>(conditionsToShow);
+          IsInitialized = true;
+        });
       }
       catch (Exception ex)
       {

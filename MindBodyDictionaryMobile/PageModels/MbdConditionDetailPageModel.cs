@@ -514,6 +514,7 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
       if (Condition.IsNullOrNew())
       {
         _errorHandler.HandleError(new Exception($"Condition with id {id} could not be found."));
+        await Shell.Current.GoToAsync("..");
         return;
       }
 

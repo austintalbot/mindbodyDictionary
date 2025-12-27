@@ -23,6 +23,9 @@ public static class MauiProgram
   public static IServiceProvider Services { get; private set; }
 
   public static MauiApp CreateMauiApp() {
+    // Initialize SQLite for iOS and other platforms requiring explicit init
+    SQLitePCL.Batteries_V2.Init();
+
     try
     {
       Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1JFaF1cXGtCf1FpRmJGdld5fUVHYVZUTXxaS00DNHVRdkdmWH1fc3ZURmJeVER+WERWYEg=");
@@ -66,14 +69,14 @@ public static class MauiProgram
       builder.Services.AddSingleton<MainPageModel>();
       builder.Services.AddSingleton<ProjectListPageModel>();
       // builder.Services.AddSingleton<ManageMetaPageModel>();
-      builder.Services.AddTransient<IBillingService, BillingService>();
+      builder.Services.AddSingleton<IBillingService, BillingService>();
 
 #if ANDROID
       builder.Services.AddSingleton<IDeviceInstallationService, Platforms.Android.DeviceInstallationService>();
 #elif IOS
-            var iosDeviceService = new Platforms.iOS.DeviceInstallationService();
-            builder.Services.AddSingleton<IDeviceInstallationService>(iosDeviceService);
-            builder.Services.AddSingleton(iosDeviceService);
+      var iosDeviceService = new Platforms.iOS.DeviceInstallationService();
+      builder.Services.AddSingleton<IDeviceInstallationService>(iosDeviceService);
+      builder.Services.AddSingleton(iosDeviceService);
 #endif
 
       builder.Services.AddSingleton<INotificationActionServiceExtended, NotificationActionService>();
@@ -133,7 +136,16 @@ public static class MauiProgram
       Services = app.Services;
 
       // Initialize Database (WAL Mode)
-      app.Services.GetRequiredService<DatabaseBootstrap>().Initialize();
+      try
+      {
+        app.Services.GetRequiredService<DatabaseBootstrap>().Initialize();
+      }
+      catch (Exception ex)
+      {
+        logger.LogError(ex, "Failed to initialize database during startup");
+        System.Diagnostics.Debug.WriteLine($"Database Initialization Failed: {ex}");
+        // Do not rethrow to avoid SIGABRT on startup
+      }
 
       // Load images into cache on startup
       var imageCacheService = Services.GetRequiredService<ImageCacheService>();

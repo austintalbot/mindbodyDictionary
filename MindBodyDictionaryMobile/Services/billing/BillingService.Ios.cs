@@ -265,16 +265,6 @@ public class BillingService(ILogger<BaseBillingService> logger) : BaseBillingSer
         break;
     }
   }
-
-
-
-  ~BillingService() {
-    if (_paymentObserver != null)
-    {
-      SKPaymentQueue.DefaultQueue.RemoveTransactionObserver(_paymentObserver);
-      _paymentObserver.Dispose();
-    }
-  }
 }
 
 internal class ProductsRequestDelegate : NSObject, ISKProductsRequestDelegate, ISKRequestDelegate
