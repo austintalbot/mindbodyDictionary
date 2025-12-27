@@ -68,9 +68,6 @@ public abstract class BaseTest(ITestOutputHelper output) : IDisposable
                   .MoveToLocation(endX, endY)
                   .Release()
                   .Perform();
-            
-            // Short wait for animation
-            System.Threading.Thread.Sleep(1000);
         }
         catch (Exception ex)
         {
@@ -79,7 +76,6 @@ public abstract class BaseTest(ITestOutputHelper output) : IDisposable
                  // Fallback for iOS usually
                  var hamburger = Driver!.FindElement(By.XPath("//XCUIElementTypeButton[1]")); 
                  hamburger.Click();
-                 System.Threading.Thread.Sleep(1000);
              } catch {}
         }
     }
@@ -123,6 +119,81 @@ public abstract class BaseTest(ITestOutputHelper output) : IDisposable
         if (TestFailed)
         {
             throw new Exception("Flyout Menu verification failed. See logs for missing items.");
+        }
+    }
+
+    protected void NavigateBack()
+    {
+        Output.WriteLine("ACTION: Navigating Back...");
+        if (Driver?.Capabilities.GetCapability("platformName").ToString()?.ToLower() == "android")
+        {
+            Driver.Navigate().Back();
+        }
+        else
+        {
+            // iOS: Try clicking the Back button first (more reliable than swipe)
+            bool buttonClicked = false;
+            try 
+            {
+                // Common names for iOS back button: "Back", or the title of the previous page ("Condition" or "Home")
+                // Based on screenshot, it might just be an icon or labeled "Back"
+                var backButtons = Driver!.FindElements(By.XPath("//XCUIElementTypeNavigationBar//XCUIElementTypeButton"));
+                
+                if (backButtons.Count > 0)
+                {
+                    // Usually the first button in the nav bar is Back
+                    var backButton = backButtons.FirstOrDefault(b => b.Location.X < 100 && b.Location.Y < 150); // Ensure it's top-left
+                    if (backButton != null)
+                    {
+                        Output.WriteLine($"ACTION: Found Navigation Bar button '{backButton.Text}'. Clicking...");
+                        backButton.Click();
+                        buttonClicked = true;
+                    }
+                }
+                
+                if (!buttonClicked)
+                {
+                    // Fallback: Try generic top-left button search if Nav Bar not found
+                    var anyBackButton = Driver!.FindElements(By.XPath("//XCUIElementTypeButton[@name='Back']"));
+                    if (anyBackButton.Count > 0)
+                    {
+                         Output.WriteLine("ACTION: Found generic 'Back' button. Clicking...");
+                         anyBackButton[0].Click();
+                         buttonClicked = true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Output.WriteLine($"WARNING: Failed to click Back button: {ex.Message}");
+            }
+
+            // Fallback to Swipe if button interaction failed
+            if (!buttonClicked)
+            {
+                try 
+                {
+                    var size = Driver!.Manage().Window.Size;
+                    int startX = 0; 
+                    int startY = size.Height / 2;
+                    int endX = (int)(size.Width * 0.6); 
+                    int endY = startY;
+
+                    Output.WriteLine($"ACTION: Button not found/clicked. Performing iOS Swipe Back from ({startX},{startY}) to ({endX},{endY})");
+
+                    var action = new Actions(Driver);
+                    action.MoveToLocation(startX, startY)
+                          .ClickAndHold()
+                          .MoveToLocation(endX, endY)
+                          .Release()
+                          .Perform();
+                }
+                catch (Exception ex)
+                {
+                    Output.WriteLine($"WARNING: Swipe Back failed: {ex.Message}. Trying standard Back...");
+                    Driver?.Navigate().Back();
+                }
+            }
         }
     }
 
