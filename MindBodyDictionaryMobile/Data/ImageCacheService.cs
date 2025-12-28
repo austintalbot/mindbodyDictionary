@@ -13,6 +13,7 @@ public class ImageCacheService(ImageCacheRepository imageCacheRepository, ILogge
   private const string ImagesResourcePath = "images";
   private const string RemoteImageBaseUrl = "https://mbdstoragesa.blob.core.windows.net/mbdconditionimages/";
   private readonly System.Collections.Concurrent.ConcurrentDictionary<string, Task> _pendingCacheTasks = [];
+  private readonly object _eventLock = new();
 
   /// <summary>
   /// Event fired when an image is added or updated in the cache.
@@ -220,9 +221,16 @@ public class ImageCacheService(ImageCacheRepository imageCacheRepository, ILogge
 
     await _imageCacheRepository.SaveItemAsync(imageCache);
 
+    // Thread-safe event invocation
+    EventHandler<string>? handler = null;
+    lock (_eventLock)
+    {
+      handler = ImageUpdated;
+    }
+    
     try
     {
-      ImageUpdated?.Invoke(this, fileName);
+      handler?.Invoke(this, fileName);
     }
     catch (Exception ex)
     {

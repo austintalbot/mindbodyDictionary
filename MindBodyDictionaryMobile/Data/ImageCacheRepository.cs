@@ -10,7 +10,7 @@ using MindBodyDictionaryMobile.Models;
 /// </summary>
 public class ImageCacheRepository(ILogger<ImageCacheRepository> logger)
 {
-  private bool _hasBeenInitialized;
+  private volatile bool _hasBeenInitialized;
   private readonly SemaphoreSlim _initSemaphore = new(1, 1);
   private readonly ILogger<ImageCacheRepository> _logger = logger;
 

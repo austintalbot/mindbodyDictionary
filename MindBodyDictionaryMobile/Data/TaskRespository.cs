@@ -13,7 +13,7 @@ using MindBodyDictionaryMobile.Models;
 /// <param name="logger">The logger instance.</param>
 public class TaskRepository(ILogger<TaskRepository> logger)
 {
-  private bool _hasBeenInitialized = false;
+  private volatile bool _hasBeenInitialized = false;
   private readonly SemaphoreSlim _initSemaphore = new(1, 1);
   private readonly ILogger _logger = logger;
 

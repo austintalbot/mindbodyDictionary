@@ -165,19 +165,31 @@ public partial class SearchPageModel : ObservableObject, IRecipient<ConditionsUp
               SubscriptionStatusMessage = hasSubscription ? "Premium Subscription Active" : "Free Version - Upgrade for Full Access";
             });
 
-            foreach (var c in _allConditions)
-            {
-              c.DisplayLock = c.SubscriptionOnly && !hasSubscription;
-
-              if (!string.IsNullOrEmpty(c.ImageNegative) && c.CachedImageOneSource == null)
-              {
-                var imageSource = await _imageCacheService.GetImageAsync(c.ImageNegative);
-                if (imageSource != null)
+            // Load images with concurrency throttling to prevent resource exhaustion
+            using var semaphore = new SemaphoreSlim(5, 5);  // Max 5 concurrent downloads
+            var imageTasks = _allConditions
+              .Where(c => !string.IsNullOrEmpty(c.ImageNegative) && c.CachedImageOneSource == null)
+              .Select(async c => {
+                await semaphore.WaitAsync();
+                try
                 {
-                  await MainThread.InvokeOnMainThreadAsync(() => c.CachedImageOneSource = imageSource);
+                  var imageName = c.ImageNegative;
+                  if (!string.IsNullOrEmpty(imageName))
+                  {
+                    var imageSource = await _imageCacheService.GetImageAsync(imageName);
+                    if (imageSource != null)
+                    {
+                      await MainThread.InvokeOnMainThreadAsync(() => c.CachedImageOneSource = imageSource);
+                    }
+                  }
                 }
-              }
-            }
+                finally
+                {
+                  semaphore.Release();
+                }
+              });
+
+            await Task.WhenAll(imageTasks);
           }
           catch (Exception ex)
           {

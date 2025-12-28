@@ -18,7 +18,7 @@ public class AppDataPreloaderService(
   private readonly MbdConditionRepository _mbdConditionRepository = mbdConditionRepository;
   private readonly SeedDataService _seedDataService = seedDataService;
   private readonly DataSyncService _dataSyncService = dataSyncService;
-  private static bool _isPreloadStarted = false;
+  private static volatile bool _isPreloadStarted = false;
   private static readonly object _preloadLock = new();
 
   /// <summary>

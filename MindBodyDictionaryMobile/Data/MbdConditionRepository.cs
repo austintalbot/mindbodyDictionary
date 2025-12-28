@@ -14,16 +14,16 @@ using MindBodyDictionaryMobile.Models;
 /// </summary>
 public class MbdConditionRepository(TaskRepository taskRepository, TagRepository tagRepository, ILogger<MbdConditionRepository> logger)
 {
-  private bool _hasBeenInitialized = false;
+  private volatile bool _hasBeenInitialized = false;
   private readonly SemaphoreSlim _initSemaphore = new(1, 1);
   private readonly ILogger<MbdConditionRepository> _logger = logger;
   private readonly TaskRepository _taskRepository = taskRepository;
   private readonly TagRepository _tagRepository = tagRepository;
 
   // Fallback in-memory cache if database fails
-  private static readonly List<MbdCondition> _inMemoryConditions = [];
+  private static readonly System.Collections.Generic.Dictionary<string, MbdCondition> _inMemoryConditionCache = [];
   private static readonly object _cacheLock = new();
-  private static bool _usingInMemoryCache = false;
+  private static volatile bool _usingInMemoryCache = false;
 
   /// <summary>
   /// Initializes the database connection and creates the MbdCondition table if it does not exist.
@@ -124,10 +124,10 @@ public class MbdConditionRepository(TaskRepository taskRepository, TagRepository
     {
       lock (_cacheLock)
       {
-        if (_inMemoryConditions.Count > 0)
+        if (_inMemoryConditionCache.Count > 0)
         {
-          System.Diagnostics.Debug.WriteLine($"=== ListAsync: Returning {_inMemoryConditions.Count} conditions from in-memory cache ===");
-          return _inMemoryConditions.OrderBy(c => c.Name).ToList();
+          System.Diagnostics.Debug.WriteLine($"=== ListAsync: Returning {_inMemoryConditionCache.Count} conditions from in-memory cache ===");
+          return _inMemoryConditionCache.Values.OrderBy(c => c.Name).ToList();
         }
       }
     }
@@ -150,10 +150,10 @@ public class MbdConditionRepository(TaskRepository taskRepository, TagRepository
     {
       lock (_cacheLock)
       {
-        if (_inMemoryConditions.Count > 0)
+        if (_inMemoryConditionCache.Count > 0)
         {
-          System.Diagnostics.Debug.WriteLine($"=== ListAsync: Database empty, returning {_inMemoryConditions.Count} from in-memory cache ===");
-          return _inMemoryConditions.OrderBy(c => c.Name).ToList();
+          System.Diagnostics.Debug.WriteLine($"=== ListAsync: Database empty, returning {_inMemoryConditionCache.Count} from in-memory cache ===");
+          return _inMemoryConditionCache.Values.OrderBy(c => c.Name).ToList();
         }
       }
     }
@@ -206,13 +206,10 @@ public class MbdConditionRepository(TaskRepository taskRepository, TagRepository
 
     lock (_cacheLock)
     {
-      if (_inMemoryConditions.Count > 0)
-      {
-        var cached = _inMemoryConditions.FirstOrDefault(c => c.Id == id);
-        if (cached != null)
-          return cached;
-      }
+      if (_inMemoryConditionCache.TryGetValue(id, out var cached))
+        return cached;
     }
+    
     return null;
   }
 
@@ -311,14 +308,10 @@ public class MbdConditionRepository(TaskRepository taskRepository, TagRepository
       _usingInMemoryCache = true;
     }
 
+    // Update in-memory cache safely under lock
     lock (_cacheLock)
     {
-      var existing = _inMemoryConditions.FirstOrDefault(c => c.Id == item.Id);
-      if (existing != null)
-      {
-        _inMemoryConditions.Remove(existing);
-      }
-      _inMemoryConditions.Add(item);
+      _inMemoryConditionCache[item.Id] = item;
     }
 
     return item.Id ?? string.Empty;
