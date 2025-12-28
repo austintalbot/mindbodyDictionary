@@ -209,7 +209,7 @@ public class MbdConditionRepository(TaskRepository taskRepository, TagRepository
       if (_inMemoryConditionCache.TryGetValue(id, out var cached))
         return cached;
     }
-    
+
     return null;
   }
 

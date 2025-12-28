@@ -118,7 +118,7 @@ public class ImageCacheService(ImageCacheRepository imageCacheRepository, ILogge
         if (resourceName != null)
         {
           _logger.LogInformation("GetImageAsync: Found embedded resource: {ResourceName} for {FileName}", resourceName, fileName);
-          
+
           await GetOrAddCacheTask(fileName, async () => {
              await using var stream = assembly.GetManifestResourceStream(resourceName);
              if (stream != null)
@@ -227,7 +227,7 @@ public class ImageCacheService(ImageCacheRepository imageCacheRepository, ILogge
     {
       handler = ImageUpdated;
     }
-    
+
     try
     {
       handler?.Invoke(this, fileName);
