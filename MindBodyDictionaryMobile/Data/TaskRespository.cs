@@ -14,6 +14,7 @@ using MindBodyDictionaryMobile.Models;
 public class TaskRepository(ILogger<TaskRepository> logger)
 {
   private bool _hasBeenInitialized = false;
+  private readonly SemaphoreSlim _initSemaphore = new(1, 1);
   private readonly ILogger _logger = logger;
 
   /// <summary>
@@ -23,28 +24,39 @@ public class TaskRepository(ILogger<TaskRepository> logger)
     if (_hasBeenInitialized)
       return;
 
-    await using var connection = new SqliteConnection(Constants.DatabasePath);
-    await connection.OpenAsync();
-
+    await _initSemaphore.WaitAsync();
     try
     {
-      var createTableCmd = connection.CreateCommand();
-      createTableCmd.CommandText = @"
+      if (_hasBeenInitialized)
+        return;
+
+      await using var connection = new SqliteConnection(Constants.DatabasePath);
+      await connection.OpenAsync();
+
+      try
+      {
+        var createTableCmd = connection.CreateCommand();
+        createTableCmd.CommandText = @"
 			CREATE TABLE IF NOT EXISTS Task (
 				ID INTEGER PRIMARY KEY AUTOINCREMENT,
 				Title TEXT NOT NULL,
 				IsCompleted INTEGER NOT NULL,
 				ProjectID TEXT NOT NULL
 			);";
-      await createTableCmd.ExecuteNonQueryAsync();
-    }
-    catch (Exception e)
-    {
-      _logger.LogError(e, "Error creating Task table");
-      throw;
-    }
+        await createTableCmd.ExecuteNonQueryAsync();
+      }
+      catch (Exception e)
+      {
+        _logger.LogError(e, "Error creating Task table");
+        throw;
+      }
 
-    _hasBeenInitialized = true;
+      _hasBeenInitialized = true;
+    }
+    finally
+    {
+      _initSemaphore.Release();
+    }
   }
 
   /// <summary>

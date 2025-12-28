@@ -23,6 +23,7 @@ public class SeedDataService(ProjectRepository projectRepository, TaskRepository
   private readonly MbdConditionApiService _mbdConditionApiService = mbdConditionApiService;
   private readonly string _seedDataFilePath = "SeedData.json";
   private readonly ILogger<SeedDataService> _logger = logger;
+  private readonly SemaphoreSlim _seedSemaphore = new(1, 1);
 
   /// <summary>
   /// Callback for UI updates during the seeding process.
@@ -169,6 +170,7 @@ public class SeedDataService(ProjectRepository projectRepository, TaskRepository
   /// Falls back to local seed file if the API is unavailable.
   /// </summary>
   public async Task SeedConditionsAsync(bool forceUpdate = false) {
+    await _seedSemaphore.WaitAsync();
     try
     {
       _logger.LogInformation("Starting to seed conditions (Force: {Force})", forceUpdate);
@@ -218,6 +220,10 @@ public class SeedDataService(ProjectRepository projectRepository, TaskRepository
       _logger.LogError(e, "Error seeding conditions");
       System.Diagnostics.Debug.WriteLine($"=== SeedConditionsAsync ERROR: {e.Message} ===");
       throw;
+    }
+    finally
+    {
+      _seedSemaphore.Release();
     }
   }
 

@@ -11,6 +11,7 @@ using MindBodyDictionaryMobile.Models;
 public class ImageCacheRepository(ILogger<ImageCacheRepository> logger)
 {
   private bool _hasBeenInitialized;
+  private readonly SemaphoreSlim _initSemaphore = new(1, 1);
   private readonly ILogger<ImageCacheRepository> _logger = logger;
 
   /// <summary>
@@ -20,8 +21,12 @@ public class ImageCacheRepository(ILogger<ImageCacheRepository> logger)
     if (_hasBeenInitialized)
       return;
 
+    await _initSemaphore.WaitAsync();
     try
     {
+      if (_hasBeenInitialized)
+        return;
+
       var dbPath = Constants.DatabasePath;
       _logger.LogInformation("Init: DatabasePath = {Path}", dbPath);
 
@@ -72,6 +77,10 @@ public class ImageCacheRepository(ILogger<ImageCacheRepository> logger)
     {
       _logger.LogError(e, "Init: Error creating ImageCache table - {Message}", e.Message);
       throw;
+    }
+    finally
+    {
+      _initSemaphore.Release();
     }
   }
 

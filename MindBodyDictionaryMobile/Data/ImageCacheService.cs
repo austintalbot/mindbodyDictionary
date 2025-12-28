@@ -12,6 +12,7 @@ public class ImageCacheService(ImageCacheRepository imageCacheRepository, ILogge
   private readonly ILogger<ImageCacheService> _logger = logger;
   private const string ImagesResourcePath = "images";
   private const string RemoteImageBaseUrl = "https://mbdstoragesa.blob.core.windows.net/mbdconditionimages/";
+  private readonly System.Collections.Concurrent.ConcurrentDictionary<string, Task> _pendingCacheTasks = [];
 
   /// <summary>
   /// Event fired when an image is added or updated in the cache.
@@ -67,21 +68,31 @@ public class ImageCacheService(ImageCacheRepository imageCacheRepository, ILogge
       ImageSource? imageSource = null;
       try
       {
-        using var httpClient = new HttpClient();
-        var url = $"{RemoteImageBaseUrl}{Uri.EscapeDataString(fileName)}";
-        _logger.LogInformation("GetImageAsync: Attempting to download image from remote: {Url}", url);
-
-        var imageData = await httpClient.GetByteArrayAsync(url);
-
-        if (imageData.Length > 0)
+        // Deduplicate remote downloads as well if multiple requests come in for same file
+        await GetOrAddCacheTask(fileName, async () =>
         {
-          await SaveToCacheAsync(fileName, imageData);
-          _logger.LogInformation("GetImageAsync: Successfully downloaded and cached from remote: {FileName} ({Size} bytes)", fileName, imageData.Length);
-          imageSource = ImageSource.FromStream(() => new MemoryStream(imageData));
-        }
-        else
+          using var httpClient = new HttpClient();
+          var url = $"{RemoteImageBaseUrl}{Uri.EscapeDataString(fileName)}";
+          _logger.LogInformation("GetImageAsync: Attempting to download image from remote: {Url}", url);
+
+          var imageData = await httpClient.GetByteArrayAsync(url);
+
+          if (imageData.Length > 0)
+          {
+            await SaveToCacheAsync(fileName, imageData);
+            _logger.LogInformation("GetImageAsync: Successfully downloaded and cached from remote: {FileName} ({Size} bytes)", fileName, imageData.Length);
+          }
+          else
+          {
+            _logger.LogWarning("GetImageAsync: Remote download returned empty data for {FileName}", fileName);
+          }
+        });
+
+        // Re-check cache after download attempt
+        cachedImage = await _imageCacheRepository.GetByFileNameAsync(fileName);
+        if (cachedImage != null)
         {
-          _logger.LogWarning("GetImageAsync: Remote download returned empty data for {FileName}", fileName);
+           imageSource = ImageSource.FromStream(() => new MemoryStream(cachedImage.ImageData));
         }
       }
       catch (Exception ex)
@@ -106,20 +117,29 @@ public class ImageCacheService(ImageCacheRepository imageCacheRepository, ILogge
         if (resourceName != null)
         {
           _logger.LogInformation("GetImageAsync: Found embedded resource: {ResourceName} for {FileName}", resourceName, fileName);
-          await using var stream = assembly.GetManifestResourceStream(resourceName);
-          if (stream != null)
-          {
-            var memoryStream = new MemoryStream();
-            await stream.CopyToAsync(memoryStream);
-            var imageData = memoryStream.ToArray();
+          
+          await GetOrAddCacheTask(fileName, async () => {
+             await using var stream = assembly.GetManifestResourceStream(resourceName);
+             if (stream != null)
+             {
+               var memoryStream = new MemoryStream();
+               await stream.CopyToAsync(memoryStream);
+               var imageData = memoryStream.ToArray();
 
-            await SaveToCacheAsync(fileName, imageData);
-            _logger.LogInformation("GetImageAsync: Successfully loaded and cached from embedded resources: {FileName} ({Size} bytes)", fileName, imageData.Length);
-            return ImageSource.FromStream(() => new MemoryStream(imageData));
-          }
-          else
+               await SaveToCacheAsync(fileName, imageData);
+               _logger.LogInformation("GetImageAsync: Successfully loaded and cached from embedded resources: {FileName} ({Size} bytes)", fileName, imageData.Length);
+             }
+             else
+             {
+               _logger.LogWarning("GetImageAsync: Failed to open embedded resource stream for {ResourceName} (Stream was null)", resourceName);
+             }
+          });
+
+          // Return stream from cache or re-read
+          cachedImage = await _imageCacheRepository.GetByFileNameAsync(fileName);
+          if (cachedImage != null)
           {
-            _logger.LogWarning("GetImageAsync: Failed to open embedded resource stream for {ResourceName} (Stream was null)", resourceName);
+             return ImageSource.FromStream(() => new MemoryStream(cachedImage.ImageData));
           }
         }
         else
@@ -143,6 +163,21 @@ public class ImageCacheService(ImageCacheRepository imageCacheRepository, ILogge
     }
   }
 
+  private async Task GetOrAddCacheTask(string key, Func<Task> action)
+  {
+      // Atomic get-or-add task
+      var task = _pendingCacheTasks.GetOrAdd(key, _ => action());
+      try
+      {
+          await task;
+      }
+      finally
+      {
+          // Remove task when done so future requests can retry if needed or just use cache
+          _pendingCacheTasks.TryRemove(key, out _);
+      }
+  }
+
   /// <summary>
   /// Forces a download of the image from the remote server and updates the local cache,
   /// bypassing any existing cache check.
@@ -153,18 +188,20 @@ public class ImageCacheService(ImageCacheRepository imageCacheRepository, ILogge
 
     try
     {
-      using var httpClient = new HttpClient();
-      var url = $"{RemoteImageBaseUrl}{Uri.EscapeDataString(fileName)}";
-      _logger.LogInformation("RefreshImageFromRemoteAsync: Force downloading: {Url}", url);
+        await GetOrAddCacheTask(fileName, async () => {
+          using var httpClient = new HttpClient();
+          var url = $"{RemoteImageBaseUrl}{Uri.EscapeDataString(fileName)}";
+          _logger.LogInformation("RefreshImageFromRemoteAsync: Force downloading: {Url}", url);
 
-      var imageData = await httpClient.GetByteArrayAsync(url);
+          var imageData = await httpClient.GetByteArrayAsync(url);
 
-      if (imageData.Length > 0)
-      {
-        // This upserts (overwrites) the existing cache entry
-        await SaveToCacheAsync(fileName, imageData);
-        _logger.LogInformation("RefreshImageFromRemoteAsync: Successfully refreshed: {FileName}", fileName);
-      }
+          if (imageData.Length > 0)
+          {
+            // This upserts (overwrites) the existing cache entry
+            await SaveToCacheAsync(fileName, imageData);
+            _logger.LogInformation("RefreshImageFromRemoteAsync: Successfully refreshed: {FileName}", fileName);
+          }
+        });
     }
     catch (Exception ex)
     {
@@ -260,46 +297,52 @@ public class ImageCacheService(ImageCacheRepository imageCacheRepository, ILogge
         return;
       }
 
-      // Load image from manifest resources
-      var assembly = typeof(ImageCacheService).Assembly;
-      _logger.LogInformation("CacheImageAsync: Searching for resource matching {FileName}", fileName);
+      await GetOrAddCacheTask(fileName, async () => {
+          // Double check inside lock
+          var checkAgain = await _imageCacheRepository.GetByFileNameAsync(fileName);
+          if (checkAgain != null) return;
 
-      var resourceName = assembly.GetManifestResourceNames()
-          .FirstOrDefault(name => name.EndsWith($".{fileName}", StringComparison.OrdinalIgnoreCase));
+          // Load image from manifest resources
+          var assembly = typeof(ImageCacheService).Assembly;
+          _logger.LogInformation("CacheImageAsync: Searching for resource matching {FileName}", fileName);
 
-      if (resourceName == null)
-      {
-        _logger.LogWarning("CacheImageAsync: Image resource not found for {FileName}", fileName);
-        return;
-      }
+          var resourceName = assembly.GetManifestResourceNames()
+              .FirstOrDefault(name => name.EndsWith($".{fileName}", StringComparison.OrdinalIgnoreCase));
 
-      _logger.LogInformation("CacheImageAsync: Found resource {ResourceName}", resourceName);
+          if (resourceName == null)
+          {
+            _logger.LogWarning("CacheImageAsync: Image resource not found for {FileName}", fileName);
+            return;
+          }
 
-      await using var stream = assembly.GetManifestResourceStream(resourceName);
-      if (stream == null)
-      {
-        _logger.LogWarning("CacheImageAsync: Failed to open resource stream: {ResourceName}", resourceName);
-        return;
-      }
+          _logger.LogInformation("CacheImageAsync: Found resource {ResourceName}", resourceName);
 
-      var memoryStream = new MemoryStream();
-      await stream.CopyToAsync(memoryStream);
-      var imageData = memoryStream.ToArray();
+          await using var stream = assembly.GetManifestResourceStream(resourceName);
+          if (stream == null)
+          {
+            _logger.LogWarning("CacheImageAsync: Failed to open resource stream: {ResourceName}", resourceName);
+            return;
+          }
 
-      _logger.LogInformation("CacheImageAsync: Loaded {Size} bytes for {FileName}", imageData.Length, fileName);
+          var memoryStream = new MemoryStream();
+          await stream.CopyToAsync(memoryStream);
+          var imageData = memoryStream.ToArray();
 
-      // Save to database
-      var imageCache = new ImageCache
-      {
-        FileName = fileName,
-        ImageData = imageData,
-        CachedAt = DateTime.UtcNow,
-        ContentType = GetContentType(fileName)
-      };
+          _logger.LogInformation("CacheImageAsync: Loaded {Size} bytes for {FileName}", imageData.Length, fileName);
 
-      await _imageCacheRepository.SaveItemAsync(imageCache);
-      _logger.LogInformation("CacheImageAsync: Successfully cached {FileName} ({Size} bytes) from {ResourceName}",
-          fileName, imageData.Length, resourceName);
+          // Save to database
+          var imageCache = new ImageCache
+          {
+            FileName = fileName,
+            ImageData = imageData,
+            CachedAt = DateTime.UtcNow,
+            ContentType = GetContentType(fileName)
+          };
+
+          await _imageCacheRepository.SaveItemAsync(imageCache);
+          _logger.LogInformation("CacheImageAsync: Successfully cached {FileName} ({Size} bytes) from {ResourceName}",
+              fileName, imageData.Length, resourceName);
+      });
     }
     catch (Exception e)
     {
