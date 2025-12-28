@@ -163,6 +163,16 @@ public partial class SearchPageModel : ObservableObject, IRecipient<ConditionsUp
             await MainThread.InvokeOnMainThreadAsync(() => {
               IsSubscriptionActive = hasSubscription;
               SubscriptionStatusMessage = hasSubscription ? "Premium Subscription Active" : "Free Version - Upgrade for Full Access";
+
+              if (!hasSubscription)
+              {
+              // Update DisplayLock for all conditions based on subscription status
+                foreach (var condition in _allConditions)
+                {
+                  condition.DisplayLock = condition.SubscriptionOnly && !hasSubscription;
+                }
+              }
+
             });
 
             // Load images with concurrency throttling to prevent resource exhaustion

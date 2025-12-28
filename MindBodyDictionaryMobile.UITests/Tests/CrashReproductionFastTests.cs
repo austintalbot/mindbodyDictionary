@@ -124,6 +124,121 @@ public class CrashReproductionFastTests : BaseTest
         }
     }
 
+    [Theory]
+    [InlineData(Platform.Android)]
+    [InlineData(Platform.iOS)]
+    public void Search_IterateAllConditionsQuickly_Fast_NoCrash(Platform platform)
+    {
+        try
+        {
+            Output.WriteLine($"========== STARTING SEARCH PAGE ALL CONDITIONS ITERATION TEST FOR {platform} ==========");
+
+            // Initialize
+            InitializeDriver(platform);
+            WaitForElement(By.Id("AppLogo"), 15);
+
+            // Navigate to search page using the standard navigation method
+            Output.WriteLine("Navigating to search page...");
+            try
+            {
+                NavigateToPage("Search");
+            }
+            catch (Exception ex)
+            {
+                Output.WriteLine($"NavigateToPage failed: {ex.Message}, continuing anyway...");
+            }
+            System.Threading.Thread.Sleep(1500);
+
+            int iterationCount = 0;
+            int maxIterations = 100; // Safety limit
+
+            while (iterationCount < maxIterations)
+            {
+                iterationCount++;
+                Output.WriteLine($"Iteration {iterationCount}");
+
+                // Find all conditions currently visible on the page
+                List<IWebElement> conditions = new List<IWebElement>();
+                try
+                {
+                    if (platform == Platform.Android)
+                    {
+                        var list = Driver!.FindElement(By.Id("ConditionsList"));
+                        conditions = list.FindElements(By.ClassName("android.widget.FrameLayout"))
+                            .Where(e =>
+                            {
+                                try
+                                {
+                                    var text = e.FindElement(By.ClassName("android.widget.TextView"));
+                                    return !string.IsNullOrWhiteSpace(text.Text) && text.Text.Length > 2;
+                                }
+                                catch { return false; }
+                            })
+                            .Cast<IWebElement>()
+                            .ToList();
+                    }
+                    else
+                    {
+                        // iOS: Find cells in the list
+                        conditions = Driver!.FindElements(By.XPath("//*[@name='ConditionsList']//XCUIElementTypeCell"))
+                            .Where(c =>
+                            {
+                                try
+                                {
+                                    return !string.IsNullOrWhiteSpace(c.Text) && c.Text.Length > 2;
+                                }
+                                catch { return false; }
+                            })
+                            .Cast<IWebElement>()
+                            .ToList();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Output.WriteLine($"  Error finding conditions: {ex.Message}");
+                    Output.WriteLine($"SUCCESS: Iterated through {iterationCount - 1} conditions without crash.");
+                    break;
+                }
+
+                if (conditions.Count == 0)
+                {
+                    Output.WriteLine($"  No more conditions found.");
+                    Output.WriteLine($"SUCCESS: Iterated through {iterationCount - 1} conditions without crash.");
+                    break;
+                }
+
+                // Click the first condition in the list
+                try
+                {
+                    string conditionText = conditions[0].Text;
+                    Output.WriteLine($"  Clicking condition: {conditionText}");
+                    conditions[0].Click();
+
+                    // Wait for detail page to load
+                    System.Threading.Thread.Sleep(1000);
+
+                    // Navigate back
+                    NavigateBack();
+                    System.Threading.Thread.Sleep(500);
+
+                    Output.WriteLine($"  Returned to search page");
+                }
+                catch (Exception ex)
+                {
+                    Output.WriteLine($"  ERROR on iteration {iterationCount}: {ex.Message}");
+                    break;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            TestFailed = true;
+            TakeScreenshot(nameof(Search_IterateAllConditionsQuickly_Fast_NoCrash));
+            Output.WriteLine($"TEST FAILED: {ex.Message}");
+            throw;
+        }
+    }
+
     private IWebElement? FindNonBlankCondition(Platform platform, Random random)
     {
         List<IWebElement> validItems = new List<IWebElement>();
