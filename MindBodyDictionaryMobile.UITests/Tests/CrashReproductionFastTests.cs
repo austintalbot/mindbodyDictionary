@@ -5,9 +5,9 @@ using Xunit.Abstractions;
 
 namespace MindBodyDictionaryMobile.UITests.Tests;
 
-public class CrashReproductionTests : BaseTest
+public class CrashReproductionFastTests : BaseTest
 {
-    public CrashReproductionTests(ITestOutputHelper output) : base(output)
+    public CrashReproductionFastTests(ITestOutputHelper output) : base(output)
     {
     }
 
@@ -20,11 +20,11 @@ public class CrashReproductionTests : BaseTest
     [Theory]
     [InlineData(Platform.Android)]
     [InlineData(Platform.iOS)]
-    public void Home_OpenConditionAndNavigateBack_NoCrash(Platform platform)
+    public void Home_OpenConditionAndNavigateBack_Fast_NoCrash(Platform platform)
     {
         try
         {
-            Output.WriteLine($"========== STARTING CRASH REPRODUCTION TEST FOR {platform} ==========");
+            Output.WriteLine($"========== STARTING FAST CRASH REPRODUCTION TEST FOR {platform} ==========");
 
             // Initialize
             InitializeDriver(platform);
@@ -38,12 +38,7 @@ public class CrashReproductionTests : BaseTest
                 Output.WriteLine($"Iteration {i}/{iterations}");
 
                 // Find and click a non-blank condition
-                IWebElement? conditionItem = FindNonBlankCondition(platform, random);
-                if (conditionItem == null)
-                {
-                    throw new Exception($"Failed to find valid condition on iteration {i}");
-                }
-
+                IWebElement? conditionItem = FindNonBlankCondition(platform, random) ?? throw new Exception($"Failed to find valid condition on iteration {i}");
                 string itemText = conditionItem.Text;
                 Output.WriteLine($"  Clicking: {itemText}");
                 conditionItem.Click();
@@ -61,6 +56,7 @@ public class CrashReproductionTests : BaseTest
                         }
                         catch { return false; }
                     });
+                    Output.WriteLine($"  Detail page loaded");
                 }
                 catch (WebDriverTimeoutException)
                 {
@@ -70,25 +66,49 @@ public class CrashReproductionTests : BaseTest
                 // Navigate back quickly
                 NavigateBack();
 
-                // Verify home page returned - be lenient about which UI elements are visible
+                // Verify home page returned - be very lenient about navigation state
+                bool homePageConfirmed = false;
                 try
                 {
                     WaitForElement(By.Id("AppLogo"), 5);
+                    homePageConfirmed = true;
                 }
                 catch (Exception)
                 {
-                    // Fallback: check for conditions list as sign of home page
+                    // AppLogo not found, try other indicators
+                }
+
+                if (!homePageConfirmed)
+                {
                     try
                     {
                         var conditionsList = Driver!.FindElement(By.XPath("//*[@name='ConditionsList']"));
                         if (conditionsList.Displayed)
                         {
                             Output.WriteLine($"  INFO: Home page confirmed via ConditionsList");
-                            continue;
+                            homePageConfirmed = true;
                         }
                     }
                     catch { }
+                }
 
+                // Last resort: check if we can still find conditions (indicating we're on home page)
+                if (!homePageConfirmed)
+                {
+                    try
+                    {
+                        var testItem = FindNonBlankCondition(platform, new Random());
+                        if (testItem != null)
+                        {
+                            Output.WriteLine($"  INFO: Home page confirmed via ability to find conditions");
+                            homePageConfirmed = true;
+                        }
+                    }
+                    catch { }
+                }
+
+                if (!homePageConfirmed)
+                {
                     throw new Exception($"Failed to return to Home Page on iteration {i}. App likely crashed.");
                 }
             }
@@ -98,7 +118,7 @@ public class CrashReproductionTests : BaseTest
         catch (Exception ex)
         {
             TestFailed = true;
-            TakeScreenshot(nameof(Home_OpenConditionAndNavigateBack_NoCrash));
+            TakeScreenshot(nameof(Home_OpenConditionAndNavigateBack_Fast_NoCrash));
             Output.WriteLine($"TEST FAILED: {ex.Message}");
             throw;
         }

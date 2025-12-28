@@ -31,7 +31,7 @@ public class NavigationTests : BaseTest
             InitializeDriver(platform);
 
             // Act - Navigate to Search from Home
-            Driver!.Navigate().GoToUrl("mindbodydictionary://search");
+            NavigateToPage("Search");
 
             // Wait for search page to load
             WaitForElement(By.Id("MbdConditionSearchBar"));
@@ -61,7 +61,7 @@ public class NavigationTests : BaseTest
             InitializeDriver(platform);
 
             // Act
-            Driver!.Navigate().GoToUrl("mindbodydictionary://notifications");
+            NavigateToPage("Notifications");
 
             // Wait for page to load
             WaitForElement(By.Id("RegisterNotificationsButton"));
@@ -91,7 +91,7 @@ public class NavigationTests : BaseTest
             InitializeDriver(platform);
 
             // Act
-            Driver!.Navigate().GoToUrl("mindbodydictionary://premium");
+            NavigateToPage("Premium");
 
             // Wait for page to load
             WaitForElement(By.Id("SubscribeButton"));
@@ -120,7 +120,7 @@ public class NavigationTests : BaseTest
             InitializeDriver(platform);
 
             // Act
-            Driver!.Navigate().GoToUrl("mindbodydictionary://about");
+            NavigateToPage("About");
 
             // Wait for page to load
             WaitForElement(By.Id("AppNameLabel"));
@@ -153,7 +153,7 @@ public class NavigationTests : BaseTest
             InitializeDriver(platform);
 
             // Act
-            Driver!.Navigate().GoToUrl("mindbodydictionary://faq");
+            NavigateToPage("FAQ");
 
             // Wait for page to load
             WaitForElement(By.Id("FaqCollectionView"));

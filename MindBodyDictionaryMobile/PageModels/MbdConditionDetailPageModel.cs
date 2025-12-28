@@ -45,6 +45,8 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
 
   private readonly IBillingService _billingService;
   private readonly IServiceProvider _serviceProvider;
+
+  private CancellationTokenSource? _loadDataCancellation;
   // Injected Views
   private readonly MbdConditionDetailsProblemView _problemView;
   private readonly MbdConditionDetailsAffirmationsView _affirmationsView;
@@ -283,6 +285,11 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
 
   public void ApplyQueryAttributes(IDictionary<string, object> query) {
     _logger.LogInformation($"ApplyQueryAttributes called with query: {string.Join(", ", query.Select(kvp => $"{kvp.Key}={kvp.Value}"))}");
+
+    // Cancel any previous load operation
+    _loadDataCancellation?.Cancel();
+    _loadDataCancellation = new CancellationTokenSource();
+
     if (query.TryGetValue("id", out object? value))
     {
 
@@ -290,7 +297,7 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
       _logger.LogInformation($"ApplyQueryAttributes received ID: {id}");
       if (!string.IsNullOrEmpty(id))
       {
-        LoadData(id).FireAndForgetSafeAsync(_errorHandler);
+        LoadData(id, _loadDataCancellation.Token).FireAndForgetSafeAsync(_errorHandler);
       }
       else
       {
@@ -499,13 +506,14 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
 
 
 
-  private async Task LoadData(string id) {
+  private async Task LoadData(string id, CancellationToken cancellationToken = default) {
 
     try
     {
       IsBusy = true;
 
       Condition = await _mbdConditionRepository.GetAsync(id);
+      cancellationToken.ThrowIfCancellationRequested();
       _logger.LogInformation($"LoadData: Condition retrieved from repository. IsNull: {Condition == null}");
       if (Condition != null)
       {
@@ -523,6 +531,9 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
       Tasks = Condition.Tasks;
       SummaryNegative = Condition.SummaryNegative ?? string.Empty;
       SummaryPositive = Condition.SummaryPositive ?? string.Empty;
+
+      cancellationToken.ThrowIfCancellationRequested();
+
       // Check subscription
       bool isSubscribed = false;
       try
@@ -560,6 +571,7 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
       if (!string.IsNullOrEmpty(Condition.ImageNegative))
       {
         var cachedImageOne = await _imageCacheService.GetImageAsync(Condition.ImageNegative);
+        cancellationToken.ThrowIfCancellationRequested();
         Condition.CachedImageOneSource = cachedImageOne;
         _logger.LogInformation($"CachedImageOneSource result: {(cachedImageOne == null ? "null" : "ImageSource loaded")}");
       }
@@ -568,17 +580,19 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
       if (!string.IsNullOrEmpty(Condition.ImagePositive))
       {
         var cachedImageTwo = await _imageCacheService.GetImageAsync(Condition.ImagePositive);
+        cancellationToken.ThrowIfCancellationRequested();
         Condition.CachedImageTwoSource = cachedImageTwo;
         _logger.LogInformation($"CachedImageTwoSource result: {(cachedImageTwo == null ? "null" : "ImageSource loaded")}");
       }
 
-
+      cancellationToken.ThrowIfCancellationRequested();
 
       Icon = Icons.FirstOrDefault(i => i.Icon == Condition.Icon) ?? Icons.First();
 
 
 
       Categories = await _categoryRepository.ListAsync();
+      cancellationToken.ThrowIfCancellationRequested();
 
       Category = Categories?.FirstOrDefault(c => c.ID == Condition.CategoryID);
 
@@ -587,6 +601,7 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
 
 
       var allTags = await _tagRepository.ListAsync();
+      cancellationToken.ThrowIfCancellationRequested();
 
       foreach (var tag in allTags)
 
@@ -598,7 +613,7 @@ public partial class MbdConditionDetailPageModel : ObservableObject, IQueryAttri
 
       }
 
-      AllTags = new(allTags);
+      AllTags = [.. allTags];
 
 
 

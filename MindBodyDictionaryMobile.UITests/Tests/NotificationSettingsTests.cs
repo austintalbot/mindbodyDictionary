@@ -24,7 +24,7 @@ public class NotificationSettingsTests : BaseTest
             InitializeDriver(platform);
 
             // Navigate to Notifications page
-            Driver!.Navigate().GoToUrl("mindbodydictionary://notifications");
+            NavigateToPage("Notifications");
 
             // Act
             var registerButton = Driver.FindElement(By.Id("RegisterNotificationsButton"));
@@ -52,7 +52,7 @@ public class NotificationSettingsTests : BaseTest
             InitializeDriver(platform);
 
             // Navigate to Notifications page
-            Driver!.Navigate().GoToUrl("mindbodydictionary://notifications");
+            NavigateToPage("Notifications");
 
             // Act
             var deregisterButton = Driver.FindElement(By.Id("DeregisterNotificationsButton"));
@@ -80,7 +80,7 @@ public class NotificationSettingsTests : BaseTest
             InitializeDriver(platform);
 
             // Navigate to Notifications page
-            Driver!.Navigate().GoToUrl("mindbodydictionary://notifications");
+            NavigateToPage("Notifications");
 
             // Act
             var statusMessage = Driver.FindElement(By.Id("StatusMessageLabel"));
