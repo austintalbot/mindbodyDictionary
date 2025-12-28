@@ -18,48 +18,6 @@ public class SmokeTests : BaseTest
         wait.Until(driver => driver.FindElement(locator).Displayed);
     }
 
-    private void NavigateToPage(string pageTitle)
-    {
-        Output.WriteLine($"NAVIGATING: Trying to navigate to '{pageTitle}' via UI...");
-
-        // 1. Try to find the element directly (if visible in TabBar or already open menu)
-        By elementLocator = By.XPath($"//*[@label='{pageTitle}' or @name='{pageTitle}' or @text='{pageTitle}' or @content-desc='{pageTitle}']");
-        
-        try
-        {
-            // Quick check if visible
-            var elements = Driver!.FindElements(elementLocator);
-            if (elements.Count > 0 && elements[0].Displayed)
-            {
-                Output.WriteLine($"FOUND: '{pageTitle}' is visible. Clicking...");
-                elements[0].Click();
-                return;
-            }
-        }
-        catch { }
-
-        // 2. If not found, assume it's in the Flyout/Side Menu. Open Flyout.
-        Output.WriteLine("ACTION: Element not visible. Attempting to open Flyout menu...");
-        OpenFlyout();
-
-        // 3. Look for the item again in the Flyout
-        Output.WriteLine($"ACTION: Looking for '{pageTitle}' in Flyout...");
-        try
-        {
-            // Wait slightly for animation
-            Thread.Sleep(1000);
-            var menuElement = Driver!.FindElement(elementLocator);
-            menuElement.Click();
-            Output.WriteLine($"SUCCESS: Clicked '{pageTitle}' in Flyout.");
-        }
-        catch (Exception ex)
-        {
-             Output.WriteLine($"ERROR: Failed to find/click '{pageTitle}' in Flyout. {ex.Message}");
-             TakeScreenshot($"NavFail_{pageTitle}");
-             throw;
-        }
-    }
-
     [Theory]
     [InlineData(Platform.Android)]
     [InlineData(Platform.iOS)]

@@ -48,6 +48,59 @@ public abstract class BaseTest(ITestOutputHelper output) : IDisposable
         Output.WriteLine("BaseTest: Implicit Wait set to 5 seconds.");
     }
 
+    protected void NavigateToPage(string pageTitle)
+    {
+        Output.WriteLine($"NAVIGATING: Trying to navigate to '{pageTitle}' via UI...");
+
+        bool foundInTabs = false;
+        
+        // 1. Try to find in TabBar (if exists)
+        try 
+        {
+            if (Driver?.Capabilities.GetCapability("platformName").ToString()?.ToLower() == "ios")
+            {
+                var tabBar = Driver!.FindElements(By.ClassName("XCUIElementTypeTabBar"));
+                if (tabBar.Count > 0 && tabBar[0].Displayed)
+                {
+                    var tabItem = tabBar[0].FindElement(By.XPath($".//XCUIElementTypeButton[@name='{pageTitle}']"));
+                    if (tabItem.Displayed)
+                    {
+                        Output.WriteLine($"FOUND: '{pageTitle}' in TabBar. Clicking...");
+                        tabItem.Click();
+                        foundInTabs = true;
+                    }
+                }
+            }
+            // Add Android Tab logic if needed (usually BottomNavigationView)
+        }
+        catch { }
+
+        if (foundInTabs) return;
+
+        // 2. If not found in tabs, assume Flyout.
+        Output.WriteLine("ACTION: Element not found in tabs. Attempting to open Flyout menu...");
+        OpenFlyout();
+
+        // 3. Look for the item in the Flyout
+        Output.WriteLine($"ACTION: Looking for '{pageTitle}' in Flyout...");
+        try
+        {
+            // Use generic locator for menu item, but exclude inputs
+            string excludeSearch = "not(contains(@type, 'SearchField')) and not(contains(@class, 'EditText'))";
+            By elementLocator = By.XPath($"//*[@label='{pageTitle}' or @name='{pageTitle}' or @text='{pageTitle}' or @content-desc='{pageTitle}'][{excludeSearch}]");
+            
+            var menuElement = Driver!.FindElement(elementLocator);
+            menuElement.Click();
+            Output.WriteLine($"SUCCESS: Clicked '{pageTitle}' in Flyout.");
+        }
+        catch (Exception ex)
+        {
+             Output.WriteLine($"ERROR: Failed to find/click '{pageTitle}' in Flyout. {ex.Message}");
+             TakeScreenshot($"NavFail_{pageTitle}");
+             throw;
+        }
+    }
+
     protected void OpenFlyout()
     {
         // Attempt to swipe from left edge to right to open menu
@@ -197,6 +250,31 @@ public abstract class BaseTest(ITestOutputHelper output) : IDisposable
         }
     }
 
+    protected void ScrollDown()
+    {
+        try 
+        {
+            var size = Driver!.Manage().Window.Size;
+            int startX = size.Width / 2;
+            int startY = (int)(size.Height * 0.8); // Start near bottom
+            int endX = startX;
+            int endY = (int)(size.Height * 0.2); // End near top
+
+            Output.WriteLine($"ACTION: Scrolling Down from ({startX},{startY}) to ({endX},{endY})");
+
+            var action = new Actions(Driver);
+            action.MoveToLocation(startX, startY)
+                  .ClickAndHold()
+                  .MoveToLocation(endX, endY)
+                  .Release()
+                  .Perform();
+        }
+        catch (Exception ex)
+        {
+             Output.WriteLine($"WARNING: Scroll failed: {ex.Message}");
+        }
+    }
+
     private void HandlePopups()
     {
         try
@@ -285,20 +363,36 @@ public abstract class BaseTest(ITestOutputHelper output) : IDisposable
 
     private AppiumOptions GetIOSOptions()
     {
-        // xcrun simctl list devices available | grep "iPhone 17 Pro Max"
-        var options = new AppiumOptions
-        {
-            AutomationName = "XCUITest",
-            PlatformName = "iOS",
-            PlatformVersion = Environment.GetEnvironmentVariable("IOS_PLATFORM_VERSION") ?? "26.0",
-            DeviceName = Environment.GetEnvironmentVariable("IOS_DEVICE_NAME") ?? "iPhone 17 Pro Max"
-        };
+        var options = new AppiumOptions();
+        options.AutomationName = "XCUITest";
+        options.PlatformName = "iOS";
+        
+        var platformVersion = Environment.GetEnvironmentVariable("IOS_PLATFORM_VERSION");
+        options.PlatformVersion = !string.IsNullOrEmpty(platformVersion) ? platformVersion : "26.0";
+        
+        var deviceName = Environment.GetEnvironmentVariable("IOS_DEVICE_NAME");
+        options.DeviceName = !string.IsNullOrEmpty(deviceName) ? deviceName : "iPhone 17 Pro Max";
 
-        // Support targeting specific UDID (e.g. the currently booted simulator)
+        // Support targeting specific UDID (e.g. the currently booted simulator or physical device)
         var udid = Environment.GetEnvironmentVariable("IOS_UDID");
         if (!string.IsNullOrEmpty(udid))
         {
             options.AddAdditionalAppiumOption("udid", udid);
+            Output.WriteLine($"BaseTest Capabilities: Setting UDID to '{udid}'");
+        }
+        else
+        {
+            Output.WriteLine("BaseTest Capabilities: No IOS_UDID environment variable found.");
+        }
+
+        // Real Device Signing Support
+        var orgId = Environment.GetEnvironmentVariable("IOS_XCODE_ORG_ID");
+        var signingId = Environment.GetEnvironmentVariable("IOS_XCODE_SIGNING_ID") ?? "iPhone Developer";
+        if (!string.IsNullOrEmpty(orgId))
+        {
+            options.AddAdditionalAppiumOption("xcodeOrgId", orgId);
+            options.AddAdditionalAppiumOption("xcodeSigningId", signingId);
+            Output.WriteLine($"BaseTest Capabilities: Real Device Signing enabled (OrgId: {orgId})");
         }
 
         // Bundle ID
@@ -306,9 +400,9 @@ public abstract class BaseTest(ITestOutputHelper output) : IDisposable
 
         // Fixes for ECONNREFUSED / xcodebuild code 70
         options.AddAdditionalAppiumOption("useNewWDA", true);
-        options.AddAdditionalAppiumOption("wdaLaunchTimeout", 60000); // 60 seconds
-        options.AddAdditionalAppiumOption("wdaConnectionTimeout", 60000); // 60 seconds
-        options.AddAdditionalAppiumOption("showXcodeLog", true); // Crucial for debugging WDA crashes
+        options.AddAdditionalAppiumOption("wdaLaunchTimeout", 60000); 
+        options.AddAdditionalAppiumOption("wdaConnectionTimeout", 60000); 
+        options.AddAdditionalAppiumOption("showXcodeLog", true); 
 
         // Optional: Path to app if needed
         var appPath = Environment.GetEnvironmentVariable("IOS_APP_PATH");
