@@ -95,33 +95,29 @@ public class CrashReproductionTests : BaseTest
                 // 4. Verify Detail Page
                 Output.WriteLine($"STEP 3.{i}: VERIFY DETAIL PAGE LOADED");
                 
-                // Wait for navigation (AppLogo to disappear or ConditionsList to disappear)
-                bool navigated = false;
-                var waitStart = DateTime.Now;
-                while ((DateTime.Now - waitStart).TotalSeconds < 10)
-                {
-                    try {
-                        var list = Driver!.FindElements(By.Id("ConditionsList"));
-                        var logo = Driver!.FindElements(By.Id("AppLogo"));
-                        
-                        // If list is gone OR logo is gone, we navigated.
-                        if ((list.Count == 0 || !list[0].Displayed) && (logo.Count == 0 || !logo[0].Displayed))
-                        {
-                            navigated = true;
-                            break;
-                        }
-                    } catch {}
-                    // Short polling delay is acceptable here compared to Thread.Sleep
-                    System.Threading.Thread.Sleep(200); 
-                }
+                // Wait for positive confirmation of Detail Page (faster than waiting for disappear)
+                try {
+                    var navWait = new WebDriverWait(Driver, TimeSpan.FromSeconds(10));
+                    navWait.Until(d => 
+                    {
+                        try {
+                            // Check for Page Title "Condition"
+                            var title = d.FindElements(By.XPath("//*[@text='Condition' or @label='Condition' or @name='Condition']"));
+                            if (title.Count > 0 && title[0].Displayed) return true;
 
-                if (!navigated)
-                {
-                     Output.WriteLine("WARNING: AppLogo/ConditionsList still visible. Click might have failed or navigation is slow.");
+                            // Check for Premium Content or Upgrade button as backup
+                            var premium = d.FindElements(By.XPath("//*[@text='Premium Content' or @label='Premium Content']"));
+                            if (premium.Count > 0 && premium[0].Displayed) return true;
+                            
+                            return false;
+                        } catch { return false; }
+                    });
+                    Output.WriteLine("SUCCESS: Navigation to Detail Page confirmed (Found 'Condition' or 'Premium Content').");
+                    TakeScreenshot($"Iteration_{i}_DetailPage");
                 }
-                else
+                catch (WebDriverTimeoutException)
                 {
-                    Output.WriteLine("SUCCESS: Navigation to Detail Page confirmed.");
+                     Output.WriteLine("WARNING: Detail Page elements not found. Navigation might have failed.");
                 }
 
                 // 5. Navigate Back
