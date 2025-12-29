@@ -17,6 +17,22 @@ public class CrashReproductionFastTests : BaseTest
         wait.Until(driver => driver.FindElement(locator).Displayed);
     }
 
+    private void DismissExitDialog()
+    {
+        try
+        {
+            // Try to find and click "No" button on exit dialog
+            var noButton = Driver!.FindElements(By.XPath("//*[@text='No' or @label='No']")).FirstOrDefault();
+            if (noButton != null && noButton.Displayed)
+            {
+                Output.WriteLine("  Dismissing exit dialog...");
+                noButton.Click();
+                System.Threading.Thread.Sleep(500);
+            }
+        }
+        catch { }
+    }
+
     [Theory]
     [InlineData(Platform.Android)]
     [InlineData(Platform.iOS)]
@@ -137,20 +153,16 @@ public class CrashReproductionFastTests : BaseTest
             InitializeDriver(platform);
             WaitForElement(By.Id("AppLogo"), 15);
 
-            // Navigate to search page using the standard navigation method
-            Output.WriteLine("Navigating to search page...");
-            try
-            {
-                NavigateToPage("Search");
-            }
-            catch (Exception ex)
-            {
-                Output.WriteLine($"NavigateToPage failed: {ex.Message}, continuing anyway...");
-            }
-            System.Threading.Thread.Sleep(1500);
+            // Dismiss any exit dialogs that might appear
+            DismissExitDialog();
+
+            // Navigate to Search Page
+            NavigateToPage("Search");
+            WaitForElement(By.Id("ConditionCollectionView"), 10);
 
             int iterationCount = 0;
             int maxIterations = 100; // Safety limit
+            var random = new Random();
 
             while (iterationCount < maxIterations)
             {
@@ -163,7 +175,7 @@ public class CrashReproductionFastTests : BaseTest
                 {
                     if (platform == Platform.Android)
                     {
-                        var list = Driver!.FindElement(By.Id("ConditionsList"));
+                        var list = Driver!.FindElement(By.Id("ConditionCollectionView"));
                         conditions = list.FindElements(By.ClassName("android.widget.FrameLayout"))
                             .Where(e =>
                             {
@@ -180,7 +192,7 @@ public class CrashReproductionFastTests : BaseTest
                     else
                     {
                         // iOS: Find cells in the list
-                        conditions = Driver!.FindElements(By.XPath("//*[@name='ConditionsList']//XCUIElementTypeCell"))
+                        conditions = Driver!.FindElements(By.XPath("//*[@name='ConditionCollectionView']//XCUIElementTypeCell"))
                             .Where(c =>
                             {
                                 try
@@ -220,6 +232,9 @@ public class CrashReproductionFastTests : BaseTest
                     // Navigate back
                     NavigateBack();
                     System.Threading.Thread.Sleep(500);
+
+                    // Dismiss any exit dialogs that might appear after navigation
+                    DismissExitDialog();
 
                     Output.WriteLine($"  Returned to search page");
                 }

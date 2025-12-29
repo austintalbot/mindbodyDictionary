@@ -103,14 +103,57 @@ public abstract class BaseTest(ITestOutputHelper output) : IDisposable
 
     protected void OpenFlyout()
     {
-        // Attempt to swipe from left edge to right to open menu
+        bool flyoutOpened = false;
+        
+        // 1. Try to find and click Hamburger button to avoid gesture nav issues
+        try
+        {
+            IWebElement? hamburger = null;
+            if (Driver?.Capabilities.GetCapability("platformName").ToString()?.ToLower() == "android")
+            {
+                // Standard MAUI Shell hamburger content description
+                var hamburgers = Driver.FindElements(By.XPath("//android.widget.ImageButton[@content-desc='Open navigation drawer']"));
+                if (hamburgers.Count > 0) 
+                {
+                    hamburger = hamburgers[0];
+                }
+                else
+                {
+                     // Fallback: finding by class name in top left
+                     var imgButtons = Driver.FindElements(By.ClassName("android.widget.ImageButton"));
+                     hamburger = imgButtons.FirstOrDefault(b => b.Location.Y < 200 && b.Location.X < 150);
+                }
+            }
+            else
+            {
+                // iOS: Try finding by name "Menu" or similar, or first button in top left
+                var buttons = Driver!.FindElements(By.ClassName("XCUIElementTypeButton"));
+                hamburger = buttons.FirstOrDefault(b => b.Location.Y < 150 && b.Location.X < 100);
+            }
+
+            if (hamburger != null && hamburger.Displayed)
+            {
+                Output.WriteLine("ACTION: Found Hamburger button. Clicking...");
+                hamburger.Click();
+                flyoutOpened = true;
+                System.Threading.Thread.Sleep(500); // Wait for animation
+            }
+        }
+        catch (Exception ex) 
+        {
+            Output.WriteLine($"WARNING: Failed to click Hamburger button: {ex.Message}");
+        }
+
+        if (flyoutOpened) return;
+
+        // 2. Fallback to Swipe if button failed
         try 
         {
             var size = Driver!.Manage().Window.Size;
-            // Start from very left edge, middle height
-            int startX = 5; 
+            // Adjusted startX to 15 to try and avoid triggering 'Back' gesture on Android while still grabbing drawer
+            int startX = 15; 
             int startY = size.Height / 2;
-            int endX = (int)(size.Width * 0.75); // Drag across screen
+            int endX = (int)(size.Width * 0.75); 
             int endY = startY;
 
             Output.WriteLine($"ACTION: Swiping from ({startX},{startY}) to ({endX},{endY}) to open Flyout");
@@ -124,12 +167,7 @@ public abstract class BaseTest(ITestOutputHelper output) : IDisposable
         }
         catch (Exception ex)
         {
-             Output.WriteLine($"WARNING: Swipe failed: {ex.Message}. Trying to find Hamburger button...");
-             try {
-                 // Fallback for iOS usually
-                 var hamburger = Driver!.FindElement(By.XPath("//XCUIElementTypeButton[1]")); 
-                 hamburger.Click();
-             } catch {}
+             Output.WriteLine($"WARNING: Swipe failed: {ex.Message}");
         }
     }
 
