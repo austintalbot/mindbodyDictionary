@@ -344,16 +344,25 @@ public abstract class BaseTest(ITestOutputHelper output) : IDisposable
 
                 try 
                 {
-                    // Try Accessibility ID first
+                    // Primary strategy: Use AccessibilityId (maps to AutomationId in MAUI)
                     disclaimerButton = wait.Until(d => d.FindElement(MobileBy.AccessibilityId("DisclaimerUnderstandButton")));
-                    Output.WriteLine("Popup: Found Disclaimer 'I Understand' button by ID.");
+                    Output.WriteLine("Popup: Found Disclaimer button via AccessibilityId (DisclaimerUnderstandButton).");
                 }
-                catch
+                catch (Exception)
                 {
-                    // Fallback to text
-                    Output.WriteLine("Popup: ID not found. Trying text 'I Understand'...");
-                    disclaimerButton = wait.Until(d => d.FindElement(By.XPath("//*[@text='I Understand' or @label='I Understand']")));
-                    Output.WriteLine("Popup: Found Disclaimer 'I Understand' button by Text.");
+                    try
+                    {
+                        // Secondary strategy: Use Id (some platform versions map AutomationId to resource-id)
+                        disclaimerButton = Driver!.FindElement(By.Id("DisclaimerUnderstandButton"));
+                        Output.WriteLine("Popup: Found Disclaimer button via Id (DisclaimerUnderstandButton).");
+                    }
+                    catch (Exception)
+                    {
+                        // Final fallback: Use text-based search
+                        Output.WriteLine("Popup: AutomationId not found. Trying text 'I Understand'...");
+                        disclaimerButton = wait.Until(d => d.FindElement(By.XPath("//*[@text='I Understand' or @label='I Understand']")));
+                        Output.WriteLine("Popup: Found Disclaimer 'I Understand' button by Text.");
+                    }
                 }
 
                 if (disclaimerButton != null)

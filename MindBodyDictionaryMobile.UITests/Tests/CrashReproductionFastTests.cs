@@ -175,17 +175,10 @@ public class CrashReproductionFastTests : BaseTest
                 {
                     if (platform == Platform.Android)
                     {
+                        // Performance optimization: Find items directly using XPath based on Appium Inspector structure
+                        // Avoids N+1 lookups by filtering on the server side
                         var list = Driver!.FindElement(By.Id("ConditionCollectionView"));
-                        conditions = list.FindElements(By.ClassName("android.widget.FrameLayout"))
-                            .Where(e =>
-                            {
-                                try
-                                {
-                                    var text = e.FindElement(By.ClassName("android.widget.TextView"));
-                                    return !string.IsNullOrWhiteSpace(text.Text) && text.Text.Length > 2;
-                                }
-                                catch { return false; }
-                            })
+                        conditions = list.FindElements(By.XPath(".//android.widget.TextView[string-length(@text) > 2]"))
                             .Cast<IWebElement>()
                             .ToList();
                     }
