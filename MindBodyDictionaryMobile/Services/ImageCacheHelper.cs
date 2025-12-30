@@ -27,7 +27,7 @@ public class ImageCacheHelper(ImageCacheService imageCacheService, ILogger<Image
 {
   private readonly ImageCacheService _imageCacheService = imageCacheService;
   private readonly ILogger<ImageCacheHelper> _logger = logger;
-  private readonly Dictionary<string, ImageSource?> _memoryCache = [];
+  private readonly System.Collections.Concurrent.ConcurrentDictionary<string, ImageSource?> _memoryCache = [];
 
   public async Task<ImageSource> GetImageSourceAsync(string fileName) {
     if (string.IsNullOrWhiteSpace(fileName))

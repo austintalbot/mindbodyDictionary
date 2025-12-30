@@ -6,6 +6,13 @@ using MindBodyDictionaryMobile.Data;
 using MindBodyDictionaryMobile.Models;
 using MindBodyDictionaryMobile.Services;
 
+/// <summary>
+/// Page model for displaying and editing details of a single task.
+/// </summary>
+/// <remarks>
+/// Allows users to view, edit, and delete task details associated with a project.
+/// Provides functionality to mark tasks as complete and manage task properties.
+/// </remarks>
 public partial class TaskDetailPageModel(ProjectRepository projectRepository, TaskRepository taskRepository, ModalErrorHandler errorHandler) : ObservableObject, IQueryAttributable
 {
   public const string ProjectQueryKey = "project";

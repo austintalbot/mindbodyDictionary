@@ -18,18 +18,22 @@ public class AppDataPreloaderService(
   private readonly MbdConditionRepository _mbdConditionRepository = mbdConditionRepository;
   private readonly SeedDataService _seedDataService = seedDataService;
   private readonly DataSyncService _dataSyncService = dataSyncService;
-  private static bool _isPreloadStarted = false;
+  private static volatile bool _isPreloadStarted = false;
+  private static readonly object _preloadLock = new();
 
   /// <summary>
   /// Kicks off the data preloading and synchronization process.
   /// This method is designed to be called once at application startup.
   /// </summary>
   public void PreloadData() {
-    if (_isPreloadStarted)
+    lock (_preloadLock)
     {
-      return;
+      if (_isPreloadStarted)
+      {
+        return;
+      }
+      _isPreloadStarted = true;
     }
-    _isPreloadStarted = true;
 
     _ = Task.Run(async () => {
       try

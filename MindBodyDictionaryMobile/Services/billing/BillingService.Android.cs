@@ -59,7 +59,7 @@ public class BillingService : BaseBillingService
       _logger.LogInformation("Starting billing client connection...");
       if (_stateListener != null)
       {
-        _billingClient.StartConnection(_stateListener);
+        _billingClient?.StartConnection(_stateListener);
       }
 
       // Wait for connection with timeout (5 seconds)
@@ -268,7 +268,10 @@ public class BillingService : BaseBillingService
       {
         _logger.LogWarning("Billing client not ready, attempting connection...");
         _initTcs = new TaskCompletionSource<bool>();
-        _billingClient.StartConnection(_stateListener);
+        if (_stateListener != null)
+        {
+          _billingClient.StartConnection(_stateListener);
+        }
 
         var timeoutTask = Task.Delay(3000);
         await Task.WhenAny(_initTcs.Task, timeoutTask);

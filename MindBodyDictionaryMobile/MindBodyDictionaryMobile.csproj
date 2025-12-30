@@ -29,8 +29,8 @@
 		<ApplicationId>com.mbd.mindbodydictionarymobile</ApplicationId>
 
 		<!-- Versions -->
-		<ApplicationDisplayVersion>3.0</ApplicationDisplayVersion>
-		<ApplicationVersion>6</ApplicationVersion>
+		<ApplicationDisplayVersion>3.0.0</ApplicationDisplayVersion>
+		<ApplicationVersion>8</ApplicationVersion>
 		<NoWarn>$(NoWarn),CS8618,CS8602,XC0045,XC0103,XC0022,CA1422,CA1416</NoWarn>
 
 

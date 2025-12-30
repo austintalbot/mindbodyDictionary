@@ -7,6 +7,10 @@ using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using MindBodyDictionaryMobile.Models;
 
+/// <summary>
+/// Service for seeding the application database with initial data from JSON files and API sources.
+/// Handles loading projects, tasks, tags, categories, and medical conditions into SQLite.
+/// </summary>
 public class SeedDataService(ProjectRepository projectRepository, TaskRepository taskRepository, TagRepository tagRepository, CategoryRepository categoryRepository, MbdConditionRepository mbdConditionRepository, ImageCacheService imageCacheService, MbdConditionApiService mbdConditionApiService, ILogger<SeedDataService> logger)
 {
   public string? RawApiConditionsJson { get; private set; }
@@ -19,10 +23,21 @@ public class SeedDataService(ProjectRepository projectRepository, TaskRepository
   private readonly MbdConditionApiService _mbdConditionApiService = mbdConditionApiService;
   private readonly string _seedDataFilePath = "SeedData.json";
   private readonly ILogger<SeedDataService> _logger = logger;
+  private readonly SemaphoreSlim _seedSemaphore = new(1, 1);
 
-  // Callback for UI updates during seeding
+  /// <summary>
+  /// Callback for UI updates during the seeding process.
+  /// </summary>
   public Action<string>? OnProgressUpdate { get; set; }
 
+  /// <summary>
+  /// Loads all seed data (projects, tasks, tags, categories, and conditions) into the database.
+  /// Clears existing data before loading new data.
+  /// </summary>
+  /// <remarks>
+  /// This method first clears all tables, then loads projects, tasks, tags, and categories from the seed JSON file,
+  /// and finally seeds conditions from the API or local fallback file. Logs progress and errors throughout.
+  /// </remarks>
   public async Task LoadSeedDataAsync() {
     await ClearTables();
 
@@ -155,6 +170,7 @@ public class SeedDataService(ProjectRepository projectRepository, TaskRepository
   /// Falls back to local seed file if the API is unavailable.
   /// </summary>
   public async Task SeedConditionsAsync(bool forceUpdate = false) {
+    await _seedSemaphore.WaitAsync();
     try
     {
       _logger.LogInformation("Starting to seed conditions (Force: {Force})", forceUpdate);
@@ -204,6 +220,10 @@ public class SeedDataService(ProjectRepository projectRepository, TaskRepository
       _logger.LogError(e, "Error seeding conditions");
       System.Diagnostics.Debug.WriteLine($"=== SeedConditionsAsync ERROR: {e.Message} ===");
       throw;
+    }
+    finally
+    {
+      _seedSemaphore.Release();
     }
   }
 

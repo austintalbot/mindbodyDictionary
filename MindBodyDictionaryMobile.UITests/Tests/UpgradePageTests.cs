@@ -24,7 +24,7 @@ public class UpgradePageTests : BaseTest
             InitializeDriver(platform);
 
             // Navigate to Premium page
-            Driver!.Navigate().GoToUrl("mindbodydictionary://premium");
+            NavigateToPage("Premium");
 
             // Act
             var subscribeButton = Driver.FindElement(By.Id("SubscribeButton"));
@@ -52,7 +52,7 @@ public class UpgradePageTests : BaseTest
             InitializeDriver(platform);
 
             // Navigate to Premium page
-            Driver!.Navigate().GoToUrl("mindbodydictionary://premium");
+            NavigateToPage("Premium");
 
             // Act
             var restoreButton = Driver.FindElement(By.Id("RestoreButton"));
@@ -80,7 +80,7 @@ public class UpgradePageTests : BaseTest
             InitializeDriver(platform);
 
             // Navigate to Premium page
-            Driver!.Navigate().GoToUrl("mindbodydictionary://premium");
+            NavigateToPage("Premium");
 
             // Act
             var privacyButton = Driver.FindElement(By.Id("PrivacyPolicyButton"));
@@ -108,7 +108,7 @@ public class UpgradePageTests : BaseTest
             InitializeDriver(platform);
 
             // Navigate to Premium page
-            Driver!.Navigate().GoToUrl("mindbodydictionary://premium");
+            NavigateToPage("Premium");
 
             // Act
             var termsButton = Driver.FindElement(By.Id("TermsButton"));

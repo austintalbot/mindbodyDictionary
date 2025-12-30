@@ -24,7 +24,7 @@ public class SearchPageTests : BaseTest
             InitializeDriver(platform);
 
             // Navigate to Search page (assuming Shell navigation)
-            Driver!.Navigate().GoToUrl("mindbodydictionary://search");
+            NavigateToPage("Search");
 
             // Act
             var searchBar = Driver.FindElement(By.Id("MbdConditionSearchBar"));
@@ -52,7 +52,7 @@ public class SearchPageTests : BaseTest
             InitializeDriver(platform);
 
             // Navigate to Search page
-            Driver!.Navigate().GoToUrl("mindbodydictionary://search");
+            NavigateToPage("Search");
 
             // Act
             var collectionView = Driver.FindElement(By.Id("ConditionCollectionView"));
@@ -80,7 +80,7 @@ public class SearchPageTests : BaseTest
             InitializeDriver(platform);
 
             // Navigate to Search page
-            Driver!.Navigate().GoToUrl("mindbodydictionary://search");
+            NavigateToPage("Search");
 
             // Act
             var searchBar = Driver.FindElement(By.Id("MbdConditionSearchBar"));

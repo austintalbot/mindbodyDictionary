@@ -14,14 +14,16 @@ using MindBodyDictionaryMobile.Models;
 /// </summary>
 public class MbdConditionRepository(TaskRepository taskRepository, TagRepository tagRepository, ILogger<MbdConditionRepository> logger)
 {
-  private bool _hasBeenInitialized = false;
+  private volatile bool _hasBeenInitialized = false;
+  private readonly SemaphoreSlim _initSemaphore = new(1, 1);
   private readonly ILogger<MbdConditionRepository> _logger = logger;
   private readonly TaskRepository _taskRepository = taskRepository;
   private readonly TagRepository _tagRepository = tagRepository;
 
   // Fallback in-memory cache if database fails
-  private static List<MbdCondition> _inMemoryConditions = [];
-  private static bool _usingInMemoryCache = false;
+  private static readonly System.Collections.Generic.Dictionary<string, MbdCondition> _inMemoryConditionCache = [];
+  private static readonly object _cacheLock = new();
+  private static volatile bool _usingInMemoryCache = false;
 
   /// <summary>
   /// Initializes the database connection and creates the MbdCondition table if it does not exist.
@@ -33,16 +35,24 @@ public class MbdConditionRepository(TaskRepository taskRepository, TagRepository
       return;
     }
 
-    System.Diagnostics.Debug.WriteLine("=== ConditionRepository.Init: Initializing database ===");
-    await using var connection = new SqliteConnection(Constants.DatabasePath);
-    await connection.OpenAsync();
-
+    await _initSemaphore.WaitAsync();
     try
     {
+      if (_hasBeenInitialized)
+      {
+        return;
+      }
+
+      System.Diagnostics.Debug.WriteLine("=== ConditionRepository.Init: Initializing database ===");
+      await using var connection = new SqliteConnection(Constants.DatabasePath);
+      await connection.OpenAsync();
+
+      try
+      {
 
 
-      var createTableCmd = connection.CreateCommand();
-      createTableCmd.CommandText = @"
+        var createTableCmd = connection.CreateCommand();
+        createTableCmd.CommandText = @"
 			CREATE TABLE IF NOT EXISTS Condition (
 				Id TEXT PRIMARY KEY NOT NULL,
 				Name TEXT NOT NULL,
@@ -59,23 +69,28 @@ public class MbdConditionRepository(TaskRepository taskRepository, TagRepository
                 Recommendations TEXT,
                 SubscriptionOnly INTEGER
 			);";
-      await createTableCmd.ExecuteNonQueryAsync();
-      System.Diagnostics.Debug.WriteLine("=== ConditionRepository.Init: Condition table created/verified ===");
+        await createTableCmd.ExecuteNonQueryAsync();
+        System.Diagnostics.Debug.WriteLine("=== ConditionRepository.Init: Condition table created/verified ===");
 
-      // Add index on Name for alphabetical sorting
-      var createIndexCmd = connection.CreateCommand();
-      createIndexCmd.CommandText = "CREATE INDEX IF NOT EXISTS idx_condition_name ON Condition(Name);";
-      await createIndexCmd.ExecuteNonQueryAsync();
-      System.Diagnostics.Debug.WriteLine("=== ConditionRepository.Init: Index on Name created ===");
+        // Add index on Name for alphabetical sorting
+        var createIndexCmd = connection.CreateCommand();
+        createIndexCmd.CommandText = "CREATE INDEX IF NOT EXISTS idx_condition_name ON Condition(Name);";
+        await createIndexCmd.ExecuteNonQueryAsync();
+        System.Diagnostics.Debug.WriteLine("=== ConditionRepository.Init: Index on Name created ===");
+      }
+      catch (Exception e)
+      {
+        System.Diagnostics.Debug.WriteLine($"=== ConditionRepository.Init ERROR: {e.Message} ===");
+        _logger.LogError(e, "Error creating MbdCondition table");
+        throw;
+      }
+
+      _hasBeenInitialized = true;
     }
-    catch (Exception e)
+    finally
     {
-      System.Diagnostics.Debug.WriteLine($"=== ConditionRepository.Init ERROR: {e.Message} ===");
-      _logger.LogError(e, "Error creating MbdCondition table");
-      throw;
+      _initSemaphore.Release();
     }
-
-    _hasBeenInitialized = true;
   }
 
   /// <summary>
@@ -105,10 +120,16 @@ public class MbdConditionRepository(TaskRepository taskRepository, TagRepository
   /// Retrieves a list of all conditions from the database or cache.
   /// </summary>
   public async Task<List<MbdCondition>> ListAsync() {
-    if (_usingInMemoryCache && _inMemoryConditions.Count > 0)
+    if (_usingInMemoryCache)
     {
-      System.Diagnostics.Debug.WriteLine($"=== ListAsync: Returning {_inMemoryConditions.Count} conditions from in-memory cache ===");
-      return _inMemoryConditions.OrderBy(c => c.Name).ToList();
+      lock (_cacheLock)
+      {
+        if (_inMemoryConditionCache.Count > 0)
+        {
+          System.Diagnostics.Debug.WriteLine($"=== ListAsync: Returning {_inMemoryConditionCache.Count} conditions from in-memory cache ===");
+          return _inMemoryConditionCache.Values.OrderBy(c => c.Name).ToList();
+        }
+      }
     }
 
     await Init();
@@ -125,10 +146,16 @@ public class MbdConditionRepository(TaskRepository taskRepository, TagRepository
       conditions.Add(ReadCondition(reader));
     }
 
-    if (conditions.Count == 0 && _inMemoryConditions.Count > 0)
+    if (conditions.Count == 0)
     {
-      System.Diagnostics.Debug.WriteLine($"=== ListAsync: Database empty, returning {_inMemoryConditions.Count} from in-memory cache ===");
-      return _inMemoryConditions.OrderBy(c => c.Name).ToList();
+      lock (_cacheLock)
+      {
+        if (_inMemoryConditionCache.Count > 0)
+        {
+          System.Diagnostics.Debug.WriteLine($"=== ListAsync: Database empty, returning {_inMemoryConditionCache.Count} from in-memory cache ===");
+          return _inMemoryConditionCache.Values.OrderBy(c => c.Name).ToList();
+        }
+      }
     }
 
     return conditions;
@@ -177,15 +204,20 @@ public class MbdConditionRepository(TaskRepository taskRepository, TagRepository
       return condition;
     }
 
-    if (_inMemoryConditions.Count > 0)
+    lock (_cacheLock)
     {
-      var cached = _inMemoryConditions.FirstOrDefault(c => c.Id == id);
-      if (cached != null)
+      if (_inMemoryConditionCache.TryGetValue(id, out var cached))
         return cached;
     }
+
     return null;
   }
 
+  /// <summary>
+  /// Reads a condition from a database reader and maps it to a <see cref="MbdCondition"/> object.
+  /// </summary>
+  /// <param name="reader">The SQLite data reader positioned at the condition record.</param>
+  /// <returns>A <see cref="MbdCondition"/> object populated from the current row.</returns>
   private MbdCondition ReadCondition(SqliteDataReader reader) {
     return new MbdCondition
     {
@@ -206,6 +238,13 @@ public class MbdConditionRepository(TaskRepository taskRepository, TagRepository
     };
   }
 
+  /// <summary>
+  /// Deserializes a JSON string from the database into a generic list of type T.
+  /// </summary>
+  /// <typeparam name="T">The type of items in the list.</typeparam>
+  /// <param name="reader">The SQLite data reader.</param>
+  /// <param name="ordinal">The column index to read from.</param>
+  /// <returns>A deserialized list of type T, or null if the value is NULL or empty.</returns>
   private List<T>? DeserializeList<T>(SqliteDataReader reader, int ordinal) {
     if (reader.IsDBNull(ordinal))
       return null;
@@ -269,14 +308,13 @@ public class MbdConditionRepository(TaskRepository taskRepository, TagRepository
       _usingInMemoryCache = true;
     }
 
-    var existing = _inMemoryConditions.FirstOrDefault(c => c.Id == item.Id);
-    if (existing != null)
+    // Update in-memory cache safely under lock
+    lock (_cacheLock)
     {
-      _inMemoryConditions.Remove(existing);
+      _inMemoryConditionCache[item.Id] = item;
     }
-    _inMemoryConditions.Add(item);
 
-    return item.Id;
+    return item.Id ?? string.Empty;
   }
 
   /// <summary>

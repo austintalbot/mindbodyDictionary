@@ -17,7 +17,8 @@ using MindBodyDictionaryMobile.Models;
 /// <param name="logger">The logger instance.</param>
 public class TagRepository(ILogger<TagRepository> logger)
 {
-  private bool _hasBeenInitialized = false;
+  private volatile bool _hasBeenInitialized = false;
+  private readonly SemaphoreSlim _initSemaphore = new(1, 1);
   private readonly ILogger _logger = logger;
 
   /// <summary>
@@ -27,43 +28,54 @@ public class TagRepository(ILogger<TagRepository> logger)
     if (_hasBeenInitialized)
       return;
 
-    await using var connection = new SqliteConnection(Constants.DatabasePath);
-    await connection.OpenAsync();
-
+    await _initSemaphore.WaitAsync();
     try
     {
-      var createTableCmd = connection.CreateCommand();
-      createTableCmd.CommandText = @"
+      if (_hasBeenInitialized)
+        return;
+
+      await using var connection = new SqliteConnection(Constants.DatabasePath);
+      await connection.OpenAsync();
+
+      try
+      {
+        var createTableCmd = connection.CreateCommand();
+        createTableCmd.CommandText = @"
 			CREATE TABLE IF NOT EXISTS Tag (
 				ID INTEGER PRIMARY KEY AUTOINCREMENT,
 				Title TEXT NOT NULL,
 				Color TEXT NOT NULL
 			);";
-      await createTableCmd.ExecuteNonQueryAsync();
+        await createTableCmd.ExecuteNonQueryAsync();
 
-      createTableCmd.CommandText = @"
+        createTableCmd.CommandText = @"
 			CREATE TABLE IF NOT EXISTS ProjectsTags (
 				ProjectID INTEGER NOT NULL,
 				TagID INTEGER NOT NULL,
 				PRIMARY KEY(ProjectID, TagID)
 			);";
-      await createTableCmd.ExecuteNonQueryAsync();
+        await createTableCmd.ExecuteNonQueryAsync();
 
-      createTableCmd.CommandText = @"
+        createTableCmd.CommandText = @"
 			CREATE TABLE IF NOT EXISTS ConditionsTags (
 				ConditionID TEXT NOT NULL,
 				TagID INTEGER NOT NULL,
 				PRIMARY KEY(ConditionID, TagID)
 			);";
-      await createTableCmd.ExecuteNonQueryAsync();
-    }
-    catch (Exception e)
-    {
-      _logger.LogError(e, "Error creating tables");
-      throw;
-    }
+        await createTableCmd.ExecuteNonQueryAsync();
+      }
+      catch (Exception e)
+      {
+        _logger.LogError(e, "Error creating tables");
+        throw;
+      }
 
-    _hasBeenInitialized = true;
+      _hasBeenInitialized = true;
+    }
+    finally
+    {
+      _initSemaphore.Release();
+    }
   }
 
   /// <summary>

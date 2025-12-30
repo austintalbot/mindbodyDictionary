@@ -50,7 +50,7 @@
                 Text="Send Feedback" />
 
             <!--  Copyright  -->
-            <Label Style="{StaticResource AboutPageCopyrightLabel}" Text="© 2025 mbd, LLC. All rights reserved." />
+            <Label Style="{StaticResource AboutPageCopyrightLabel}" Text="© 2025 MBD, LLC. All rights reserved." />
 
         </VerticalStackLayout>
     </ScrollView>

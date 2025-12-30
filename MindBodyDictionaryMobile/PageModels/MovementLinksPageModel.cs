@@ -7,6 +7,12 @@ using MindBodyDictionaryMobile.Services;
 
 namespace MindBodyDictionaryMobile.PageModels;
 
+/// <summary>
+/// Page model for displaying external movement and exercise links.
+/// </summary>
+/// <remarks>
+/// Fetches and displays curated links to movement resources from the API.
+/// </remarks>
 public partial class MovementLinksPageModel : ObservableObject
 {
   private readonly MovementLinkApiService _apiService;

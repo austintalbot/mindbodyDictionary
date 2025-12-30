@@ -11,6 +11,13 @@ using MindBodyDictionaryMobile.Services.billing;
 
 namespace MindBodyDictionaryMobile.PageModels;
 
+/// <summary>
+/// Page model for searching and filtering conditions and resources.
+/// </summary>
+/// <remarks>
+/// Provides real-time search functionality with filtering by name, description, tags, and other criteria.
+/// Listens for updates via the MVVM Messaging system.
+/// </remarks>
 [QueryProperty(nameof(SearchParam), "SearchParam")]
 public partial class SearchPageModel : ObservableObject, IRecipient<ConditionsUpdatedMessage>
 {
@@ -156,21 +163,43 @@ public partial class SearchPageModel : ObservableObject, IRecipient<ConditionsUp
             await MainThread.InvokeOnMainThreadAsync(() => {
               IsSubscriptionActive = hasSubscription;
               SubscriptionStatusMessage = hasSubscription ? "Premium Subscription Active" : "Free Version - Upgrade for Full Access";
-            });
 
-            foreach (var c in _allConditions)
-            {
-              c.DisplayLock = c.SubscriptionOnly && !hasSubscription;
-
-              if (!string.IsNullOrEmpty(c.ImageNegative) && c.CachedImageOneSource == null)
+              if (!hasSubscription)
               {
-                var imageSource = await _imageCacheService.GetImageAsync(c.ImageNegative);
-                if (imageSource != null)
+              // Update DisplayLock for all conditions based on subscription status
+                foreach (var condition in _allConditions)
                 {
-                  await MainThread.InvokeOnMainThreadAsync(() => c.CachedImageOneSource = imageSource);
+                  condition.DisplayLock = condition.SubscriptionOnly && !hasSubscription;
                 }
               }
-            }
+
+            });
+
+            // Load images with concurrency throttling to prevent resource exhaustion
+            using var semaphore = new SemaphoreSlim(5, 5);  // Max 5 concurrent downloads
+            var imageTasks = _allConditions
+              .Where(c => !string.IsNullOrEmpty(c.ImageNegative) && c.CachedImageOneSource == null)
+              .Select(async c => {
+                await semaphore.WaitAsync();
+                try
+                {
+                  var imageName = c.ImageNegative;
+                  if (!string.IsNullOrEmpty(imageName))
+                  {
+                    var imageSource = await _imageCacheService.GetImageAsync(imageName);
+                    if (imageSource != null)
+                    {
+                      await MainThread.InvokeOnMainThreadAsync(() => c.CachedImageOneSource = imageSource);
+                    }
+                  }
+                }
+                finally
+                {
+                  semaphore.Release();
+                }
+              });
+
+            await Task.WhenAll(imageTasks);
           }
           catch (Exception ex)
           {

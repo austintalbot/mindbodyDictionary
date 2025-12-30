@@ -6,6 +6,12 @@ using Microsoft.Extensions.Logging;
 using MindBodyDictionaryMobile.Models;
 using MindBodyDictionaryMobile.Services;
 
+/// <summary>
+/// Page model for managing push notification settings and device registration.
+/// </summary>
+/// <remarks>
+/// Allows users to enable/disable notifications, manage notification preferences, and view registration status.
+/// </remarks>
 public partial class NotificationSettingsPageModel : ObservableObject
 {
   readonly INotificationRegistrationService _notificationRegistrationService;

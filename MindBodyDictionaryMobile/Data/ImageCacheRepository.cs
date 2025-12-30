@@ -10,7 +10,8 @@ using MindBodyDictionaryMobile.Models;
 /// </summary>
 public class ImageCacheRepository(ILogger<ImageCacheRepository> logger)
 {
-  private bool _hasBeenInitialized;
+  private volatile bool _hasBeenInitialized;
+  private readonly SemaphoreSlim _initSemaphore = new(1, 1);
   private readonly ILogger<ImageCacheRepository> _logger = logger;
 
   /// <summary>
@@ -20,8 +21,12 @@ public class ImageCacheRepository(ILogger<ImageCacheRepository> logger)
     if (_hasBeenInitialized)
       return;
 
+    await _initSemaphore.WaitAsync();
     try
     {
+      if (_hasBeenInitialized)
+        return;
+
       var dbPath = Constants.DatabasePath;
       _logger.LogInformation("Init: DatabasePath = {Path}", dbPath);
 
@@ -73,11 +78,17 @@ public class ImageCacheRepository(ILogger<ImageCacheRepository> logger)
       _logger.LogError(e, "Init: Error creating ImageCache table - {Message}", e.Message);
       throw;
     }
+    finally
+    {
+      _initSemaphore.Release();
+    }
   }
 
   /// <summary>
   /// Retrieves an image from cache by filename.
   /// </summary>
+  /// <param name="fileName">The filename of the image to retrieve.</param>
+  /// <returns>An <see cref="ImageCache"/> object if found; otherwise null.</returns>
   public async Task<ImageCache?> GetByFileNameAsync(string fileName) {
     await Init();
     await using var connection = new SqliteConnection(Constants.DatabasePath);
@@ -103,6 +114,7 @@ public class ImageCacheRepository(ILogger<ImageCacheRepository> logger)
   /// <summary>
   /// Retrieves all cached images from the database.
   /// </summary>
+  /// <returns>A list of <see cref="ImageCache"/> objects ordered by filename.</returns>
   public async Task<List<ImageCache>> ListAsync() {
     await Init();
     await using var connection = new SqliteConnection(Constants.DatabasePath);
@@ -132,6 +144,8 @@ public class ImageCacheRepository(ILogger<ImageCacheRepository> logger)
   /// <summary>
   /// Saves an image to the cache database.
   /// </summary>
+  /// <param name="image">The <see cref="ImageCache"/> object containing image data to save.</param>
+  /// <remarks>Uses INSERT OR REPLACE to handle duplicate filenames.</remarks>
   public async Task SaveItemAsync(ImageCache image) {
     try
     {
@@ -168,6 +182,7 @@ public class ImageCacheRepository(ILogger<ImageCacheRepository> logger)
   /// <summary>
   /// Deletes an image from the cache by filename.
   /// </summary>
+  /// <param name="fileName">The filename of the image to delete.</param>
   public async Task DeleteItemAsync(string fileName) {
     await Init();
     await using var connection = new SqliteConnection(Constants.DatabasePath);
@@ -191,6 +206,7 @@ public class ImageCacheRepository(ILogger<ImageCacheRepository> logger)
   /// <summary>
   /// Drops the ImageCache table (for testing/reset purposes).
   /// </summary>
+  /// <remarks>After dropping the table, the internal initialization flag is reset.</remarks>
   public async Task DropTableAsync() {
     await using var connection = new SqliteConnection(Constants.DatabasePath);
     await connection.OpenAsync();
@@ -212,6 +228,7 @@ public class ImageCacheRepository(ILogger<ImageCacheRepository> logger)
   /// <summary>
   /// Gets the count of cached images.
   /// </summary>
+  /// <returns>The total number of images in the cache.</returns>
   public async Task<int> GetCountAsync() {
     await Init();
     await using var connection = new SqliteConnection(Constants.DatabasePath);
@@ -226,8 +243,9 @@ public class ImageCacheRepository(ILogger<ImageCacheRepository> logger)
   }
 
   /// <summary>
-  /// Clears all cached images.
+  /// Clears all cached images from the database.
   /// </summary>
+  /// <remarks>Deletes all rows from the ImageCache table.</remarks>
   public async Task ClearAllAsync() {
     await Init();
     await using var connection = new SqliteConnection(Constants.DatabasePath);

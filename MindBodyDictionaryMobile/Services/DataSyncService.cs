@@ -21,6 +21,7 @@ public class DataSyncService(
   private readonly FaqApiService _faqApiService = faqApiService;
   private readonly MovementLinkApiService _movementLinkApiService = movementLinkApiService;
   private readonly ImageCacheService _imageCacheService = imageCacheService;
+  private readonly SemaphoreSlim _syncLock = new(1, 1);
 
   private const string LastSyncKey = "LastConditionSync";
   private const string FaqsCacheKey = "CachedFaqs";
@@ -31,6 +32,7 @@ public class DataSyncService(
   /// Syncs all application data (Conditions, FAQs, MovementLinks) from backend if needed.
   /// </summary>
   public async Task SyncAllDataAsync(bool forceRefresh = false) {
+    await _syncLock.WaitAsync();
     try
     {
       Debug.WriteLine($"[DataSyncService] SyncAllDataAsync - Starting sync check (Force: {forceRefresh})");
@@ -62,7 +64,11 @@ public class DataSyncService(
             Debug.WriteLine($"[DataSyncService] Cached {links.Count} Movement Links");
           }
 
-          // 4. Force Refresh All Images
+          // 4. Update sync timestamp - atomic under lock
+          Preferences.Default.Set(LastSyncKey, DateTime.UtcNow);
+          Debug.WriteLine("[DataSyncService] Updated LastConditionSync timestamp");
+
+          // 5. Force Refresh All Images
           // Run in background to avoid blocking the UI/Sync
           if (conditions.Count > 0)
           {
@@ -102,9 +108,6 @@ public class DataSyncService(
               }
             });
           }
-
-          // Update Last Sync Time
-          Preferences.Default.Set(LastSyncKey, DateTime.UtcNow);
         }
         else
         {
@@ -133,6 +136,10 @@ public class DataSyncService(
           }
         });
       }
+    }
+    finally
+    {
+      _syncLock.Release();
     }
   }
 

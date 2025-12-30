@@ -15,7 +15,8 @@ using MindBodyDictionaryMobile.Models;
 /// <param name="logger">The logger instance.</param>
 public class ProjectRepository(TaskRepository taskRepository, TagRepository tagRepository, ILogger<ProjectRepository> logger)
 {
-  private bool _hasBeenInitialized = false;
+  private volatile bool _hasBeenInitialized = false;
+  private readonly SemaphoreSlim _initSemaphore = new(1, 1);
   private readonly ILogger _logger = logger;
   private readonly TaskRepository _taskRepository = taskRepository;
   private readonly TagRepository _tagRepository = tagRepository;
@@ -27,13 +28,19 @@ public class ProjectRepository(TaskRepository taskRepository, TagRepository tagR
     if (_hasBeenInitialized)
       return;
 
-    await using var connection = new SqliteConnection(Constants.DatabasePath);
-    await connection.OpenAsync();
-
+    await _initSemaphore.WaitAsync();
     try
     {
-      var createTableCmd = connection.CreateCommand();
-      createTableCmd.CommandText = @"
+      if (_hasBeenInitialized)
+        return;
+
+      await using var connection = new SqliteConnection(Constants.DatabasePath);
+      await connection.OpenAsync();
+
+      try
+      {
+        var createTableCmd = connection.CreateCommand();
+        createTableCmd.CommandText = @"
 			CREATE TABLE IF NOT EXISTS Project (
 				ID INTEGER PRIMARY KEY AUTOINCREMENT,
 				Name TEXT NOT NULL,
@@ -41,15 +48,20 @@ public class ProjectRepository(TaskRepository taskRepository, TagRepository tagR
 				Icon TEXT NOT NULL,
 				CategoryID INTEGER NOT NULL
 			);";
-      await createTableCmd.ExecuteNonQueryAsync();
-    }
-    catch (Exception e)
-    {
-      _logger.LogError(e, "Error creating Project table");
-      throw;
-    }
+        await createTableCmd.ExecuteNonQueryAsync();
+      }
+      catch (Exception e)
+      {
+        _logger.LogError(e, "Error creating Project table");
+        throw;
+      }
 
-    _hasBeenInitialized = true;
+      _hasBeenInitialized = true;
+    }
+    finally
+    {
+      _initSemaphore.Release();
+    }
   }
 
   /// <summary>

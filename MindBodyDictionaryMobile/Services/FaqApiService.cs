@@ -5,16 +5,17 @@ using MindBodyDictionaryMobile.Models;
 
 namespace MindBodyDictionaryMobile.Services;
 
-public class FaqApiService
+/// <summary>
+/// API service for retrieving Frequently Asked Questions (FAQ) data from the backend.
+/// </summary>
+/// <remarks>
+/// Fetches FAQ items from the backend API and handles deserialization and error logging.
+/// </remarks>
+public class FaqApiService(ILogger<FaqApiService> logger)
 {
-  private readonly HttpClient _httpClient;
-  private readonly ILogger<FaqApiService> _logger;
+  private readonly HttpClient _httpClient = new HttpClient();
+  private readonly ILogger<FaqApiService> _logger = logger;
   private const string FaqEndpoint = "https://mbd-admin-api-staging.azurewebsites.net/api/GetFaqs?code=p8_sBm-IGx0vcvseYZK_mGxL16_CYCbH7RgPb2p-YoIkAzFuiNtQ1Q==";
-
-  public FaqApiService(ILogger<FaqApiService> logger) {
-    _httpClient = new HttpClient();
-    _logger = logger;
-  }
 
   public async Task<List<FaqItem>> GetFaqsAsync() {
     try

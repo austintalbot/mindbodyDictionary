@@ -4,6 +4,12 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MindBodyDictionaryMobile.Models;
 
+/// <summary>
+/// Page model for displaying and editing details of a single user project.
+/// </summary>
+/// <remarks>
+/// Allows users to view project information, manage associated tasks and tags, and edit project details.
+/// </remarks>
 public partial class ProjectDetailPageModel : ObservableObject, IQueryAttributable, IProjectTaskPageModel
 {
   private Project? _project;

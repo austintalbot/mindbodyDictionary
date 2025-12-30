@@ -9,6 +9,12 @@ using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
 using Font = Microsoft.Maui.Font;
 
+/// <summary>
+/// Code-behind for the app shell which provides the main navigation structure.
+/// </summary>
+/// <remarks>
+/// The AppShell defines the navigation routes and layout structure for the entire application.
+/// </remarks>
 public partial class AppShell : Shell
 {
   private readonly IServiceProvider _serviceProvider;
@@ -75,7 +81,7 @@ public partial class AppShell : Shell
     }
     catch (Exception ex)
     {
-      await DisplayAlert("Error", $"Could not open link: {ex.Message}", "OK");
+      await DisplayAlertAsync("Error", $"Could not open link: {ex.Message}", "OK");
     }
   }
 
@@ -126,7 +132,10 @@ public partial class AppShell : Shell
         {
           // Manually tear down the Shell UI to prevent lifecycle crashes on Android
           // where Fragments try to access the ServiceProvider after it's disposed.
-          Application.Current!.MainPage = new ContentPage();
+          if (Application.Current?.Windows.Count > 0)
+          {
+            Application.Current.Windows[0].Page = new ContentPage();
+          }
           await Task.Delay(100);
           Application.Current!.Quit();
         }

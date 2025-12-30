@@ -11,11 +11,21 @@ using MindBodyDictionaryMobile.Services.billing;
 using Syncfusion.Maui.Core.Hosting;
 using Syncfusion.Maui.Toolkit.Hosting;
 
+/// <summary>
+/// Configuration class for building and configuring the MAUI application.
+/// </summary>
+/// <remarks>
+/// This class is responsible for registering services, configuring the host builder,
+/// and setting up fonts and platform-specific configurations for the mobile app.
+/// </remarks>
 public static class MauiProgram
 {
   public static IServiceProvider Services { get; private set; }
 
   public static MauiApp CreateMauiApp() {
+    // Initialize SQLite for iOS and other platforms requiring explicit init
+    SQLitePCL.Batteries_V2.Init();
+
     try
     {
       Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1JFaF1cXGtCf1FpRmJGdld5fUVHYVZUTXxaS00DNHVRdkdmWH1fc3ZURmJeVER+WERWYEg=");
@@ -53,19 +63,20 @@ public static class MauiProgram
       builder.Services.AddSingleton<MbdConditionApiService>();
       builder.Services.AddSingleton<DataSyncService>();
       builder.Services.AddSingleton<SeedDataService>();
+      builder.Services.AddSingleton<DatabaseBootstrap>();
       builder.Services.AddSingleton<AppDataPreloaderService>();
       builder.Services.AddSingleton<ModalErrorHandler>();
       builder.Services.AddSingleton<MainPageModel>();
       builder.Services.AddSingleton<ProjectListPageModel>();
       // builder.Services.AddSingleton<ManageMetaPageModel>();
-      builder.Services.AddTransient<IBillingService, BillingService>();
+      builder.Services.AddSingleton<IBillingService, BillingService>();
 
 #if ANDROID
       builder.Services.AddSingleton<IDeviceInstallationService, Platforms.Android.DeviceInstallationService>();
 #elif IOS
-            var iosDeviceService = new Platforms.iOS.DeviceInstallationService();
-            builder.Services.AddSingleton<IDeviceInstallationService>(iosDeviceService);
-            builder.Services.AddSingleton(iosDeviceService);
+      var iosDeviceService = new Platforms.iOS.DeviceInstallationService();
+      builder.Services.AddSingleton<IDeviceInstallationService>(iosDeviceService);
+      builder.Services.AddSingleton(iosDeviceService);
 #endif
 
       builder.Services.AddSingleton<INotificationActionServiceExtended, NotificationActionService>();
@@ -79,10 +90,6 @@ public static class MauiProgram
       builder.Services.AddTransient<NotificationSettingsPageModel>();
       builder.Services.AddTransient<NotificationSettingsPage>();
 
-#if DEBUG
-      // builder.Services.AddTransient<ImageCachePageModel>();
-      // builder.Services.AddTransient<ImageCachePage>();
-#endif
 
       builder.Services.AddSingleton<UpgradePremiumPageModel>();
       builder.Services.AddSingleton<UpgradePremiumPage>();
@@ -127,6 +134,18 @@ public static class MauiProgram
       var logger = app.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Startup");
       logger.LogInformation("App startup log test");
       Services = app.Services;
+
+      // Initialize Database (WAL Mode)
+      try
+      {
+        app.Services.GetRequiredService<DatabaseBootstrap>().Initialize();
+      }
+      catch (Exception ex)
+      {
+        logger.LogError(ex, "Failed to initialize database during startup");
+        System.Diagnostics.Debug.WriteLine($"Database Initialization Failed: {ex}");
+        // Do not rethrow to avoid SIGABRT on startup
+      }
 
       // Load images into cache on startup
       var imageCacheService = Services.GetRequiredService<ImageCacheService>();

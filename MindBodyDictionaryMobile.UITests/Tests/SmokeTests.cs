@@ -1,5 +1,6 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
+using OpenQA.Selenium.Interactions;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -24,53 +25,102 @@ public class SmokeTests : BaseTest
     {
         try
         {
-            Output.WriteLine("Initializing Driver...");
+            Output.WriteLine($"========== STARTING SMOKE TEST FOR {platform} ==========");
+
+            Output.WriteLine("STEP 0: DRIVER INITIALIZATION");
+            Output.WriteLine($"ACTION: Initializing Appium Driver for platform: {platform}...");
+            Output.WriteLine("EXPECTATION: Driver should initialize successfully and launch the app.");
             InitializeDriver(platform);
+            Output.WriteLine("SUCCESS: Driver initialized.");
+
+            // Give the app time to fully load
+            Output.WriteLine("WAIT: Sleeping for 5 seconds to ensure app is ready...");
+            Thread.Sleep(5000);
 
             // 1. Home Page (default start)
-            // Verify something on home page. HomePageTests checks MbdConditionSearchBar, RefreshConditionsButton, ConditionsList, AppLogo
-            // Let's check AppLogo as it seems most 'home' like.
-            Output.WriteLine("Verifying Home Page...");
+            Output.WriteLine("--------------------------------------------------");
+            Output.WriteLine("STEP 1: VERIFY HOME PAGE");
+            Output.WriteLine("ACTION: checking for 'AppLogo' element on the starting page...");
+            Output.WriteLine("EXPECTATION: The Home Page should be visible with the App Logo displayed.");
             WaitForElement(By.Id("AppLogo"));
-            Output.WriteLine("Home Page Loaded");
+            Output.WriteLine("SUCCESS: Home Page verified (AppLogo found).");
+
+            // 1a. Verify Flyout Menu Content (Requested Feature)
+            Output.WriteLine("--------------------------------------------------");
+            Output.WriteLine("STEP 1a: VERIFY FLYOUT MENU");
+            VerifyFlyoutMenu();
+            // Close flyout by tapping outside or re-navigating to Home if needed, 
+            // but clicking 'Home' in the menu is a safe way to close it and return.
+            Output.WriteLine("ACTION: Closing Flyout by navigating Home...");
+            NavigateToPage("Home"); 
 
             // 2. Navigate to Search
-            Output.WriteLine("Navigating to Search...");
-            Driver!.Navigate().GoToUrl("mindbodydictionary://search");
+            Output.WriteLine("--------------------------------------------------");
+            Output.WriteLine("STEP 2: NAVIGATE TO SEARCH PAGE");
+            NavigateToPage("Search");
+            Output.WriteLine("EXPECTATION: Search Page should load and 'MbdConditionSearchBar' should be visible.");
             WaitForElement(By.Id("MbdConditionSearchBar"));
-            Output.WriteLine("Search Page Loaded");
+            Output.WriteLine("SUCCESS: Search Page verified.");
 
             // 3. Navigate to Notifications
-            Output.WriteLine("Navigating to Notifications...");
-            Driver!.Navigate().GoToUrl("mindbodydictionary://notifications");
+            Output.WriteLine("--------------------------------------------------");
+            Output.WriteLine("STEP 3: NAVIGATE TO NOTIFICATIONS PAGE");
+            NavigateToPage("Notifications");
+            Output.WriteLine("EXPECTATION: Notifications Page should load and 'RegisterNotificationsButton' should be visible.");
             WaitForElement(By.Id("RegisterNotificationsButton"));
-            Output.WriteLine("Notifications Page Loaded");
+            Output.WriteLine("SUCCESS: Notifications Page verified.");
 
             // 4. Navigate to Premium
-            Output.WriteLine("Navigating to Premium...");
-            Driver!.Navigate().GoToUrl("mindbodydictionary://premium");
-            WaitForElement(By.Id("SubscribeButton"));
-            Output.WriteLine("Premium Page Loaded");
+            Output.WriteLine("--------------------------------------------------");
+            Output.WriteLine("STEP 4: NAVIGATE TO PREMIUM PAGE");
+            NavigateToPage("Premium");
+            Output.WriteLine("EXPECTATION: Premium Page should load and either 'SubscribeButton' or 'Premium Active' should be visible.");
+            
+            try 
+            {
+                WaitForElement(By.Id("SubscribeButton"), 5);
+                Output.WriteLine("SUCCESS: Premium Page verified (SubscribeButton found).");
+            }
+            catch 
+            {
+                Output.WriteLine("INFO: SubscribeButton not found. Checking for 'Premium Active' message...");
+                var premiumActive = Driver!.FindElements(By.XPath("//*[@text='✓ Premium Active' or @label='✓ Premium Active']"));
+                if (premiumActive.Count > 0 && premiumActive[0].Displayed)
+                {
+                    Output.WriteLine("SUCCESS: Premium Page verified (Premium Active message found).");
+                }
+                else
+                {
+                    throw new Exception("Neither SubscribeButton nor Premium Active message found on Premium Page.");
+                }
+            }
 
             // 5. Navigate to About
-            Output.WriteLine("Navigating to About...");
-            Driver!.Navigate().GoToUrl("mindbodydictionary://about");
+            Output.WriteLine("--------------------------------------------------");
+            Output.WriteLine("STEP 5: NAVIGATE TO ABOUT PAGE");
+            NavigateToPage("About");
+            Output.WriteLine("EXPECTATION: About Page should load and 'AppNameLabel' should be visible.");
             WaitForElement(By.Id("AppNameLabel"));
-            Output.WriteLine("About Page Loaded");
+            Output.WriteLine("SUCCESS: About Page verified.");
 
             // 6. Navigate to FAQ
-            Output.WriteLine("Navigating to FAQ...");
-            Driver!.Navigate().GoToUrl("mindbodydictionary://faq");
+            Output.WriteLine("--------------------------------------------------");
+            Output.WriteLine("STEP 6: NAVIGATE TO FAQ PAGE");
+            NavigateToPage("FAQ");
+            Output.WriteLine("EXPECTATION: FAQ Page should load and 'FaqCollectionView' should be visible.");
             WaitForElement(By.Id("FaqCollectionView"));
-            Output.WriteLine("FAQ Page Loaded");
+            Output.WriteLine("SUCCESS: FAQ Page verified.");
 
-            Output.WriteLine("Smoke Test Passed: Navigated to all pages without crash.");
+            Output.WriteLine("--------------------------------------------------");
+            Output.WriteLine("========== SMOKE TEST PASSED: ALL PAGES ACCESSIBLE ==========");
         }
         catch (Exception ex)
         {
             TestFailed = true;
             TakeScreenshot(nameof(Smoke_NavigateToAllPages_NoCrash));
-            Output.WriteLine($"Smoke Test Failed: {ex.Message}");
+            Output.WriteLine("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            Output.WriteLine($"SMOKE TEST FAILED: {ex.Message}");
+            Output.WriteLine("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             throw;
         }
     }

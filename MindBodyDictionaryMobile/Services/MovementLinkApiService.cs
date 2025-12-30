@@ -5,6 +5,12 @@ using MindBodyDictionaryMobile.Models;
 
 namespace MindBodyDictionaryMobile.Services;
 
+/// <summary>
+/// API service for retrieving movement and exercise links from the backend.
+/// </summary>
+/// <remarks>
+/// Fetches external movement resource links that are associated with conditions and displayed to users.
+/// </remarks>
 public class MovementLinkApiService
 {
   private readonly HttpClient _httpClient;

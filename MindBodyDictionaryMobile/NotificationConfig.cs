@@ -1,5 +1,8 @@
 namespace MindBodyDictionaryMobile;
 
+/// <summary>
+/// Configuration constants for push notification handling and Firebase Cloud Messaging (FCM).
+/// </summary>
 public static class NotificationConfig
 {
   // Azure Notification Hub Configuration

@@ -29,6 +29,7 @@
 
                 <!--  Logo  -->
                 <Image
+                    AutomationId="MindBodyDictionaryLogo"
                     Margin="0,20,0,20"
                     Aspect="AspectFit"
                     HeightRequest="150"
@@ -67,12 +68,14 @@
                     IsVisible="{Binding IsSubscribed, Converter={StaticResource InverseBoolConverter}}"
                     Spacing="{StaticResource LayoutSpacing}">
                     <Button
+                        AutomationId="SubscribeButton"
                         Padding="15,12"
                         Command="{Binding PurchaseCommand}"
                         IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
                         Text="{Binding IsBusy, Converter={StaticResource BoolToTextConverter}, ConverterParameter='Loading...|Subscribe for $9.99/year'}" />
 
                     <Button
+                        AutomationId="RestoreButton"
                         Padding="15,12"
                         BackgroundColor="Transparent"
                         BorderColor="{AppThemeBinding Light={StaticResource Primary},
@@ -107,6 +110,7 @@
                 <!--  Legal Links  -->
                 <VerticalStackLayout Padding="0,30,0,0" Spacing="10">
                     <Button
+                        AutomationId="PrivacyPolicyButton"
                         Padding="10,8"
                         BackgroundColor="Transparent"
                         Command="{Binding PrivacyCommand}"
@@ -116,6 +120,7 @@
                                                     Dark={StaticResource Primary}}" />
 
                     <Button
+                        AutomationId="TermsButton"
                         Padding="10,8"
                         BackgroundColor="Transparent"
                         Command="{Binding TermsCommand}"

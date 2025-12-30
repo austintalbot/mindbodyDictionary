@@ -8,6 +8,13 @@ namespace MindBodyDictionaryMobile.PageModels
   using Microsoft.Maui.Controls; // For ImageSource and Shell
   using MindBodyDictionaryMobile.Models;
 
+  /// <summary>
+  /// Page model for displaying a summary view of a condition with positive/negative perspectives.
+  /// </summary>
+  /// <remarks>
+  /// Shows a simplified view of condition information including problem/positive summaries,
+  /// affirmations, and physical connections. Used for quick reference and learning.
+  /// </remarks>
   [QueryProperty(nameof(Id), "Id")]
   [QueryProperty(nameof(Type), "Type")]
   public partial class MbdConditionSummaryPageModel : ObservableObject, IQueryAttributable
@@ -47,14 +54,14 @@ namespace MindBodyDictionaryMobile.PageModels
     }
 
     public void ApplyQueryAttributes(IDictionary<string, object> query) {
-      if (query.ContainsKey("Positive"))
+      if (query.TryGetValue("Positive", out object? value))
       {
-        Id = query["Positive"]?.ToString();
+        Id = value?.ToString() ?? string.Empty;
         Type = "Positive";
       }
-      else if (query.ContainsKey("Negative"))
+      else if (query.TryGetValue("Negative", out value))
       {
-        Id = query["Negative"]?.ToString();
+        Id = value?.ToString() ?? string.Empty;
         Type = "Negative";
       }
 
@@ -67,7 +74,7 @@ namespace MindBodyDictionaryMobile.PageModels
     private async Task LoadConditionSummary(string id, string type) {
       try
       {
-        MbdCondition condition = await _mbdConditionRepository.GetAsync(id);
+        MbdCondition? condition = await _mbdConditionRepository.GetAsync(id);
         if (condition == null)
         {
           // Handle case where condition is not found
@@ -76,20 +83,20 @@ namespace MindBodyDictionaryMobile.PageModels
         }
 
         InternalCondition = condition;
-        Title = condition.Name; // Or some other relevant title
+        Title = condition.Name ?? string.Empty; // Or some other relevant title
 
         string imagePath = "";
 
         if (type == "Negative")
         {
           MindsetText = "Troubled Mindset"; // Example text
-          Summary = condition.SummaryNegative;
+          Summary = condition.SummaryNegative ?? string.Empty;
           imagePath = condition.ImageNegative ?? "";
         }
         else if (type == "Positive")
         {
           MindsetText = "Healing Mindset"; // Example text
-          Summary = condition.SummaryPositive;
+          Summary = condition.SummaryPositive ?? string.Empty;
           imagePath = condition.ImagePositive ?? "";
         }
         else
@@ -101,7 +108,11 @@ namespace MindBodyDictionaryMobile.PageModels
 
         if (!string.IsNullOrEmpty(imagePath))
         {
-          CachedImageSource = await _imageCacheService.GetImageAsync(imagePath);
+          var imageSource = await _imageCacheService.GetImageAsync(imagePath);
+          if (imageSource != null)
+          {
+            CachedImageSource = imageSource;
+          }
         }
         // Assume you have logic to determine if ads should be shown
         // ShowAds = !SubscriptionService.IsPremiumUser();

@@ -33,7 +33,7 @@ public class DeviceInstallationService : IDeviceInstallationService
     // Implement token retrieval for Android (FCM)
     // This typically involves getting the token from FirebaseMessaging.Instance
     var tokenTask = Firebase.Messaging.FirebaseMessaging.Instance.GetToken();
-    var token = (string)await tokenTask;
+    var token = (string?)await tokenTask;
 
     if (string.IsNullOrWhiteSpace(token))
     {

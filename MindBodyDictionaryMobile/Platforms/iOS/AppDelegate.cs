@@ -30,7 +30,10 @@ public class AppDelegate : MauiUIApplicationDelegate, IUNUserNotificationCenterD
       if (launchOptions[UIApplication.LaunchOptionsLocalNotificationKey] is UILocalNotification localNotification)
       {
         System.Diagnostics.Debug.WriteLine("=== App launched from local notification ===");
-        ProcessNotification(localNotification.UserInfo);
+        if (localNotification.UserInfo != null)
+        {
+          ProcessNotification(localNotification.UserInfo);
+        }
       }
     }
 

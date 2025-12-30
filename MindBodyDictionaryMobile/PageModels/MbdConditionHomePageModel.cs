@@ -10,6 +10,13 @@ namespace MindBodyDictionaryMobile.PageModels
   using MindBodyDictionaryMobile.Models;
   using MindBodyDictionaryMobile.Models.Messaging;
 
+  /// <summary>
+  /// Page model for the conditions home/discovery page.
+  /// </summary>
+  /// <remarks>
+  /// Displays a filterable list of medical conditions with search and category filtering capabilities.
+  /// Listens for updates via the MVVM Messaging system when condition data is refreshed.
+  /// </remarks>
   public partial class MbdConditionHomePageModel : ObservableObject, IRecipient<ConditionsUpdatedMessage>
   {
     private readonly MbdConditionRepository _mbdConditionRepository;
@@ -127,8 +134,10 @@ namespace MindBodyDictionaryMobile.PageModels
         }
 
         // Assign a new ObservableCollection to trigger only ONE update notification
-        RandomConditionCollection = new ObservableCollection<MbdCondition>(conditionsToShow);
-        IsInitialized = true;
+        MainThread.BeginInvokeOnMainThread(() => {
+          RandomConditionCollection = new ObservableCollection<MbdCondition>(conditionsToShow);
+          IsInitialized = true;
+        });
       }
       catch (Exception ex)
       {
@@ -155,7 +164,7 @@ namespace MindBodyDictionaryMobile.PageModels
 
     [RelayCommand]
     public async Task ShowConditionDetails(MbdCondition condition) {
-      _logger.LogInformation($"ShowConditionDetails called. Parameter: {{condition?.Id}} / {{condition?.Name}}");
+      _logger.LogInformation($"ShowConditionDetails called. Parameter: {condition?.Id} / {condition?.Name}");
       await AppShell.DisplaySnackbarAsync($"Navigating to: condtion");
       if (condition == null)
       {
