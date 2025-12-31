@@ -435,6 +435,63 @@ tasks:
       dotnet build -f net10.0-ios -c Release
       dotnet build -f net10.0-ios -c Release -t:Run -p:_DeviceName=":v2:udid=$UDID"
 
+  screenshot:iphone-6.5:
+    desc: Run iOS app on 6.5-inch iPhone simulator for App Store screenshots
+    dir: MindBodyDictionaryMobile
+    cmds:
+    - |
+      echo "📱 Running app on 6.5-inch iPhone simulator for screenshots..."
+
+      # Get the UDID of a 6.5-inch iPhone simulator (iPhone 14/15/16 Pro Max)
+      UDID=$(xcrun simctl list devices available | grep -E "iPhone.*Pro Max" | head -1 | grep -o '([A-F0-9-]*)' | tr -d '()')
+
+      if [ -z "$UDID" ]; then
+        echo "⚠️  No 6.5-inch iPhone (Pro Max) simulator found. Available iPhone devices:"
+        xcrun simctl list devices available | grep iPhone
+        echo ""
+        echo "💡 Tip: Create an iPhone simulator with 6.5-inch display (Pro Max):"
+        echo "  xcrun simctl create 'iPhone 16 Pro Max' 'iPhone 16 Pro Max' iOS26.2"
+        exit 1
+      fi
+
+      echo "✅ Using device UDID: $UDID"
+      dotnet build -f net10.0-ios -c Release
+      dotnet build -f net10.0-ios -c Release -t:Run -p:_DeviceName=":v2:udid=$UDID"
+
+  screenshot:ipad-13:
+    desc: Run iOS app on 12.9-inch/13-inch iPad simulator for App Store screenshots
+    dir: MindBodyDictionaryMobile
+    cmds:
+    - |
+      echo "📱 Running app on 12.9-inch/13-inch iPad simulator for screenshots..."
+
+      # Get the UDID of a 12.9-inch or 13-inch iPad simulator (iPad Pro)
+      UDID=$(xcrun simctl list devices available | grep -i "iPad Pro.*13-inch\|iPad Pro.*12.9" | head -1 | grep -o '([A-F0-9-]*)' | tr -d '()')
+
+      if [ -z "$UDID" ]; then
+        echo "⚠️  No 12.9-inch/13-inch iPad Pro simulator found. Available iPad devices:"
+        xcrun simctl list devices available | grep -i iPad
+        echo ""
+        echo "💡 Tip: Create an iPad Pro 13-inch simulator:"
+        echo "  xcrun simctl create 'iPad Pro 13-inch' 'iPad Pro (13-inch)' iOS26.2"
+        exit 1
+      fi
+
+      echo "✅ Using device UDID: $UDID"
+      dotnet build -f net10.0-ios -c Release
+      dotnet build -f net10.0-ios -c Release -t:Run -p:_DeviceName=":v2:udid=$UDID"
+
+  screenshot:all:
+    desc: Run app on both 6.5-inch iPhone and 13-inch iPad simulators (iOS 26.2) for screenshots
+    cmds:
+    - echo "📱 Running app on all required displays for screenshots..."
+    - echo ""
+    - task: screenshot:iphone-6.5
+    - echo ""
+    - task: screenshot:ipad-13
+    - echo ""
+    - echo "✅ App running on all simulators!"
+
   test:notifications:
     desc: Test push notifications on Android and iOS
     cmds:
