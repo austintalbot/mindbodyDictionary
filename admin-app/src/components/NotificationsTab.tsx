@@ -165,7 +165,7 @@ const NotificationsTab: React.FC = () => {
           </div>
 
           {/* New input field for Deep Link */}
-          <div style={{ marginBottom: '16px' }}>
+          {/* <div style={{ marginBottom: '16px' }}>
             <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '8px', color: colors.lightText }}>Deep Link (Optional):</label>
             <input
               type="text"
@@ -184,9 +184,9 @@ const NotificationsTab: React.FC = () => {
                 outline: 'none'
               }}
             />
-          </div>
+          </div> */}
 
-          <div style={{ marginBottom: '24px' }}>
+          {/* <div style={{ marginBottom: '24px' }}>
             <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '8px', color: colors.lightText }}>Associate with Condition:</label>
             <select
               value={notificationMbdCondition}
@@ -214,7 +214,7 @@ const NotificationsTab: React.FC = () => {
             </select>
             {loadingMbdConditions && <span style={{ fontSize: '12px', color: colors.mutedText, marginTop: '4px', display: 'block' }}>Loading conditions...</span>}
             {error && <div style={{ fontSize: '12px', color: colors.danger, marginTop: '4px' }}>Error loading conditions.</div>}
-          </div>
+          </div> */}
 
           <button
             onClick={sendNotification}
