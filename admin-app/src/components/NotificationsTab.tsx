@@ -1,13 +1,14 @@
 // admin-app/src/components/NotificationsTab.tsx
 import React, { useState, useEffect } from 'react';
-import { sendPushNotification, fetchMbdConditions } from '../services/apiService';
-import { MbdCondition } from '../types';
+import { sendPushNotification } from '../services/apiService';
+// import { fetchMbdConditions } from '../services/apiService';
+// import { MbdCondition } from '../types';
 import { useTheme } from '../theme/useTheme';
 
-interface MbdConditionOption {
-    id?: string;
-    name?: string;
-}
+// interface MbdConditionOption {
+//     id?: string;
+//     name?: string;
+// }
 
 const NotificationsTab: React.FC = () => {
   const { colors } = useTheme();
@@ -16,33 +17,33 @@ const NotificationsTab: React.FC = () => {
   const [notificationTag, setNotificationTag] = useState('0'); // '0' for Everyone, '1' for Subscribers Only
   const [notificationMbdCondition, setNotificationMbdCondition] = useState('0');
   const [notificationDeepLink, setNotificationDeepLink] = useState(''); // New state for deep link
-  const [mbdConditionOptions, setMbdConditionOptions] = useState<MbdConditionOption[]>([]);
-  const [loadingMbdConditions, setLoadingMbdConditions] = useState(true);
+  // const [mbdConditionOptions, setMbdConditionOptions] = useState<MbdConditionOption[]>([]);
+  // const [loadingMbdConditions, setLoadingMbdConditions] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
 
   useEffect(() => {
-    loadMbdConditionOptions();
+    // loadMbdConditionOptions();
   }, []);
 
-  const loadMbdConditionOptions = async () => {
-    setLoadingMbdConditions(true);
-    try {
-        const response = await fetchMbdConditions();
-        if (response && Array.isArray(response)) {
-            const sorted = response
-          .map((mbdCondition: MbdCondition) => ({ id: mbdCondition.id, name: mbdCondition.name }))
-          .sort((a, b) => (a.name || '').localeCompare(b.name || ''));
-            setMbdConditionOptions(sorted);
-        } else {
-            throw new Error('API response data for MbdConditions is not an array or is missing.');
-        }
-    } catch (err: any) {
-        setError(err.message || "Failed to load conditions for notifications");
-    } finally {
-        setLoadingMbdConditions(false);
-    }
-  };
+  // const loadMbdConditionOptions = async () => {
+  //   setLoadingMbdConditions(true);
+  //   try {
+  //       const response = await fetchMbdConditions();
+  //       if (response && Array.isArray(response)) {
+  //           const sorted = response
+  //         .map((mbdCondition: MbdCondition) => ({ id: mbdCondition.id, name: mbdCondition.name }))
+  //         .sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+  //         setMbdConditionOptions(sorted);
+  //       } else {
+  //           throw new Error('API response data for MbdConditions is not an array or is missing.');
+  //       }
+  //   } catch (err: any) {
+  //       setError(err.message || "Failed to load conditions for notifications");
+  //   } finally {
+  //       setLoadingMbdConditions(false);
+  //   }
+  // };
 
   const sendNotification = async () => {
     if (notificationTitle.trim() === '') {
