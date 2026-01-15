@@ -609,7 +609,30 @@ const MbdConditionModal: React.FC<MbdConditionModalProps> = ({
 
             <TabsContent value="recommendations">
               <div style={{ padding: '20px' }}>
-                <h5 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '20px', color: colors.foreground }}>Recommendations</h5>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                  <h5 style={{ fontSize: '16px', fontWeight: '600', margin: 0, color: colors.foreground }}>Recommendations</h5>
+                  <button
+                    onClick={() => {
+                      const newRecommendations = [...(mbdCondition.recommendations || []), { name: '', url: '', recommendationType: 0 }];
+                      onChange({ ...mbdCondition, recommendations: newRecommendations });
+                    }}
+                    style={{
+                      padding: '8px 16px',
+                      backgroundColor: colors.primary,
+                      color: colors.buttonText,
+                      border: 'none',
+                      borderRadius: '6px',
+                      cursor: 'pointer',
+                      fontSize: '14px',
+                      fontWeight: '600',
+                      transition: 'all 0.2s'
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.primaryHover}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.primary}
+                  >
+                    + Add
+                  </button>
+                </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                   {(mbdCondition.recommendations || []).map((rec: Recommendation, idx: number) => (
                     <div key={idx} style={{ display: 'flex', flexDirection: 'column', gap: '8px', padding: '12px', backgroundColor: colors.backgroundSecondary, borderRadius: '6px' }}>
@@ -741,28 +764,6 @@ const MbdConditionModal: React.FC<MbdConditionModalProps> = ({
                       </select>
                     </div>
                   ))}
-                  <button
-                    onClick={() => {
-                      const newRecommendations = [...(mbdCondition.recommendations || []), { name: '', url: '', recommendationType: 0 }];
-                      onChange({ ...mbdCondition, recommendations: newRecommendations });
-                    }}
-                    style={{
-                      padding: '10px 20px',
-                      backgroundColor: colors.primary,
-                      color: colors.buttonText,
-                      border: 'none',
-                      borderRadius: '6px',
-                      cursor: 'pointer',
-                      fontSize: '14px',
-                      fontWeight: '600',
-                      transition: 'all 0.2s',
-                      marginTop: '12px'
-                    }}
-                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.primaryHover}
-                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.primary}
-                  >
-                    + Add Recommendation
-                  </button>
                 </div>
               </div>
             </TabsContent>
