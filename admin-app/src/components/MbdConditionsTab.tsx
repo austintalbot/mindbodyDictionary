@@ -191,24 +191,44 @@ const MbdConditionsTab: React.FC = () => {
         {/* Header with Refresh Button */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
           <h5 style={{ fontSize: '18px', fontWeight: '600', margin: 0, color: colors.foreground }}>Conditions</h5>
-          <button
-            onClick={handleRefreshMbdConditions}
-            style={{
-              padding: '8px 16px',
-              backgroundColor: colors.primary,
-              color: '#fff',
-              border: 'none',
-              borderRadius: '6px',
-              cursor: 'pointer',
-              fontWeight: '600',
-              fontSize: '14px',
-              transition: 'all 0.2s'
-            }}
-            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.primaryHover}
-            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.primary}
-          >
-            Refresh Conditions
-          </button>
+          <div style={{ display: 'flex', gap: '12px' }}>
+            <button
+              onClick={handleRefreshMbdConditions}
+              style={{
+                padding: '8px 16px',
+                backgroundColor: colors.primary,
+                color: '#fff',
+                border: 'none',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                fontWeight: '600',
+                fontSize: '14px',
+                transition: 'all 0.2s'
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.primaryHover}
+              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.primary}
+            >
+              Refresh
+            </button>
+            <button
+              onClick={addMbdCondition}
+              style={{
+                padding: '8px 16px',
+                backgroundColor: colors.primary,
+                color: '#fff',
+                border: 'none',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                fontWeight: '600',
+                fontSize: '14px',
+                transition: 'all 0.2s'
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.primaryHover}
+              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.primary}
+            >
+              + Add
+            </button>
+          </div>
         </div>
 
         {/* Search Bar */}
@@ -238,27 +258,6 @@ const MbdConditionsTab: React.FC = () => {
 
         {/* Table */}
         <MbdConditionsTable mbdConditions={filteredMbdConditions} onEdit={selectMbdCondition} onDelete={deleteMbdConditionConfirm} />
-
-        {/* Add Button */}
-        <button
-          onClick={addMbdCondition}
-          style={{
-            padding: '10px 20px',
-            backgroundColor: colors.primary,
-            color: '#fff',
-            border: 'none',
-            borderRadius: '6px',
-            cursor: 'pointer',
-            fontSize: '14px',
-            fontWeight: '600',
-            marginBottom: '20px',
-            transition: 'all 0.2s'
-          }}
-          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.primaryHover}
-          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.primary}
-        >
-          + Add New Condition
-        </button>
       </div>
 
       {/* Condition Detail Modal */}
