@@ -168,24 +168,44 @@ const ImagesTab: React.FC = () => {
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
           <h5 style={{ fontSize: '18px', fontWeight: '600', margin: 0, color: colors.foreground }}>Images</h5>
-          <button
-            onClick={() => { clearImagesCache(); loadImages(); }}
-            style={{
-              padding: '8px 16px',
-              backgroundColor: colors.primary,
-              color: '#fff',
-              border: 'none',
-              borderRadius: '6px',
-              cursor: 'pointer',
-              fontWeight: '600',
-              fontSize: '14px',
-              transition: 'all 0.2s'
-            }}
-            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.primaryHover}
-            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.primary}
-          >
-            Refresh Images
-          </button>
+          <div style={{ display: 'flex', gap: '12px' }}>
+            <button
+              onClick={() => { clearImagesCache(); loadImages(); }}
+              style={{
+                padding: '8px 16px',
+                backgroundColor: colors.primary,
+                color: '#fff',
+                border: 'none',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                fontWeight: '600',
+                fontSize: '14px',
+                transition: 'all 0.2s'
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.primaryHover}
+              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.primary}
+            >
+              Refresh
+            </button>
+            <button
+              onClick={addImage}
+              style={{
+                padding: '8px 16px',
+                backgroundColor: colors.primary,
+                color: '#fff',
+                border: 'none',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                fontWeight: '600',
+                fontSize: '14px',
+                transition: 'all 0.2s'
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.primaryHover}
+              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.primary}
+            >
+              + Add
+            </button>
+          </div>
         </div>
 
         {/* Search input field */}
@@ -324,136 +344,195 @@ const ImagesTab: React.FC = () => {
           </table>
         </div>
 
-        <button
-          onClick={addImage}
-          style={{
-            padding: '10px 20px',
-            backgroundColor: colors.primary,
-            color: '#fff',
-            border: 'none',
-            borderRadius: '6px',
-            cursor: 'pointer',
-            fontSize: '14px',
-            fontWeight: '600',
-            marginBottom: '20px',
-            transition: 'all 0.2s'
-          }}
-          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.primaryHover}
-          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.primary}
-        >
-          + Add New Image
-        </button>
-
-
-
         {showAddImageDiv && (
           <div style={{
-            maxWidth: '500px',
-            margin: '0 auto',
-            padding: '24px',
-            backgroundColor: colors.backgroundSecondary,
-            borderRadius: '8px',
-            border: `1px solid ${colors.border}`
+            display: 'flex',
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: colors.shadow,
+            zIndex: 1050,
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '20px'
           }}>
-            <h6 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '20px', color: colors.foreground }}>Upload New Image</h6>
-
-            <div style={{ marginBottom: '16px' }}>
-              <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '8px', color: colors.lightText }}>Select Condition</label>
-              <select
-                value={imageMbdCondition}
-                onChange={(e) => setImageMbdCondition(e.target.value)}
-                style={{
-                  width: '100%',
-                  padding: '10px 12px',
-                  fontSize: '14px',
-                  border: `1px solid ${colors.inputBorder}`,
-                  borderRadius: '6px',
-                  backgroundColor: colors.inputBackground,
-                  color: colors.foreground,
-                  outline: 'none',
-                  cursor: 'pointer'
-                }}
-              >
-                <option value="0">Select Condition...</option>
-                {mbdConditionOptions.map(opt => <option key={opt.id} value={opt.id!}>{opt.name}</option>)}
-              </select>
-            </div>
-
-            <div style={{ marginBottom: '16px' }}>
-              <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '8px', color: colors.lightText }}>Image Type</label>
-              <select
-                value={imageType}
-                onChange={(e) => setImageType(e.target.value as ImageType)}
-                style={{
-                  width: '100%',
-                  padding: '10px 12px',
-                  fontSize: '14px',
-                  border: `1px solid ${colors.inputBorder}`,
-                  borderRadius: '6px',
-                  backgroundColor: colors.inputBackground,
-                  color: colors.foreground,
-                  outline: 'none',
-                  cursor: 'pointer'
-                }}
-              >
-                <option value="0">Select Image Type...</option>
-                <option value={ImageType.Negative}>Negative</option>
-                <option value={ImageType.Positive}>Positive</option>
-              </select>
-            </div>
-
-            <div style={{ marginBottom: '24px' }}>
-              <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '8px', color: colors.lightText }}>Image File</label>
-              <div style={{ position: 'relative', overflow: 'hidden', display: 'inline-block', width: '100%' }}>
-                <input
-                  type="file"
-                  id="imageFile"
-                  onChange={handleFileChange}
+            <div style={{
+              backgroundColor: colors.background,
+              borderRadius: '8px',
+              width: '100%',
+              maxWidth: '500px',
+              display: 'flex',
+              flexDirection: 'column',
+              boxShadow: `0 10px 40px ${colors.shadowHeavy}`
+            }}>
+              {/* Modal Header */}
+              <div style={{
+                padding: '24px',
+                borderBottom: `1px solid ${colors.border}`,
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center'
+              }}>
+                <h2 style={{ margin: 0, fontSize: '20px', fontWeight: '700', color: colors.foreground }}>Upload New Image</h2>
+                <button
+                  onClick={() => setShowAddImageDiv(false)}
                   style={{
-                    position: 'absolute',
-                    left: 0,
-                    top: 0,
-                    opacity: 0,
-                    width: '100%',
-                    height: '100%',
-                    cursor: 'pointer'
+                    background: 'none',
+                    border: 'none',
+                    fontSize: '24px',
+                    color: colors.mutedText,
+                    cursor: 'pointer',
+                    padding: 0,
+                    width: '32px',
+                    height: '32px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: '4px',
+                    transition: 'all 0.2s'
                   }}
-                />
-                <div style={{
-                  padding: '10px 12px',
-                  fontSize: '14px',
-                  border: `1px solid ${colors.inputBorder}`,
-                  borderRadius: '6px',
-                  backgroundColor: colors.inputBackground,
-                  color: colors.mutedText,
-                  whiteSpace: 'nowrap',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis'
-                }}>
-                  {fileLabel}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = colors.neutral;
+                    e.currentTarget.style.color = colors.foreground;
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                    e.currentTarget.style.color = colors.mutedText;
+                  }}
+                >
+                  ✕
+                </button>
+              </div>
+
+              {/* Modal Body */}
+              <div style={{ padding: '24px', overflowY: 'auto', maxHeight: '70vh' }}>
+                <div style={{ marginBottom: '16px' }}>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '8px', color: colors.lightText }}>Select Condition</label>
+                  <select
+                    value={imageMbdCondition}
+                    onChange={(e) => setImageMbdCondition(e.target.value)}
+                    style={{
+                      width: '100%',
+                      padding: '10px 12px',
+                      fontSize: '14px',
+                      border: `1px solid ${colors.inputBorder}`,
+                      borderRadius: '6px',
+                      backgroundColor: colors.inputBackground,
+                      color: colors.foreground,
+                      outline: 'none',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    <option value="0">Select Condition...</option>
+                    {mbdConditionOptions.map(opt => <option key={opt.id} value={opt.id!}>{opt.name}</option>)}
+                  </select>
+                </div>
+
+                <div style={{ marginBottom: '16px' }}>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '8px', color: colors.lightText }}>Image Type</label>
+                  <select
+                    value={imageType}
+                    onChange={(e) => setImageType(e.target.value as ImageType)}
+                    style={{
+                      width: '100%',
+                      padding: '10px 12px',
+                      fontSize: '14px',
+                      border: `1px solid ${colors.inputBorder}`,
+                      borderRadius: '6px',
+                      backgroundColor: colors.inputBackground,
+                      color: colors.foreground,
+                      outline: 'none',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    <option value="0">Select Image Type...</option>
+                    <option value={ImageType.Negative}>Negative</option>
+                    <option value={ImageType.Positive}>Positive</option>
+                  </select>
+                </div>
+
+                <div style={{ marginBottom: '24px' }}>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '8px', color: colors.lightText }}>Image File</label>
+                  <div style={{ position: 'relative', overflow: 'hidden', display: 'inline-block', width: '100%' }}>
+                    <input
+                      type="file"
+                      id="imageFile"
+                      onChange={handleFileChange}
+                      style={{
+                        position: 'absolute',
+                        left: 0,
+                        top: 0,
+                        opacity: 0,
+                        width: '100%',
+                        height: '100%',
+                        cursor: 'pointer'
+                      }}
+                    />
+                    <div style={{
+                      padding: '10px 12px',
+                      fontSize: '14px',
+                      border: `1px solid ${colors.inputBorder}`,
+                      borderRadius: '6px',
+                      backgroundColor: colors.inputBackground,
+                      color: colors.mutedText,
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis'
+                    }}>
+                      {fileLabel}
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <button
-              onClick={submitImage}
-              style={{
-                width: '100%',
-                padding: '12px',
-                backgroundColor: colors.primary,
-                color: '#fff',
-                border: 'none',
-                borderRadius: '6px',
-                cursor: 'pointer',
-                fontSize: '14px',
-                fontWeight: '600',
-                transition: 'all 0.2s'
-              }}
-              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.primaryHover}
-              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.primary}
-            >
-              Upload Image
-            </button>
+              {/* Modal Footer */}
+              <div style={{
+                padding: '20px 24px',
+                borderTop: `1px solid ${colors.border}`,
+                display: 'flex',
+                justifyContent: 'flex-end',
+                gap: '12px'
+              }}>
+                <button
+                  onClick={() => setShowAddImageDiv(false)}
+                  style={{
+                    padding: '10px 24px',
+                    backgroundColor: colors.neutral,
+                    color: colors.foreground,
+                    border: 'none',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    fontSize: '14px',
+                    fontWeight: '600',
+                    transition: 'all 0.2s'
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.border}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.neutral}
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={submitImage}
+                  style={{
+                    padding: '10px 24px',
+                    backgroundColor: colors.primary,
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    fontSize: '14px',
+                    fontWeight: '600',
+                    transition: 'all 0.2s'
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.primaryHover}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.primary}
+                >
+                  Upload Image
+                </button>
+              </div>
+            </div>
           </div>
         )}
       </div>
