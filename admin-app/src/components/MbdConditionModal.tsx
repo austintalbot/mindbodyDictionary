@@ -614,39 +614,72 @@ const MbdConditionModal: React.FC<MbdConditionModalProps> = ({
                   {(mbdCondition.recommendations || []).map((rec: Recommendation, idx: number) => (
                     <div key={idx} style={{ display: 'flex', flexDirection: 'column', gap: '8px', padding: '12px', backgroundColor: colors.backgroundSecondary, borderRadius: '6px' }}>
                       <div style={{ display: 'flex', gap: '8px' }}>
-                        <textarea
-                          value={typeof rec === 'string' ? rec : rec?.name || ''}
-                          onChange={(e) => {
-                            const newRecommendations = [...(mbdCondition.recommendations || [])];
-                            if (typeof rec === 'string') {
-                              newRecommendations[idx] = { name: e.target.value, url: '', recommendationType: 0 } as Recommendation;
-                            } else {
-                              newRecommendations[idx] = { ...rec, name: e.target.value };
-                            }
-                            onChange({ ...mbdCondition, recommendations: newRecommendations });
-                          }}
-                          placeholder="Recommendation name"
-                          style={{
-                            flex: 1,
-                            padding: '10px 12px',
-                            fontSize: '14px',
-                            border: `1px solid ${colors.inputBorder}`,
-                            borderRadius: '6px',
-                            minHeight: '60px',
-                            fontFamily: 'inherit',
-                            transition: 'all 0.2s',
-                            backgroundColor: colors.inputBackground,
-                            color: colors.foreground
-                          }}
-                          onFocus={(e) => {
-                            e.currentTarget.style.borderColor = colors.inputFocus;
-                            e.currentTarget.style.boxShadow = `0 0 0 3px ${colors.inputFocusRing}`;
-                          }}
-                          onBlur={(e) => {
-                            e.currentTarget.style.borderColor = colors.inputBorder;
-                            e.currentTarget.style.boxShadow = 'none';
-                          }}
-                        />
+                        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                          <textarea
+                            value={typeof rec === 'string' ? rec : rec?.name || ''}
+                            onChange={(e) => {
+                              const newRecommendations = [...(mbdCondition.recommendations || [])];
+                              if (typeof rec === 'string') {
+                                newRecommendations[idx] = { name: e.target.value, url: '', recommendationType: 0 } as Recommendation;
+                              } else {
+                                newRecommendations[idx] = { ...rec, name: e.target.value };
+                              }
+                              onChange({ ...mbdCondition, recommendations: newRecommendations });
+                            }}
+                            placeholder="Recommendation name"
+                            style={{
+                              padding: '10px 12px',
+                              fontSize: '14px',
+                              border: `1px solid ${colors.inputBorder}`,
+                              borderRadius: '6px',
+                              minHeight: '60px',
+                              fontFamily: 'inherit',
+                              transition: 'all 0.2s',
+                              backgroundColor: colors.inputBackground,
+                              color: colors.foreground
+                            }}
+                            onFocus={(e) => {
+                              e.currentTarget.style.borderColor = colors.inputFocus;
+                              e.currentTarget.style.boxShadow = `0 0 0 3px ${colors.inputFocusRing}`;
+                            }}
+                            onBlur={(e) => {
+                              e.currentTarget.style.borderColor = colors.inputBorder;
+                              e.currentTarget.style.boxShadow = 'none';
+                            }}
+                          />
+                          <input
+                            type="text"
+                            value={typeof rec === 'string' ? '' : rec?.url || ''}
+                            onChange={(e) => {
+                              const newRecommendations = [...(mbdCondition.recommendations || [])];
+                              if (typeof rec === 'string') {
+                                newRecommendations[idx] = { name: '', url: e.target.value, recommendationType: 0 } as Recommendation;
+                              } else {
+                                newRecommendations[idx] = { ...rec, url: e.target.value };
+                              }
+                              onChange({ ...mbdCondition, recommendations: newRecommendations });
+                            }}
+                            placeholder="Link URL (optional)"
+                            style={{
+                              padding: '10px 12px',
+                              fontSize: '14px',
+                              border: `1px solid ${colors.inputBorder}`,
+                              borderRadius: '6px',
+                              fontFamily: 'inherit',
+                              transition: 'all 0.2s',
+                              backgroundColor: colors.inputBackground,
+                              color: colors.foreground
+                            }}
+                            onFocus={(e) => {
+                              e.currentTarget.style.borderColor = colors.inputFocus;
+                              e.currentTarget.style.boxShadow = `0 0 0 3px ${colors.inputFocusRing}`;
+                            }}
+                            onBlur={(e) => {
+                              e.currentTarget.style.borderColor = colors.inputBorder;
+                              e.currentTarget.style.boxShadow = 'none';
+                            }}
+                          />
+                        </div>
                         <button
                           onClick={() => {
                             const newRecommendations = mbdCondition.recommendations?.filter((_: Recommendation, i: number) => i !== idx) || [];
@@ -663,7 +696,7 @@ const MbdConditionModal: React.FC<MbdConditionModalProps> = ({
                             fontWeight: '600',
                             transition: 'all 0.2s',
                             height: 'fit-content',
-                            marginTop: '10px'
+                            marginTop: '0'
                           }}
                           onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.dangerHover}
                           onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.danger}
